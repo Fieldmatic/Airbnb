@@ -21,7 +21,7 @@ public class Bookable {
     private List<String> pictures;
     private String profilePicture;
     private String rules;
-    private Double raiting;
+    private Double rating;
     @OneToMany
     private List<Tag> additionalServices;
     @OneToMany

@@ -19,9 +19,9 @@ export default function Header(){
                 
             </div>
             <div className='header__links'>
-             <p>Add Cottage</p>
-             <p>Add Experience</p>
-             <p>Edit Your Profile</p>
+             <Link to={'/addCottage'} style={{textDecoration: 'none', color:'black'}}>Add Cottage</Link>
+             <Link to={'/addExperience'} style={{textDecoration: 'none', color:'black'}}>Add Experience</Link>
+             <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
             </div>
              
             <div className='header__right'>

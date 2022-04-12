@@ -1,0 +1,29 @@
+
+.textBox {
+    margin-bottom: 15px;
+    height: 35px;
+    width: 200px;
+    text-indent: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    display: block;
+    margin: 10px;
+}
+
+.userProfileHeader {
+    font-size: 40px;
+    color:crimson;
+    font-weight: 900;
+    text-align: left;
+
+}
+
+.userProfile {
+    text-align: left;
+    padding: 130px;
+    background-color:darksalmon;
+}
+
+.userProfileForm {
+    display: inline-block;
+}

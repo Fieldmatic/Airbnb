@@ -11,5 +11,5 @@ import java.util.Map;
 @NoArgsConstructor
 public class Cottage extends Bookable {
     @ElementCollection
-    Map<Integer, Integer> rooms;
+    private Map<Integer, Integer> rooms;
 }

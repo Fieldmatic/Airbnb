@@ -3,61 +3,112 @@ import "./ClientProfile.css"
 import ClientService from '../../services/ClientService'
 
 export default function ClientProfile() {
-    const [client, setClient] = useState(Object)
-    const [address, setAddress] = useState(Object)
+    const [client, setClient] = useState(
+        {
+            username: "",
+            password: "",
+            name: "",
+            surname: "",
+            email: "",
+            phoneNumber: "",
+            profilePhoto: "",
+            address: {
+                street: "",
+                city: "",
+                state: "",
+                zipCode: ""
+            }
+        }
+    )
 
     useEffect(() => {
         ClientService.getClient().then((response) => {
-            setClient(response.data)
-            setAddress(response.data.address)
+            setClient(response.data) 
         })
     }, [])
 
 
     return (
         <div className="userProfile">
-            <h2 className="userProfileHeader"> User Profile</h2>    
+            <h2 className="userProfileHeader"> Personal details</h2>    
             <form className="userProfileForm">
-            <input className="textBox"
+            <label className="userLabel"> Username </label>
+                <input className="textBox"
                 type="text"
-                placeholder={`Username: ${client.username}`}
                 name="username"
-            />
-            <input
-                className="textBox"
+                value={client.username}
+                />
+            <br></br>
+            <br></br>
+
+            <label className="userLabel"> First Name </label>
+           
+                <input className="textBox"
                 type="text"
-                placeholder={`First Name: ${client.name}`}
-                name="firstName"
+                name="name"
+                value={client.name}
             />
-            <input className="textBox"
+            <br></br>
+            <br></br>
+
+            <label className="userLabel"> Last Name </label>
+    
+                <input className="textBox"
                 type="text"
-                placeholder={`Last Name: ${client.surname}`}
-                name="lastName"
+                name="surname"
+                value={client.surname}
             />
-            <input className="textBox"
-                type="email"
-                placeholder={`Email: ${client.email}`}
+           
+            <br></br>
+            <br></br>
+
+            <label className="userLabel"> Email </label>
+        
+                <input className="textBox"
+                type="text"
                 name="email"
+                value={client.email}
             />
-            <input className="textBox"
+            <br></br>
+            <br></br>
+
+
+            <label className="userLabel"> PhoneNumber </label>
+
+                <input className="textBox"
                 type="text"
-                placeholder={`Phone Number: ${client.phoneNumber}`}
                 name="phoneNumber"
+                value={client.phoneNumber}
             />
-            <input className="textBox"
+        
+            <br></br>
+            <br></br>
+
+            <label className="userLabel"> Street </label>
+
+                <input className="textBox"
                 type="text"
-                placeholder={`Address: ${address.street}`}
                 name="street"
+                value={client.address.street}
             />
-            <input className="textBox"
+           
+            <br></br>
+            <br></br>
+
+            <label className="userLabel"> City </label>
+                <input className="textBox"
                 type="text"
-                placeholder={`City: ${address.city}`}
                 name="city"
-            />
-            <input className="textBox"
+                value={client.address.city}
+           />
+            <br></br>
+            <br></br>
+            
+            <label className="userLabel"> State </label>
+                <input className="textBox"
                 type="text"
-                placeholder={`State: ${address.state}`}
                 name="state"
+                value={client.address.state}
             />
             </form>
         </div>

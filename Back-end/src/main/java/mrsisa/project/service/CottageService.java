@@ -8,6 +8,9 @@ import mrsisa.project.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Service
 public class CottageService {
@@ -37,6 +40,13 @@ public class CottageService {
         priceListRepository.save(priceList);
         cottage.setPriceList(priceList);
         cottage.setRating(0.0);
+        Map<Integer,Integer> rooms = new HashMap<>();
+        if (dto.getSingleRooms() != 0) rooms.put(1,dto.getSingleRooms());
+        if (dto.getDoubleRooms() != 0) rooms.put(2,dto.getDoubleRooms());
+        if (dto.getTripleRooms() != 0) rooms.put(3,dto.getTripleRooms());
+        if (dto.getQuadRooms() != 0) rooms.put(4,dto.getQuadRooms());
+        cottage.setRooms(rooms);
+
         return cottage;
     }
 

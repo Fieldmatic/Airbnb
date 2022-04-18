@@ -14,4 +14,8 @@ public class CottageDTO {
     private String rules;
     private Double dailyRate;
     private Double hourlyRate;
+    private Integer singleRooms;
+    private Integer doubleRooms;
+    private Integer tripleRooms;
+    private Integer quadRooms;
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import './Cottage.css'
 import CottageService from '../../services/CottageService'
+import Counter from "../utils/Counter"
 
 export default function Cottage() {
   const [formData, setFormData] = React.useState (
@@ -11,14 +12,28 @@ export default function Cottage() {
         rules : "",
         hourlyRate : "",
         dailyRate : "",
-        cancellationConditions: ""
-
+        cancellationConditions: "",
+        singleRooms : 0,
+        doubleRooms : 0,
+        tripleRooms : 0,
+        quadRooms : 0
       }
 
   )
 
   function handleChange(event) {
+    console.log(event)
+    console.log("gggg")
     const {name, value} = event.target
+    setFormData(prevFormData => {
+      return {
+        ...prevFormData,
+        [name]: value
+      }
+    })
+  }
+
+  function handleRoomChange(name, value) {
     setFormData(prevFormData => {
       return {
         ...prevFormData,
@@ -71,7 +86,7 @@ export default function Cottage() {
         />
         <textarea 
           className="form--input-area"
-          placeholder = "PromotionalDescription"
+          placeholder = "Promotional description"
           onChange = {handleChange}
           value = {formData.promotionalDescription}
           name = "promotionalDescription"
@@ -90,6 +105,23 @@ export default function Cottage() {
           value = {formData.cancellationConditions}
           name = "cancellationConditions"
         />
+        <div className='bedRoom'>
+          <label className='bedRoom--label'>Single rooms: </label>  
+          <Counter name = "singleRooms" value = {formData.singleRooms} handleChange = {handleRoomChange}/>
+        </div>
+        <div className='bedRoom'>
+        <label className='bedRoom--label'>Double rooms: </label>  
+          <Counter name = "doubleRooms" value = {formData.doubleRooms} handleChange = {handleRoomChange}/>
+        </div>
+        <div className='bedRoom'>
+          <label className='bedRoom--label'>Triple rooms: </label>  
+          <Counter name = "tripleRooms" value = {formData.tripleRooms} handleChange = {handleRoomChange}/>
+        </div>
+        <div className='bedRoom'>
+          <label className='bedRoom--label'>Quad rooms: </label>  
+          <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
+        </div>
+
         <button className="form--submit">Submit</button>
       </form>
     </div>

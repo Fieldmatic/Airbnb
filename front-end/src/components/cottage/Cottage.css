@@ -1,7 +1,7 @@
 
 .form-container {
     background-color: #FF5A5F;
-    height: 100vh;
+    height: 150vh;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
 .form {
     background-color: white;
     padding: 50px;
-    height: 80vh;
+    height: 120vh;
     width: 50vh;
     border-radius: 10px;
     display: flex;
@@ -24,7 +24,7 @@
 }
 
 .form--input {
-    width: 100%;
+    width: 97%;
     margin-bottom: 20px;
     height: 40px;
     border-radius: 5px;
@@ -34,7 +34,7 @@
 }
 
 .form--input-area {
-    width: 100%;
+    width: 97%;
     margin-bottom: 20px;
     height: 70px;
     border-radius: 5px;
@@ -67,4 +67,26 @@
 .form--header{
     margin-bottom: 20px;
     color: blac;
+}
+
+.counter{
+    display: flex;
+    align-items: center;
+}
+
+.bedRoom{
+    display: flex;
+    flex-direction: row;
+    font-size: medium;
+    width: 100%;
+    margin: 5px;
+    align-items: left;
+}
+
+.counter{
+    height: 50%;
+}
+
+.bedRoom--label{
+    width: 40%;
 }

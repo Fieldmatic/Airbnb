@@ -69,9 +69,6 @@ public class CottageService {
 
 
 
-
-    }
-
     private Cottage dtoToCottage(CottageDTO dto) {
         Cottage cottage = new Cottage();
         cottage.setName(dto.getName());

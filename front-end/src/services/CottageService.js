@@ -10,7 +10,7 @@ class CottageService {
               },
         });
     }
-    }
+    
 }
 
 export default new CottageService()

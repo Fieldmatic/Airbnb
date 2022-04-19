@@ -11,6 +11,7 @@ import mrsisa.project.model.Client;
 @Getter
 @NoArgsConstructor
 public class ClientDTO {
+    private Long id;
     private String username;
     private String password;
     private String name;
@@ -21,10 +22,11 @@ public class ClientDTO {
     private Address address;
 
     public ClientDTO(Client client) {
-        this(client.getUsername(), client.getPassword(), client.getName(), client.getSurname(), client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress());
+        this(client.getId(), client.getUsername(), client.getPassword(), client.getName(), client.getSurname(), client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress());
     }
 
-    public ClientDTO(String username, String password, String name, String surname, String email, String profilePhoto, String phoneNumber, Address address) {
+    public ClientDTO(Long id, String username, String password, String name, String surname, String email, String profilePhoto, String phoneNumber, Address address) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;

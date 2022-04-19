@@ -1,18 +1,17 @@
-
 .textBox {
     margin-bottom: 15px;
     height: 35px;
-    width: 200px;
+    width: 190px;
     text-indent: 10px;
     border: 1px solid #444;
     border-radius: 5px;
-    display: block;
+    display: inline-block;
     margin: 10px;
 }
 
 .userProfileHeader {
     font-size: 40px;
-    color:crimson;
+    color:darksalmon;
     font-weight: 900;
     text-align: left;
 
@@ -20,10 +19,34 @@
 
 .userProfile {
     text-align: left;
-    padding: 130px;
-    background-color:darksalmon;
+    padding: 50px;
+    margin-top: 5px;
 }
 
 .userProfileForm {
     display: inline-block;
+    background-color:aliceblue;
+    padding: 20px;
+}
+
+.userLabel {
+    display: inline-block;
+    width: 200px;
+    height: 20px;
+    padding: 10px;
+}
+
+.textAreaReason {
+    height: auto;
+    width: auto;
+    text-indent: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.saveReasonButton {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
 }

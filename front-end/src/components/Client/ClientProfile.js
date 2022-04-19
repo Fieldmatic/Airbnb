@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import "./ClientProfile.css"
 import ClientService from '../../services/ClientService'
+import Popup from './Popup'
 
 export default function ClientProfile() {
+    const [reasonForDeletion, setReasonForDeletion] = useState("")
+    const [deletePopup, setDeletePopup] = useState(false)
     const [editClicked, setEditClicked] = useState(
         {
             usernameButton: false,
@@ -76,6 +79,15 @@ export default function ClientProfile() {
             setClient(response.data) 
         })
     }, [])
+
+    function handlePopupChange(event) {
+        setReasonForDeletion(event.target.value)
+    }
+
+    function saveDeletionReason(event) {
+        event.preventDefault()
+        ClientService.saveReason(reasonForDeletion)
+    }
 
 
     return (
@@ -201,6 +213,17 @@ export default function ClientProfile() {
             }
             <button id="stateButton" onClick={toggleShown}> {editClicked.stateButton? "Save" : "Edit"}</button>
             </form>
+            <button onClick={() => setDeletePopup(true)}> Delete</button>
+            <Popup trigger={deletePopup} setTrigger={setDeletePopup}> 
+                <p> Razlog za brisanje naloga: </p>
+                <textarea className='textAreaReason' rows="10" cols="33"
+                    value={reasonForDeletion}
+                    placeholder="Comments"
+                    onChange={handlePopupChange}
+                    name="comments"
+                />   
+                <button className='saveReasonButton' onClick={saveDeletionReason}> Save</button>
+            </Popup>
         </div>
     )
 }

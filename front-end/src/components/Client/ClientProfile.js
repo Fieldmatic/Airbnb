@@ -105,7 +105,7 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.username}</label>
             }
-            <button id="usernameButton" onClick={toggleShown}> {editClicked.usernameButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="usernameButton" onClick={toggleShown}> {editClicked.usernameButton? "Save" : "Edit"}</button>
             <br></br>
             <br></br>
 
@@ -120,7 +120,7 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.name}</label>
             }
-            <button id="nameButton" onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="nameButton" onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
             <br></br>
             <br></br>
 
@@ -135,7 +135,7 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.surname}</label>
             }
-            <button id="surnameButton" onClick={toggleShown}> {editClicked.surnameButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="surnameButton" onClick={toggleShown}> {editClicked.surnameButton? "Save" : "Edit"}</button>
             <br></br>
             <br></br>
 
@@ -150,7 +150,7 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.email}</label>
             }
-            <button id="emailButton" onClick={toggleShown}> {editClicked.emailButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="emailButton" onClick={toggleShown}> {editClicked.emailButton? "Save" : "Edit"}</button>
             <br></br>
             <br></br>
 
@@ -166,7 +166,7 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.phoneNumber}</label>
             }
-            <button id="phoneNumberButton" onClick={toggleShown}> {editClicked.phoneNumberButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="phoneNumberButton" onClick={toggleShown}> {editClicked.phoneNumberButton? "Save" : "Edit"}</button>
             <br></br>
             <br></br>
 
@@ -181,7 +181,7 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.address.street}</label>
             }
-            <button id="streetButton" onClick={toggleShown}> {editClicked.streetButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="streetButton" onClick={toggleShown}> {editClicked.streetButton? "Save" : "Edit"}</button>
             <br></br>
             <br></br>
 
@@ -196,7 +196,7 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.address.city}</label>
             }
-            <button id="cityButton" onClick={toggleShown}> {editClicked.cityButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="cityButton" onClick={toggleShown}> {editClicked.cityButton? "Save" : "Edit"}</button>
             <br></br>
             <br></br>
             
@@ -211,12 +211,13 @@ export default function ClientProfile() {
             : 
                 <label className='userLabel'> {client.address.state}</label>
             }
-            <button id="stateButton" onClick={toggleShown}> {editClicked.stateButton? "Save" : "Edit"}</button>
+            <button className="updateBtn" id="stateButton" onClick={toggleShown}> {editClicked.stateButton? "Save" : "Edit"}</button>
             </form>
-            <button onClick={() => setDeletePopup(true)}> Delete</button>
+            <br></br><br></br>
+            <button onClick={() => setDeletePopup(true)} className='deleteButton'> Delete your profile</button>
             <Popup trigger={deletePopup} setTrigger={setDeletePopup}> 
-                <p> Razlog za brisanje naloga: </p>
-                <textarea className='textAreaReason' rows="10" cols="33"
+                <h3> Razlog za brisanje naloga: </h3>
+                <textarea className='textAreaReason' rows="10" cols="40"
                     value={reasonForDeletion}
                     placeholder="Comments"
                     onChange={handlePopupChange}

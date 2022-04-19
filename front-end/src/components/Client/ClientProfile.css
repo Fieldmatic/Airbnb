@@ -11,21 +11,23 @@
 
 .userProfileHeader {
     font-size: 40px;
-    color:darksalmon;
-    font-weight: 900;
-    text-align: left;
+    font-weight: 800;
+    text-align: center;
+    color: #FF5A5F;
 
 }
 
 .userProfile {
-    text-align: left;
+    text-align: center;
+    color: black;
+    font-weight: lighter;
     padding: 50px;
     margin-top: 5px;
 }
 
 .userProfileForm {
     display: inline-block;
-    background-color:aliceblue;
+    background-color:lavenderblush;
     padding: 20px;
 }
 
@@ -34,6 +36,14 @@
     width: 200px;
     height: 20px;
     padding: 10px;
+}
+
+.updateBtn {
+    border-color:black;
+    background-color: #FF5A5F;
+    font-weight: bolder;
+    bottom: 0;
+    right: 0;
 }
 
 .textAreaReason {
@@ -49,4 +59,17 @@
     position: absolute;
     right: 20px;
     bottom: 20px;
+    background-color:lavenderblush;
+    color: black;
+    font-weight: bolder;
+    height: 30px;
+    width: 77px;
+}
+
+.deleteButton {
+    border-color:black;
+    background-color: #FF5A5F;
+    font-weight: bold;
+    align-items: left;
+    margin-left: 10px;
 }

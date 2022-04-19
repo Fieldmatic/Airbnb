@@ -66,7 +66,7 @@ public class ClientController {
     @PostMapping(value = "/saveDeletionReason", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<String> saveReason(@RequestBody String reason) {
         Client client = clientService.findAll().get(0);
-        ProfileDeletionReason deletionReason = new ProfileDeletionReason(reason.substring(0, reason.length() - 1), false, client);
+        ProfileDeletionReason deletionReason = new ProfileDeletionReason(reason.substring(0, reason.length() - 1).replace('+', ' '), false, client);
         deletionReasonService.save(deletionReason);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }

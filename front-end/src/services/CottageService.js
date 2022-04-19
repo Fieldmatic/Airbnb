@@ -10,7 +10,12 @@ class CottageService {
               },
         });
     }
-    
+    getCottage(id) {
+        return axios.get(COTTAGE_BASED_REST_API_URL + "/edit/" + id, id)
+    }
+    updateCottage(cottage, id){
+        return axios.put(COTTAGE_BASED_REST_API_URL + "/edit/" + id, cottage)
+    }
 }
 
 export default new CottageService()

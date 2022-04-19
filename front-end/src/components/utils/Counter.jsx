@@ -5,20 +5,28 @@ import {IconButton}  from "@mui/material";
 
 export default function App(props) {
   let [value, setValue] = React.useState(props.value);
+
   React.useEffect(() => {
     {props.handleChange(props.name, value)};
   }, [value])
+
+  React.useEffect(() => {
+    {setValue(props.value)}
+  },[props.value])
+
   function incrementCount() {
     setValue(function(oldValue) {
       return oldValue + 1 
     });
   }
+
   function decrementCount() {
     setValue(function(oldValue) {
       if (oldValue > 0) return oldValue-1
       else return oldValue
     })
   }
+
   return (
     <div className="counter">
       <IconButton onClick = {incrementCount} >

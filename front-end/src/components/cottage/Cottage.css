@@ -1,7 +1,7 @@
 
 .form-container {
     background-color: #FF5A5F;
-    height: 150vh;
+    height: 200vh;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
 .form {
     background-color: white;
     padding: 50px;
-    height: 120vh;
+    height: 180vh;
     width: 50vh;
     border-radius: 10px;
     display: flex;

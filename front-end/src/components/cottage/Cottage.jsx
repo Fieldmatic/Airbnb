@@ -2,6 +2,7 @@ import React from 'react'
 import './Cottage.css'
 import CottageService from '../../services/CottageService'
 import Counter from "../utils/Counter"
+import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 
 export default function Cottage() {
   const [formData, setFormData] = React.useState (
@@ -21,9 +22,24 @@ export default function Cottage() {
 
   )
 
+  const [files, setFiles] = React.useState([]);
+  const [imageSrc, setImageSrc] = React.useState(undefined);
+  const updateFiles = (incommingFiles) => {
+    console.log("incomming files", incommingFiles);
+    setFiles(incommingFiles);
+  };
+  const onDelete = (id) => {
+    setFiles(files.filter((x) => x.id !== id));
+  };
+  const handleSee = (imageSource) => {
+    setImageSrc(imageSource);
+  };
+  const handleClean = (files) => {
+    console.log("list cleaned", files);
+  };
+
   function handleChange(event) {
-    console.log(event)
-    console.log("gggg")
+    console.log(files)
     const {name, value} = event.target
     setFormData(prevFormData => {
       return {
@@ -44,8 +60,15 @@ export default function Cottage() {
 
   function handleSubmit(event){
     event.preventDefault()
+    //const data = new FormData()
+    //data.append("cottage", JSON.stringify(formData))
+    // for (let file in files) {
+    //   data.append("files", files[file])
+    // }
+    // for (let [key, value] of data.entries()) {
+    //   console.log(`${key}: ${value}`);
+    // }
     CottageService.addCottage(formData)
-    console.log(formData)
   }
 
   return (
@@ -121,7 +144,34 @@ export default function Cottage() {
           <label className='bedRoom--label'>Quad rooms: </label>  
           <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
         </div>
-
+        <Dropzone
+      style={{ minWidth: "100%", margin:"20px", fontSize:"20px" }}
+      onChange={updateFiles}
+      minHeight="10%"
+      onClean={handleClean}
+      value={files}
+      maxFiles={10}
+      header={true}
+      maxFileSize={5000000}
+    >
+      {files.map((file) => (
+        <FileItem
+          {...file}
+          key={file.id}
+          onDelete={onDelete}
+          onSee={handleSee}
+          resultOnTooltip
+          preview
+          info
+          hd
+        />
+      ))}
+      <FullScreenPreview
+        imgSource={imageSrc}
+        openImage={imageSrc}
+        onClose={(e) => handleSee(undefined)}
+      />
+    </Dropzone>
         <button className="form--submit">Submit</button>
       </form>
     </div>

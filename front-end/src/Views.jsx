@@ -1,7 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import NotFound from "./NotFound";
 import Home from "./Home";
-import AddAdventureForm from "./Components/Adventure/AddAdventureForm";
+import AddAdventureForm from "./components/Adventure/AddAdventureForm";
+import ClientProfile from "./components/Client/ClientProfile";
 
 const Views = () => {
   return (
@@ -10,6 +11,8 @@ const Views = () => {
       <Route path = "/addCottage" element = {<div>Kucica</div>}/>
       <Route path = "/addAdventure" element = {<AddAdventureForm />}/>
       <Route path = "/editProfile" element = {<div>Profil</div>}/>
+      <Route path = "/addExperience" element = {<div>Pecanje</div>}/>
+      <Route path = "/editProfile" element = {< ClientProfile />}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

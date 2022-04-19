@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Bookable {
+public abstract class Bookable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

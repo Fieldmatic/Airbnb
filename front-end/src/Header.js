@@ -20,7 +20,7 @@ export default function Header(){
             </div>
             <div className='header__links'>
              <Link to={'/addCottage'} style={{textDecoration: 'none', color:'black'}}>Add Cottage</Link>
-             <Link to={'/addExperience'} style={{textDecoration: 'none', color:'black'}}>Add Experience</Link>
+             <Link to={'/addAdventure'} style={{textDecoration: 'none', color:'black'}}>Add Adventure</Link>
              <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
             </div>
              

@@ -10,6 +10,6 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class Cottage extends Bookable {
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Map<Integer, Integer> rooms;
 }

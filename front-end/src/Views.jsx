@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "./NotFound";
 import Home from "./Home";
 import ClientProfile from "./components/Client/ClientProfile";
-import AddAdventureForm from "./Components/Adventure/AddAdventureForm";
+import AddAdventureForm from "./components/Adventure/AddAdventureForm";
 
 const Views = () => {
   return (

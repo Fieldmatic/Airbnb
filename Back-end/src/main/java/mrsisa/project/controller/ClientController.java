@@ -1,14 +1,11 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.ClientDTO;
-import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Client;
 import mrsisa.project.model.Person;
-import mrsisa.project.model.ProfileDeletionReason;
 import mrsisa.project.service.AddressService;
 import mrsisa.project.service.ClientService;
-import mrsisa.project.service.ProfileDeletionReasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,9 +23,6 @@ public class ClientController {
 
     @Autowired
     private AddressService addressService;
-
-    @Autowired
-    private ProfileDeletionReasonService deletionReasonService;
 
     @GetMapping
     public ClientDTO getClient() {

@@ -22,4 +22,17 @@ public class AdventureController {
         adventureService.add(adventureDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
+
+    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editAdventure(@RequestBody AdventureDTO dto, @PathVariable("id") Long id) {
+        adventureService.edit(dto, id);
+        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+    }
+
+    @GetMapping(value = "/edit/{id}")
+    public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id){
+        Adventure adventure = adventureService.findOne(id);
+        if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new AdventureDTO(adventure), HttpStatus.OK);
+    }
 }

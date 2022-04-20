@@ -28,6 +28,20 @@ public class AdventureService {
         adventureRepository.save(adventure);
     }
 
+    public void edit(AdventureDTO dto, Long id) {
+        Adventure adventure = adventureRepository.findById(id).orElse(null);
+        if (adventure != null) {
+            adventure.setName(dto.getName());
+            adventure.setAddress(dto.getAddress());
+            adventure.setPromotionalDescription(dto.getPromoDescription());
+            adventure.setRules(dto.getRules());
+            adventure.getPriceList().setHourlyRate(dto.getHourlyRate());
+            adventure.getPriceList().setCancellationConditions(dto.getCancellationConditions());
+            adventure.setCapacity(dto.getCapacity());
+            adventureRepository.save(adventure);
+        }
+    }
+
     public Adventure findOne(Long id) {
         return adventureRepository.findById(id).orElseGet(null);
     }
@@ -40,16 +54,15 @@ public class AdventureService {
         adventureRepository.deleteById(id);
     }
 
-    private Adventure dtoToAdventure(AdventureDTO dto){
+    private Adventure dtoToAdventure(AdventureDTO dto) {
         Adventure adventure = new Adventure();
-        adventure.setName(dto.getAdventureName());
+        adventure.setName(dto.getName());
         adventure.setAddress(dto.getAddress());
         adventure.setPromotionalDescription(dto.getPromoDescription());
         adventure.setRules(dto.getRules());
         PriceList priceList = new PriceList();
-        priceList.setHourlyRate(dto.getHourlyRate().doubleValue());
-        priceList.setCancellationConditions(dto.getCancelationConditions());
-        priceListRepository.save(priceList);
+        priceList.setHourlyRate(dto.getHourlyRate());
+        priceList.setCancellationConditions(dto.getCancellationConditions());
         priceListRepository.save(priceList);
         adventure.setPriceList(priceList);
         adventure.setRating(0.0);

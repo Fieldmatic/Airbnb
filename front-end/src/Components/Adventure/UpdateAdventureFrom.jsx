@@ -1,8 +1,9 @@
 import React from 'react'
 import './AddAdventureForm.css'
 import AdventureService from '../../services/AdventureService'
+import { useParams } from 'react-router-dom'
 
-export default function AddAdventureForm() {
+export default function UpdateAdventureForm(props) {
     const [formData, setFormData] = React.useState({
         name: "",
         address: "",
@@ -14,6 +15,26 @@ export default function AddAdventureForm() {
         hourlyRate: "",
         inputPictures: ""
     });
+
+    let {id} = useParams();
+
+    React.useEffect(() => {
+        AdventureService.getAdventure(id).then((result) => {
+            let adventure = result.data;
+            console.log(adventure)
+            setFormData({
+                name: adventure.name, 
+                address: adventure.address,
+                promoDescription: adventure.promoDescription,
+                rules: adventure.rules,
+                hourlyRate: adventure.hourlyRate,
+                dailyRate: adventure.dailyRate,
+                cancellationConditions: adventure.cancellationConditions,
+                capacity: adventure.capacity,
+                equipment: adventure.equipment
+            })
+        })
+      },[])
 
     var errorMessages = {
         nameError: "",
@@ -37,15 +58,15 @@ export default function AddAdventureForm() {
             [name]: value
         }));
     }
-    
-    function handleSubmit(event) {
+
+    function handleSubmit(event){
         event.preventDefault();
         // validateForm();
         setValidFrom(true);
         if (validForm) {
-            AdventureService.addAdventure(formData);
-            console.log("Success");
+            AdventureService.updateAdventure(formData, id)
         }
+        
     }
 
     function validateForm() {
@@ -103,7 +124,7 @@ export default function AddAdventureForm() {
     return (
         <div className="form-container">
             <form className="form" onSubmit={handleSubmit}>
-                <h2 className="form--title">Create adventure</h2>
+                <h2 className="form--title">Update adventure</h2>
                 <input 
                     type="text"
                     placeholder="Name"
@@ -112,7 +133,7 @@ export default function AddAdventureForm() {
                     onChange={handleChange}
                     value={formData.name}
                 />
-                {/* {renderErrorMessage(errorMessages.nameError)} */}
+                {renderErrorMessage(errorMessages.nameError)}
                 <input 
                     type="text" 
                     placeholder="Address"
@@ -121,7 +142,7 @@ export default function AddAdventureForm() {
                     onChange={handleChange}
                     value={formData.address}
                 />
-                {/* {renderErrorMessage(errorMessages.addressError)} */}
+                {renderErrorMessage(errorMessages.addressError)}
                 <input 
                     type="text" 
                     placeholder="Capacity"
@@ -130,7 +151,7 @@ export default function AddAdventureForm() {
                     onChange={handleChange}
                     value={formData.capacity}
                 />
-                {/* {renderErrorMessage(errorMessages.capacityError)} */}
+                {renderErrorMessage(errorMessages.capacityError)}
                 <input 
                     type="text" 
                     placeholder="Hourly rate"
@@ -139,7 +160,7 @@ export default function AddAdventureForm() {
                     onChange={handleChange}
                     value={formData.hourlyRate}
                 />
-                {/* {renderErrorMessage(errorMessages.hourlyRateError)} */}
+                {renderErrorMessage(errorMessages.hourlyRateError)}
                 <textarea 
                     placeholder="Promo description"
                     className="form--input-area"
@@ -162,7 +183,7 @@ export default function AddAdventureForm() {
                     value={formData.equipment}
                 />
                 <textarea 
-                    placeholder="Cancellation conditions"
+                    placeholder="Cancelation conditions"
                     className="form--input-area"
                     name="cancellationConditions"
                     onChange={handleChange}
@@ -180,7 +201,7 @@ export default function AddAdventureForm() {
                 <button
                     className="form--submit"
                 >
-                    Create adventure
+                    Update adventure
                 </button>
             </form>
         </div>

@@ -69,6 +69,27 @@ public class CottageService {
 
 
 
+    public void edit(CottageDTO dto, Long id) {
+        Cottage cottage = cottageRepository.findById(id).orElse(null);
+        cottage.setName(dto.getName());
+        cottage.setAddress(dto.getAddress());
+        cottage.setPromotionalDescription(dto.getPromotionalDescription());
+        cottage.setRules(dto.getRules());
+        cottage.getPriceList().setHourlyRate(dto.getHourlyRate());
+        cottage.getPriceList().setDailyRate(dto.getDailyRate());
+        cottage.getPriceList().setCancellationConditions(dto.getCancellationConditions());
+        if (dto.getSingleRooms() != 0) cottage.getRooms().put(1,dto.getSingleRooms());
+        if (dto.getDoubleRooms() != 0) cottage.getRooms().put(2,dto.getDoubleRooms());
+        if (dto.getTripleRooms() != 0) cottage.getRooms().put(3,dto.getTripleRooms());
+        if (dto.getQuadRooms() != 0) cottage.getRooms().put(4,dto.getQuadRooms());
+        cottageRepository.save(cottage);
+    }
+
+    public Cottage findOne(Long id) {
+        return cottageRepository.findById(id).orElse(null);
+    }
+
+
     private Cottage dtoToCottage(CottageDTO dto) {
         Cottage cottage = new Cottage();
         cottage.setName(dto.getName());

@@ -24,4 +24,18 @@ public class CottageController {
         cottageService.add(dto, new MultipartFile[10]);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
+
+    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
+        cottageService.edit(dto, id);
+        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+    }
+
+    @GetMapping(value = "/edit/{id}")
+    public ResponseEntity<CottageDTO> getCottage(@PathVariable("id") Long id){
+        System.out.println(id);
+        Cottage cottage = cottageService.findOne(id);
+        if (cottage == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new CottageDTO(cottage), HttpStatus.OK);
+    }
 }

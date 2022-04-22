@@ -23,17 +23,22 @@ export default function Cottage() {
   )
 
   const [files, setFiles] = React.useState([]);
+
   const [imageSrc, setImageSrc] = React.useState(undefined);
+
   const updateFiles = (incommingFiles) => {
     console.log("incomming files", incommingFiles);
     setFiles(incommingFiles);
   };
+
   const onDelete = (id) => {
     setFiles(files.filter((x) => x.id !== id));
   };
+
   const handleSee = (imageSource) => {
     setImageSrc(imageSource);
   };
+
   const handleClean = (files) => {
     console.log("list cleaned", files);
   };
@@ -60,15 +65,16 @@ export default function Cottage() {
 
   function handleSubmit(event){
     event.preventDefault()
-    //const data = new FormData()
-    //data.append("cottage", JSON.stringify(formData))
-    // for (let file in files) {
-    //   data.append("files", files[file])
-    // }
-    // for (let [key, value] of data.entries()) {
-    //   console.log(`${key}: ${value}`);
-    // }
-    CottageService.addCottage(formData)
+    let data = new FormData()
+    const json = JSON.stringify(formData)
+    const cottageJson = new Blob([json], {
+      type: 'application/json'
+    });
+    data.append("cottage", cottageJson)
+    files.map((file) => {
+      data.append("files", file.file)
+    })
+    CottageService.addCottage(data)
   }
 
   return (

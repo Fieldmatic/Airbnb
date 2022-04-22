@@ -20,8 +20,8 @@ public class CottageController {
     private CottageService cottageService;
 
     @PostMapping(value = "/add")
-    public ResponseEntity<String> addCottage(@RequestBody CottageDTO dto) throws IOException {
-        cottageService.add(dto, new MultipartFile[10]);
+    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+        cottageService.add(dto, multiPartFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 }

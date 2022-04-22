@@ -33,10 +33,10 @@ public class CottageService {
     public void add(CottageDTO dto, MultipartFile[] multipartFiles) throws IOException {
         Cottage cottage = dtoToCottage(dto);
         cottageRepository.save(cottage);
-      /*  List<String> paths = addPictures(cottage, multipartFiles);
+        List<String> paths = addPictures(cottage, multipartFiles);
         cottage.setPictures(paths);
         cottage.setProfilePicture(paths.get(0));
-        cottageRepository.save(cottage);*/
+        cottageRepository.save(cottage);
     }
 
     public List<String> addPictures(Cottage cottage, MultipartFile[] multipartFiles) throws IOException {

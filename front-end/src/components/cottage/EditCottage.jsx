@@ -9,7 +9,12 @@ export default function EditCottage(props) {
   const [formData, setFormData] = React.useState (
       {
         name : "",
-        address: "",
+        address: {
+          street: "",
+          city: "",
+          state: "",
+          zipCode: ""
+        },
         promotionalDescription : "",
         rules : "",
         hourlyRate : "",
@@ -55,6 +60,20 @@ export default function EditCottage(props) {
     })
   }
 
+  function handleAddressChange(event) {
+    const {name, value} = event.target
+    const address = formData.address
+    setFormData(prevFormData => {
+        return {
+            ...prevFormData,
+            address: {
+                       ...address,
+                       [name]:value
+                     }
+        }
+    })
+  }
+
   function handleRoomChange(name, value) {
     setFormData(prevFormData => {
       return {
@@ -82,12 +101,36 @@ export default function EditCottage(props) {
           value = {formData.name}   
         />
         <input 
-          className="form--input"
-          type = "text"
-          placeholder = "Address"
-          onChange = {handleChange}
-          name = "address"
-          value = {formData.address}          
+            className="form--input"
+            type = "text"
+            placeholder = "State"
+            onChange = {handleAddressChange}
+            name = "state"
+            value = {formData.address.state}          
+        />
+        <input 
+            className="form--input"
+            type = "text"
+            placeholder = "City"
+            onChange = {handleAddressChange}
+            name = "city"
+            value = {formData.address.city}          
+        />
+        <input 
+            className="form--input"
+            type = "text"
+            placeholder = "Zip"
+            onChange = {handleAddressChange}
+            name = "zipCode"
+            value = {formData.address.zipCode}          
+        />
+        <input 
+            className="form--input"
+            type = "text"
+            placeholder = "Street"
+            onChange = {handleAddressChange}
+            name = "street"
+            value = {formData.address.street}          
         />
         <input 
           className="form--input"

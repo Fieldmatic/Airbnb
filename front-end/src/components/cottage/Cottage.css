@@ -79,7 +79,8 @@
     flex-direction: row;
     font-size: medium;
     width: 100%;
-    margin: 5px;
+    margin: 2px;
+    margin-left: 12px;
     align-items: left;
 }
 

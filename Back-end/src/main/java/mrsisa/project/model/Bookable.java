@@ -15,7 +15,8 @@ public abstract class Bookable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String address;
+    @OneToOne
+    private Address address;
     private String promotionalDescription;
     @ElementCollection
     private List<String> pictures;

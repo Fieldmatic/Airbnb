@@ -5,6 +5,7 @@ import AddAdventureForm from "./components/Adventure/AddAdventureForm";
 import ClientProfile from "./components/Client/ClientProfile";
 import Cottage from "./components/cottage/Cottage";
 import EditCottage from "./components/cottage/EditCottage";
+import Boat from "./components/Boat/Boat";
 
 const Views = () => {
   return (
@@ -16,6 +17,7 @@ const Views = () => {
       <Route path = "/addExperience" element = {<div>Pecanje</div>}/>
       <Route path = "/addExperience" element = {<div>Pecanje</div>}/>
       <Route path = "/editProfile" element = {< ClientProfile />}/>
+      <Route path = "/addBoat" element = {<Boat/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

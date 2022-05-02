@@ -1,9 +1,9 @@
 import React from 'react'
 import './AddAdventureForm.css'
 import AdventureService from '../../services/AdventureService'
-import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
+import { useParams } from 'react-router-dom'
 
-export default function AddAdventureForm() {
+export default function UpdateAdventureForm(props) {
     const [formData, setFormData] = React.useState({
         name: "",
         address: {
@@ -20,6 +20,26 @@ export default function AddAdventureForm() {
         hourlyRate: "",
         inputPictures: ""
     });
+
+    let {id} = useParams();
+
+    React.useEffect(() => {
+        AdventureService.getAdventure(id).then((result) => {
+            let adventure = result.data;
+            console.log(adventure)
+            setFormData({
+                name: adventure.name, 
+                address: adventure.address,
+                promoDescription: adventure.promoDescription,
+                rules: adventure.rules,
+                hourlyRate: adventure.hourlyRate,
+                dailyRate: adventure.dailyRate,
+                cancellationConditions: adventure.cancellationConditions,
+                capacity: adventure.capacity,
+                equipment: adventure.equipment
+            })
+        })
+      },[])
 
     var errorMessages = {
         nameError: "",
@@ -44,6 +64,19 @@ export default function AddAdventureForm() {
         }));
     }
 
+    function handleSubmit(event){
+        event.preventDefault();
+        // validateForm();
+        setValidFrom(true);
+        if (validForm) {
+            let data = new FormData()
+            const adventureJson = adventureToJson();
+            data.append("adventure", adventureJson)
+            AdventureService.updateAdventure(data, id)
+        }
+        
+    }
+
     function handleAddressChange(event) {
         const {name, value} = event.target
         const address = formData.address
@@ -56,44 +89,17 @@ export default function AddAdventureForm() {
                 }
             }
         })
-      }
-    
-    function handleSubmit(event) {
-        event.preventDefault();
-        // validateForm();
-        setValidFrom(true);
-        if (validForm) {
-            let data = new FormData()
-            const adventureJson = adventureToJson();
-            data.append("adventure", adventureJson)
-            files.map((file) => {
-                data.append("files", file.file)
-            })
-            AdventureService.addAdventure(data);
-        }
-        
     }
 
-    const [files, setFiles] = React.useState([]);
-
-    const [imageSrc, setImageSrc] = React.useState(undefined);
-
-    const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
-        setFiles(incommingFiles);
-    };
-
-    const onDelete = (id) => {
-        setFiles(files.filter((x) => x.id !== id));
-    };
-
-    const handleSee = (imageSource) => {
-        setImageSrc(imageSource);
-    };
-
-    const handleClean = (files) => {
-        console.log("list cleaned", files);
-    };
+    function adventureToJson() {
+        let formDataCopy = { ...formData };
+        formDataCopy.equipment = formDataCopy.equipment.trim().split(",");
+        const json = JSON.stringify(formDataCopy);
+        const adventureJson = new Blob([json], {
+            type: 'application/json'
+        });
+        return adventureJson;
+    }
 
     function validateForm() {
         setValidFrom(true);
@@ -146,21 +152,11 @@ export default function AddAdventureForm() {
     const renderErrorMessage = (name) => (
         <div className="form--error">{name}</div>
     );
-
-    function adventureToJson() {
-        let formDataCopy = { ...formData };
-        formDataCopy.equipment = formDataCopy.equipment.trim().split(",");
-        const json = JSON.stringify(formDataCopy);
-        const adventureJson = new Blob([json], {
-            type: 'application/json'
-        });
-        return adventureJson;
-    }
     
     return (
         <div className="form-container">
             <form className="form" onSubmit={handleSubmit}>
-                <h2 className="form--title">Create adventure</h2>
+                <h2 className="form--title">Update adventure</h2>
                 <input 
                     type="text"
                     placeholder="Name"
@@ -243,44 +239,16 @@ export default function AddAdventureForm() {
                     value={formData.equipment}
                 />
                 <textarea 
-                    placeholder="Cancellation conditions"
+                    placeholder="Cancelation conditions"
                     className="form--input-area"
                     name="cancellationConditions"
                     onChange={handleChange}
                     value={formData.cancellationConditions}
-                />
-                <Dropzone
-                    style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
-                    onChange={updateFiles}
-                    minHeight="10%"
-                    onClean={handleClean}
-                    value={files}
-                    maxFiles={10}
-                    header={true}
-                    maxFileSize={5000000}
-                    >
-                    {files.map((file) => (
-                        <FileItem
-                        {...file}
-                        key={file.id}
-                        onDelete={onDelete}
-                        onSee={handleSee}
-                        resultOnTooltip
-                        preview
-                        info
-                        hd
-                        />
-                    ))}
-                    <FullScreenPreview
-                        imgSource={imageSrc}
-                        openImage={imageSrc}
-                        onClose={(e) => handleSee(undefined)}
-                    />
-                </Dropzone>
+                />               
                 <button
                     className="form--submit"
                 >
-                    Create adventure
+                    Update adventure
                 </button>
             </form>
         </div>

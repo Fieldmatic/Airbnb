@@ -44,6 +44,8 @@ public class CottageController {
         Cottage cottage = cottageService.findOne(id);
         Integer reviews = cottage.getReviews().size();
         return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
+
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
         cottageService.edit(dto, id);

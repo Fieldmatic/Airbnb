@@ -72,10 +72,6 @@ public class CottageService {
         return cottageRepository.findAll();
     }
 
-    public Cottage findOne(Long id) {
-        return cottageRepository.findById(id).orElseGet(null);
-    }
-
     public void edit(CottageDTO dto, Long id) {
         Cottage cottage = cottageRepository.findById(id).orElse(null);
         cottage.setName(dto.getName());

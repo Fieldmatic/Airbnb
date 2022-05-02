@@ -25,17 +25,6 @@ public class AdventureDTO {
     private Double rating;
 
     public AdventureDTO(Adventure adventure){
-        this.adventureName = adventure.getName();
-        this.address = adventure.getAddress();
-        this.promoDescription = adventure.getPromotionalDescription();
-        this.cancelationConditions = adventure.getPriceList().getCancellationConditions();
-        this.rules = adventure.getRules();
-        this.rating = adventure.getRating();
-        this.dailyRate = adventure.getPriceList().getDailyRate();
-        this.hourlyRate = adventure.getPriceList().getHourlyRate();
-    }
-
-    public AdventureDTO(Adventure adventure){
         this.name = adventure.getName();
         this.address = adventure.getAddress();
         this.promoDescription = adventure.getPromotionalDescription();
@@ -44,6 +33,8 @@ public class AdventureDTO {
         this.hourlyRate = adventure.getPriceList().getHourlyRate();
         this.capacity = adventure.getCapacity();
         this.equipment = adventure.getFishingEquipment();
+        this.rating = adventure.getRating();
+        this.dailyRate = adventure.getPriceList().getDailyRate();
     }
 
 }

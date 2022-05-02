@@ -6,7 +6,12 @@ import { useParams } from 'react-router-dom'
 export default function UpdateAdventureForm(props) {
     const [formData, setFormData] = React.useState({
         name: "",
-        address: "",
+        address: {
+            street: "",
+            city: "",
+            state: "",
+            zipCode: ""
+        },
         promoDescription: "",
         capacity: "",
         rules: "",
@@ -64,9 +69,36 @@ export default function UpdateAdventureForm(props) {
         // validateForm();
         setValidFrom(true);
         if (validForm) {
-            AdventureService.updateAdventure(formData, id)
+            let data = new FormData()
+            const adventureJson = adventureToJson();
+            data.append("adventure", adventureJson)
+            AdventureService.updateAdventure(data, id)
         }
         
+    }
+
+    function handleAddressChange(event) {
+        const {name, value} = event.target
+        const address = formData.address
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                address: {
+                    ...address,
+                    [name]:value
+                }
+            }
+        })
+    }
+
+    function adventureToJson() {
+        let formDataCopy = { ...formData };
+        formDataCopy.equipment = formDataCopy.equipment.trim().split(",");
+        const json = JSON.stringify(formDataCopy);
+        const adventureJson = new Blob([json], {
+            type: 'application/json'
+        });
+        return adventureJson;
     }
 
     function validateForm() {
@@ -133,16 +165,40 @@ export default function UpdateAdventureForm(props) {
                     onChange={handleChange}
                     value={formData.name}
                 />
-                {renderErrorMessage(errorMessages.nameError)}
+                {/* {renderErrorMessage(errorMessages.nameError)} */}
                 <input 
-                    type="text" 
-                    placeholder="Address"
                     className="form--input"
-                    name="address"
-                    onChange={handleChange}
-                    value={formData.address}
+                    type = "text"
+                    placeholder = "State"
+                    onChange = {handleAddressChange}
+                    name = "state"
+                    value = {formData.address.state}          
                 />
-                {renderErrorMessage(errorMessages.addressError)}
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "City"
+                    onChange = {handleAddressChange}
+                    name = "city"
+                    value = {formData.address.city}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Zip"
+                    onChange = {handleAddressChange}
+                    name = "zipCode"
+                    value = {formData.address.zipCode}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Street"
+                    onChange = {handleAddressChange}
+                    name = "street"
+                    value = {formData.address.street}          
+                />
+                {/* {renderErrorMessage(errorMessages.addressError)} */}
                 <input 
                     type="text" 
                     placeholder="Capacity"
@@ -151,7 +207,7 @@ export default function UpdateAdventureForm(props) {
                     onChange={handleChange}
                     value={formData.capacity}
                 />
-                {renderErrorMessage(errorMessages.capacityError)}
+                {/* {renderErrorMessage(errorMessages.capacityError)} */}
                 <input 
                     type="text" 
                     placeholder="Hourly rate"
@@ -160,7 +216,7 @@ export default function UpdateAdventureForm(props) {
                     onChange={handleChange}
                     value={formData.hourlyRate}
                 />
-                {renderErrorMessage(errorMessages.hourlyRateError)}
+                {/* {renderErrorMessage(errorMessages.hourlyRateError)} */}
                 <textarea 
                     placeholder="Promo description"
                     className="form--input-area"
@@ -188,16 +244,7 @@ export default function UpdateAdventureForm(props) {
                     name="cancellationConditions"
                     onChange={handleChange}
                     value={formData.cancellationConditions}
-                />
-                <input 
-                    type="file" 
-                    placeholder="Choose pictures"
-                    className="form--input-picture"
-                    name="inputPictures"
-                    onChange={handleChange}
-                    value={formData.inputPictures}
-                />
-                
+                />               
                 <button
                     className="form--submit"
                 >

@@ -1,11 +1,17 @@
 import React from 'react'
 import './AddAdventureForm.css'
 import AdventureService from '../../services/AdventureService'
+import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 
 export default function AddAdventureForm() {
     const [formData, setFormData] = React.useState({
         name: "",
-        address: "",
+        address: {
+            street: "",
+            city: "",
+            state: "",
+            zipCode: ""
+        },
         promoDescription: "",
         capacity: "",
         rules: "",
@@ -37,16 +43,57 @@ export default function AddAdventureForm() {
             [name]: value
         }));
     }
+
+    function handleAddressChange(event) {
+        const {name, value} = event.target
+        const address = formData.address
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                address: {
+                    ...address,
+                    [name]:value
+                }
+            }
+        })
+      }
     
     function handleSubmit(event) {
         event.preventDefault();
         // validateForm();
         setValidFrom(true);
         if (validForm) {
-            AdventureService.addAdventure(formData);
-            console.log("Success");
+            let data = new FormData()
+            const adventureJson = adventureToJson();
+            data.append("adventure", adventureJson)
+            files.map((file) => {
+                data.append("files", file.file)
+            })
+            AdventureService.addAdventure(data);
         }
+        
     }
+
+    const [files, setFiles] = React.useState([]);
+
+    const [imageSrc, setImageSrc] = React.useState(undefined);
+
+    const updateFiles = (incommingFiles) => {
+        console.log("incomming files", incommingFiles);
+        setFiles(incommingFiles);
+    };
+
+    const onDelete = (id) => {
+        setFiles(files.filter((x) => x.id !== id));
+    };
+
+    const handleSee = (imageSource) => {
+        setImageSrc(imageSource);
+    };
+
+    const handleClean = (files) => {
+        console.log("list cleaned", files);
+    };
 
     function validateForm() {
         setValidFrom(true);
@@ -99,6 +146,16 @@ export default function AddAdventureForm() {
     const renderErrorMessage = (name) => (
         <div className="form--error">{name}</div>
     );
+
+    function adventureToJson() {
+        let formDataCopy = { ...formData };
+        formDataCopy.equipment = formDataCopy.equipment.trim().split(",");
+        const json = JSON.stringify(formDataCopy);
+        const adventureJson = new Blob([json], {
+            type: 'application/json'
+        });
+        return adventureJson;
+    }
     
     return (
         <div className="form-container">
@@ -114,12 +171,36 @@ export default function AddAdventureForm() {
                 />
                 {/* {renderErrorMessage(errorMessages.nameError)} */}
                 <input 
-                    type="text" 
-                    placeholder="Address"
                     className="form--input"
-                    name="address"
-                    onChange={handleChange}
-                    value={formData.address}
+                    type = "text"
+                    placeholder = "State"
+                    onChange = {handleAddressChange}
+                    name = "state"
+                    value = {formData.address.state}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "City"
+                    onChange = {handleAddressChange}
+                    name = "city"
+                    value = {formData.address.city}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Zip"
+                    onChange = {handleAddressChange}
+                    name = "zipCode"
+                    value = {formData.address.zipCode}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Street"
+                    onChange = {handleAddressChange}
+                    name = "street"
+                    value = {formData.address.street}          
                 />
                 {/* {renderErrorMessage(errorMessages.addressError)} */}
                 <input 
@@ -168,15 +249,34 @@ export default function AddAdventureForm() {
                     onChange={handleChange}
                     value={formData.cancellationConditions}
                 />
-                <input 
-                    type="file" 
-                    placeholder="Choose pictures"
-                    className="form--input-picture"
-                    name="inputPictures"
-                    onChange={handleChange}
-                    value={formData.inputPictures}
-                />
-                
+                <Dropzone
+                    style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
+                    onChange={updateFiles}
+                    minHeight="10%"
+                    onClean={handleClean}
+                    value={files}
+                    maxFiles={10}
+                    header={true}
+                    maxFileSize={5000000}
+                    >
+                    {files.map((file) => (
+                        <FileItem
+                        {...file}
+                        key={file.id}
+                        onDelete={onDelete}
+                        onSee={handleSee}
+                        resultOnTooltip
+                        preview
+                        info
+                        hd
+                        />
+                    ))}
+                    <FullScreenPreview
+                        imgSource={imageSrc}
+                        openImage={imageSrc}
+                        onClose={(e) => handleSee(undefined)}
+                    />
+                </Dropzone>
                 <button
                     className="form--submit"
                 >

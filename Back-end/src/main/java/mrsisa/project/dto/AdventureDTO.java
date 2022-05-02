@@ -15,7 +15,7 @@ public class AdventureDTO {
     private String promoDescription;
     private Integer capacity;
     private String rules;
-    private String equipment;
+    private List<String> equipment;
     private String cancellationConditions;
     private Double hourlyRate;
     private String inputPictures;
@@ -28,7 +28,7 @@ public class AdventureDTO {
         this.rules = adventure.getRules();
         this.hourlyRate = adventure.getPriceList().getHourlyRate();
         this.capacity = adventure.getCapacity();
-//        this.equipment = adventure.getFishingEquipment();
+        this.equipment = adventure.getFishingEquipment();
     }
 
 }

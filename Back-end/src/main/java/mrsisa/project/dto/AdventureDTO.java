@@ -12,13 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 public class AdventureDTO {
 
-    private String adventureName;
+    private String name;
     private Address address;
     private String promoDescription;
     private Integer capacity;
     private String rules;
-    private String equipment;
-    private String cancelationConditions;
+    private List<String> equipment;
+    private String cancellationConditions;
     private Double hourlyRate;
     private Double dailyRate;
     private String inputPictures;
@@ -33,6 +33,17 @@ public class AdventureDTO {
         this.rating = adventure.getRating();
         this.dailyRate = adventure.getPriceList().getDailyRate();
         this.hourlyRate = adventure.getPriceList().getHourlyRate();
+    }
+
+    public AdventureDTO(Adventure adventure){
+        this.name = adventure.getName();
+        this.address = adventure.getAddress();
+        this.promoDescription = adventure.getPromotionalDescription();
+        this.cancellationConditions = adventure.getPriceList().getCancellationConditions();
+        this.rules = adventure.getRules();
+        this.hourlyRate = adventure.getPriceList().getHourlyRate();
+        this.capacity = adventure.getCapacity();
+        this.equipment = adventure.getFishingEquipment();
     }
 
 }

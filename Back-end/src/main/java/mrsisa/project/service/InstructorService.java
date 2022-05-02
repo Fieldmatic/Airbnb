@@ -1,12 +1,12 @@
 package mrsisa.project.service;
 
+
 import mrsisa.project.dto.AdventureDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.model.PriceList;
 import mrsisa.project.repository.AddressRepository;
-import mrsisa.project.repository.AdventureRepository;
-import mrsisa.project.repository.PriceListRepository;
+import mrsisa.project.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,22 +22,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AdventureService {
+public class InstructorService {
 
     @Autowired
-    private AdventureRepository adventureRepository;
-
-    @Autowired
-    private PriceListRepository priceListRepository;
+    private InstructorRepository instructorRepository;
 
     @Autowired
     private AddressRepository addressRepository;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
-
-    public Adventure save(Adventure adventure) {
-        return adventureRepository.save(adventure);
-    }
+    final String PICTURES_PATH = "src/main/resources/static/pictures/instructor/";
 
     public void add(AdventureDTO adventureDTO, MultipartFile[] multipartFiles) throws IOException {
         Adventure adventure = this.dtoToAdventure(adventureDTO);
@@ -45,33 +38,6 @@ public class AdventureService {
         adventure.setPictures(paths);
         adventure.setProfilePicture(paths.get(0));
         adventureRepository.save(adventure);
-    }
-
-    public void edit(AdventureDTO dto, Long id) {
-        Adventure adventure = adventureRepository.findById(id).orElse(null);
-        if (adventure != null) {
-            adventure.setName(dto.getName());
-            adventure.setAddress(dto.getAddress());
-            adventure.setPromotionalDescription(dto.getPromoDescription());
-            adventure.setRules(dto.getRules());
-            adventure.getPriceList().setHourlyRate(dto.getHourlyRate());
-            adventure.getPriceList().setCancellationConditions(dto.getCancellationConditions());
-            adventure.setCapacity(dto.getCapacity());
-            adventure.setFishingEquipment(dto.getEquipment());
-            adventureRepository.save(adventure);
-        }
-    }
-
-    public Adventure findOne(Long id) {
-        return adventureRepository.findById(id).orElseGet(null);
-    }
-
-    public List<Adventure> findAll() {
-        return adventureRepository.findAll();
-    }
-
-    public void remove(Long id) {
-        adventureRepository.deleteById(id);
     }
 
     private Adventure dtoToAdventure(AdventureDTO dto) {

@@ -1,9 +1,9 @@
-import React from 'react'
-import './AddAdventureForm.css'
-import AdventureService from '../../services/AdventureService'
+import React from "react";
+import "./RegistrationForm.css";
+import InstructorService from "../../services/InstructorService"
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 
-export default function AddAdventureForm() {
+export default function RegistrationForm() {
     const [formData, setFormData] = React.useState({
         name: "",
         address: {
@@ -12,28 +12,15 @@ export default function AddAdventureForm() {
             state: "",
             zipCode: ""
         },
-        promoDescription: "",
-        capacity: "",
-        rules: "",
-        equipment: "",
-        cancellationConditions: "",
-        hourlyRate: ""
+        username: "",
+        password: "",
+        confirmPassword: "",
+        surname: "",
+        email: "",
+        phone: "",
+        registrationExplanation: "",
+        biography: ""
     });
-
-    var errorMessages = {
-        nameError: "",
-        addressError: "",
-        capacityError: "",
-        hourlyRateError: ""
-    };
-
-    const [validForm, setValidFrom] = React.useState(true);
-
-    const errors = {
-        name: "You must enter adventure name",
-        address: "You must enter address",
-        number: "This field must be a number"
-      };
     
     function handleChange(event) {
         const {name, value} = event.target;
@@ -59,27 +46,26 @@ export default function AddAdventureForm() {
     
     function handleSubmit(event) {
         event.preventDefault();
-        // validateForm();
-        setValidFrom(true);
-        if (validForm) {
-            let data = new FormData()
-            const adventureJson = adventureToJson();
-            data.append("adventure", adventureJson)
-            files.map((file) => {
-                data.append("files", file.file)
-            })
-            AdventureService.addAdventure(data);
+        if (formData.password !== formData.confirmPassword) {
+            alert("Passwords doesn't match!")
+            return;
         }
-        
+        let data = new FormData()
+        const adventureJson = adventureToJson();
+        data.append("adventure", adventureJson)
+        files.map((file) => {
+            data.append("files", file.file)
+        })
+        InstructorService.addInstructor(data);
     }
 
     const [files, setFiles] = React.useState([]);
 
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
-    const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
-        setFiles(incommingFiles);
+    const updateFiles = (incommingFile) => {
+        console.log("incomming file", incommingFile);
+        setFiles(incommingFile);
     };
 
     const onDelete = (id) => {
@@ -94,61 +80,16 @@ export default function AddAdventureForm() {
         console.log("list cleaned", files);
     };
 
-    function validateForm() {
-        setValidFrom(true);
-        validateName();
-        validateAddress();
-        validateCapacity();
-        validateHourlyRate();
-    }
-
-    function validateName() {
-        if(formData.name === undefined || formData.name === "") { 
-            errorMessages.nameError = errors.name;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.nameError = errors.name;
-        }
-    }
-
-    function validateAddress() {
-        if(formData.address === undefined || formData.address === "") { 
-            errorMessages.addressError = errors.address;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.addressError = errors.address;
-        }
-    }
-
-    function validateCapacity() {
-        if(formData.capacity === undefined || formData.capacity === "" || isNaN(formData.capacity)) { 
-            errorMessages.capacityError = errors.number;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.capacityError = errors.number;
-        }
-    }
-
-    function validateHourlyRate() {
-        if(formData.hourlyRate === undefined || formData.hourlyRate === "" || isNaN(formData.hourlyRate)) { 
-            errorMessages.hourlyRateError = errors.number;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.hourlyRateError = errors.number;
-        }
-    }
-
-    const renderErrorMessage = (name) => (
-        <div className="form--error">{name}</div>
-    );
-
+    // function validateForm() {
+    //     setValidFrom(true);
+    //     validateName();
+    //     validateAddress();
+    //     validateCapacity();
+    //     validateHourlyRate();
+    // }
+    
     function adventureToJson() {
         let formDataCopy = { ...formData };
-        formDataCopy.equipment = formDataCopy.equipment.trim().split(",");
         const json = JSON.stringify(formDataCopy);
         const adventureJson = new Blob([json], {
             type: 'application/json'
@@ -159,7 +100,31 @@ export default function AddAdventureForm() {
     return (
         <div className="form-container">
             <form className="form" onSubmit={handleSubmit}>
-                <h2 className="form--title">Create adventure</h2>
+                <h2 className="form--title">Registration</h2>
+                <input 
+                    type="text"
+                    placeholder="Username"
+                    className="form--input"
+                    name="username"
+                    onChange={handleChange}
+                    value={formData.username}
+                />
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    className="form--input"
+                    name="password"
+                    onChange={handleChange}
+                    value={formData.password}
+                />
+                <input 
+                    type="password"
+                    placeholder="Confirm password"
+                    className="form--input"
+                    name="confirmPassword"
+                    onChange={handleChange}
+                    value={formData.confirmPassword}
+                />
                 <input 
                     type="text"
                     placeholder="Name"
@@ -168,7 +133,22 @@ export default function AddAdventureForm() {
                     onChange={handleChange}
                     value={formData.name}
                 />
-                {/* {renderErrorMessage(errorMessages.nameError)} */}
+                <input 
+                    type="text"
+                    placeholder="Surname"
+                    className="form--input"
+                    name="surname"
+                    onChange={handleChange}
+                    value={formData.surname}
+                />
+                <input 
+                    type="email"
+                    placeholder="E-mail"
+                    className="form--input"
+                    name="email"
+                    onChange={handleChange}
+                    value={formData.email}
+                />
                 <input 
                     className="form--input"
                     type = "text"
@@ -201,52 +181,27 @@ export default function AddAdventureForm() {
                     name = "street"
                     value = {formData.address.street}          
                 />
-                {/* {renderErrorMessage(errorMessages.addressError)} */}
                 <input 
                     type="text" 
-                    placeholder="Capacity"
+                    placeholder="Phone"
                     className="form--input"
-                    name="capacity"
+                    name="phone"
                     onChange={handleChange}
-                    value={formData.capacity}
-                />
-                {/* {renderErrorMessage(errorMessages.capacityError)} */}
-                <input 
-                    type="text" 
-                    placeholder="Hourly rate"
-                    className="form--input"
-                    name="hourlyRate"
-                    onChange={handleChange}
-                    value={formData.hourlyRate}
-                />
-                {/* {renderErrorMessage(errorMessages.hourlyRateError)} */}
-                <textarea 
-                    placeholder="Promo description"
-                    className="form--input-area"
-                    name="promoDescription"
-                    onChange={handleChange}
-                    value={formData.promoDescription}
+                    value={formData.phone}
                 />
                 <textarea 
-                    placeholder="Behaviour rules"
+                    placeholder="Biography"
                     className="form--input-area"
-                    name="rules"
+                    name="biography"
                     onChange={handleChange}
-                    value={formData.rules}
+                    value={formData.biography}
                 />
                 <textarea 
-                    placeholder="Equipment(separate with ',')"
+                    placeholder="Why you want to create an account?"
                     className="form--input-area"
-                    name="equipment"
+                    name="registrationExplanation"
                     onChange={handleChange}
-                    value={formData.equipment}
-                />
-                <textarea 
-                    placeholder="Cancellation conditions"
-                    className="form--input-area"
-                    name="cancellationConditions"
-                    onChange={handleChange}
-                    value={formData.cancellationConditions}
+                    value={formData.registrationExplanation}
                 />
                 <Dropzone
                     style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
@@ -254,7 +209,7 @@ export default function AddAdventureForm() {
                     minHeight="10%"
                     onClean={handleClean}
                     value={files}
-                    maxFiles={10}
+                    maxFiles={1}
                     header={true}
                     maxFileSize={5000000}
                     >
@@ -279,7 +234,7 @@ export default function AddAdventureForm() {
                 <button
                     className="form--submit"
                 >
-                    Create adventure
+                    Submit
                 </button>
             </form>
         </div>

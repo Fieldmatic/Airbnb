@@ -20,7 +20,7 @@ public class AdventureController {
     @Autowired
     private AdventureService adventureService;
 
-    @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/add")
     public ResponseEntity<String> addAdventure(@RequestPart("adventure") AdventureDTO adventureDTO,
                                                @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException
     {
@@ -28,7 +28,7 @@ public class AdventureController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
-    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/edit/{id}")
     public ResponseEntity<String> editAdventure(@RequestPart("adventure") AdventureDTO dto, @PathVariable("id") Long id)
     {
         adventureService.edit(dto, id);

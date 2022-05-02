@@ -22,8 +22,8 @@ public class CottageController {
     private CottageService cottageService;
 
     @PostMapping(value = "/add")
-    public ResponseEntity<String> addCottage(@RequestBody CottageDTO dto) throws IOException {
-        cottageService.add(dto, new MultipartFile[10]);
+    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+        cottageService.add(dto, multiPartFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
@@ -44,5 +44,16 @@ public class CottageController {
         Cottage cottage = cottageService.findOne(id);
         Integer reviews = cottage.getReviews().size();
         return new ResponseEntity<>(reviews, HttpStatus.OK);
+    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
+        cottageService.edit(dto, id);
+        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+    }
+
+    @GetMapping(value = "/edit/{id}")
+    public ResponseEntity<CottageDTO> getCottage(@PathVariable("id") Long id){
+        Cottage cottage = cottageService.findOne(id);
+        if (cottage == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new CottageDTO(cottage), HttpStatus.OK);
     }
 }

@@ -2,9 +2,10 @@ import React from 'react'
 import './Cottage.css'
 import CottageService from '../../services/CottageService'
 import Counter from "../utils/Counter"
-import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
+import { useParams } from 'react-router-dom'
 
-export default function Cottage() {
+export default function EditCottage(props) {
+  let {id} = useParams();
   const [formData, setFormData] = React.useState (
       {
         name : "",
@@ -19,31 +20,32 @@ export default function Cottage() {
         tripleRooms : 0,
         quadRooms : 0
       }
-
   )
 
-  const [files, setFiles] = React.useState([]);
 
-  const [imageSrc, setImageSrc] = React.useState(undefined);
-
-  const updateFiles = (incommingFiles) => {
-    console.log("incomming files", incommingFiles);
-    setFiles(incommingFiles);
-  };
-
-  const onDelete = (id) => {
-    setFiles(files.filter((x) => x.id !== id));
-  };
-
-  const handleSee = (imageSource) => {
-    setImageSrc(imageSource);
-  };
-
-  const handleClean = (files) => {
-    console.log("list cleaned", files);
-  };
+    React.useEffect(() => {
+      CottageService.getCottage(id).then((result) => {
+          let cottage = result.data;
+          console.log(cottage)
+          setFormData({
+              name : cottage.name, 
+              address : cottage.address,
+              promotionalDescription : cottage.promotionalDescription,
+              rules : cottage.rules,
+              hourlyRate : cottage.hourlyRate,
+              dailyRate : cottage.dailyRate,
+              cancellationConditions : cottage.cancellationConditions,
+              singleRooms : cottage.singleRooms,
+              doubleRooms : cottage.doubleRooms,
+              tripleRooms : cottage.tripleRooms,
+              quadRooms : cottage.quadRooms
+          })
+      })
+    },[])
+    
 
   function handleChange(event) {
+    console.log(formData)
     const {name, value} = event.target
     setFormData(prevFormData => {
       return {
@@ -64,22 +66,13 @@ export default function Cottage() {
 
   function handleSubmit(event){
     event.preventDefault()
-    let data = new FormData()
-    const json = JSON.stringify(formData)
-    const cottageJson = new Blob([json], {
-      type: 'application/json'
-    });
-    data.append("cottage", cottageJson)
-    files.map((file) => {
-      data.append("files", file.file)
-    })
-    CottageService.addCottage(data)
+    CottageService.updateCottage(formData, id)
   }
 
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
-        <h1 className='form--header'>Vikendica</h1>
+        <h1 className='form--header'> {formData.name}</h1>
         <input
           className="form--input"
           type = "text"
@@ -139,7 +132,7 @@ export default function Cottage() {
         </div>
         <div className='bedRoom'>
         <label className='bedRoom--label'>Double rooms: </label>  
-          <Counter name = "doubleRooms" value = {formData.doubleRooms} handleChange = {handleRoomChange}/>
+           <Counter name = "doubleRooms" value = {formData.doubleRooms} handleChange = {handleRoomChange}/>
         </div>
         <div className='bedRoom'>
           <label className='bedRoom--label'>Triple rooms: </label>  
@@ -149,35 +142,7 @@ export default function Cottage() {
           <label className='bedRoom--label'>Quad rooms: </label>  
           <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
         </div>
-        <Dropzone
-      style={{ minWidth: "100%", margin:"20px", fontSize:"20px" }}
-      onChange={updateFiles}
-      minHeight="10%"
-      onClean={handleClean}
-      value={files}
-      maxFiles={10}
-      header={true}
-      maxFileSize={5000000}
-    >
-      {files.map((file) => (
-        <FileItem
-          {...file}
-          key={file.id}
-          onDelete={onDelete}
-          onSee={handleSee}
-          resultOnTooltip
-          preview
-          info
-          hd
-        />
-      ))}
-      <FullScreenPreview
-        imgSource={imageSrc}
-        openImage={imageSrc}
-        onClose={(e) => handleSee(undefined)}
-      />
-    </Dropzone>
-        <button className="form--submit">Submit</button>
+        <button className="form--save">Save</button>
       </form>
     </div>
   )

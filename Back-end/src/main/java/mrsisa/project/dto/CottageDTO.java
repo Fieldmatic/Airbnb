@@ -2,6 +2,7 @@ package mrsisa.project.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mrsisa.project.model.Address;
 import mrsisa.project.model.Cottage;
 
 
@@ -25,7 +26,7 @@ public class CottageDTO {
     }
     private Long id;
     private String name;
-    private String address;
+    private Address address;
     private String promotionalDescription;
     private String cancellationConditions;
     private String rules;

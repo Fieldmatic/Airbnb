@@ -2,6 +2,7 @@ package mrsisa.project.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class AdventureDTO {
 
     private String name;
-    private String address;
+    private Address address;
     private String promoDescription;
     private Integer capacity;
     private String rules;

@@ -1,0 +1,91 @@
+div.allEntities {
+    text-align: center;
+    padding: 10px;
+}
+
+.entityCard {
+    position: relative;
+    width: 600px;
+    height: 200px;
+    font-size: 12px;
+    border: 1px solid gray;
+    padding: 5px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.entityCardImage {
+    height: 95%;
+    width: 30%;
+    position: absolute;
+    left: 5px;
+    border-radius: 9px;
+}
+
+.entityCardPrices {
+    position: absolute;
+    right: 10px;
+    bottom: 50px;
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+.entityCardName {
+    position: absolute;
+    left: 200px;
+}
+
+div.entityCardGrade {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+span.entityCardGrade {
+    padding: 8px;
+    border: 2px solid black;
+    color: #FF5A5F;
+    background-color: lavenderblush;
+}
+
+.entityCardButton {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    border-color:gray;
+    background-color: #FF5A5F;
+    font-weight: bold;
+    align-items: left;
+}
+
+.entityCardDescription {
+    position: absolute;
+    left: 200px;
+    top: 60px;
+    font-size: larger;
+}
+
+.entityCardAddress {
+    position: absolute;
+    left: 220px;
+    top: 35px;
+    font-size: larger;
+}
+
+.addressLogo {
+    position: absolute;
+    left: 195px;
+    top: 30px;
+}
+
+.entityButton {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    margin: auto;
+    background-color: white;
+    border: white;
+    padding: 15px;
+}

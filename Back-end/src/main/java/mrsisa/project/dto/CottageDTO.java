@@ -9,11 +9,13 @@ import mrsisa.project.model.Cottage;
 @NoArgsConstructor
 public class CottageDTO {
     public CottageDTO(Cottage cottage){
+        this.id = cottage.getId();
         this.name = cottage.getName();
         this.address = cottage.getAddress();
         this.promotionalDescription = cottage.getPromotionalDescription();
         this.cancellationConditions = cottage.getPriceList().getCancellationConditions();
         this.rules = cottage.getRules();
+        this.rating = cottage.getRating();
         this.dailyRate = cottage.getPriceList().getDailyRate();
         this.hourlyRate = cottage.getPriceList().getHourlyRate();
         this.singleRooms = cottage.getRooms().get(1) != null ? cottage.getRooms().get(1) : 0;
@@ -21,6 +23,7 @@ public class CottageDTO {
         this.tripleRooms = cottage.getRooms().get(3) != null ? cottage.getRooms().get(3) : 0;
         this.quadRooms = cottage.getRooms().get(4) != null ? cottage.getRooms().get(4) : 0;
     }
+    private Long id;
     private String name;
     private String address;
     private String promotionalDescription;
@@ -28,6 +31,7 @@ public class CottageDTO {
     private String rules;
     private Double dailyRate;
     private Double hourlyRate;
+    private Double rating;
     private Integer singleRooms;
     private Integer doubleRooms;
     private Integer tripleRooms;

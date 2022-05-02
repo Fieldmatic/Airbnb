@@ -24,7 +24,7 @@ public abstract class Bookable {
     private Double rating;
     @OneToMany
     private List<Tag> additionalServices;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Review> reviews;
     @OneToMany
     private List<Discount> discounts;

@@ -37,7 +37,6 @@ public class ClientController {
 
     @PutMapping("/update")
     public ResponseEntity<ClientDTO> updateClient(@RequestBody ClientDTO clientDetails) {
-        System.out.println(clientDetails);
         Client client = clientService.findOne(clientDetails.getId());
 
         if (client == null) {

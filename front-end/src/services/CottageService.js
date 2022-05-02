@@ -10,6 +10,14 @@ class CottageService {
               },
         });
     }
+
+    getAllCottages() {
+        return axios.get(COTTAGE_BASED_REST_API_URL + "/all");
+    }
+
+    getNumberOfReviews(id) {
+        return axios.get(COTTAGE_BASED_REST_API_URL + "/reviewsNumber/" + id);
+    }
     
 }
 

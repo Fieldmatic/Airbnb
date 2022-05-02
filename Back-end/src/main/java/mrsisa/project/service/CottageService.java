@@ -1,6 +1,7 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.model.Client;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.model.PriceList;
 import mrsisa.project.repository.CottageRepository;
@@ -67,7 +68,13 @@ public class CottageService {
         }
     }
 
+    public List<Cottage> findAll() {
+        return cottageRepository.findAll();
+    }
 
+    public Cottage findOne(Long id) {
+        return cottageRepository.findById(id).orElseGet(null);
+    }
 
     private Cottage dtoToCottage(CottageDTO dto) {
         Cottage cottage = new Cottage();

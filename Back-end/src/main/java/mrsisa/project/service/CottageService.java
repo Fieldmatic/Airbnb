@@ -2,8 +2,10 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Client;
+import mrsisa.project.model.Address;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.model.PriceList;
+import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.CottageRepository;
 import mrsisa.project.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class CottageService {
 
     @Autowired
     CottageRepository cottageRepository;
+
+    @Autowired
+    AddressRepository addressRepository;
 
     @Autowired
     PriceListRepository priceListRepository;
@@ -75,12 +80,17 @@ public class CottageService {
     public void edit(CottageDTO dto, Long id) {
         Cottage cottage = cottageRepository.findById(id).orElse(null);
         cottage.setName(dto.getName());
-        cottage.setAddress(dto.getAddress());
+        cottage.getAddress().setState(dto.getAddress().getState());
+        cottage.getAddress().setCity(dto.getAddress().getCity());
+        cottage.getAddress().setStreet(dto.getAddress().getStreet());
+        cottage.getAddress().setZipCode(dto.getAddress().getZipCode());
+        addressRepository.save(cottage.getAddress());
         cottage.setPromotionalDescription(dto.getPromotionalDescription());
         cottage.setRules(dto.getRules());
         cottage.getPriceList().setHourlyRate(dto.getHourlyRate());
         cottage.getPriceList().setDailyRate(dto.getDailyRate());
         cottage.getPriceList().setCancellationConditions(dto.getCancellationConditions());
+        priceListRepository.save(cottage.getPriceList());
         if (dto.getSingleRooms() != 0) cottage.getRooms().put(1,dto.getSingleRooms());
         if (dto.getDoubleRooms() != 0) cottage.getRooms().put(2,dto.getDoubleRooms());
         if (dto.getTripleRooms() != 0) cottage.getRooms().put(3,dto.getTripleRooms());
@@ -96,7 +106,9 @@ public class CottageService {
     private Cottage dtoToCottage(CottageDTO dto) {
         Cottage cottage = new Cottage();
         cottage.setName(dto.getName());
-        cottage.setAddress(dto.getAddress());
+        Address address = dto.getAddress();
+        addressRepository.save(address);
+        cottage.setAddress(address);
         cottage.setPromotionalDescription(dto.getPromotionalDescription());
         cottage.setRules(dto.getRules());
         PriceList priceList = new PriceList();

@@ -8,7 +8,12 @@ export default function Cottage() {
   const [formData, setFormData] = React.useState (
       {
         name : "",
-        address: "",
+        address: {
+          street: "",
+          city: "",
+          state: "",
+          zipCode: ""
+        },
         promotionalDescription : "",
         rules : "",
         hourlyRate : "",
@@ -53,6 +58,20 @@ export default function Cottage() {
     })
   }
 
+  function handleAddressChange(event) {
+    const {name, value} = event.target
+    const address = formData.address
+    setFormData(prevFormData => {
+        return {
+            ...prevFormData,
+            address: {
+                       ...address,
+                       [name]:value
+                     }
+        }
+    })
+  }
+
   function handleRoomChange(name, value) {
     setFormData(prevFormData => {
       return {
@@ -89,12 +108,36 @@ export default function Cottage() {
           value = {formData.name}   
         />
         <input 
-          className="form--input"
-          type = "text"
-          placeholder = "Address"
-          onChange = {handleChange}
-          name = "address"
-          value = {formData.address}          
+            className="form--input"
+            type = "text"
+            placeholder = "State"
+            onChange = {handleAddressChange}
+            name = "state"
+            value = {formData.address.state}          
+        />
+        <input 
+            className="form--input"
+            type = "text"
+            placeholder = "City"
+            onChange = {handleAddressChange}
+            name = "city"
+            value = {formData.address.city}          
+        />
+        <input 
+            className="form--input"
+            type = "text"
+            placeholder = "Zip"
+            onChange = {handleAddressChange}
+            name = "zipCode"
+            value = {formData.address.zipCode}          
+        />
+        <input 
+            className="form--input"
+            type = "text"
+            placeholder = "Street"
+            onChange = {handleAddressChange}
+            name = "street"
+            value = {formData.address.street}          
         />
         <input 
           className="form--input"
@@ -150,7 +193,7 @@ export default function Cottage() {
           <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
         </div>
         <Dropzone
-      style={{ minWidth: "100%", margin:"20px", fontSize:"20px" }}
+      style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
       onChange={updateFiles}
       minHeight="10%"
       onClean={handleClean}

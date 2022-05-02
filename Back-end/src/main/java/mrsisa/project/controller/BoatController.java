@@ -1,11 +1,8 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.BoatDTO;
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Boat;
-import mrsisa.project.model.Cottage;
 import mrsisa.project.service.BoatService;
-import mrsisa.project.service.CottageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

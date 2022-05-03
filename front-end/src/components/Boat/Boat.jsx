@@ -83,7 +83,7 @@ export default function Boat () {
         files.map((file) => {
           data.append("files", file.file)
         })
-        BoatService.addBoat(data, files)
+        BoatService.addBoat(data)
       }
 
     return (

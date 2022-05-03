@@ -69,25 +69,18 @@ export default function OwnerRegistration() {
             }
         })
     }
-
     
     function handleSubmit(event){
         event.preventDefault()
-        if (formData.password !== formData.passwordRetype) {
-            alert("Passwords aren't matching!")
-            return;
-        }
         let type = formData.type;
-        console.log(type)
         let data = new FormData()
         const ownerJson = getOwnerJson();
         data.append("owner", ownerJson)
         files.map((file) => {
             data.append("files", file.file)
-          })
-        if (type === "boatOwner") BoatOwnerService.addBoatOwner(data)   
-        else if (type === "cottageOwner") CottageOwnerService.addCottageOwner(data)
-      }
+        })
+        registerOwner(type, data);
+    }
     
     return (
     <div className="form-container">
@@ -230,6 +223,22 @@ export default function OwnerRegistration() {
      </form>
     </div>
     )
+
+    function registerOwner(type, data) {
+        if (type === "boatOwner")
+            BoatOwnerService.addBoatOwner(data).then((response) => {
+                alert(response.data);
+            }).catch((err) => {
+                alert(err.response.data);
+
+            });
+        else if (type === "cottageOwner")
+            CottageOwnerService.addCottageOwner(data).then((response) => {
+                alert(response.data);
+            }).catch((err) => {
+                alert(err.response.data);
+            });
+    }
 
     function getOwnerJson() {
         const json = JSON.stringify(formData);

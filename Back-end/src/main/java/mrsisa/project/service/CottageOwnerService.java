@@ -5,10 +5,8 @@ import mrsisa.project.dto.CottageOwnerDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.BoatOwner;
 import mrsisa.project.model.CottageOwner;
-import mrsisa.project.repository.AddressRepository;
-import mrsisa.project.repository.BoatOwnerRepository;
-import mrsisa.project.repository.CottageOwnerRepository;
-import mrsisa.project.repository.CottageRepository;
+import mrsisa.project.model.Person;
+import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,9 +28,13 @@ public class CottageOwnerService {
     CottageOwnerRepository cottageOwnerRepository;
 
     @Autowired
+    PersonRepository personRepository;
+
+    @Autowired
     AddressRepository addressRepository;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
+
 
     public void add(CottageOwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
         CottageOwner owner = dtoToCottageOwner(dto);

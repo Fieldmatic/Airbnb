@@ -31,7 +31,6 @@ export default function EditCottage(props) {
     React.useEffect(() => {
       CottageService.getCottage(id).then((result) => {
           let cottage = result.data;
-          console.log(cottage)
           setFormData({
               name : cottage.name, 
               address : cottage.address,
@@ -50,7 +49,6 @@ export default function EditCottage(props) {
     
 
   function handleChange(event) {
-    console.log(formData)
     const {name, value} = event.target
     setFormData(prevFormData => {
       return {

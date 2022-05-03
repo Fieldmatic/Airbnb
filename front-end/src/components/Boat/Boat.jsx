@@ -52,7 +52,6 @@ export default function Boat () {
 
     function handleChange(event) {
         const {name, value} = event.target
-        console.log(formData)
         setFormData(prevFormData => {
         return {
             ...prevFormData,

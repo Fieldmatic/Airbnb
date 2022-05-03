@@ -8,6 +8,7 @@ import Cottage from "./components/cottage/Cottage";
 import AllEntities from "./components/ViewEntities/AllEntities";
 import EditCottage from "./components/cottage/EditCottage";
 import Boat from "./components/Boat/Boat";
+import OwnerRegistration from "./components/Owner/OwnerRegistration";
 
 
 const Views = () => {
@@ -23,6 +24,7 @@ const Views = () => {
       <Route path = "/editProfile" element = {< ClientProfile />}/>
       <Route path = "/showEntities" element = {< AllEntities />}/>
       <Route path = "/addBoat" element = {<Boat/>}/>
+      <Route path = "/ownerRegistration" element = {<OwnerRegistration/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

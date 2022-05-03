@@ -2,6 +2,7 @@ import React from 'react'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import BoatOwnerService from "../../services/BoatOwnerService"
 import CottageOwnerService from "../../services/CottageOwnerService"
+import ClientService from '../../services/ClientService';
 
 export default function OwnerRegistration() {
     const [formData, setFormData] = React.useState (
@@ -19,8 +20,6 @@ export default function OwnerRegistration() {
           passwordRetype: "",
           email : "",
           phoneNumber: "",
-          registrationExplanation : "",
-          type : "cottageOwner"
         }
   
     )
@@ -78,18 +77,22 @@ export default function OwnerRegistration() {
         }
         let type = formData.type;
         let data = new FormData()
-        const ownerJson = getOwnerJson();
-        data.append("owner", ownerJson)
+        const clientJson = getClientJson();
+        data.append("client", clientJson)
         files.map((file) => {
             data.append("files", file.file)
         })
-        registerOwner(type, data);
+        ClientService.addClient(data).then((response) => {
+            alert(response.data);
+        }).catch((err) => {
+            alert(err.response.data);
+        });
     }
     
     return (
     <div className="form-container">
         <form className="form" onSubmit={handleSubmit}>
-        <h1 className='form--header'>Owner Registration</h1>
+        <h1 className='form--header'>Client Registration</h1>
         <input
             className="form--input"
             type = "text"
@@ -177,24 +180,7 @@ export default function OwnerRegistration() {
             onChange = {handleChange}
             name = "phoneNumber"
             value = {formData.phoneNumber}   
-        />
-        <label className="type--label">Owner Type:</label>
-        <select 
-                className="form--type"
-                value={formData.type}
-                onChange={handleChange}
-                name="type"
-            >
-                <option value="cottageOwner">Cottage Owner</option>
-                <option value="boatOwner">Boat Owner</option>
-            </select>
-        <textarea 
-          className="form--input-area"
-          placeholder = "Registration explanation"
-          onChange = {handleChange}
-          value = {formData.registrationExplanation}
-          name = "registrationExplanation"
-        />
+        />       
         <Dropzone
             style={{ minWidth: "100%", margin:"20px", fontSize:"20px" }}
             onChange={updateFiles}
@@ -228,27 +214,11 @@ export default function OwnerRegistration() {
     </div>
     )
 
-    function registerOwner(type, data) {
-        if (type === "boatOwner")
-            BoatOwnerService.addBoatOwner(data).then((response) => {
-                alert(response.data);
-            }).catch((err) => {
-                alert(err.response.data);
-
-            });
-        else if (type === "cottageOwner")
-            CottageOwnerService.addCottageOwner(data).then((response) => {
-                alert(response.data);
-            }).catch((err) => {
-                alert(err.response.data);
-            });
-    }
-
-    function getOwnerJson() {
+    function getClientJson() {
         const json = JSON.stringify(formData);
-        const ownerJson = new Blob([json], {
+        const clientJson = new Blob([json], {
             type: 'application/json'
         });
-        return ownerJson;
+        return clientJson;
     }
 }

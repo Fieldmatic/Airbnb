@@ -10,6 +10,7 @@ import EditCottage from "./components/cottage/EditCottage";
 import Boat from "./components/Boat/Boat";
 import OwnerRegistration from "./components/Owner/OwnerRegistration";
 import RegistrationForm from "./components/Instructor/RegistrationForm";
+import ClientRegistration from "./components/Client/ClientRegistration";
 
 
 const Views = () => {
@@ -27,6 +28,7 @@ const Views = () => {
       <Route path = "/addBoat" element = {<Boat/>}/>
       <Route path = "/ownerRegistration" element = {<OwnerRegistration/>}/>
       <Route path = "/registrateInstructor" element = {<RegistrationForm />} />
+      <Route path = "/clientRegistration" element = {<ClientRegistration/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

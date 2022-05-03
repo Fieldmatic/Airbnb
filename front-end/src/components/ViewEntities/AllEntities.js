@@ -59,6 +59,16 @@ function AllEntities() {
         setPriority(value)
     }
 
+    if (priority === "priceLowest" || priority === "ratingPrice") {
+        allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? 1 : -1)
+    } 
+    if (priority === "rating" || priority === "ratingPrice" || priority === "ratingReviews") {
+        allCards.sort((card1, card2) => (card1.rating > card2.rating) ? -1 : 1)
+    }
+    if (priority === "priceHighest") {
+        allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? -1 : 1)
+    }
+    //sortiranje po rating i number of reviews
     const cards = allCards.map(item => {
         return (
             <EntityCard

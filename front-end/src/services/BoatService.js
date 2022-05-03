@@ -8,6 +8,13 @@ class BoatService {
         return axios.post(BOAT_BASED_REST_API_URL + "/add", formData)
     }
 
+    getAllBoats() {
+        return axios.get(BOAT_BASED_REST_API_URL + "/all");
+    }
+
+    getNumberOfBoatReviews(id) {
+        return axios.get(BOAT_BASED_REST_API_URL + "/reviewsNumber/" + id);
+    }
 
 }
 

@@ -17,10 +17,10 @@ class CottageService {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/all");
     }
 
-    getNumberOfReviews(id) {
+    getNumberOfCottageReviews(id) {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/reviewsNumber/" + id);
     }
-    
+
 }
 
 export default new CottageService()

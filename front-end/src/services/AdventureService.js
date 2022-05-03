@@ -18,6 +18,10 @@ class AdventureService {
     updateAdventure(adventure, id){
         return axios.put(ADVENTURE_BASED_REST_API_URL + "/edit/" + id, adventure)
     }
+
+    getNumberOfAdventureReviews(id) {
+        return axios.get(ADVENTURE_BASED_REST_API_URL + "/reviewsNumber/" + id);
+    }
 }
 
 export default new AdventureService()

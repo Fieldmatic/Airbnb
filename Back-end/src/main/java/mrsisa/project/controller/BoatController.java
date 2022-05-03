@@ -1,9 +1,12 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.BoatDTO;
+import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Boat;
+import mrsisa.project.model.Cottage;
 import mrsisa.project.service.BoatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -37,4 +42,23 @@ public class BoatController {
         if (boat == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(new BoatDTO(boat), HttpStatus.OK);
     }
+
+    @GetMapping(value="/all")
+    public ResponseEntity<List<BoatDTO>> getAllBoats() {
+        List<Boat> boats = boatService.findAll();
+
+        List<BoatDTO> boatsDTO = new ArrayList<>();
+        for (Boat boat : boats) {
+            boatsDTO.add(new BoatDTO(boat));
+        }
+        return new ResponseEntity<>(boatsDTO, HttpStatus.OK);
+    }
+    
+    @GetMapping(value = "/reviewsNumber/{id}")
+    public ResponseEntity<Integer> getNumberOfBoatReviews(@PathVariable("id") Long id) {
+        Boat boat = boatService.findOne(id);
+        Integer reviews = boat.getReviews().size();
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
+
 }

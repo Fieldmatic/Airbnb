@@ -57,4 +57,11 @@ public class AdventureController {
         if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(new AdventureDTO(adventure), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/reviewsNumber/{id}")
+    public ResponseEntity<Integer> getNumberOfAdventureReviews(@PathVariable("id") Long id) {
+        Adventure adventure = adventureService.findOne(id);
+        Integer reviews = adventure.getReviews().size();
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
 }

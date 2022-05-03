@@ -2,6 +2,8 @@ package mrsisa.project.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,6 +28,7 @@ public abstract class Bookable {
     @OneToMany
     private List<Tag> additionalServices;
     @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Review> reviews;
     @OneToMany
     private List<Discount> discounts;

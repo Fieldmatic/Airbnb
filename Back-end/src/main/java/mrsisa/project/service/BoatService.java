@@ -89,6 +89,9 @@ public class BoatService {
         return boatRepository.findById(id).orElse(null);
     }
 
+    public List<Boat> findAll() {
+        return boatRepository.findAll();
+    }
 
     private Boat dtoToBoat(BoatDTO dto) {
         Boat boat = new Boat();

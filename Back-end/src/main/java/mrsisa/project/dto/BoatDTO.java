@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BoatDTO {
     public BoatDTO(Boat boat){
+        this.id = boat.getId();
         this.name = boat.getName();
         this.address = boat.getAddress();
         this.promotionalDescription = boat.getPromotionalDescription();
@@ -19,6 +20,7 @@ public class BoatDTO {
         this.dailyRate = boat.getPriceList().getDailyRate();
         this.hourlyRate = boat.getPriceList().getHourlyRate();
         this.type = boat.getType().toString();
+        this.rating = boat.getRating();
         this.enginesNumber = boat.getEnginesNumber();
         this.enginePower = boat.getEnginePower();
         this.maxSpeed = boat.getMaxSpeed();
@@ -26,6 +28,7 @@ public class BoatDTO {
         this.navigationEquipment = boat.getNavigationEquipment();
         this.fishingEquipment = boat.getFishingEquipment();
     }
+    private Long id;
     private String name;
     private Address address;
     private String promotionalDescription;
@@ -34,6 +37,7 @@ public class BoatDTO {
     private Double dailyRate;
     private Double hourlyRate;
     private String type;
+    private Double rating;
     private Integer enginesNumber;
     private Double enginePower;
     private Double maxSpeed;

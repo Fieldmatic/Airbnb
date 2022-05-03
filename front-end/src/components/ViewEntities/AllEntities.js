@@ -56,7 +56,7 @@ function AllEntities() {
 
     function handleChange(event) {
         const {name, value} = event.target
-        //setPriority(value)
+        setPriority(value)
     }
 
     const cards = allCards.map(item => {
@@ -77,6 +77,19 @@ function AllEntities() {
 
     return (
         <div className="allEntities">
+            <div className="sort">
+                <label className="sort">Sort by: </label>
+                <select 
+                    className="form--type"
+                    name="type"
+                    onChange={handleChange}
+                >
+                    <option value="priceLowest">Price (lowest first)</option>
+                    <option value="priceHighest">Price (highest first)</option>
+                    <option value="rating">Rating</option>
+                    <option value="ratingPrice">Best rating and lowest price</option>
+                </select>
+            </div>
             <button className={cottageButtonStyle} onClick={showAllCottages}> 
                 <CottageIcon fontSize="large"></CottageIcon>
                 Cottages

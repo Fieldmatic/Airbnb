@@ -48,7 +48,7 @@ public class AdventureController {
         return new ResponseEntity<>(adventuresDTO, HttpStatus.OK);
     }
     
-    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/edit/{id}")
     public ResponseEntity<String> editAdventure(@RequestPart("adventure") AdventureDTO dto, @PathVariable("id") Long id)
     {
         adventureService.edit(dto, id);

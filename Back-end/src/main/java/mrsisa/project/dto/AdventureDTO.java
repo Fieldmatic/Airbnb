@@ -20,7 +20,6 @@ public class AdventureDTO {
     private List<String> equipment;
     private String cancellationConditions;
     private Double hourlyRate;
-    private String inputPictures;
     private Double rating;
 
     public AdventureDTO(Adventure adventure){

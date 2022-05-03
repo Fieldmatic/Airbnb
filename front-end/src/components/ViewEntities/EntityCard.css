@@ -9,24 +9,22 @@ div.allEntities {
     height: 200px;
     font-size: 12px;
     border: 1px solid gray;
-    padding: 5px;
     margin: auto;
     margin-bottom: 10px;
 }
 
 .entityCardImage {
-    height: 95%;
+    height: 100%;
     width: 30%;
     position: absolute;
-    left: 5px;
-    border-radius: 9px;
+    left: 0px;
 }
 
 .entityCardPrices {
     position: absolute;
     right: 10px;
-    bottom: 50px;
-    font-weight: bolder;
+    bottom: 60px;
+    font-weight: bold;
     font-size: 25px;
 }
 
@@ -50,34 +48,42 @@ span.entityCardGrade {
     background-color: lavenderblush;
 }
 
+.entityCardReviews {
+    position: absolute;
+    top: 33px;
+    right: 44px;
+}
+
 .entityCardButton {
     position: absolute;
-    bottom: 5px;
+    bottom: 10px;
     right: 10px;
-    border-color:gray;
-    background-color: #FF5A5F;
+    background-color: lavenderblush;
+    color: #FF5A5F;
     font-weight: bold;
     align-items: left;
+    width: 90px;
+    height: 30px;
 }
 
 .entityCardDescription {
     position: absolute;
     left: 200px;
-    top: 60px;
+    top: 65px;
     font-size: larger;
 }
 
 .entityCardAddress {
     position: absolute;
-    left: 220px;
-    top: 35px;
+    left: 218px;
+    top: 38px;
     font-size: larger;
 }
 
 .addressLogo {
     position: absolute;
     left: 195px;
-    top: 30px;
+    top: 31px;
 }
 
 .entityButton {
@@ -88,4 +94,22 @@ span.entityCardGrade {
     background-color: white;
     border: white;
     padding: 15px;
+    margin-bottom: 15px;
 }
+
+.entityButtonWithBorder {
+    border-color: gray;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    margin: auto;
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+div.sort {
+    display: flex;
+}
+
+

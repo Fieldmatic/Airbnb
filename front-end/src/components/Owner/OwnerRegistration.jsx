@@ -72,6 +72,10 @@ export default function OwnerRegistration() {
     
     function handleSubmit(event){
         event.preventDefault()
+        if (formData.password !== formData.passwordRetype) {
+            alert("Passwords aren't matching")
+            return
+        }
         let type = formData.type;
         let data = new FormData()
         const ownerJson = getOwnerJson();

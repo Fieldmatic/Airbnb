@@ -16,6 +16,10 @@ class ClientService {
         console.log(reason)
         return axios.post(CLIENT_BASED_REST_API_URL + "/saveDeletionReason", reason)
     }
+
+    addClient(formData){
+        return axios.post (CLIENT_BASED_REST_API_URL + "/add", formData)
+    }
 }
 
 

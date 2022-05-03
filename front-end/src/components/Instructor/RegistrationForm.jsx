@@ -52,11 +52,18 @@ export default function RegistrationForm() {
         }
         let data = new FormData()
         const adventureJson = adventureToJson();
-        data.append("adventure", adventureJson)
+        data.append("instructor", adventureJson)
         files.map((file) => {
             data.append("files", file.file)
         })
-        InstructorService.addInstructor(data);
+        InstructorService.addInstructor(data)
+        .then(response => {
+            if (response.data === "NC"){
+                alert("Username already exist!")
+            } else {
+                alert("Success!")
+            }
+        });
     }
 
     const [files, setFiles] = React.useState([]);

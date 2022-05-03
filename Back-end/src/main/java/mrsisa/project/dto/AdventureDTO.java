@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class AdventureDTO {
-
+    private Long id;
     private String name;
     private Address address;
     private String promoDescription;
@@ -20,11 +20,11 @@ public class AdventureDTO {
     private List<String> equipment;
     private String cancellationConditions;
     private Double hourlyRate;
-    private Double dailyRate;
     private String inputPictures;
     private Double rating;
 
     public AdventureDTO(Adventure adventure){
+        this.id = adventure.getId();
         this.name = adventure.getName();
         this.address = adventure.getAddress();
         this.promoDescription = adventure.getPromotionalDescription();
@@ -34,7 +34,6 @@ public class AdventureDTO {
         this.capacity = adventure.getCapacity();
         this.equipment = adventure.getFishingEquipment();
         this.rating = adventure.getRating();
-        this.dailyRate = adventure.getPriceList().getDailyRate();
     }
 
 }

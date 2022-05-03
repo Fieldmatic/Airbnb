@@ -60,13 +60,20 @@ function AllEntities() {
     }
 
     if (priority === "priceLowest" || priority === "ratingPrice") {
-        allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? 1 : -1)
+        if (entityType == "adventure") {
+            allCards.sort((card1, card2) => (card1.hourlyRate > card2.hourlyRate) ? 1 : -1)
+        } else {
+            allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? 1 : -1)        }
     } 
     if (priority === "rating" || priority === "ratingPrice" || priority === "ratingReviews") {
         allCards.sort((card1, card2) => (card1.rating > card2.rating) ? -1 : 1)
     }
     if (priority === "priceHighest") {
-        allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? -1 : 1)
+        if (entityType == "adventure") {
+            allCards.sort((card1, card2) => (card1.hourlyRate > card2.hourlyRate) ? -1 : 1)
+        } else {
+            allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? -1 : 1)
+        }
     }
     //sortiranje po rating i number of reviews
     const cards = allCards.map(item => {

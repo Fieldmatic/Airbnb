@@ -6,6 +6,7 @@ import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.service.BoatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +56,7 @@ public class BoatController {
         }
         return new ResponseEntity<>(boatsDTO, HttpStatus.OK);
     }
-    
+
     @GetMapping(value = "/reviewsNumber/{id}")
     public ResponseEntity<Integer> getNumberOfBoatReviews(@PathVariable("id") Long id) {
         Boat boat = boatService.findOne(id);
@@ -61,4 +64,11 @@ public class BoatController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
+    @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public ResponseEntity getBoatProfilePicture(@PathVariable Long id) throws IOException {
+        Boat boat = boatService.findOne(id);
+        File file = new File(boat.getProfilePicture());
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        return ResponseEntity.ok().body(resource);
+    }
 }

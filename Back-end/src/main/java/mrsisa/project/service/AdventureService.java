@@ -1,6 +1,7 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.AdventureDTO;
+import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.model.PriceList;
 import mrsisa.project.repository.AddressRepository;
@@ -76,7 +77,9 @@ public class AdventureService {
     private Adventure dtoToAdventure(AdventureDTO dto) {
         Adventure adventure = new Adventure();
         adventure.setName(dto.getName());
-        adventure.setAddress(dto.getAddress());
+        Address address = dto.getAddress();
+        addressRepository.save(address);
+        adventure.setAddress(address);
         adventure.setPromotionalDescription(dto.getPromoDescription());
         adventure.setRules(dto.getRules());
         PriceList priceList = new PriceList();

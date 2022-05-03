@@ -6,27 +6,38 @@ import AdventureService from "../../services/AdventureService"
 
 export default function EntityCard(props) {
     const [reviewsNumber, setReviewsNumber] = React.useState(0)
+    const [profileImage, setProfileImage] = React.useState(undefined)
 
     React.useEffect(() => {
-        if (props.entityType === "cottage") {
+        if (props.entity === "cottage") {
             CottageService.getNumberOfCottageReviews(props.id).then((response) => {
                 setReviewsNumber(response.data) 
             })
-        } else if (props.entityType === "boat") {
+            CottageService.getProfilePicture(props.id).then((response) => {
+                setProfileImage(response.data)
+            })
+        } else if (props.entity === "boat") {
             BoatService.getNumberOfBoatReviews(props.id).then((response) => {
                 setReviewsNumber(response.data) 
+            })
+            BoatService.getProfilePicture(props.id).then((response) => {
+                console.log(response.data)
+                setProfileImage(response.data)
             })
         //avanture
         } else {
             AdventureService.getNumberOfAdventureReviews(props.id).then((response) => {
                 setReviewsNumber(response.data) 
             })
+            AdventureService.getProfilePicture(props.id).then((response) => {
+                setProfileImage(response.data)
+            })
         }
    }, [])
 
     return(
         <div className="entityCard"> 
-            <img src={`../images/user.png`} className="entityCardImage" alt="user"/>
+            {profileImage && <img src={URL.createObjectURL(profileImage)} className="entityCardImage" alt="user"/>}
             <h1 className="entityCardName">{props.name}</h1>
             <LocationOnIcon className="addressLogo"></LocationOnIcon>            
             <p className="entityCardAddress"> {props.address.city}, {props.address.state}</p>
@@ -36,7 +47,7 @@ export default function EntityCard(props) {
                 <span> Rating: </span>
                 <span className="entityCardGrade"> {props.rating}</span>
             </div>
-            <p className="entityCardPrices"> RSD {props.dailyRate} </p>
+            <p className="entityCardPrices"> RSD {props.entity === "adventure"? props.hourlyRate : props.dailyRate} </p>
             <button className="entityCardButton"> Explore</button>
         </div>
     )

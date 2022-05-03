@@ -21,6 +21,10 @@ class CottageService {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/reviewsNumber/" + id);
     }
 
+    getProfilePicture(id) {
+        return axios.get(COTTAGE_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
+    }
+
 }
 
 export default new CottageService()

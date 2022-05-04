@@ -20,6 +20,9 @@ public class InstructorDTO {
     private String phone;
     private String registrationExplanation;
     private String biography;
+    private String profilePhoto;
+
+    private static final String PRE_PATH  = "C:/Users/Korisnik/Desktop/medotologije razvoja softvera/projekat/ISA-MRS/Back-end/";
 
     public InstructorDTO(Instructor instructor){
         this.name = instructor.getName();
@@ -31,5 +34,6 @@ public class InstructorDTO {
         this.email = instructor.getEmail();
         this.phone = instructor.getPhoneNumber();
         this.registrationExplanation = instructor.getRegistrationExplanation();
+        this.profilePhoto = PRE_PATH + instructor.getProfilePhoto();
     }
 }

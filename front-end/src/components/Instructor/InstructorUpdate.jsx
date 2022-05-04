@@ -1,9 +1,11 @@
 import React from "react";
-import "./RegistrationForm.css";
+import "./InstructorRegistration.css";
 import InstructorService from "../../services/InstructorService"
-import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
+import { useParams } from 'react-router-dom'
 
-export default function RegistrationForm() {
+
+export default function InstructorUpdate() {
+
     const [formData, setFormData] = React.useState({
         name: "",
         address: {
@@ -18,16 +20,57 @@ export default function RegistrationForm() {
         surname: "",
         email: "",
         phone: "",
-        registrationExplanation: "",
-        biography: ""
+        biography: "",
+        profilePhoto: ""
     });
-    
+
+    let {id} = useParams();
+    const [files, setFiles] = React.useState([]);
+
+    React.useEffect(() => {
+        InstructorService.getInstructor(id).then((result) => {
+            let instructor = result.data;
+            console.log(instructor)
+            setFormData({
+                name: instructor.name, 
+                address: instructor.address,
+                username: instructor.username,
+                password: instructor.password,
+                confirmPassword: instructor.confirmPassword,
+                surname: instructor.surname,
+                email: instructor.email,
+                phone: instructor.phone,
+                biography: instructor.biography,
+                profilePhoto: instructor.profilePhoto
+            })
+        })
+      },[])
+
     function handleChange(event) {
         const {name, value} = event.target;
         setFormData(prevFormData => ({
             ...prevFormData,
             [name]: value
         }));
+    }
+
+    function handleSubmit(event){
+        event.preventDefault();
+        if (formData.password !== formData.confirmPassword) {
+            alert("Passwords doesn't match!")
+            return;
+        }
+        let data = new FormData()
+        const instructorJson = instructorToJson();
+        data.append("instructor", instructorJson)
+        files.map((file) => {
+            data.append("files", file.file)
+        })
+        InstructorService.updateInstructor(data, id)
+        .then(response => {
+            alert(response.data);
+        });
+        
     }
 
     function handleAddressChange(event) {
@@ -42,78 +85,28 @@ export default function RegistrationForm() {
                 }
             }
         })
-      }
-    
-    function handleSubmit(event) {
-        event.preventDefault();
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords doesn't match!")
-            return;
-        }
-        let data = new FormData()
-        const adventureJson = adventureToJson();
-        data.append("instructor", adventureJson)
-        files.map((file) => {
-            data.append("files", file.file)
-        })
-        InstructorService.addInstructor(data)
-        .then(response => {
-            if (response.data === "NC"){
-                alert("Username already exist!")
-            } else {
-                alert("Success!")
-            }
-        });
     }
 
-    const [files, setFiles] = React.useState([]);
-
-    const [imageSrc, setImageSrc] = React.useState(undefined);
-
-    const updateFiles = (incommingFile) => {
-        console.log("incomming file", incommingFile);
-        setFiles(incommingFile);
-    };
-
-    const onDelete = (id) => {
-        setFiles(files.filter((x) => x.id !== id));
-    };
-
-    const handleSee = (imageSource) => {
-        setImageSrc(imageSource);
-    };
-
-    const handleClean = (files) => {
-        console.log("list cleaned", files);
-    };
-
-    // function validateForm() {
-    //     setValidFrom(true);
-    //     validateName();
-    //     validateAddress();
-    //     validateCapacity();
-    //     validateHourlyRate();
-    // }
-    
-    function adventureToJson() {
+    function instructorToJson() {
         let formDataCopy = { ...formData };
         const json = JSON.stringify(formDataCopy);
-        const adventureJson = new Blob([json], {
+        const instructorJson = new Blob([json], {
             type: 'application/json'
         });
-        return adventureJson;
+        return instructorJson;
     }
-    
+
     return (
-        <div className="form-container">
+        <div className="container">
+            {/* Form */}
+            <div className="item">
             <form className="form" onSubmit={handleSubmit}>
-                <h2 className="form--title">Registration</h2>
+                <h2 className="form--title">Profile</h2>
                 <input 
                     type="text"
                     placeholder="Username"
                     className="form--input"
                     name="username"
-                    onChange={handleChange}
                     value={formData.username}
                 />
                 <input 
@@ -153,7 +146,6 @@ export default function RegistrationForm() {
                     placeholder="E-mail"
                     className="form--input"
                     name="email"
-                    onChange={handleChange}
                     value={formData.email}
                 />
                 <input 
@@ -203,47 +195,19 @@ export default function RegistrationForm() {
                     onChange={handleChange}
                     value={formData.biography}
                 />
-                <textarea 
-                    placeholder="Why you want to create an account?"
-                    className="form--input-area"
-                    name="registrationExplanation"
-                    onChange={handleChange}
-                    value={formData.registrationExplanation}
-                />
-                <Dropzone
-                    style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
-                    onChange={updateFiles}
-                    minHeight="10%"
-                    onClean={handleClean}
-                    value={files}
-                    maxFiles={1}
-                    header={true}
-                    maxFileSize={5000000}
-                    >
-                    {files.map((file) => (
-                        <FileItem
-                        {...file}
-                        key={file.id}
-                        onDelete={onDelete}
-                        onSee={handleSee}
-                        resultOnTooltip
-                        preview
-                        info
-                        hd
-                        />
-                    ))}
-                    <FullScreenPreview
-                        imgSource={imageSrc}
-                        openImage={imageSrc}
-                        onClose={(e) => handleSee(undefined)}
-                    />
-                </Dropzone>
                 <button
                     className="form--submit"
                 >
-                    Submit
+                    Update
                 </button>
             </form>
+            </div>
+
+            {/* Profile photo */}
+            <div className="item">
+                <img className="profile-photo" src={formData.profilePhoto} />
+            </div>
         </div>
     )
+
 }

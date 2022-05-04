@@ -56,6 +56,24 @@ public class InstructorService {
         return true;
     }
 
+    public void edit(InstructorDTO dto, Long id) {
+        Instructor instructor = instructorRepository.findById(id).orElse(null);
+        if (instructor != null) {
+            instructor.setName(dto.getName());
+            instructor.setAddress(dto.getAddress());
+            instructor.setBiography(dto.getBiography());
+            instructor.setSurname(dto.getSurname());
+            instructor.setEmail(dto.getEmail());
+            instructor.setPassword(dto.getPassword());
+            instructor.setPhoneNumber(dto.getPhone());
+            instructorRepository.save(instructor);
+        }
+    }
+
+    public Instructor findOne(Long id) {
+        return instructorRepository.findById(id).orElseGet(null);
+    }
+
     private Instructor dtoToInstructor(InstructorDTO dto) {
         if (dto.getUsername() == null || !this.validateUsername(dto.getUsername())) {
             return null;

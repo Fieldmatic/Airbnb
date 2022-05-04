@@ -22,7 +22,7 @@ public class InstructorDTO {
     private String biography;
     private String profilePhoto;
 
-    private static final String PRE_PATH  = "C:/Users/Korisnik/Desktop/medotologije razvoja softvera/projekat/ISA-MRS/Back-end/";
+    private static final String PRE_PATH  = "../../../../Back-end/";
 
     public InstructorDTO(Instructor instructor){
         this.name = instructor.getName();

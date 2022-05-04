@@ -36,7 +36,7 @@ export default function InstructorUpdate() {
                 address: instructor.address,
                 username: instructor.username,
                 password: instructor.password,
-                confirmPassword: instructor.confirmPassword,
+                confirmPassword: "",
                 surname: instructor.surname,
                 email: instructor.email,
                 phone: instructor.phone,
@@ -107,6 +107,7 @@ export default function InstructorUpdate() {
                     placeholder="Username"
                     className="form--input"
                     name="username"
+                    readOnly
                     value={formData.username}
                 />
                 <input 
@@ -146,6 +147,7 @@ export default function InstructorUpdate() {
                     placeholder="E-mail"
                     className="form--input"
                     name="email"
+                    readOnly
                     value={formData.email}
                 />
                 <input 

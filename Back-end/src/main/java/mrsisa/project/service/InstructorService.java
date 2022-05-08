@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import mrsisa.project.dto.AdventureDTO;
 import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.model.*;
-import mrsisa.project.repository.AddressRepository;
-import mrsisa.project.repository.ClientRepository;
-import mrsisa.project.repository.InstructorRepository;
-import mrsisa.project.repository.OwnerRepository;
+import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,10 +27,7 @@ public class InstructorService {
     private InstructorRepository instructorRepository;
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private OwnerRepository ownerRepository;
+    private PersonRepository personRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -60,7 +54,11 @@ public class InstructorService {
         Instructor instructor = instructorRepository.findById(id).orElse(null);
         if (instructor != null) {
             instructor.setName(dto.getName());
-            instructor.setAddress(dto.getAddress());
+            instructor.getAddress().setCity(dto.getAddress().getCity());
+            instructor.getAddress().setState(dto.getAddress().getState());
+            instructor.getAddress().setStreet(dto.getAddress().getStreet());
+            instructor.getAddress().setZipCode(dto.getAddress().getZipCode());
+            addressRepository.save(instructor.getAddress());
             instructor.setBiography(dto.getBiography());
             instructor.setSurname(dto.getSurname());
             instructor.setEmail(dto.getEmail());
@@ -97,22 +95,8 @@ public class InstructorService {
     }
 
     private boolean validateUsername(String username) {
-        List<Client> clients = clientRepository.findAll();
-        List<Owner> owners = ownerRepository.findAll();
-        List<Instructor> instructors = instructorRepository.findAll();
-        for (Client client : clients){
-            if (client.getUsername().equals(username))
-                return false;
-        }
-        for (Owner owner : owners){
-            if (owner.getUsername().equals(username))
-                return false;
-        }
-        for (Instructor instructor : instructors){
-            if (instructor.getUsername().equals(username))
-                return false;
-        }
-        return true;
+        Person person = personRepository.findByUsername(username);
+        return person == null;
     }
 
     public List<String> addPictures(Instructor instructor, MultipartFile[] multipartFiles) throws IOException {

@@ -14,6 +14,10 @@ class InstructorService {
     updateInstructor(instructor, id){
         return axios.put(INSTRUCTOR_BASED_REST_API_URL + "/edit/" + id, instructor)
     }
+
+    getProfilePicture(id) {
+        return axios.get(INSTRUCTOR_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
+    }
 }
 
 export default new InstructorService()

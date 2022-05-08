@@ -8,6 +8,7 @@ import BoatService from "../../services/BoatService"
 import EntityCard from "./EntityCard"
 import "./EntityCard.css"
 import { selectUnstyledClasses } from "@mui/base"
+import Header from "../../Header";
 
 function AllEntities() {
     const [allCards, setAllCards] = React.useState([])
@@ -93,33 +94,36 @@ function AllEntities() {
     })        
 
     return (
-        <div className="allEntities">
-            <div className="sort">
-                <label className="sort">Sort by: </label>
-                <select 
-                    className="form--type"
-                    name="type"
-                    onChange={handleChange}
-                >
-                    <option value="priceLowest">Price (lowest first)</option>
-                    <option value="priceHighest">Price (highest first)</option>
-                    <option value="rating">Rating</option>
-                    <option value="ratingPrice">Best rating and lowest price</option>
-                </select>
+        <div>
+            <Header />
+            <div className="allEntities">
+                <div className="sort">
+                    <label className="sort">Sort by: </label>
+                    <select 
+                        className="form--type"
+                        name="type"
+                        onChange={handleChange}
+                    >
+                        <option value="priceLowest">Price (lowest first)</option>
+                        <option value="priceHighest">Price (highest first)</option>
+                        <option value="rating">Rating</option>
+                        <option value="ratingPrice">Best rating and lowest price</option>
+                    </select>
+                </div>
+                <button className={cottageButtonStyle} onClick={showAllCottages}> 
+                    <CottageIcon fontSize="large"></CottageIcon>
+                    Cottages
+                </button>
+                <button className={boatButtonStyle} onClick={showAllBoats}>
+                    <DirectionsBoatIcon fontSize="large"></DirectionsBoatIcon>
+                    Boats
+                </button>
+                <button className={adventureButtonStyle} onClick={showAllAdventures}>
+                    <PhishingIcon fontSize="large"></PhishingIcon>                
+                    Adventures
+                </button>
+                {cards}
             </div>
-            <button className={cottageButtonStyle} onClick={showAllCottages}> 
-                <CottageIcon fontSize="large"></CottageIcon>
-                Cottages
-            </button>
-            <button className={boatButtonStyle} onClick={showAllBoats}>
-                <DirectionsBoatIcon fontSize="large"></DirectionsBoatIcon>
-                Boats
-            </button>
-            <button className={adventureButtonStyle} onClick={showAllAdventures}>
-                <PhishingIcon fontSize="large"></PhishingIcon>                
-                Adventures
-            </button>
-            {cards}
         </div>
     )
 }

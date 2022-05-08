@@ -52,11 +52,16 @@ public class AdventureService {
         Adventure adventure = adventureRepository.findById(id).orElse(null);
         if (adventure != null) {
             adventure.setName(dto.getName());
-            adventure.setAddress(dto.getAddress());
+            adventure.getAddress().setCity(dto.getAddress().getCity());
+            adventure.getAddress().setState(dto.getAddress().getState());
+            adventure.getAddress().setStreet(dto.getAddress().getStreet());
+            adventure.getAddress().setZipCode(dto.getAddress().getZipCode());
+            addressRepository.save(adventure.getAddress());
             adventure.setPromotionalDescription(dto.getPromoDescription());
             adventure.setRules(dto.getRules());
             adventure.getPriceList().setHourlyRate(dto.getHourlyRate());
             adventure.getPriceList().setCancellationConditions(dto.getCancellationConditions());
+            priceListRepository.save(adventure.getPriceList());
             adventure.setCapacity(dto.getCapacity());
             adventure.setFishingEquipment(dto.getEquipment());
             adventureRepository.save(adventure);

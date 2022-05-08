@@ -2,6 +2,7 @@ import React from 'react'
 import './AddAdventureForm.css'
 import AdventureService from '../../services/AdventureService'
 import { useParams } from 'react-router-dom'
+import Header from '../../Header'
 
 export default function UpdateAdventureForm(props) {
     const [formData, setFormData] = React.useState({
@@ -28,15 +29,15 @@ export default function UpdateAdventureForm(props) {
             let adventure = result.data;
             console.log(adventure)
             setFormData({
-                name: adventure.name, 
-                address: adventure.address,
-                promoDescription: adventure.promoDescription,
-                rules: adventure.rules,
-                hourlyRate: adventure.hourlyRate,
-                dailyRate: adventure.dailyRate,
-                cancellationConditions: adventure.cancellationConditions,
-                capacity: adventure.capacity,
-                equipment: adventure.equipment
+                name: adventure.name || "", 
+                address: adventure.address || "",
+                promoDescription: adventure.promoDescription || "",
+                rules: adventure.rules || "",
+                hourlyRate: adventure.hourlyRate || "",
+                dailyRate: adventure.dailyRate || "",
+                cancellationConditions: adventure.cancellationConditions || "",
+                capacity: adventure.capacity || "",
+                equipment: adventure.equipment.toString() || ""
             })
         })
       },[])
@@ -73,6 +74,10 @@ export default function UpdateAdventureForm(props) {
             const adventureJson = adventureToJson();
             data.append("adventure", adventureJson)
             AdventureService.updateAdventure(data, id)
+            .then(response => {
+                alert(response.data);
+                window.location.reload();
+            });
         }
         
     }
@@ -154,103 +159,107 @@ export default function UpdateAdventureForm(props) {
     );
     
     return (
-        <div className="form-container">
-            <form className="form" onSubmit={handleSubmit}>
-                <h2 className="form--title">Update adventure</h2>
-                <input 
-                    type="text"
-                    placeholder="Name"
-                    className="form--input"
-                    name="name"
-                    onChange={handleChange}
-                    value={formData.name}
-                />
-                {/* {renderErrorMessage(errorMessages.nameError)} */}
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "State"
-                    onChange = {handleAddressChange}
-                    name = "state"
-                    value = {formData.address.state}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "City"
-                    onChange = {handleAddressChange}
-                    name = "city"
-                    value = {formData.address.city}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Zip"
-                    onChange = {handleAddressChange}
-                    name = "zipCode"
-                    value = {formData.address.zipCode}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Street"
-                    onChange = {handleAddressChange}
-                    name = "street"
-                    value = {formData.address.street}          
-                />
-                {/* {renderErrorMessage(errorMessages.addressError)} */}
-                <input 
-                    type="text" 
-                    placeholder="Capacity"
-                    className="form--input"
-                    name="capacity"
-                    onChange={handleChange}
-                    value={formData.capacity}
-                />
-                {/* {renderErrorMessage(errorMessages.capacityError)} */}
-                <input 
-                    type="text" 
-                    placeholder="Hourly rate"
-                    className="form--input"
-                    name="hourlyRate"
-                    onChange={handleChange}
-                    value={formData.hourlyRate}
-                />
-                {/* {renderErrorMessage(errorMessages.hourlyRateError)} */}
-                <textarea 
-                    placeholder="Promo description"
-                    className="form--input-area"
-                    name="promoDescription"
-                    onChange={handleChange}
-                    value={formData.promoDescription}
-                />
-                <textarea 
-                    placeholder="Behaviour rules"
-                    className="form--input-area"
-                    name="rules"
-                    onChange={handleChange}
-                    value={formData.rules}
-                />
-                <textarea 
-                    placeholder="Equipment(separate with ',')"
-                    className="form--input-area"
-                    name="equipment"
-                    onChange={handleChange}
-                    value={formData.equipment}
-                />
-                <textarea 
-                    placeholder="Cancelation conditions"
-                    className="form--input-area"
-                    name="cancellationConditions"
-                    onChange={handleChange}
-                    value={formData.cancellationConditions}
-                />               
-                <button
-                    className="form--submit"
-                >
-                    Update adventure
-                </button>
-            </form>
+        <div>
+            <Header />
+            <div className="form-container">
+                <form className="form" onSubmit={handleSubmit}>
+                    <h2 className="form--title">Update adventure</h2>
+                    <input 
+                        type="text"
+                        placeholder="Name"
+                        className="form--input"
+                        name="name"
+                        onChange={handleChange}
+                        value={formData.name}
+                    />
+                    {/* {renderErrorMessage(errorMessages.nameError)} */}
+                    <input 
+                        className="form--input"
+                        type = "text"
+                        placeholder = "State"
+                        onChange = {handleAddressChange}
+                        name = "state"
+                        value = {formData.address.state}          
+                    />
+                    <input 
+                        className="form--input"
+                        type = "text"
+                        placeholder = "City"
+                        onChange = {handleAddressChange}
+                        name = "city"
+                        value = {formData.address.city}          
+                    />
+                    <input 
+                        className="form--input"
+                        type = "text"
+                        placeholder = "Zip"
+                        onChange = {handleAddressChange}
+                        name = "zipCode"
+                        value = {formData.address.zipCode}          
+                    />
+                    <input 
+                        className="form--input"
+                        type = "text"
+                        placeholder = "Street"
+                        onChange = {handleAddressChange}
+                        name = "street"
+                        value = {formData.address.street}          
+                    />
+                    {/* {renderErrorMessage(errorMessages.addressError)} */}
+                    <input 
+                        type="text" 
+                        placeholder="Capacity"
+                        className="form--input"
+                        name="capacity"
+                        onChange={handleChange}
+                        value={formData.capacity}
+                    />
+                    {/* {renderErrorMessage(errorMessages.capacityError)} */}
+                    <input 
+                        type="text" 
+                        placeholder="Hourly rate"
+                        className="form--input"
+                        name="hourlyRate"
+                        onChange={handleChange}
+                        value={formData.hourlyRate}
+                    />
+                    {/* {renderErrorMessage(errorMessages.hourlyRateError)} */}
+                    <textarea 
+                        placeholder="Promo description"
+                        className="form--input-area"
+                        name="promoDescription"
+                        onChange={handleChange}
+                        value={formData.promoDescription}
+                    />
+                    <textarea 
+                        placeholder="Behaviour rules"
+                        className="form--input-area"
+                        name="rules"
+                        onChange={handleChange}
+                        value={formData.rules}
+                    />
+                    <textarea 
+                        placeholder="Equipment(separate with ',')"
+                        className="form--input-area"
+                        name="equipment"
+                        onChange={handleChange}
+                        value={formData.equipment}
+                    />
+                    <textarea 
+                        placeholder="Cancelation conditions"
+                        className="form--input-area"
+                        name="cancellationConditions"
+                        onChange={handleChange}
+                        value={formData.cancellationConditions}
+                    />               
+                    <button
+                        className="form--submit"
+                    >
+                        Update adventure
+                    </button>
+                </form>
+            </div>
         </div>
+        
     )
 }

@@ -12,6 +12,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .form {
@@ -83,8 +85,6 @@ body {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 20px;
     margin-top: 50px;
-    margin-left: 50px;
-    margin-right: 40px;
 }
 
 .item {
@@ -93,6 +93,8 @@ body {
     justify-content: center;
     margin-bottom: 20px;
     padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .profile-photo {
@@ -100,6 +102,8 @@ body {
     height: fit-content;
     border: 1px solid #ccc;
     display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 input[type="file"] {
@@ -119,4 +123,6 @@ input[type="file"] {
     display: block;
     width: fit-content;
     height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }

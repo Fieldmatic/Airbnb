@@ -3,6 +3,8 @@ import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import BoatOwnerService from "../../services/BoatOwnerService"
 import CottageOwnerService from "../../services/CottageOwnerService"
 import ClientService from '../../services/ClientService';
+import { Navigate } from "react-router-dom";
+import Header from "../../Header";
 
 export default function OwnerRegistration() {
     const [formData, setFormData] = React.useState (
@@ -23,6 +25,8 @@ export default function OwnerRegistration() {
         }
   
     )
+
+    const [redirect, setRedirect] = React.useState("");
 
     const [files, setFiles] = React.useState([]);
 
@@ -84,134 +88,144 @@ export default function OwnerRegistration() {
         })
         ClientService.addClient(data).then((response) => {
             alert(response.data);
+            setRedirect("/")
         }).catch((err) => {
             alert(err.response.data);
         });
     }
+
+    if (redirect){
+        return (
+            <Navigate to={redirect}/>
+        )
+    }
     
     return (
-    <div className="form-container">
-        <form className="form" onSubmit={handleSubmit}>
-        <h1 className='form--header'>Client Registration</h1>
-        <input
-            className="form--input"
-            type = "text"
-            placeholder = "Name"
-            onChange = {handleChange}
-            name = "name"
-            value = {formData.name}   
-        />
-        <input
-            className="form--input"
-            type = "text"
-            placeholder = "Surname"
-            onChange = {handleChange}
-            name = "surname"
-            value = {formData.surname}   
-        />
-        <input 
-            className="form--input"
-            type = "text"
-            placeholder = "State"
-            onChange = {handleAddressChange}
-            name = "state"
-            value = {formData.address.state}          
-        />
-        <input 
-            className="form--input"
-            type = "text"
-            placeholder = "City"
-            onChange = {handleAddressChange}
-            name = "city"
-            value = {formData.address.city}          
-        />
-        <input 
-            className="form--input"
-            type = "text"
-            placeholder = "Zip"
-            onChange = {handleAddressChange}
-            name = "zipCode"
-            value = {formData.address.zipCode}          
-        />
-        <input 
-            className="form--input"
-            type = "text"
-            placeholder = "Street"
-            onChange = {handleAddressChange}
-            name = "street"
-            value = {formData.address.street}          
-        />
-        <input
-            className="form--input"
-            type = "text"
-            placeholder = "Username"
-            onChange = {handleChange}
-            name = "username"
-            value = {formData.username}   
-        />
-        <input
-            className="form--input"
-            type = "password"
-            placeholder = "Password"
-            onChange = {handleChange}
-            name = "password"
-            value = {formData.password}   
-        />
-        <input
-            className="form--input"
-            type = "password"
-            placeholder = "Retype Password"
-            onChange = {handleChange}
-            name = "passwordRetype"
-            value = {formData.passwordRetype}   
-        />
-        <input
-            className="form--input"
-            type = "text"
-            placeholder = "Email"
-            onChange = {handleChange}
-            name = "email"
-            value = {formData.email}   
-        />
-        <input
-            className="form--input"
-            type = "text"
-            placeholder = "Phone number"
-            onChange = {handleChange}
-            name = "phoneNumber"
-            value = {formData.phoneNumber}   
-        />       
-        <Dropzone
-            style={{ minWidth: "100%", margin:"20px", fontSize:"20px" }}
-            onChange={updateFiles}
-            minHeight="10%"
-            onClean={handleClean}
-            value={files}
-            maxFiles={1}
-            header={true}
-            maxFileSize={5000000}
-        >
-            {files.map((file) => (
-            <FileItem
-                {...file}
-                key={file.id}
-                onDelete={onDelete}
-                onSee={handleSee}
-                resultOnTooltip
-                preview
-                info
-                hd
-            />
-            ))}
-            <FullScreenPreview
-            imgSource={imageSrc}
-            openImage={imageSrc}
-            onClose={(e) => handleSee(undefined)}
-            />
-        </Dropzone>
-        <button className="form--submit">Submit</button>  
-     </form>
-    </div>
+        <div>
+            <Header />
+            <div className="form-container">
+                <form className="form" onSubmit={handleSubmit}>
+                <h1 className='form--header'>Client Registration</h1>
+                <input
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Name"
+                    onChange = {handleChange}
+                    name = "name"
+                    value = {formData.name}   
+                />
+                <input
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Surname"
+                    onChange = {handleChange}
+                    name = "surname"
+                    value = {formData.surname}   
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "State"
+                    onChange = {handleAddressChange}
+                    name = "state"
+                    value = {formData.address.state}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "City"
+                    onChange = {handleAddressChange}
+                    name = "city"
+                    value = {formData.address.city}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Zip"
+                    onChange = {handleAddressChange}
+                    name = "zipCode"
+                    value = {formData.address.zipCode}          
+                />
+                <input 
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Street"
+                    onChange = {handleAddressChange}
+                    name = "street"
+                    value = {formData.address.street}          
+                />
+                <input
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Username"
+                    onChange = {handleChange}
+                    name = "username"
+                    value = {formData.username}   
+                />
+                <input
+                    className="form--input"
+                    type = "password"
+                    placeholder = "Password"
+                    onChange = {handleChange}
+                    name = "password"
+                    value = {formData.password}   
+                />
+                <input
+                    className="form--input"
+                    type = "password"
+                    placeholder = "Retype Password"
+                    onChange = {handleChange}
+                    name = "passwordRetype"
+                    value = {formData.passwordRetype}   
+                />
+                <input
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Email"
+                    onChange = {handleChange}
+                    name = "email"
+                    value = {formData.email}   
+                />
+                <input
+                    className="form--input"
+                    type = "text"
+                    placeholder = "Phone number"
+                    onChange = {handleChange}
+                    name = "phoneNumber"
+                    value = {formData.phoneNumber}   
+                />       
+                <Dropzone
+                    style={{ minWidth: "100%", margin:"20px", fontSize:"20px" }}
+                    onChange={updateFiles}
+                    minHeight="10%"
+                    onClean={handleClean}
+                    value={files}
+                    maxFiles={1}
+                    header={true}
+                    maxFileSize={5000000}
+                >
+                    {files.map((file) => (
+                    <FileItem
+                        {...file}
+                        key={file.id}
+                        onDelete={onDelete}
+                        onSee={handleSee}
+                        resultOnTooltip
+                        preview
+                        info
+                        hd
+                    />
+                    ))}
+                    <FullScreenPreview
+                    imgSource={imageSrc}
+                    openImage={imageSrc}
+                    onClose={(e) => handleSee(undefined)}
+                    />
+                </Dropzone>
+                <button className="form--submit">Submit</button>  
+            </form>
+            </div>
+        </div>
     )
 
     function getClientJson() {

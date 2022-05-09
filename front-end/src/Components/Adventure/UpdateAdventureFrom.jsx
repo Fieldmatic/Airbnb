@@ -1,5 +1,4 @@
 import React from 'react'
-import './AddAdventureForm.css'
 import AdventureService from '../../services/AdventureService'
 import { useParams } from 'react-router-dom'
 import Header from '../../Header'

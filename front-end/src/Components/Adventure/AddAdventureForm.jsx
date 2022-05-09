@@ -1,5 +1,4 @@
 import React from 'react'
-import './AddAdventureForm.css'
 import AdventureService from '../../services/AdventureService'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import { Navigate } from "react-router-dom";
@@ -175,7 +174,7 @@ export default function AddAdventureForm() {
             <Header />
             <div className="form-container">
                 <form className="form" onSubmit={handleSubmit}>
-                    <h2 className="form--title">Create adventure</h2>
+                    <h2 className="form--header">Create adventure</h2>
                     <input 
                         type="text"
                         placeholder="Name"
@@ -265,9 +264,9 @@ export default function AddAdventureForm() {
                         value={formData.cancellationConditions}
                     />
                     <Dropzone
-                        style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
+                        style={{ minWidth: "95%", margin:"20px", fontSize:"18px" }}
                         onChange={updateFiles}
-                        minHeight="10%"
+                        minHeight="20vh"
                         onClean={handleClean}
                         value={files}
                         maxFiles={10}

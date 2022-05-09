@@ -114,7 +114,7 @@ export default function Cottage() {
       <Header />
       <div className="form-container">
         <form className="form" onSubmit={handleSubmit}>
-          <h1 className='form--header'>Vikendica</h1>
+          <h1 className='form--header'>Cottage</h1>
           <input
             className="form--input"
             type = "text"
@@ -209,9 +209,9 @@ export default function Cottage() {
             <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
           </div>
           <Dropzone
-        style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
+        style={{minWidth: "95%", margin:"20px", fontSize:"18px" }}
         onChange={updateFiles}
-        minHeight="10%"
+        minHeight="20vh"
         onClean={handleClean}
         value={files}
         maxFiles={10}

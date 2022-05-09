@@ -1,7 +1,7 @@
 
 .form-container {
     background-color: #FF5A5F;
-    height: 200vh;
+    height: 100%;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -12,8 +12,8 @@
 .form {
     background-color: white;
     padding: 50px;
-    height: 180vh;
-    width: 50vh;
+    height: 100%;
+    width: 30%;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -21,12 +21,13 @@
     box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
     box-sizing: border-box;
     font-size: large;
+    margin: 4% 0 4% 0 ;
 }
 
 .form--input {
-    width: 97%;
+    width: 95%;
     margin-bottom: 20px;
-    height: 40px;
+    height: 4vh;
     border-radius: 5px;
     border: 1px solid gray;
     padding: 5px;
@@ -34,7 +35,7 @@
 }
 
 .form--input-area {
-    width: 97%;
+    width: 95%;
     margin-bottom: 20px;
     height: 70px;
     border-radius: 5px;
@@ -44,14 +45,19 @@
     resize: none;
 }
 
-.form--submit {
-    width: 100%;
+.form--submit, .form--save {
+    width: 97%;
     padding: 10px;
     border-radius: 5px;
     color: white;
     background-color: #FF5A5F;
     border: none;
     cursor: pointer; 
+}
+
+.form--save {
+    margin-top: 3%;
+
 }
 
 .form--marketing {
@@ -66,7 +72,7 @@
 
 .form--header{
     margin-bottom: 20px;
-    color: blac;
+    color: black;
 }
 
 .counter{
@@ -78,16 +84,18 @@
     display: flex;
     flex-direction: row;
     font-size: medium;
-    width: 100%;
+    width: 95%;
     margin: 2px;
-    margin-left: 12px;
+    margin-left: 3px;
     align-items: left;
+    font-size: 18px;
 }
 
 .counter{
-    height: 50%;
+    height: 100%;
 }
 
 .bedRoom--label{
-    width: 40%;
+    width: 45%;
+    margin-top: 2%;
 }

@@ -254,9 +254,9 @@ export default function Boat () {
                     name = "fishingEquipment"
                 />            
                 <Dropzone
-                style={{ minWidth: "100%", margin:"20px", fontSize:"20px" }}
+                style={{ minWidth: "95%", margin:"20px", fontSize:"18px" }}
                 onChange={updateFiles}
-                minHeight="10%"
+                minHeight="20vh"
                 onClean={handleClean}
                 value={files}
                 maxFiles={10}

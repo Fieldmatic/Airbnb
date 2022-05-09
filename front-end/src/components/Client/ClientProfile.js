@@ -7,6 +7,7 @@ import Header from "../../Header";
 export default function ClientProfile() {
     const [reasonForDeletion, setReasonForDeletion] = useState("")
     const [deletePopup, setDeletePopup] = useState(false)
+    const [opacityClass, setOpacityClass] = useState("")
     const [editClicked, setEditClicked] = useState(
         {
             usernameButton: false,
@@ -73,7 +74,6 @@ export default function ClientProfile() {
         })
         ClientService.updateClient(client)
     }
-    
 
     useEffect(() => {
         ClientService.getClient().then((response) => {
@@ -82,6 +82,7 @@ export default function ClientProfile() {
     }, [])
 
     function handlePopupChange(event) {
+        event.preventDefault()
         setReasonForDeletion(event.target.value)
     }
 
@@ -90,13 +91,23 @@ export default function ClientProfile() {
         ClientService.saveReason(reasonForDeletion)
     }
 
+    function openPopup(event) {
+        event.preventDefault()
+        setDeletePopup(true)
+        setOpacityClass("formOpacity");
+    }
+
+    function changeOpacity() {
+        setOpacityClass("")
+      }
+
 
     return (
         <div>
             <Header />
             <div className="userProfile">
                 <h2 className="userProfileHeader"> Personal details</h2>    
-                <form className="userProfileForm">
+                <form className={`userProfileForm ${opacityClass}`}>
                 <label className="userLabel"> Username </label>
                 {editClicked.usernameButton ? 
                     <input className="textBox"
@@ -158,7 +169,7 @@ export default function ClientProfile() {
                 <br></br>
 
 
-                <label className="userLabel"> PhoneNumber </label>
+                <label className="userLabel"> Phone Number </label>
                 {editClicked.phoneNumberButton? 
                     <input className="textBox"
                     type="text"
@@ -215,19 +226,18 @@ export default function ClientProfile() {
                     <label className='userLabel'> {client.address.state}</label>
                 }
                 <button className="updateBtn" id="stateButton" onClick={toggleShown}> {editClicked.stateButton? "Save" : "Edit"}</button>
+                <br></br><br></br><br></br>
+                <button onClick={openPopup} className='deleteButton'> Delete your profile</button>
                 </form>
-                <br></br><br></br>
-                <button onClick={() => setDeletePopup(true)} className='deleteButton'> Delete your profile</button>
-                <Popup trigger={deletePopup} setTrigger={setDeletePopup}> 
-                    <h3> Razlog za brisanje naloga: </h3>
-                    <textarea className='textAreaReason' rows="10" cols="40"
-                        value={reasonForDeletion}
-                        placeholder="Comments"
-                        onChange={handlePopupChange}
-                        name="comments"
-                    />   
-                    <button className='saveReasonButton' onClick={saveDeletionReason}> Save</button>
+                <Popup className="delete-profile-popup" trigger={deletePopup} setTrigger={setDeletePopup} value={opacityClass} 
+                handleChange={changeOpacity}
+                popupChange={handlePopupChange}
+                saveReason={saveDeletionReason}
+                title="Account deletion request"
+                placeHolder = "Reason for deletion"
+                rightButtonContent="Send">
                 </Popup>
+            
             </div>
         </div>
     )

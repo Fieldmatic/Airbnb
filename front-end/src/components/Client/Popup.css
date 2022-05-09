@@ -1,30 +1,49 @@
+
+
 .popup {
-    position: fixed;
-    top: 0;
-    left: 10px;
-    width: 100%;
-    height: 100vh;
     display: flex;
-    justify-content: left;
-    align-items: center;
-}
-
-.popup-inner {
-    position: relative;
+    flex-direction: column;
     padding: 10px;
-    width: 30%;
+    width: 31%;
+    height: 20%;
+    background-color: white;
+    border-radius: 9px;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: left;
+}
+
+.textAreaReason {
     height: 50%;
+    width: 95%;
+    text-indent: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 5px 5px -2px rgba(0,0,0,0.75);
+    box-sizing: border-box;
+    margin: 2% 0% 1% 0%
+}
+
+.popup--buttons {
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    justify-content: space-between;
+    margin-top: 3%;
+}
+
+.close-btn, .saveReasonButton {
+    color: white;
     background-color: #FF5A5F;
+    width: 20%;
+    height: 3vh;
+    bottom: 0;
+    right: 0;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer; 
 }
 
 
-.popup-inner .close-btn {
-    position: absolute;
-    left: 20px;
-    bottom: 20px;
-    background-color:lavenderblush;
-    color: black;
-    font-weight: bolder;
-    height: 30px;
-    width: 80px;
-}

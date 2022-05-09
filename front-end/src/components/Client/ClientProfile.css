@@ -19,16 +19,22 @@
 
 .userProfile {
     text-align: center;
-    color: black;
-    font-weight: lighter;
-    padding: 50px;
-    margin-top: 5px;
+    background-color: #FF5A5F;
+    height: 100vh;
+    padding: 20px;
 }
 
 .userProfileForm {
     display: inline-block;
-    background-color:lavenderblush;
+    background-color:white;
     padding: 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
+    box-sizing: border-box;
+}
+
+.formOpacity {
+    opacity: .1;
 }
 
 .userLabel {
@@ -39,37 +45,28 @@
 }
 
 .updateBtn {
-    border-color:black;
+    color: white;
     background-color: #FF5A5F;
-    font-weight: bolder;
+    width: 100px;
+    height: 25px;
     bottom: 0;
     right: 0;
-}
-
-.textAreaReason {
-    height: auto;
-    width: auto;
-    text-indent: 10px;
-    border: 1px solid #444;
     border-radius: 5px;
-    margin-top: 10px;
-}
-
-.saveReasonButton {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    background-color:lavenderblush;
-    color: black;
-    font-weight: bolder;
-    height: 30px;
-    width: 77px;
+    color: white;
+    background-color: #FF5A5F;
+    border: none;
+    cursor: pointer; 
 }
 
 .deleteButton {
-    border-color:black;
+    width: 300px;
+    height: 30px;
     background-color: #FF5A5F;
-    font-weight: bold;
     align-items: left;
     margin-left: 10px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    cursor: pointer; 
 }
+

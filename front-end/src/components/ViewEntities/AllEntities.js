@@ -13,7 +13,7 @@ import Header from "../../Header";
 function AllEntities() {
     const [allCards, setAllCards] = React.useState([])
     const [entityType, setEntityType] = React.useState("cottage")
-    const [priority, setPriority] = React.useState("price")
+    const [priority, setPriority] = React.useState("priceLowest")
     const [cottageButtonStyle, setCottageButtonStyle] = React.useState("entityButton")
     const [boatButtonStyle, setBoatButtonStyle] = React.useState("entityButton")
     const [adventureButtonStyle, setAdventureButtonStyle] = React.useState("entityButton")
@@ -96,9 +96,8 @@ function AllEntities() {
     return (
         <div>
             <Header />
-            <div className="allEntities">
+            <div className="entities-view">
                 <div className="sort">
-                    <label className="sort">Sort by: </label>
                     <select 
                         className="form--type"
                         name="type"
@@ -110,18 +109,20 @@ function AllEntities() {
                         <option value="ratingPrice">Best rating and lowest price</option>
                     </select>
                 </div>
-                <button className={cottageButtonStyle} onClick={showAllCottages}> 
-                    <CottageIcon fontSize="large"></CottageIcon>
-                    Cottages
-                </button>
-                <button className={boatButtonStyle} onClick={showAllBoats}>
-                    <DirectionsBoatIcon fontSize="large"></DirectionsBoatIcon>
-                    Boats
-                </button>
-                <button className={adventureButtonStyle} onClick={showAllAdventures}>
-                    <PhishingIcon fontSize="large"></PhishingIcon>                
-                    Adventures
-                </button>
+                <div className="entities">
+                    <button className={cottageButtonStyle} onClick={showAllCottages}> 
+                        <CottageIcon fontSize="large"></CottageIcon>
+                        Cottages
+                    </button>
+                    <button className={boatButtonStyle} onClick={showAllBoats}>
+                        <DirectionsBoatIcon fontSize="large"></DirectionsBoatIcon>
+                        Boats
+                    </button>
+                    <button className={adventureButtonStyle} onClick={showAllAdventures}>
+                        <PhishingIcon fontSize="large"></PhishingIcon>                
+                        Adventures
+                    </button>
+                </div>
                 {cards}
             </div>
         </div>

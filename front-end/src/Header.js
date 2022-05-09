@@ -9,10 +9,12 @@ import { Link } from 'react-router-dom';
 export default function Header(){
     return (
         <div className = 'header'>
-            <img className='header__icon'
-            src = "https://cdn.worldvectorlogo.com/logos/airbnb.svg"
-            alt = ""
-            />
+            <Link to={'/'}>
+                <img className='header__icon'
+                src = "https://cdn.worldvectorlogo.com/logos/airbnb.svg"
+                alt = ""
+                />
+            </Link>
             <div className='header__center'>
                 <input type ='text' />
                 <SearchIcon/>
@@ -22,7 +24,7 @@ export default function Header(){
              <Link to={'/addCottage'} style={{textDecoration: 'none', color:'black'}}>Add Cottage</Link>
              <Link to={'/addAdventure'} style={{textDecoration: 'none', color:'black'}}>Add Adventure</Link>
              <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
-             <Link to={'/showEntities'} style={{textDecoration: 'none', color:'black'}}>View</Link>
+             <Link to={'/showEntities'} style={{textDecoration: 'none', color:'black'}}>View offers</Link>
 
             </div>
              

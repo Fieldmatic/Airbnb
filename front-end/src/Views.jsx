@@ -22,8 +22,6 @@ const Views = () => {
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
       <Route path = "/editCottage/:id" element = {<EditCottage/>}/>
-      <Route path = "/addExperience" element = {<div>Pecanje</div>}/>
-      <Route path = "/addExperience" element = {<div>Pecanje</div>}/>
       <Route path = "/editProfile" element = {< ClientProfile />}/>
       <Route path = "/showEntities" element = {< AllEntities />}/>
       <Route path = "/addBoat" element = {<Boat/>}/>

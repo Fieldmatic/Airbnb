@@ -1,13 +1,14 @@
 .header {
     display: flex;
-    margin-top: 10px;
+    margin: 10px 0px 10px px;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     background-color: white;
     top: 0;
-    z-index: 100;
+    z-index: 50;
     width: 100%;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
 }
 
 .header__icon {
@@ -22,9 +23,10 @@
     flex: 1;
     max-width: fit-content;
     padding: 10px;
-    height: 30px;
+    height: 20px;
     border: 1px solid lightgray;
     border-radius: 999px;
+    margin: 15px 0px 15px 0px;
     
 }
 
@@ -48,5 +50,5 @@
     font-weight: bold;
     align-items: center;
     justify-content: space-between;
-    width: 24vw;
+    width: 35%;
 }

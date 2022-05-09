@@ -3,6 +3,7 @@ import "./ClientProfile.css"
 import ClientService from '../../services/ClientService'
 import Popup from './Popup'
 import Header from "../../Header";
+import ProfilePicture from './ProfilePicture';
 
 export default function ClientProfile() {
     const [reasonForDeletion, setReasonForDeletion] = useState("")
@@ -86,8 +87,7 @@ export default function ClientProfile() {
         setReasonForDeletion(event.target.value)
     }
 
-    function saveDeletionReason(event) {
-        event.preventDefault()
+    function saveDeletionReason() {
         ClientService.saveReason(reasonForDeletion)
     }
 
@@ -108,36 +108,35 @@ export default function ClientProfile() {
             <div className="userProfile">
                 <h2 className="userProfileHeader"> Personal details</h2>    
                 <form className={`userProfileForm ${opacityClass}`}>
-                <label className="userLabel"> Username </label>
-                {editClicked.usernameButton ? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateClient}
-                    name="username"
-                    value={client.username}
+                <div className='client-form-data'>
+                    <label className="userLabel"> Username </label>
+                    {editClicked.usernameButton ? 
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateClient}
+                        name="username"
+                        value={client.username}
+                        />
+                    : 
+                        <label className='userLabel'> {client.username}</label>
+                    }
+                    <button className="updateBtn" id="usernameButton" onClick={toggleShown}> {editClicked.usernameButton? "Save" : "Edit"}</button>
+                </div>
+                <div className='client-form-data'>
+                    <label className="userLabel"> First Name </label>
+                    {editClicked.nameButton ? 
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateClient}
+                        name="name"
+                        value={client.name}
                     />
-                : 
-                    <label className='userLabel'> {client.username}</label>
-                }
-                <button className="updateBtn" id="usernameButton" onClick={toggleShown}> {editClicked.usernameButton? "Save" : "Edit"}</button>
-                <br></br>
-                <br></br>
-
-                <label className="userLabel"> First Name </label>
-                {editClicked.nameButton ? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateClient}
-                    name="name"
-                    value={client.name}
-                />
-                : 
-                    <label className='userLabel'> {client.name}</label>
-                }
-                <button className="updateBtn" id="nameButton" onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
-                <br></br>
-                <br></br>
-
+                    : 
+                        <label className='userLabel'> {client.name}</label>
+                    }
+                    <button className="updateBtn" id="nameButton" onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
+                </div>
+                <div className='client-form-data'>
                 <label className="userLabel"> Last Name </label>
                 {editClicked.surnameButton ? 
                     <input className="textBox"
@@ -150,9 +149,8 @@ export default function ClientProfile() {
                     <label className='userLabel'> {client.surname}</label>
                 }
                 <button className="updateBtn" id="surnameButton" onClick={toggleShown}> {editClicked.surnameButton? "Save" : "Edit"}</button>
-                <br></br>
-                <br></br>
-
+                </div>
+                <div className='client-form-data'>
                 <label className="userLabel"> Email </label>
                 {editClicked.emailButton ? 
                     <input className="textBox"
@@ -165,10 +163,8 @@ export default function ClientProfile() {
                     <label className='userLabel'> {client.email}</label>
                 }
                 <button className="updateBtn" id="emailButton" onClick={toggleShown}> {editClicked.emailButton? "Save" : "Edit"}</button>
-                <br></br>
-                <br></br>
-
-
+                </div>
+                <div className='client-form-data'>
                 <label className="userLabel"> Phone Number </label>
                 {editClicked.phoneNumberButton? 
                     <input className="textBox"
@@ -181,9 +177,8 @@ export default function ClientProfile() {
                     <label className='userLabel'> {client.phoneNumber}</label>
                 }
                 <button className="updateBtn" id="phoneNumberButton" onClick={toggleShown}> {editClicked.phoneNumberButton? "Save" : "Edit"}</button>
-                <br></br>
-                <br></br>
-
+                </div>
+                <div className='client-form-data'>
                 <label className="userLabel"> Street </label>
                 {editClicked.streetButton? 
                     <input className="textBox"
@@ -196,9 +191,8 @@ export default function ClientProfile() {
                     <label className='userLabel'> {client.address.street}</label>
                 }
                 <button className="updateBtn" id="streetButton" onClick={toggleShown}> {editClicked.streetButton? "Save" : "Edit"}</button>
-                <br></br>
-                <br></br>
-
+                </div>
+                <div className='client-form-data'>
                 <label className="userLabel"> City </label>
                 {editClicked.cityButton? 
                     <input className="textBox"
@@ -211,9 +205,8 @@ export default function ClientProfile() {
                     <label className='userLabel'> {client.address.city}</label>
                 }
                 <button className="updateBtn" id="cityButton" onClick={toggleShown}> {editClicked.cityButton? "Save" : "Edit"}</button>
-                <br></br>
-                <br></br>
-                
+                </div>
+                <div className='client-form-data'>                 
                 <label className="userLabel"> State </label>
                 {editClicked.stateButton? 
                     <input className="textBox"
@@ -226,9 +219,10 @@ export default function ClientProfile() {
                     <label className='userLabel'> {client.address.state}</label>
                 }
                 <button className="updateBtn" id="stateButton" onClick={toggleShown}> {editClicked.stateButton? "Save" : "Edit"}</button>
-                <br></br><br></br><br></br>
+                </div>
                 <button onClick={openPopup} className='deleteButton'> Delete your profile</button>
                 </form>
+                <ProfilePicture />
                 <Popup className="delete-profile-popup" trigger={deletePopup} setTrigger={setDeletePopup} value={opacityClass} 
                 handleChange={changeOpacity}
                 popupChange={handlePopupChange}
@@ -237,7 +231,6 @@ export default function ClientProfile() {
                 placeHolder = "Reason for deletion"
                 rightButtonContent="Send">
                 </Popup>
-            
             </div>
         </div>
     )

@@ -119,7 +119,7 @@ export default function InstructorRegistration() {
             <Header />
             <div className="form-container">
                 <form className="form" onSubmit={handleSubmit}>
-                    <h2 className="form--title">Registration</h2>
+                    <h2 className="form--title">Instructor Registration</h2>
                     <input 
                         type="text"
                         placeholder="Username"

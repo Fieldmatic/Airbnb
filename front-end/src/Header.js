@@ -1,5 +1,6 @@
 import React from 'react';
 import './Header.css'
+import MenuItems from './MenuItems.jsx'
 import SearchIcon from '@mui/icons-material/Search';
 import LanguageIcon from '@mui/icons-material/Language';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -17,24 +18,45 @@ export default function Header(){
             </Link>
             <div className='header__center'>
                 <input type ='text' />
-                <SearchIcon/>
-                
+                <SearchIcon/>        
             </div>
             <div className='header__links'>
              <Link to={'/addCottage'} style={{textDecoration: 'none', color:'black'}}>Add Cottage</Link>
+             <Link to={'/addBoat'} style={{textDecoration: 'none', color:'black'}}>Add Boat</Link>
              <Link to={'/addAdventure'} style={{textDecoration: 'none', color:'black'}}>Add Adventure</Link>
              <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
-             <Link to={'/showEntities'} style={{textDecoration: 'none', color:'black'}}>View offers</Link>
+             <Link to={'/showEntities'} style={{textDecoration: 'none', color:'black'}}>View Offers</Link>
 
             </div>
              
             <div className='header__right'>
-                <p>Become a host</p>
-                <LanguageIcon/>
+            <ul className="menus">
+                {menuItems.map((menu, index) => {
+                    return <MenuItems items={menu} key={index} />;
+                })}
+            </ul>
                 <ExpandMoreIcon/>
-                <Avatar/>
+                <Link to={'/clientRegistration'} style={{textDecoration: 'none', color:'black'}}>
+                    <Avatar/>
+                </Link>
+                
             </div>
         </div>
 
     )
 }
+
+export const menuItems = [
+    {
+        title: "Become a host",
+        submenu: [
+         {
+          title: "Cottage & boat owner",
+          path: "/ownerRegistration"
+         },
+         {
+          title: "Instructor",
+          path: "/registrateInstructor"
+         }]
+    }
+   ];

@@ -20,6 +20,10 @@ class ClientService {
     addClient(formData){
         return axios.post (CLIENT_BASED_REST_API_URL + "/add", formData)
     }
+
+    getProfilePicture() {
+        return axios.get(CLIENT_BASED_REST_API_URL + "/getProfilePicture", {responseType: 'blob'})
+    }
 }
 
 

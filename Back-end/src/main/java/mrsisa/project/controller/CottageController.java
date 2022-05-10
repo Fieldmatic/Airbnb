@@ -33,14 +33,17 @@ public class CottageController {
 
     @GetMapping(value="/all")
     public ResponseEntity<List<CottageDTO>> getAllCottages() {
-        List<Cottage> cottages =cottageService.findAll();
-
-        List<CottageDTO> cottagesDTO = new ArrayList<>();
-        for (Cottage cottage : cottages) {
-            cottagesDTO.add(new CottageDTO(cottage));
-        }
+        List<CottageDTO> cottagesDTO = cottageService.findAll();
         return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
+
+    @GetMapping(value="/getOwnerCottages/{id}")
+    public ResponseEntity<List<CottageDTO>> getOwnerCottages(@PathVariable("id") Long id) {
+        List<CottageDTO> cottagesDTO = cottageService.findOwnerCottages(id);
+        return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
+    }
+
+
 
     @GetMapping(value = "/reviewsNumber/{id}")
     public ResponseEntity<Integer> getNumberOfCottageReviews(@PathVariable("id") Long id) {

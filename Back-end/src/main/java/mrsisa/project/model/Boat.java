@@ -19,6 +19,9 @@ public class Boat extends Bookable {
     private Double maxSpeed;
     private Integer capacity;
 
+    @ManyToOne
+    private BoatOwner boatOwner;
+
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<String> navigationEquipment;

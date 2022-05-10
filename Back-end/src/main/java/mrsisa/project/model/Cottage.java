@@ -12,4 +12,6 @@ import java.util.Map;
 public class Cottage extends Bookable {
     @ElementCollection(fetch = FetchType.EAGER)
     private Map<Integer, Integer> rooms;
+    @ManyToOne
+    private CottageOwner cottageOwner;
 }

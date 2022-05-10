@@ -6,6 +6,7 @@ import mrsisa.project.model.Address;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.model.PriceList;
 import mrsisa.project.repository.AddressRepository;
+import mrsisa.project.repository.CottageOwnerRepository;
 import mrsisa.project.repository.CottageRepository;
 import mrsisa.project.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class CottageService {
 
     @Autowired
     PriceListRepository priceListRepository;
+
+    @Autowired
+    CottageOwnerRepository cottageOwnerRepository;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
@@ -73,9 +77,21 @@ public class CottageService {
         }
     }
 
-    public List<Cottage> findAll() {
-        return cottageRepository.findAll();
+    public List<CottageDTO> findAll() {
+        List<CottageDTO> cottagesDTO = new ArrayList<>();
+        for (Cottage cottage : cottageRepository.findAll()) {
+            cottagesDTO.add(new CottageDTO(cottage));
+        }
+        return  cottagesDTO;
     }
+
+    public List<CottageDTO> findOwnerCottages(Long id) {
+        List<CottageDTO> cottagesDTO = new ArrayList<>();
+        for (Cottage cottage : cottageRepository.findOwnerCottages(id)) {
+            cottagesDTO.add(new CottageDTO(cottage));
+        }
+        return cottagesDTO;
+    };
 
     public void edit(CottageDTO dto, Long id) {
         Cottage cottage = cottageRepository.findById(id).orElse(null);

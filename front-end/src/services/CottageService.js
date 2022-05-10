@@ -17,6 +17,10 @@ class CottageService {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/all");
     }
 
+    getOwnerCottages(id){
+        return axios.get(COTTAGE_BASED_REST_API_URL + "/getOwnerCottages/" + id);
+    }
+
     getNumberOfCottageReviews(id) {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/reviewsNumber/" + id);
     }

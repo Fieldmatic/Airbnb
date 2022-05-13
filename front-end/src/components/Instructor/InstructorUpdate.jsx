@@ -114,7 +114,7 @@ export default function InstructorUpdate() {
     return (
         <div>
             <Header />
-            <div className="container">
+            <div className="instructor-update-container">
                 {/* Form */}
                 <div className="item">
                 <form className="form--instructor--update" onSubmit={handleSubmit}>

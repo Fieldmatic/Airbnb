@@ -42,7 +42,7 @@
     margin-right:2%;
     font-weight: bold;
     justify-content: space-between;
-    width: 15%;
+    width: 12%;
 }
 
 .header__links{
@@ -50,18 +50,13 @@
     font-weight: bold;
     align-items: center;
     justify-content: space-between;
-    width: 35%;
+    width: 50%;
 }
-
-  body {
-    font-family: sans-serif;
-  }
-
 
   .nav-area {
     display: flex;
     align-items: center;
-    max-width: 1200px;
+    max-width:100%;
     margin: 0 auto;
     padding: 0 20px;
     height: 58px;

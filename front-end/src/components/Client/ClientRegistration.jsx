@@ -1,7 +1,5 @@
 import React from 'react'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
-import BoatOwnerService from "../../services/BoatOwnerService"
-import CottageOwnerService from "../../services/CottageOwnerService"
 import ClientService from '../../services/ClientService';
 import { Navigate } from "react-router-dom";
 import Header from "../../Header";

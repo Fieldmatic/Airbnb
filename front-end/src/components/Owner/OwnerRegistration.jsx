@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import BoatOwnerService from "../../services/BoatOwnerService"
-import CottageOwnerService from "../../services/CottageOwnerService"
+import RegistrationService from "../../services/LoginRegisterService"
 import Header from "../../Header";
 import { Navigate } from "react-router-dom";
 
@@ -254,7 +254,7 @@ export default function OwnerRegistration() {
 
             });
         else if (type === "cottageOwner")
-            CottageOwnerService.addCottageOwner(data).then((response) => {
+            RegistrationService.addCottageOwner(data).then((response) => {
                 alert(response.data);
             }).catch((err) => {
                 alert(err.response.data);

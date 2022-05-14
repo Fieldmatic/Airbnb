@@ -9,6 +9,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,19 +25,22 @@ public class CottageController {
     @Autowired
     private CottageService cottageService;
 
+
     @PostMapping(value = "/add")
+    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
         cottageService.add(dto, multiPartFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
-
+    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     @GetMapping(value="/all")
     public ResponseEntity<List<CottageDTO>> getAllCottages() {
         List<CottageDTO> cottagesDTO = cottageService.findAll();
         return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     @GetMapping(value="/getOwnerCottages/{id}")
     public ResponseEntity<List<CottageDTO>> getOwnerCottages(@PathVariable("id") Long id) {
         List<CottageDTO> cottagesDTO = cottageService.findOwnerCottages(id);
@@ -52,6 +56,7 @@ public class CottageController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
         cottageService.edit(dto, id);

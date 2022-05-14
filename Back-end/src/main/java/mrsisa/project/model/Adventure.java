@@ -5,9 +5,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -22,4 +20,6 @@ public class Adventure extends Bookable{
     @Fetch(value = FetchMode.SUBSELECT)
     private List<String> fishingEquipment;
 
+    @OneToMany
+    private List<Period> busyPeriods;
 }

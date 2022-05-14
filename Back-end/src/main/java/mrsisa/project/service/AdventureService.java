@@ -3,9 +3,11 @@ package mrsisa.project.service;
 import mrsisa.project.dto.AdventureDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
+import mrsisa.project.model.Period;
 import mrsisa.project.model.PriceList;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.AdventureRepository;
+import mrsisa.project.repository.PeriodRepository;
 import mrsisa.project.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +35,9 @@ public class AdventureService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private PeriodRepository periodRepository;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
 
@@ -64,6 +70,9 @@ public class AdventureService {
             priceListRepository.save(adventure.getPriceList());
             adventure.setCapacity(dto.getCapacity());
             adventure.setFishingEquipment(dto.getEquipment());
+            adventure.getBusyPeriods().setStartDateTime(LocalDateTime.parse(dto.getStartDateTime()));
+            adventure.getBusyPeriods().setEndDateTime(LocalDateTime.parse(dto.getEndDateTime()));
+            periodRepository.save(adventure.getBusyPeriods());
             adventureRepository.save(adventure);
         }
     }
@@ -96,6 +105,11 @@ public class AdventureService {
         adventure.setRating(0.0);
         adventure.setCapacity(dto.getCapacity());
         adventure.setFishingEquipment(dto.getEquipment());
+        Period period = new Period();
+        period.setStartDateTime(LocalDateTime.now());
+        period.setEndDateTime(LocalDateTime.now());
+        periodRepository.save(period);
+        adventure.setBusyPeriods(period);
         return adventure;
     }
 

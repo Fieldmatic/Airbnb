@@ -1,0 +1,155 @@
+.hotelContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    position: relative;
+  }
+  
+  .hotelWrapper {
+    width: 100%;
+    height: 100%;
+    max-width: 1024px;
+    max-height: 1024px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  }
+  
+  
+  .hotelTitle {
+    font-size: 30px;
+  }
+
+  .entityAddressAndPrice {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .hotelAddress {
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .price {
+    font-size: x-large;
+    font-weight: bolder;
+  }
+
+  .night {
+    font-size: small;
+    font-size: medium;
+    font-weight: lighter;
+    color: #555;
+  }
+  
+  
+  .hotelImages {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .hotelImgWrapper {
+    width: 33%;
+    height: 200px;
+  }
+  
+  .hotelImg {
+    width: 99%;
+    height: 98%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  .paragraphs {
+    margin-top: 10px;
+    border-top: 2px solid rgba(18, 17, 17, 0.148);
+  }
+
+  .paragraphs > h3{
+    margin: 10px 0 10px 0;
+  }
+
+  .paragraphs > p{
+    margin-bottom: 20px;
+  }
+  
+  .hotelDetailsPrice {
+    flex: 1;
+    background-color: #ebf3ff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .slider{
+    position: absolute;
+    align-items: center;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.613);
+    z-index: 999;
+    margin-top: -20px;
+  }
+  
+  .sliderWrapper{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .sliderImg{
+    position: relative;
+    margin: 0% 5% 0% 8%;
+    width: 80%;
+    height: 80vh;
+  }
+  
+  .close{
+    position: absolute;
+    top: 2%;
+    right: 5%;
+    font-size: 30px;
+    color: lightgray;
+    cursor: pointer;
+  }
+  
+  .arrow{
+    margin: 20px;
+    font-size: 50px;
+    color: lightgray;
+    cursor: pointer;
+  }
+
+  .rating{
+    background-color: #FF5A5F;
+    padding: 3px;
+    width: fit-content;
+    border-radius: 5px;
+  }
+
+  .cottageCapacity {
+    display: flex;
+    gap: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.236);
+    padding: 5px;
+  }
+
+  .bedrooms, .beds {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .capacityNum {
+    font-weight: bolder;
+  }

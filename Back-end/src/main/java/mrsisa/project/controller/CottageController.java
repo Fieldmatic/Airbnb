@@ -32,20 +32,15 @@ public class CottageController {
 
 
     @GetMapping(value="/all")
-    public ResponseEntity<List<CottageDTO>> getAllCottages() {
-        List<Cottage> cottages =cottageService.findAll();
-
-        List<CottageDTO> cottagesDTO = new ArrayList<>();
-        for (Cottage cottage : cottages) {
-            cottagesDTO.add(new CottageDTO(cottage));
-        }
-        return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
+    public ResponseEntity<List<CottageDTO>> getAllCottages() throws IOException {
+        List<CottageDTO> cottages = cottageService.getDTOCottages();
+        if (cottages.size() == 0) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(cottages, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reviewsNumber/{id}")
     public ResponseEntity<Integer> getNumberOfCottageReviews(@PathVariable("id") Long id) {
-        Cottage cottage = cottageService.findOne(id);
-        Integer reviews = cottage.getReviews().size();
+        Integer reviews = cottageService.getNumberOfReviews(id);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
@@ -56,9 +51,11 @@ public class CottageController {
     }
 
     @GetMapping(value = "/edit/{id}")
-    public ResponseEntity<CottageDTO> getCottage(@PathVariable("id") Long id){
+    public ResponseEntity<CottageDTO> getCottage(@PathVariable("id") Long id) throws IOException {
         Cottage cottage = cottageService.findOne(id);
         if (cottage == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        List<String> cottagePhotos = cottageService.getPhotos(cottage);
+        cottage.setPictures(cottagePhotos);
         return new ResponseEntity<>(new CottageDTO(cottage), HttpStatus.OK);
     }
 
@@ -69,4 +66,5 @@ public class CottageController {
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok().body(resource);
     }
+
 }

@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Cottage;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class CottageDTO {
         this.doubleRooms = cottage.getRooms().get(2) != null ? cottage.getRooms().get(2) : 0;
         this.tripleRooms = cottage.getRooms().get(3) != null ? cottage.getRooms().get(3) : 0;
         this.quadRooms = cottage.getRooms().get(4) != null ? cottage.getRooms().get(4) : 0;
+        this.photos = cottage.getPictures();
     }
     private Long id;
     private String name;
@@ -37,4 +40,5 @@ public class CottageDTO {
     private Integer doubleRooms;
     private Integer tripleRooms;
     private Integer quadRooms;
+    private List<String> photos;
 }

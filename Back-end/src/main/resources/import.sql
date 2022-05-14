@@ -4,3 +4,8 @@
 --
 -- INSERT INTO client(id, active, email, name, password, phone_number, profile_photo, surname, username, address_id, penalties, points, category_id) VALUES (1, TRUE, 'mile@gmail.com', 'mile', 'lemi123', '066684054', 'alo bre', 'milic', 'lemy', 1, 0, 0, 1);
 
+INSERT INTO "role" (name) VALUES ('ROLE_CLIENT');
+INSERT INTO "role" (name) VALUES ('ROLE_ADMIN');
+INSERT INTO "role" (name) VALUES ('ROLE_COTTAGE_OWNER');
+INSERT INTO "role" (name) VALUES ('ROLE_BOAT_OWNER');
+INSERT INTO "role" (name) VALUES ('ROLE_INSTRUCTOR');

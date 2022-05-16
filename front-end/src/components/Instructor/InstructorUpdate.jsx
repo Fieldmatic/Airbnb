@@ -3,6 +3,7 @@ import "./InstructorRegistration.css";
 import InstructorService from "../../services/InstructorService"
 import { useParams } from 'react-router-dom'
 import Header from "../../Header";
+import DeletionAccountDialog from "./DeleteAccountDialog"
 
 
 export default function InstructorUpdate() {
@@ -47,10 +48,6 @@ export default function InstructorUpdate() {
             setProfilePhoto(response.data)
         })
       },[])
-
-    React.useEffect(() => {
-        
-    }, [])
 
     function handleChange(event) {
         const {name, value} = event.target;
@@ -214,8 +211,11 @@ export default function InstructorUpdate() {
                         onChange={handleChange}
                         value={formData.confirmPassword}
                     />
+                    <DeletionAccountDialog id={id} />
+                    <br />
                     <button
                         className="form--submit"
+                        onClick={handleSubmit}
                     >
                         Update
                     </button>

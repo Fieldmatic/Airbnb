@@ -11,7 +11,7 @@ class InstructorService {
         return axios.get(INSTRUCTOR_BASED_REST_API_URL + "/edit/" + id, id)
     }
 
-    updateInstructor(instructor, id){
+    updateInstructor(instructor, id) {
         return axios.put(INSTRUCTOR_BASED_REST_API_URL + "/edit/" + id, instructor)
     }
 

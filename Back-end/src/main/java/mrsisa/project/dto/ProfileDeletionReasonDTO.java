@@ -9,13 +9,14 @@ import mrsisa.project.model.ProfileDeletionReason;
 @Getter
 @NoArgsConstructor
 public class ProfileDeletionReasonDTO {
-    private Long id;
+//    private Long id;
     private String reason;
-    private Boolean approved;
+//    private Boolean approved;
+    private String password;
 
     public ProfileDeletionReasonDTO(ProfileDeletionReason profileDeletionReason) {
-        this.id = profileDeletionReason.getId();
+//        this.id = profileDeletionReason.getId();
         this.reason = profileDeletionReason.getReason();
-        this.approved = profileDeletionReason.getApproved();
+//        this.approved = profileDeletionReason.getApproved();
     }
 }

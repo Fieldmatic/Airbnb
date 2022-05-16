@@ -11,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,6 +56,7 @@ public class AdventureController {
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
     }
 
+    @Transactional
     @GetMapping(value = "/edit/{id}")
     public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id){
         Adventure adventure = adventureService.findOne(id);

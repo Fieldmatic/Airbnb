@@ -4,8 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
-import mrsisa.project.model.Cottage;
+import mrsisa.project.model.Period;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -21,6 +22,13 @@ public class AdventureDTO {
     private String cancellationConditions;
     private Double hourlyRate;
     private Double rating;
+//    private List<Period> busyPeriods;  TODO: Koristice se za front
+    /*
+        sledece 2 promjenljive se koriste za dobavljanje datuma i vremena sa fronta, a u nastavku se koriste
+        promjenjljive iznad
+     */
+    private String startDateTime;
+    private String endDateTime;
 
     public AdventureDTO(Adventure adventure){
         this.id = adventure.getId();

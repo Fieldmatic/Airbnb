@@ -2,6 +2,16 @@ import React from 'react'
 import AdventureService from '../../services/AdventureService'
 import { useParams } from 'react-router-dom'
 import Header from '../../Header'
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { DateRangePicker } from 'react-date-range';
+import './Adventure.css';
+import { TimePicker } from '@mui/lab'
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LocalizationProvider } from '@mui/lab';
+import { TextField } from '@mui/material';
+import moment from 'moment'
+
 
 export default function UpdateAdventureForm(props) {
     const [formData, setFormData] = React.useState({
@@ -18,7 +28,9 @@ export default function UpdateAdventureForm(props) {
         equipment: "",
         cancellationConditions: "",
         hourlyRate: "",
-        inputPictures: ""
+        inputPictures: "",
+        startDateTime: "",
+        endDateTime: ""
     });
 
     let {id} = useParams();
@@ -48,13 +60,22 @@ export default function UpdateAdventureForm(props) {
         hourlyRateError: ""
     };
 
-    const [validForm, setValidFrom] = React.useState(true);
-
     const errors = {
         name: "You must enter adventure name",
         address: "You must enter address",
         number: "This field must be a number"
       };
+
+    const [startDate, setStartDate] = React.useState(new Date());
+    const [endDate, setEndDate] = React.useState(new Date());
+    const [startTime, setStartTime] = React.useState(new Date());
+    const [endTime, setEndTime] = React.useState(new Date());
+
+    const selectionRange = {
+        startDate: startDate,
+        endDate: endDate,
+        key: 'selection'
+    }
     
     function handleChange(event) {
         const {name, value} = event.target;
@@ -65,19 +86,16 @@ export default function UpdateAdventureForm(props) {
     }
 
     function handleSubmit(event){
-        event.preventDefault();
-        // validateForm();
-        setValidFrom(true);
-        if (validForm) {
-            let data = new FormData()
-            const adventureJson = adventureToJson();
-            data.append("adventure", adventureJson)
-            AdventureService.updateAdventure(data, id)
-            .then(response => {
-                alert(response.data);
-                window.location.reload();
-            });
-        }
+        event.preventDefault();         
+        let data = new FormData()
+        const adventureJson = adventureToJson();
+        console.log(adventureJson)
+        data.append("adventure", adventureJson)
+        AdventureService.updateAdventure(data, id)
+        .then(response => {
+            alert(response.data);
+            window.location.reload();
+        });
         
     }
 
@@ -97,7 +115,15 @@ export default function UpdateAdventureForm(props) {
 
     function adventureToJson() {
         let formDataCopy = { ...formData };
+        const offset = startDate.getTimezoneOffset();
+        let startDateTemp = new Date(startDate.getTime() - (offset*60*1000))
+        let endDateTemp = new Date(endDate.getTime() - (offset*60*1000))
+
         formDataCopy.equipment = formDataCopy.equipment.trim().split(",");
+        formDataCopy.startDateTime = startDateTemp.toISOString().split('T')[0] + "T" + startTime.toString().split(" ")[4];
+        formDataCopy.endDateTime = endDateTemp.toISOString().split('T')[0] + "T" + endTime.toString().split(" ")[4];
+        
+        console.log(formDataCopy);
         const json = JSON.stringify(formDataCopy);
         const adventureJson = new Blob([json], {
             type: 'application/json'
@@ -105,57 +131,17 @@ export default function UpdateAdventureForm(props) {
         return adventureJson;
     }
 
-    function validateForm() {
-        setValidFrom(true);
-        validateName();
-        validateAddress();
-        validateCapacity();
-        validateHourlyRate();
+    const handleDateChange = (ranges) => {
+        setStartDate(ranges.selection.startDate);
+        setEndDate(ranges.selection.endDate);
     }
 
-    function validateName() {
-        if(formData.name === undefined || formData.name === "") { 
-            errorMessages.nameError = errors.name;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.nameError = errors.name;
-        }
-    }
+    const [pickDate, setPickDate] = React.useState(false);
 
-    function validateAddress() {
-        if(formData.address === undefined || formData.address === "") { 
-            errorMessages.addressError = errors.address;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.addressError = errors.address;
-        }
+    const pickDateClicked = (event) => {
+        event.preventDefault();
+        setPickDate(true);
     }
-
-    function validateCapacity() {
-        if(formData.capacity === undefined || formData.capacity === "" || isNaN(formData.capacity)) { 
-            errorMessages.capacityError = errors.number;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.capacityError = errors.number;
-        }
-    }
-
-    function validateHourlyRate() {
-        if(formData.hourlyRate === undefined || formData.hourlyRate === "" || isNaN(formData.hourlyRate)) { 
-            errorMessages.hourlyRateError = errors.number;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.hourlyRateError = errors.number;
-        }
-    }
-
-    const renderErrorMessage = (name) => (
-        <div className="form--error">{name}</div>
-    );
     
     return (
         <div>
@@ -250,7 +236,42 @@ export default function UpdateAdventureForm(props) {
                         name="cancellationConditions"
                         onChange={handleChange}
                         value={formData.cancellationConditions}
-                    />               
+                    />
+                    <button className="form--submit pick-button" onClick={pickDateClicked}>Pick date</button>
+                    {pickDate && 
+                    <DateRangePicker 
+                        ranges={[selectionRange]}
+                        minDate={new Date()}
+                        rangeColors={["#FD5B61"]}
+                        onChange={handleDateChange}
+                    />}
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <TimePicker 
+                            label="Start time"
+                            onChange={(newValue) => {
+                                setStartTime(newValue);
+                                console.log(newValue.toString().split(" ")[4]);
+                            }} 
+                            value={startTime}
+                            renderInput={(params) => <TextField {...params} />}
+                            minTime={startDate}
+                            ampm={false}
+                        />
+                    </LocalizationProvider>
+                    <br />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <TimePicker 
+                            label="End time"
+                            onChange={(newValue) => {
+                                setEndTime(newValue);
+                            }}
+                            value={endTime}
+                            renderInput={(params) => <TextField {...params} />}
+                            minTime={startTime}
+                            ampm={false}
+                        />
+                    </LocalizationProvider>
+                    <br />
                     <button
                         className="form--submit"
                     >

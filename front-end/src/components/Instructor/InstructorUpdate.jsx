@@ -1,5 +1,5 @@
 import React from "react";
-import "./InstructorRegistration.css";
+import "./Instructor.css";
 import InstructorService from "../../services/InstructorService"
 import { useParams } from 'react-router-dom'
 import Header from "../../Header";
@@ -99,7 +99,7 @@ export default function InstructorUpdate() {
     function handleNewPhotoChange(event) {
         const {value} = event.target;
         setFiles(value)
-        console.log(value)
+        console.log(event.target)
     }
 
     function instructorToJson() {

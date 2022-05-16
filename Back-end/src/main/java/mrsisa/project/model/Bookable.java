@@ -36,7 +36,7 @@ public abstract class Bookable {
     private PriceList priceList;
     @OneToMany
     private List<Reservation> reservations;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Period> periods;
 
 }

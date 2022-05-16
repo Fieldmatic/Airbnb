@@ -70,11 +70,51 @@ public class AdventureService {
             priceListRepository.save(adventure.getPriceList());
             adventure.setCapacity(dto.getCapacity());
             adventure.setFishingEquipment(dto.getEquipment());
-            adventure.getBusyPeriods().setStartDateTime(LocalDateTime.parse(dto.getStartDateTime()));
-            adventure.getBusyPeriods().setEndDateTime(LocalDateTime.parse(dto.getEndDateTime()));
-            periodRepository.save(adventure.getBusyPeriods());
+            LocalDateTime start = LocalDateTime.parse(dto.getStartDateTime());
+            LocalDateTime end = LocalDateTime.parse(dto.getEndDateTime());
+            boolean periodMatchOthers = this.checkPeriodMatching(start, end, adventure);
+            if (!periodMatchOthers) {
+                Period period = new Period();
+                period.setStartDateTime(start);
+                period.setEndDateTime(end);
+                period.setAdventure(adventure);
+                adventure.getPeriods().add(period);
+                periodRepository.save(period);
+            }
             adventureRepository.save(adventure);
         }
+    }
+
+    private boolean checkPeriodMatching(LocalDateTime start, LocalDateTime end, Adventure adventure) {
+        for (Period period : adventure.getPeriods()) {
+            if (start.isAfter(period.getStartDateTime()) && end.isBefore(period.getEndDateTime()))
+                return true;
+            if (start.isBefore(period.getStartDateTime()) && end.isAfter(period.getEndDateTime())) {
+                period.setStartDateTime(start);
+                period.setEndDateTime(end);
+                periodRepository.save(period);
+                return true;
+            }
+            if (start.isBefore(period.getStartDateTime()) && end.isBefore(period.getEndDateTime())) {
+                period.setStartDateTime(start);
+                periodRepository.save(period);
+                return true;
+            }
+            if (start.isAfter(period.getStartDateTime()) && end.isAfter(period.getEndDateTime())) {
+                period.setEndDateTime(end);
+                periodRepository.save(period);
+                return true;
+            }
+            if (start.isEqual(period.getEndDateTime())) {
+                period.setEndDateTime(end);
+                periodRepository.save(period);
+            }
+            if (end.isEqual(period.getStartDateTime())) {
+                period.setStartDateTime(start);
+                periodRepository.save(period);
+            }
+        }
+        return false;
     }
 
     public Adventure findOne(Long id) {
@@ -105,11 +145,7 @@ public class AdventureService {
         adventure.setRating(0.0);
         adventure.setCapacity(dto.getCapacity());
         adventure.setFishingEquipment(dto.getEquipment());
-        Period period = new Period();
-        period.setStartDateTime(LocalDateTime.now());
-        period.setEndDateTime(LocalDateTime.now());
-        periodRepository.save(period);
-        adventure.setBusyPeriods(period);
+        // Po potrebi dodati kreiranje perioda zauzetosti
         return adventure;
     }
 

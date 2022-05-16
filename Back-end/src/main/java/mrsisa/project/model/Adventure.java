@@ -6,6 +6,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,6 +21,4 @@ public class Adventure extends Bookable{
     @Fetch(value = FetchMode.SUBSELECT)
     private List<String> fishingEquipment;
 
-    @OneToMany
-    private List<Period> busyPeriods;
 }

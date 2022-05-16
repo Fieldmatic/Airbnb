@@ -1,10 +1,7 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.CottageDTO;
-import mrsisa.project.model.Client;
-import mrsisa.project.model.Address;
-import mrsisa.project.model.Cottage;
-import mrsisa.project.model.PriceList;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.CottageOwnerRepository;
 import mrsisa.project.repository.CottageRepository;

@@ -10,17 +10,18 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Discount {
+public class Action {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private Integer personLimit;
     @ManyToMany
     private List<Tag> additionalServices;
     private Double price;
+    private LocalDateTime expirationDate;
+    @ManyToOne
+    private Bookable bookable;
 
 }

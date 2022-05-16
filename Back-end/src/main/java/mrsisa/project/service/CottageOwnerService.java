@@ -38,7 +38,6 @@ public class CottageOwnerService {
 
     public void add(CottageOwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
         CottageOwner owner = dtoToCottageOwner(dto);
-        cottageOwnerRepository.save(owner);
         List<String> paths = addPictures(owner, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
         cottageOwnerRepository.save(owner);

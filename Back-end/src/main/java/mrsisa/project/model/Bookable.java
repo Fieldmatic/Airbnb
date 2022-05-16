@@ -4,9 +4,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.List;
+
 
 @Entity
 @Data
@@ -14,7 +17,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Bookable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String name;
     @OneToOne
@@ -30,8 +33,8 @@ public abstract class Bookable {
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Review> reviews;
-    @OneToMany
-    private List<Discount> discounts;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Action> actions;
     @OneToOne
     private PriceList priceList;
     @OneToMany

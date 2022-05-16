@@ -1,13 +1,19 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
 import {Form,Button,Col, Container, Row} from "react-bootstrap";    
+import Alert from "react-bootstrap/Alert";
 import SecureLoginImg from "../../images/secure_login.png";
 import UserImg from "../../images/user.png"
 import Header from "../../Header"
 import LoginService from "../../services/LoginRegisterService"
 import "./Login.css";
-import { Navigate } from "react-router-dom";
 
 function Login() {
+   
+    const navigate = useNavigate();
+
+    const [showAlert, setShowAlert] = React.useState(false);
+    
     const [loginData, setLoginData] = React.useState (
         {
           username : "",
@@ -15,8 +21,6 @@ function Login() {
         }
   
     )
-
-    const [redirect, setRedirect] = React.useState("");
 
     function handleChange(event) {
         const {name, value} = event.target
@@ -31,26 +35,33 @@ function Login() {
     function handleSubmit(event){
         event.preventDefault()
         LoginService.login(loginData)
-                    .then(res => {                     
+                    .then(res => {         
+                        console.log(res.status)           
                         const token = res.data.accessToken;
                         const expiration = res.data.expiresIn
                         console.log(token)
                         console.log(expiration)
                         localStorage.setItem("user",token)
                         localStorage.setItem("expiration", expiration)
-                        setRedirect("/")                 
+                        navigate("/")             
+                    }).catch(error => {
+                     setShowAlert(true)   
+                    
+                       
                     });    
       }
-
-    if (redirect){
-    return (
-        <Navigate to={redirect}/>
-    )
-    }
 
     return (
         <>
         <Header/>
+        {showAlert &&
+         <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+         <Alert.Heading>Invalid login!</Alert.Heading>
+         <p>
+         User with given username and password doesn't exist!
+         </p>
+         </Alert>
+        }
         <Container className = "mt-5">
            <Row>
                <Col lg={4} md={6} sm={12} className="mt-5 p-2">

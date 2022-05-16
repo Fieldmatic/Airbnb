@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import "./ClientProfile.css"
 import ClientService from '../../services/ClientService'
-import Popup from './Popup'
+import Popup from '../utils/Popup'
 import Header from "../../Header";
 import ProfilePicture from './ProfilePicture';
 
@@ -99,7 +99,7 @@ export default function ClientProfile() {
 
     function changeOpacity() {
         setOpacityClass("")
-      }
+    }
 
 
     return (
@@ -229,7 +229,8 @@ export default function ClientProfile() {
                 saveReason={saveDeletionReason}
                 title="Account deletion request"
                 placeHolder = "Reason for deletion"
-                rightButtonContent="Send">
+                rightButtonContent="Send"
+                leftButtonContent="Close">
                 </Popup>
             </div>
         </div>

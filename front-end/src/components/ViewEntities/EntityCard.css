@@ -113,11 +113,23 @@ span.entityCardGrade {
     margin-bottom: 15px;
 }
 
-
-div.sort {
-    width: 35%;
+.searchFilterSort {
     display: flex;
     flex-direction: row;
+    gap: 10px;
+}
+
+.filter > button {
+    width: fit-content;
+    height: 4vh;
+    background-color: transparent;
+    border-color: rgba(128, 128, 128, 0.921);
+    border-width: 1px;
+    border-radius: 999px;
+}
+
+.sort > select {
+    width: fit-content;
     border-radius: 999px;
 }
 

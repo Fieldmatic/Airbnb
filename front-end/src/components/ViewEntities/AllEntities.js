@@ -6,9 +6,10 @@ import CottageService from "../../services/CottageService"
 import AdventureService from "../../services/AdventureService"
 import BoatService from "../../services/BoatService"
 import EntityCard from "./EntityCard"
+import { BiFilter } from 'react-icons/bi';
 import "./EntityCard.css"
-import { selectUnstyledClasses } from "@mui/base"
 import Header from "../../Header";
+import SearchPopup from './SearchPopup'
 
 function AllEntities() {
     const [allCards, setAllCards] = React.useState([])
@@ -17,6 +18,8 @@ function AllEntities() {
     const [cottageButtonStyle, setCottageButtonStyle] = React.useState("entityButton")
     const [boatButtonStyle, setBoatButtonStyle] = React.useState("entityButton")
     const [adventureButtonStyle, setAdventureButtonStyle] = React.useState("entityButton")
+    const [deletePopup, setDeletePopup] = React.useState(false)
+    const [opacityClass, setOpacityClass] = React.useState("")
 
     function showAllCottages() {
         setEntityType("cottage")
@@ -61,7 +64,7 @@ function AllEntities() {
     }
 
     if (priority === "priceLowest" || priority === "ratingPrice") {
-        if (entityType == "adventure") {
+        if (entityType === "adventure") {
             allCards.sort((card1, card2) => (card1.hourlyRate > card2.hourlyRate) ? 1 : -1)
         } else {
             allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? 1 : -1)        }
@@ -70,12 +73,22 @@ function AllEntities() {
         allCards.sort((card1, card2) => (card1.rating > card2.rating) ? -1 : 1)
     }
     if (priority === "priceHighest") {
-        if (entityType == "adventure") {
+        if (entityType === "adventure") {
             allCards.sort((card1, card2) => (card1.hourlyRate > card2.hourlyRate) ? -1 : 1)
         } else {
             allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? -1 : 1)
         }
     }
+
+    function openPopup(event) {
+        event.preventDefault()
+        setDeletePopup(true)
+    }
+
+    function changeOpacity() {
+        setOpacityClass("")
+    }
+
     //sortiranje po rating i number of reviews
     const cards = allCards.map(item => {
         return (
@@ -97,17 +110,26 @@ function AllEntities() {
         <div>
             <Header />
             <div className="entities-view">
-                <div className="sort">
-                    <select 
-                        className="form--type"
-                        name="type"
-                        onChange={handleChange}
-                    >
-                        <option value="priceLowest">Price (lowest first)</option>
-                        <option value="priceHighest">Price (highest first)</option>
-                        <option value="rating">Rating</option>
-                        <option value="ratingPrice">Best rating and lowest price</option>
-                    </select>
+                {deletePopup && 
+                <SearchPopup trigger={deletePopup} setTrigger={setDeletePopup} value={opacityClass}></SearchPopup>
+                }
+                <div className="searchFilterSort">
+                    <div className="sort">
+                        <select 
+                            className="form--type"
+                            name="type"
+                            onChange={handleChange}
+                        >
+                            <option value="priceLowest">Price (lowest first)</option>
+                            <option value="priceHighest">Price (highest first)</option>
+                            <option value="rating">Rating</option>
+                            <option value="ratingPrice">Best rating and lowest price</option>
+                        </select>
+                    </div>
+                    <div className="filter">
+                        
+                        <button onClick={openPopup}> <BiFilter/> Filters</button>
+                    </div>
                 </div>
                 <div className="entities">
                     <button className={cottageButtonStyle} onClick={showAllCottages}> 

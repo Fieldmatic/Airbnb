@@ -37,7 +37,7 @@ export default function DeletionAccountDialog(props) {
     let data = new FormData()
     const dataJson = dataToJson();
     data.append("data", dataJson)
-    AdminService.deleteInstructor(props.id, data)
+    AdminService.sendDeletionRequest(props.id, data)
     .then(response => {
         alert(response.data);
     })

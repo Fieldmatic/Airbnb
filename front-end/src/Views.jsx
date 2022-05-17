@@ -12,9 +12,7 @@ import OwnerRegistration from "./components/Owner/OwnerRegistration";
 import ClientRegistration from "./components/Client/ClientRegistration";
 import InstructorRegistration from "./components/Instructor/InstructorRegistration";
 import InstructorUpdate from "./components/Instructor/InstructorUpdate";
-import CottageDetails from "./components/ViewEntities/CottageDetails";
-import BoatDetails from "./components/ViewEntities/BoatDetails";
-import AdventureDetails from "./components/ViewEntities/AdventureDetails";
+import BookableDetails from "./components/ViewEntities/BookableDetails";
 
 
 const Views = () => {
@@ -32,9 +30,7 @@ const Views = () => {
       <Route path = "/clientRegistration" element = {<ClientRegistration/>}/>
       <Route path = "/registrateInstructor" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor/:id" element = {<InstructorUpdate />} />
-      <Route path = "/cottageDetails/:id" element = {<CottageDetails />} />
-      <Route path = "/boatDetails/:id" element = {<BoatDetails />} />
-      <Route path = "/adventureDetails/:id" element = {<AdventureDetails />} />
+      <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

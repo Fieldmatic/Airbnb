@@ -45,12 +45,7 @@ export default function EntityCard(props) {
 
     function redirectToEntityDetails(event) {
         event.preventDefault()
-        if (props.entity == "cottage")
-            setRedirect(`/cottageDetails/${props.id}`)
-        else if (props.entity == "boat")
-            setRedirect(`/boatDetails/${props.id}`)
-        else
-            setRedirect(`/adventureDetails/${props.id}`)
+        setRedirect(`/bookableDetails/${props.id}&${props.entity}`)
     }
 
 

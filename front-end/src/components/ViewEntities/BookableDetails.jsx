@@ -8,7 +8,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
 import Header from "../../Header";
-import "./CottageDetails.css"
+import "./BookableDetails.css"
 import AdventureService from "../../services/AdventureService";
 import BoatService from "../../services/BoatService";
 import BoatDetails from "./BoatDetails";

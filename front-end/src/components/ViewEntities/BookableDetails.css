@@ -131,10 +131,21 @@
   }
 
   .rating{
-    background-color: #FF5A5F;
+    display: flex;
+    flex-direction: row;
+    align-items:baseline;
+    gap: 2px;
     padding: 3px;
     width: fit-content;
     border-radius: 5px;
+  }
+
+  span.rating {
+    background-color: #FF5A5F;
+  }
+
+  .reviews {
+    font-size: small;
   }
 
   .cottageCapacity {
@@ -142,6 +153,29 @@
     gap: 50px;
     border: 1px solid rgba(0, 0, 0, 0.236);
     padding: 5px;
+  }
+
+  .adventureCapacity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.236);
+    padding: 5px;
+  }
+
+  .boatParam {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+  }
+
+  .boatDetails {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.236);
   }
 
   .bedrooms, .beds {

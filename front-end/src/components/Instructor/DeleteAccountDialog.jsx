@@ -34,15 +34,25 @@ export default function DeletionAccountDialog(props) {
 
   const handleDelete = (event) => {
     event.preventDefault();
-    console.log(deletionData)
-    AdminService.deleteInstructor(props.id, JSON.stringify(deletionData))
+    let data = new FormData()
+    const dataJson = dataToJson();
+    data.append("data", dataJson)
+    AdminService.deleteInstructor(props.id, data)
     .then(response => {
-        alert(response);
+        alert(response.data);
     })
     .catch(response => {
-        alert(response);
+        alert(response.data);
     })
     setOpen(false);
+  }
+
+  function dataToJson() {
+    const json = JSON.stringify(deletionData);
+    const dataJson = new Blob([json], {
+        type: 'application/json'
+    });
+    return dataJson;
   }
 
   return (

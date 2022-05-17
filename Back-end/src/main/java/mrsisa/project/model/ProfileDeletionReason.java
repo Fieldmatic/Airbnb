@@ -16,7 +16,6 @@ public class ProfileDeletionReason {
     @OneToOne
     private Person user;
     private Boolean approved;
-    private String password;
 
     public ProfileDeletionReason(String reason, Boolean approved, Person user) {
         this.reason = reason;

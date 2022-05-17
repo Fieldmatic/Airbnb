@@ -1,5 +1,5 @@
 import React from "react";
-import "./InstructorRegistration.css";
+import "./Instructor.css";
 import InstructorService from "../../services/InstructorService"
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import { Navigate } from "react-router-dom";

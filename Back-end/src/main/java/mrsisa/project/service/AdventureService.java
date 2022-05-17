@@ -3,9 +3,11 @@ package mrsisa.project.service;
 import mrsisa.project.dto.AdventureDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
+import mrsisa.project.model.Period;
 import mrsisa.project.model.PriceList;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.AdventureRepository;
+import mrsisa.project.repository.PeriodRepository;
 import mrsisa.project.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +35,9 @@ public class AdventureService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private PeriodRepository periodRepository;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
 
@@ -64,8 +70,51 @@ public class AdventureService {
             priceListRepository.save(adventure.getPriceList());
             adventure.setCapacity(dto.getCapacity());
             adventure.setFishingEquipment(dto.getEquipment());
+            LocalDateTime start = LocalDateTime.parse(dto.getStartDateTime());
+            LocalDateTime end = LocalDateTime.parse(dto.getEndDateTime());
+            boolean periodMatchOthers = this.checkPeriodMatching(start, end, adventure);
+            if (!periodMatchOthers) {
+                Period period = new Period();
+                period.setStartDateTime(start);
+                period.setEndDateTime(end);
+                period.setAdventure(adventure);
+                adventure.getPeriods().add(period);
+                periodRepository.save(period);
+            }
             adventureRepository.save(adventure);
         }
+    }
+
+    private boolean checkPeriodMatching(LocalDateTime start, LocalDateTime end, Adventure adventure) {
+        for (Period period : adventure.getPeriods()) {
+            if (start.isAfter(period.getStartDateTime()) && end.isBefore(period.getEndDateTime()))
+                return true;
+            if (start.isBefore(period.getStartDateTime()) && end.isAfter(period.getEndDateTime())) {
+                period.setStartDateTime(start);
+                period.setEndDateTime(end);
+                periodRepository.save(period);
+                return true;
+            }
+            if (start.isBefore(period.getStartDateTime()) && end.isBefore(period.getEndDateTime())) {
+                period.setStartDateTime(start);
+                periodRepository.save(period);
+                return true;
+            }
+            if (start.isAfter(period.getStartDateTime()) && end.isAfter(period.getEndDateTime())) {
+                period.setEndDateTime(end);
+                periodRepository.save(period);
+                return true;
+            }
+            if (start.isEqual(period.getEndDateTime())) {
+                period.setEndDateTime(end);
+                periodRepository.save(period);
+            }
+            if (end.isEqual(period.getStartDateTime())) {
+                period.setStartDateTime(start);
+                periodRepository.save(period);
+            }
+        }
+        return false;
     }
 
     public Adventure findOne(Long id) {
@@ -96,6 +145,7 @@ public class AdventureService {
         adventure.setRating(0.0);
         adventure.setCapacity(dto.getCapacity());
         adventure.setFishingEquipment(dto.getEquipment());
+        // Po potrebi dodati kreiranje perioda zauzetosti
         return adventure;
     }
 

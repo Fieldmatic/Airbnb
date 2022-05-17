@@ -27,6 +27,7 @@ public class BoatDTO {
         this.capacity = boat.getCapacity();
         this.navigationEquipment = boat.getNavigationEquipment();
         this.fishingEquipment = boat.getFishingEquipment();
+        this.photos = boat.getPictures();
     }
     private Long id;
     private String name;
@@ -44,4 +45,6 @@ public class BoatDTO {
     private Integer capacity;
     private List<String> navigationEquipment;
     private List<String> fishingEquipment;
+    private List<String> photos;
+
 }

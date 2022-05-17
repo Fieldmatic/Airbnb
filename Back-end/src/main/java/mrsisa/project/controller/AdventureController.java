@@ -56,9 +56,11 @@ public class AdventureController {
     }
 
     @GetMapping(value = "/edit/{id}")
-    public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id){
+    public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id) throws IOException {
         Adventure adventure = adventureService.findOne(id);
         if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        List<String> adventurePhotos = adventureService.getPhotos(adventure);
+        adventure.setPictures(adventurePhotos);
         return new ResponseEntity<>(new AdventureDTO(adventure), HttpStatus.OK);
     }
 

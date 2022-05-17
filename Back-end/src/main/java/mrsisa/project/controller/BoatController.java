@@ -40,9 +40,11 @@ public class BoatController {
     }
 
     @GetMapping(value = "/edit/{id}")
-    public ResponseEntity<BoatDTO> getBoat(@PathVariable("id") Long id){
+    public ResponseEntity<BoatDTO> getBoat(@PathVariable("id") Long id) throws IOException {
         Boat boat = boatService.findOne(id);
         if (boat == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        List<String> boatPhotos = boatService.getPhotos(boat);
+        boat.setPictures(boatPhotos);
         return new ResponseEntity<>(new BoatDTO(boat), HttpStatus.OK);
     }
 

@@ -7,7 +7,10 @@ import mrsisa.project.repository.CottageOwnerRepository;
 import mrsisa.project.repository.CottageRepository;
 import mrsisa.project.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -46,6 +49,22 @@ public class CottageService {
         cottageRepository.save(cottage);
     }
 
+    public List<CottageDTO> getDTOCottages() throws IOException {
+        List<Cottage> cottages = cottageRepository.findAll();
+        List<CottageDTO> cottagesDTO = new ArrayList<>();
+        for (Cottage cottage : cottages) {
+            List<String> cottagePhotos = getPhotos(cottage);
+            cottage.setPictures(cottagePhotos);
+            cottagesDTO.add(new CottageDTO(cottage));
+        }
+        return cottagesDTO;
+    }
+
+    public Integer getNumberOfReviews(Long id) {
+        Cottage cottage = findOne(id);
+        return cottage.getReviews().size();
+    }
+
     public List<String> addPictures(Cottage cottage, MultipartFile[] multipartFiles) throws IOException {
         List<String> paths = new ArrayList<>();
 
@@ -80,7 +99,20 @@ public class CottageService {
             cottagesDTO.add(new CottageDTO(cottage));
         }
         return  cottagesDTO;
+    public List<String> getPhotos(Cottage cottage) throws IOException {
+        List<String> photos = new ArrayList<>();
+        for (String photo : cottage.getPictures()) {
+            Path path = Paths.get(photo);
+            byte[] bytes = Files.readAllBytes(path);
+            String photoData = Base64.getEncoder().encodeToString(bytes);
+            photos.add(photoData);
+        }
+        return photos;
     }
+
+    // public List<Cottage> findAll() {
+    //     return cottageRepository.findAll();
+    // }
 
     public List<CottageDTO> findOwnerCottages(Long id) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();

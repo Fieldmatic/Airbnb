@@ -1,4 +1,5 @@
 import React from "react"
+import {Navigate} from "react-router-dom";
 import CottageService from "../../services/CottageService"
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import BoatService from "../../services/BoatService"
@@ -7,6 +8,7 @@ import AdventureService from "../../services/AdventureService"
 export default function EntityCard(props) {
     const [reviewsNumber, setReviewsNumber] = React.useState(0)
     const [profileImage, setProfileImage] = React.useState(undefined)
+    const [redirect, setRedirect] = React.useState("");
 
     React.useEffect(() => {
         if (props.entity === "cottage") {
@@ -35,6 +37,18 @@ export default function EntityCard(props) {
         }
    }, [])
 
+   if (redirect) {
+    return (
+        <Navigate to={redirect}/>
+    )
+    }
+
+    function redirectToEntityDetails(event) {
+        event.preventDefault()
+        setRedirect(`/bookableDetails/${props.id}&${props.entity}`)
+    }
+
+
     return(
         <div className="entityCard"> 
             {profileImage && <img src={URL.createObjectURL(profileImage)} className="entityCardImage" alt="user"/>}
@@ -48,7 +62,7 @@ export default function EntityCard(props) {
                 <span className="entityCardGrade"> {props.rating}</span>
             </div>
             <p className="entityCardPrices"> RSD {props.entity === "adventure"? props.hourlyRate : props.dailyRate} </p>
-            <button className="entityCardButton"> Explore</button>
+            <button className="entityCardButton"  onClick={redirectToEntityDetails}> Explore</button>
         </div>
     )
 }

@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,17 @@ public class BoatService {
         Path path = Paths.get(PICTURES_PATH + boat.getId());
         savePicturesOnPath(boat, multipartFiles, paths, path);
         return paths.stream().distinct().collect(Collectors.toList());
+    }
+
+    public List<String> getPhotos(Boat boat) throws IOException {
+        List<String> photos = new ArrayList<>();
+        for (String photo : boat.getPictures()) {
+            Path path = Paths.get(photo);
+            byte[] bytes = Files.readAllBytes(path);
+            String photoData = Base64.getEncoder().encodeToString(bytes);
+            photos.add(photoData);
+        }
+        return photos;
     }
 
     private void savePicturesOnPath(Boat boat, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {

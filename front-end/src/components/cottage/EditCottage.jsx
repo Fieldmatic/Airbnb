@@ -1,9 +1,10 @@
 import React from 'react'
-import './Cottage.css'
+import './EditCottage.css'
 import CottageService from '../../services/CottageService'
 import Counter from "../utils/Counter"
 import { useParams } from 'react-router-dom'
 import Header from "../../Header";
+import Action from './Action'
 
 export default function EditCottage(props) {
   let {id} = useParams();
@@ -95,11 +96,11 @@ export default function EditCottage(props) {
     <div>
       <Header />
       <div className='edit-cottage-container'>
-        <div className="form-container">
-          <form className="form" onSubmit={handleSubmit}>
-            <h1 className='form--header'> {formData.name}</h1>
+        <div className="edit-cottage-form-container">
+          <form className="edit-cottage-form" onSubmit={handleSubmit}>
+            <h1 className='edit-cottage-form--header'> {formData.name}</h1>
             <input
-              className="form--input"
+              className="edit-cottage-form--input"
               type = "text"
               placeholder = "Name"
               onChange = {handleChange}
@@ -107,7 +108,7 @@ export default function EditCottage(props) {
               value = {formData.name}   
             />
             <input 
-                className="form--input"
+                className="edit-cottage-form--input"
                 type = "text"
                 placeholder = "State"
                 onChange = {handleAddressChange}
@@ -115,7 +116,7 @@ export default function EditCottage(props) {
                 value = {formData.address.state}          
             />
             <input 
-                className="form--input"
+                className="edit-cottage-form--input"
                 type = "text"
                 placeholder = "City"
                 onChange = {handleAddressChange}
@@ -123,7 +124,7 @@ export default function EditCottage(props) {
                 value = {formData.address.city}          
             />
             <input 
-                className="form--input"
+                className="edit-cottage-form--input"
                 type = "text"
                 placeholder = "Zip"
                 onChange = {handleAddressChange}
@@ -131,7 +132,7 @@ export default function EditCottage(props) {
                 value = {formData.address.zipCode}          
             />
             <input 
-                className="form--input"
+                className="edit-cottage-form--input"
                 type = "text"
                 placeholder = "Street"
                 onChange = {handleAddressChange}
@@ -139,7 +140,7 @@ export default function EditCottage(props) {
                 value = {formData.address.street}          
             />
             <input 
-              className="form--input"
+              className="edit-cottage-form--input"
               type = "text"
               placeholder = "Daily rate"
               onChange = {handleChange}
@@ -147,7 +148,7 @@ export default function EditCottage(props) {
               value = {formData.dailyRate}          
             />
             <input 
-              className="form--input"
+              className="edit-cottage-form--input"
               type = "text"
               placeholder = "Hourly rate"
               onChange = {handleChange}
@@ -155,45 +156,46 @@ export default function EditCottage(props) {
               value = {formData.hourlyRate}          
             />
             <textarea 
-              className="form--input-area"
+              className="edit-cottage-form--input-area"
               placeholder = "Promotional description"
               onChange = {handleChange}
               value = {formData.promotionalDescription}
               name = "promotionalDescription"
             />
             <textarea 
-              className="form--input-area"
+              className="edit-cottage-form--input-area"
               placeholder = "Rules"
               onChange = {handleChange}
               value = {formData.rules}
               name = "rules"
             />
             <textarea 
-              className="form--input-area"
+              className="edit-cottage-form--input-area"
               placeholder = "Cancellation conditions"
               onChange = {handleChange}
               value = {formData.cancellationConditions}
               name = "cancellationConditions"
             />
-            <div className='bedRoom'>
-              <label className='bedRoom--label'>Single rooms: </label>  
+            <div className='edit-cottage-bedRoom'>
+              <label className='edit-cottage-bedRoom--label'>Single rooms: </label>  
               <Counter name = "singleRooms" value = {formData.singleRooms} handleChange = {handleRoomChange}/>
             </div>
-            <div className='bedRoom'>
-            <label className='bedRoom--label'>Double rooms: </label>  
+            <div className='edit-cottage-bedRoom'>
+            <label className='edit-cottage-bedRoom--label'>Double rooms: </label>  
               <Counter name = "doubleRooms" value = {formData.doubleRooms} handleChange = {handleRoomChange}/>
             </div>
-            <div className='bedRoom'>
-              <label className='bedRoom--label'>Triple rooms: </label>  
+            <div className='edit-cottage-bedRoom'>
+              <label className='edit-cottage-bedRoom--label'>Triple rooms: </label>  
               <Counter name = "tripleRooms" value = {formData.tripleRooms} handleChange = {handleRoomChange}/>
             </div>
-            <div className='bedRoom'>
-              <label className='bedRoom--label'>Quad rooms: </label>  
+            <div className='edit-cottage-bedRoom'>
+              <label className='edit-cottage-bedRoom--label'>Quad rooms: </label>  
               <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
             </div>
-            <button className="form--save">Save</button>
+            <button className="edit-cottage-form--save">Save</button>
           </form>
         </div>
+        <Action bookableId = {id}/>
       </div>
     </div>
   )

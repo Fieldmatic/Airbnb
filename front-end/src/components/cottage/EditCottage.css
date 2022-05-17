@@ -1,7 +1,46 @@
 
-.form-container {
+.action-dateRangePicker{
+    width: 100%;
+    box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.2);
+}
+.edit-cottage-container{
+    display: flex;
+    flex-direction: row;
     background-color: #FF5A5F;
+}
+.actions--data{
+    margin: 6% 0 6% 0;
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+}
+.actions--textfield{
+    width: 40%;
+}
+.action--submit{
+    width: 30%;
+    margin-left: 10px;
+}
+.expirationDatePicker{
+    width:100%;
+}
+.actions--container{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    background-color: white;
+    box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-size: large;
+    margin: 3.6% 0 4% 2% ;
+    align-items: center;
+    padding: 20px;
+
+}
+.edit-cottage-form-container {
     height: 100%;
+    width: 50%;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -9,11 +48,11 @@
     align-items: center;
 }
 
-.form {
+.edit-cottage-form {
     background-color: white;
     padding: 50px;
     height: 100%;
-    width: 30%;
+    width: 80%;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -24,7 +63,12 @@
     margin: 4% 0 4% 0 ;
 }
 
-.form--input {
+.actions--header{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.edit-cottage-form--input {
     width: 95%;
     margin-bottom: 20px;
     height: 4vh;
@@ -34,7 +78,7 @@
     font-family: 'Inter', sans-serif;
 }
 
-.form--input-area {
+.edit-cottage-form--input-area {
     width: 95%;
     margin-bottom: 20px;
     height: 70px;
@@ -45,7 +89,7 @@
     resize: none;
 }
 
-.form--submit, .form--save {
+.edit-cottage-form--submit, .edit-cottage-form--save {
     width: 97%;
     padding: 10px;
     border-radius: 5px;
@@ -55,22 +99,22 @@
     cursor: pointer; 
 }
 
-.form--save {
+.edit-cottage-form--save {
     margin-top: 3%;
 
 }
 
-.form--marketing {
+.edit-cottage-form--marketing {
     display: flex;
     margin-bottom: 20px;
     align-items: center;
 }
 
-.form--marketing > input {
+.edit-cottage-form--marketing > input {
     margin-right: 10px;
 }
 
-.form--header{
+.edit-cottage-form--header{
     margin-bottom: 20px;
     color: black;
 }
@@ -80,7 +124,7 @@
     align-items: center;
 }
 
-.bedRoom{
+.edit-cottage-bedRoom{
     display: flex;
     flex-direction: row;
     font-size: medium;
@@ -95,7 +139,7 @@
     height: 100%;
 }
 
-.bedRoom--label{
+.edit-cottage-bedRoom--label{
     width: 45%;
     margin-top: 2%;
 }

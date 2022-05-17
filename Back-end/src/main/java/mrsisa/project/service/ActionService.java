@@ -7,6 +7,7 @@ import mrsisa.project.repository.ActionRepository;
 import mrsisa.project.repository.BookableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -17,12 +18,13 @@ public class ActionService {
     @Autowired
     private BookableRepository bookableRepository;
 
+    @Transactional
     public void add(ActionDTO actionDTO) throws IOException {
         dtoToAction(actionDTO);
     }
 
 
-    private Action dtoToAction(ActionDTO actionDTO){
+    Action dtoToAction(ActionDTO actionDTO){
         Action action = new Action();
         action.setStartDateTime(actionDTO.getStartDateTime());
         action.setEndDateTime(actionDTO.getEndDateTime());

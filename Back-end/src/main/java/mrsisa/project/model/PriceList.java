@@ -19,4 +19,6 @@ public class PriceList {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String cancellationConditions;
+    @OneToOne
+    private Bookable bookable;
 }

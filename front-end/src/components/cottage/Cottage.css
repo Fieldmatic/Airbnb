@@ -99,3 +99,12 @@
     width: 45%;
     margin-top: 2%;
 }
+
+.edit-cottage-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.actions--container{
+    width: 50%;
+}

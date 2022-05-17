@@ -19,7 +19,6 @@ public class ActionController {
     private ActionService actionService;
 
     @PostMapping(value = "/add")
-    @Transactional
     public ResponseEntity<String> addAction(@RequestBody ActionDTO actionDTO) throws IOException {
         actionService.add(actionDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");

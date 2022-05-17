@@ -28,8 +28,6 @@ export default function EditCottage(props) {
         quadRooms : 0
       }
   )
-
-
     React.useEffect(() => {
       CottageService.getCottage(id).then((result) => {
           let cottage = result.data;

@@ -20,7 +20,12 @@ public class ActionController {
 
     @PostMapping(value = "/add")
     public ResponseEntity<String> addAction(@RequestBody ActionDTO actionDTO) throws IOException {
-        actionService.add(actionDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        try {
+            actionService.add(actionDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
+        }
     }
 }

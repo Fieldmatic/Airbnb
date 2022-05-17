@@ -86,7 +86,7 @@ function Action (props) {
             if (response.status === 201) setShowSuccess(true)
         }).catch(error => {
             setShowError(true)
-        })
+        });
       }
     
 
@@ -162,6 +162,12 @@ function Action (props) {
             <Alert variant='success' onClose = {() => setShowSuccess(false)} dismissible>
                 <Alert.Heading>Success!</Alert.Heading>
                 <p>Successfully added action!</p>
+            </Alert>
+            }
+            {showError &&
+            <Alert variant='danger' onClose = {() => setShowError(false)} dismissible>
+                <Alert.Heading>Error!</Alert.Heading>
+                <p>Bad request!</p>
             </Alert>
             }
         

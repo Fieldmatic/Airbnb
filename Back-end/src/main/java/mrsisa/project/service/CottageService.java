@@ -98,7 +98,9 @@ public class CottageService {
         for (Cottage cottage : cottageRepository.findAll()) {
             cottagesDTO.add(new CottageDTO(cottage));
         }
-        return  cottagesDTO;
+        return cottagesDTO;
+    }
+
     public List<String> getPhotos(Cottage cottage) throws IOException {
         List<String> photos = new ArrayList<>();
         for (String photo : cottage.getPictures()) {

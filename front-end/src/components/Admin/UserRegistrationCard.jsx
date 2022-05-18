@@ -14,7 +14,7 @@ export default function DeletionReasonCard(props) {
 
     const handleAccept = () => {
         let confirmation = "true"
-        AdminService.deleteProfile(props.user.id, props.id, confirmation)
+        AdminService.registrateUser(props.user.id, props.id, confirmation)
         .then((response) => {
             alert(response.data)
             window.location.reload();
@@ -23,7 +23,7 @@ export default function DeletionReasonCard(props) {
 
     const handleDeny = () => {
         let confirmation = "false"
-        AdminService.deleteProfile(props.user.id, props.id, confirmation)
+        AdminService.registrateUser(props.user.id, props.id, confirmation)
         .then((response) => {
             alert(response.data)
             window.location.reload();
@@ -36,7 +36,7 @@ export default function DeletionReasonCard(props) {
             <h1 className="card--username">Username: {props.user.username}</h1>
             <h3 className="card--name">Name: {props.user.name}</h3>
             <h3 className="card--surname">Surname: {props.user.surname}</h3>
-            <h2 className="card--reason">Reason: {props.reason}</h2>
+            <h2 className="card--reason">Reason: {props.reason}</h2>            
             <Button 
                 className="entityCardButton--deny"
                 variant="outlined"

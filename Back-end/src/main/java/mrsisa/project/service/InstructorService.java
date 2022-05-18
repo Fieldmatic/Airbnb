@@ -1,8 +1,6 @@
 package mrsisa.project.service;
 
 
-import com.fasterxml.jackson.databind.JsonSerializer;
-import mrsisa.project.dto.AdventureDTO;
 import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
@@ -31,6 +29,9 @@ public class InstructorService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private AdminService adminService;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/instructor/";
     final String DEFAULT_PICTURE_PATH = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
@@ -69,7 +70,7 @@ public class InstructorService {
     }
 
     public Instructor findOne(Long id) {
-        return instructorRepository.findById(id).orElseGet(null);
+        return instructorRepository.findById(id).orElse(null);
     }
 
     private Instructor dtoToInstructor(InstructorDTO dto) {
@@ -82,7 +83,7 @@ public class InstructorService {
         addressRepository.save(address);
         instructor.setAddress(address);
         instructor.setActive(true);
-        instructor.setApprovedAccount(false);    // TODO: send request to admin to activate profile
+        instructor.setApprovedAccount(false);
         instructor.setBiography(dto.getBiography());
         instructor.setSurname(dto.getSurname());
         instructor.setEmail(dto.getEmail());
@@ -91,6 +92,7 @@ public class InstructorService {
         instructor.setPoints(0);
         instructor.setRegistrationExplanation(dto.getRegistrationExplanation());
         instructor.setUsername(dto.getUsername());
+        adminService.createRegistrationRequest(instructor);
         return instructor;
     }
 

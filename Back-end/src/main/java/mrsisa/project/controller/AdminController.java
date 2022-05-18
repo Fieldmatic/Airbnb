@@ -1,8 +1,10 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
+import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.model.Person;
+import mrsisa.project.model.RegistrationRequest;
 import mrsisa.project.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -53,6 +55,13 @@ public class AdminController {
         if (delete)
             return ResponseEntity.status(HttpStatus.OK).body("Account deleted!");
         return ResponseEntity.status(HttpStatus.OK).body("Request for deleting account denied!");
+    }
+
+    @GetMapping(path = "/getUserRegistrationRequests")
+    public ResponseEntity<List<RegistrationRequestDTO>> getUserRegistrationRequests()
+    {
+        List<RegistrationRequestDTO> list = adminService.getRegistrationRequests();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
 //    @GetMapping(path = "/getUserProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})

@@ -1,13 +1,12 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
+import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.model.Instructor;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.ProfileDeletionReason;
-import mrsisa.project.repository.AdminRepository;
-import mrsisa.project.repository.InstructorRepository;
-import mrsisa.project.repository.PersonRepository;
-import mrsisa.project.repository.ProfileDeletionReasonRepository;
+import mrsisa.project.model.RegistrationRequest;
+import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,9 @@ public class AdminService {
 
     @Autowired
     ProfileDeletionReasonRepository profileDeletionReasonRepository;
+
+    @Autowired
+    RegistrationRequestRepository registrationRequestRepository;
 
     public boolean sendRequestForProfileDeletion(Long id, ProfileDeletionReasonDTO pdrDTO) {
         Person person = personRepository.findById(id).orElse(null);
@@ -57,6 +59,20 @@ public class AdminService {
         return true;
     }
 
+    public void createRegistrationRequest(Instructor instructor) {
+        RegistrationRequest regReq = new RegistrationRequest(instructor.getRegistrationExplanation(), instructor);
+        registrationRequestRepository.save(regReq);
+    }
+
+    public List<RegistrationRequestDTO> getRegistrationRequests() {
+        List<RegistrationRequestDTO> regReqDTOs = new ArrayList<>();
+        for(RegistrationRequest regReq : registrationRequestRepository.findAll()) {
+            if (!regReq.getViewed())
+                regReqDTOs.add(new RegistrationRequestDTO(regReq));
+        }
+        return regReqDTOs;
+    }
+
     private ProfileDeletionReason dtoToPDR(ProfileDeletionReasonDTO pdrDTO, Person person) {
         ProfileDeletionReason profileDeletionReason = new ProfileDeletionReason();
         profileDeletionReason.setReason(pdrDTO.getReason());
@@ -64,6 +80,7 @@ public class AdminService {
         profileDeletionReason.setViewed(false);
         return profileDeletionReason;
     }
+
 
 
 }

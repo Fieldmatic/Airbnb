@@ -117,7 +117,7 @@ export default function SearchPopup(props) {
       priceValue: priceValue,
       rating: rating,
       bedroomNum: bedroomNum.replace("room", ""),
-      bedsNum: bedsNum,
+      bedsNum: bedsNum.replace("bed", ""),
       maxSpeed: maxSpeed,
       capacity: capacity,
       boatType: boatType

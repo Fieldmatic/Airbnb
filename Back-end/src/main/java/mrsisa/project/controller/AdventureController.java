@@ -62,8 +62,9 @@ public class AdventureController {
         Adventure adventure = adventureService.findOne(id);
         if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         List<String> adventurePhotos = adventureService.getPhotos(adventure);
-        adventure.setPictures(adventurePhotos);
-        return new ResponseEntity<>(new AdventureDTO(adventure), HttpStatus.OK);
+        AdventureDTO dto = new AdventureDTO(adventure);
+        dto.setPhotos(adventurePhotos);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reviewsNumber/{id}")

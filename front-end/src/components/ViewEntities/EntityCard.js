@@ -23,7 +23,6 @@ export default function EntityCard(props) {
                 setReviewsNumber(response.data) 
             })
             BoatService.getProfilePicture(props.id).then((response) => {
-                console.log(response.data)
                 setProfileImage(response.data)
             })
         //avanture

@@ -1,0 +1,20 @@
+.viewEntities__info {
+    padding: 20px;
+    margin: 20px;
+}
+
+.viewEntities__info p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.viewEntities__info h1 {
+    margin-bottom: 30px;
+}
+
+.viewEntities__info button {
+    border-radius: 30px;
+    text-transform: inherit;
+    margin: 5px;
+}
+

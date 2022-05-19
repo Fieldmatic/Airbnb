@@ -3,12 +3,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import CottageService from "../../services/CottageService"
 import AdventureService from "../../services/AdventureService"
 import BoatService from "../../services/BoatService"
-import EntityCard from "../ViewEntities/EntityCard"
+import SearchResult from "./Entity";
 import Header from "../../Header";
+import {Button} from "@mui/material"
+import "./ViewHostEntities.css";
+import LoginRegisterService from "../../services/LoginRegisterService";
 
-function ViewCottages(props) {
+function ViewHostEntities() {
     const [allCards, setAllCards] = React.useState([])
-    const [entityType, setEntityType] = React.useState("cottage")
+    const [entityType, setEntityType] = React.useState("")
     const [priority, setPriority] = React.useState("priceLowest")
     const [searchQuery, setSearchQuery] = React.useState("")
 
@@ -32,23 +35,29 @@ function ViewCottages(props) {
     }
 
     React.useEffect(() => {
-        if (props.entityType === "cottage") {
-            CottageService.getOwnerCottages(props.id).then((response) => {
+        LoginRegisterService.getUserRole().then(response => {
+            if (response.data === "ROLE_COTTAGE_OWNER") setEntityType("cottage")
+            else if (response.data === "ROLE_BOAT_OWNER") setEntityType("boat")
+            else setEntityType("adventure")
+        })
+
+        if (entityType === "cottage") {
+            CottageService.getOwnerCottages().then((response) => {
                 setAllCards(response.data)
                 showAllCottages() 
             })
-        } else if (props.entityType === "boat") {
-            BoatService.getAllBoats().then((response) => {
+        } else if (entityType === "boat") {
+            BoatService.getOwnerBoats().then((response) => {
                 setAllCards(response.data)
                 showAllBoats() 
             })
-        } else if (props.entityType === "adventure"){
+        } else if (entityType === "adventure"){
             AdventureService.getAllAdventures().then((response) => {
                 setAllCards(response.data) 
                 showAllAdventures()
             })
         }
-    }, [entityType, priority])
+    },[entityType, priority])
 
     function handleChange(event) {
         const {name, value} = event.target
@@ -71,12 +80,12 @@ function ViewCottages(props) {
             allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? -1 : 1)
         }
     }
-    //sortiranje po rating i number of reviews
+
     const cards = allCards.map(item => {
         if (searchQuery !=="" && item.name.toLowerCase().includes(searchQuery.toLowerCase()))
             {
             return (
-                <EntityCard
+                <SearchResult
                     key={item.id}
                     id={item.id}
                     name={item.name}
@@ -91,7 +100,7 @@ function ViewCottages(props) {
             }
         else if (searchQuery === "") {
             return (
-                <EntityCard
+                <SearchResult
                     key={item.id}
                     id={item.id}
                     name={item.name}
@@ -109,7 +118,7 @@ function ViewCottages(props) {
     return (
         <div>
             <Header />
-            <div className="entities-view">
+            <div className="search_sort">
                 <div className='search'>
                     <input type ='text' value={searchQuery}  onChange = {handleSearch}/>
                     <SearchIcon/>        
@@ -126,10 +135,21 @@ function ViewCottages(props) {
                         <option value="ratingPrice">Best rating and lowest price</option>
                     </select>
                 </div>              
+                
+            </div>
+            <div className="viewEntities">
+            <div className="viewEntities__info">
+                <h1>{cards.length} entities</h1>
+                <Button variant="outlined">Cancellation Flexibility</Button>
+                <Button variant="outlined">Type of place</Button>
+                <Button variant="outlined">Price</Button>
+                <Button variant="outlined">Rooms and beds</Button>
+                <Button variant="outlined">More filters</Button>
+            </div>
                 {cards}
             </div>
         </div>
     )
 }
 
-export default ViewCottages
+export default ViewHostEntities

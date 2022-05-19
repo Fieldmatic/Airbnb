@@ -22,7 +22,7 @@ export default function OwnerRegistration() {
           email : "",
           phoneNumber: "",
           registrationExplanation : "",
-          type : "cottageOwner"
+          role : "ROLE_COTTAGE_OWNER"
         }
   
     )
@@ -80,14 +80,13 @@ export default function OwnerRegistration() {
             alert("Passwords aren't matching")
             return
         }
-        let type = formData.type;
         let data = new FormData()
         const ownerJson = getOwnerJson();
         data.append("owner", ownerJson)
         files.map((file) => {
             data.append("files", file.file)
         })
-        registerOwner(type, data)
+        registerOwner(data)
         .then(response => {
             alert(response.data)
             setRedirect("/")
@@ -197,12 +196,12 @@ export default function OwnerRegistration() {
                 <label className="type--label">Owner Type:</label>
                 <select 
                         className="form--type"
-                        value={formData.type}
+                        value={formData.role}
                         onChange={handleChange}
-                        name="type"
+                        name="role"
                     >
-                        <option value="cottageOwner">Cottage Owner</option>
-                        <option value="boatOwner">Boat Owner</option>
+                        <option value="ROLE_COTTAGE_OWNER">Cottage Owner</option>
+                        <option value="ROLE_BOAT_OWNER">Boat Owner</option>
                     </select>
                 <textarea 
                 className="form--input-area"
@@ -245,15 +244,7 @@ export default function OwnerRegistration() {
     </div>
     )
 
-    function registerOwner(type, data) {
-        if (type === "boatOwner")
-            BoatOwnerService.addBoatOwner(data).then((response) => {
-                alert(response.data);
-            }).catch((err) => {
-                alert(err.response.data);
-
-            });
-        else if (type === "cottageOwner")
+    function registerOwner(data) {
             RegistrationService.addCottageOwner(data).then((response) => {
                 alert(response.data);
             }).catch((err) => {

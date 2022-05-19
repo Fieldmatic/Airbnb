@@ -12,7 +12,7 @@ import OwnerRegistration from "./components/Owner/OwnerRegistration";
 import ClientRegistration from "./components/Client/ClientRegistration";
 import InstructorRegistration from "./components/Instructor/InstructorRegistration";
 import InstructorUpdate from "./components/Instructor/InstructorUpdate";
-import ViewCottages from "./components/Owner/ViewCottages";
+import ViewHostEntities from "./components/Owner/ViewHostEntities";
 import BookableDetails from "./components/ViewEntities/BookableDetails";
 import Login from "./components/Login/Login";
 
@@ -33,7 +33,7 @@ const Views = () => {
       <Route path = "/clientRegistration" element = {<ClientRegistration/>}/>
       <Route path = "/registrateInstructor" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor/:id" element = {<InstructorUpdate />} />
-      <Route path = "/viewOwnerCottages" element = {<ViewCottages entityType = "cottage" id = "2"/>} />
+      <Route path = "/viewOwnerCottages" element = {<ViewHostEntities />} />
       <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -1,15 +1,21 @@
 import axios from "axios";
 const BOAT_BASED_REST_API_URL = "http://localhost:8081/api/boat";
+import inMemoryJwt from "./inMemoryJwtService";
 
 
 class BoatService {
 
     addBoat(formData){
-        return axios.post(BOAT_BASED_REST_API_URL + "/add", formData)
+        return axios.post(BOAT_BASED_REST_API_URL + "/add", formData,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
     }
 
     getBoat(id) {
-        return axios.get(BOAT_BASED_REST_API_URL + "/edit/" + id, id)
+        return axios.get(BOAT_BASED_REST_API_URL + "/get/" + id, id)
     }
 
     getAllBoats() {
@@ -22,6 +28,16 @@ class BoatService {
 
     getProfilePicture(id) {
         return axios.get(BOAT_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
+    }
+
+    getOwnerBoats(){
+        return axios.get(BOAT_BASED_REST_API_URL + "/getOwnerBoats",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         }
+        )
     }
 
 }

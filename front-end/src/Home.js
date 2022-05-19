@@ -1,14 +1,23 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './Home.css'
 import Header from './Header';
 import Banner from './components/Banner';
 import Card from './components/Card';
-
+import inMemoryJwt from './services/inMemoryJwtService';
 
 export default function Home(){
+    const [isUserLogged, setIsUserLogged] = useState(false);
+    
+    useEffect(() => {
+        inMemoryJwt.setToken(localStorage.getItem("user"))
+        inMemoryJwt.setExpiresIn(localStorage.getItem("expiration"))
+        if ((inMemoryJwt.getToken()) !== null) setIsUserLogged(true);
+        else setIsUserLogged(false)
+    }, [isUserLogged]);
+
     return (
         <div className = 'home'>
-            <Header/>
+            <Header isUserLogged = {isUserLogged} setIsUserLogged = {setIsUserLogged}/>
             <Banner/>
             <div className="home__section">
                 <Card

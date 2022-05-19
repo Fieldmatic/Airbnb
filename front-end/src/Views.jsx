@@ -14,12 +14,14 @@ import InstructorRegistration from "./components/Instructor/InstructorRegistrati
 import InstructorUpdate from "./components/Instructor/InstructorUpdate";
 import ViewCottages from "./components/Owner/ViewCottages";
 import BookableDetails from "./components/ViewEntities/BookableDetails";
+import Login from "./components/Login/Login";
 
 
 const Views = () => {
   return (
     <Routes>
       <Route index element = {<Home/>}/>
+      <Route path = "/login" element =  {<Login/>}/>
       <Route path = "/addAdventure" element = {<AddAdventureForm />}/>
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>

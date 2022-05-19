@@ -2,14 +2,12 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
-import mrsisa.project.repository.AddressRepository;
-import mrsisa.project.repository.CottageOwnerRepository;
-import mrsisa.project.repository.CottageRepository;
-import mrsisa.project.repository.PriceListRepository;
+import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,15 +37,21 @@ public class CottageService {
     @Autowired
     CottageOwnerRepository cottageOwnerRepository;
 
+    @Autowired
+    PersonRepository personRepository;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
-    public void add(CottageDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    @Transactional
+    public void add(CottageDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
-        cottageRepository.save(cottage);
         List<String> paths = addPictures(cottage, multipartFiles);
         cottage.setPictures(paths);
         cottage.setProfilePicture(paths.get(0));
-        cottageRepository.save(cottage);
+        CottageOwner owner = (CottageOwner) personRepository.findByUsername(userP.getName());
+        cottage.setCottageOwner(owner);
+        owner.getCottages().add(cottage);
+        cottageOwnerRepository.save(owner);
     }
 
     public List<CottageDTO> getDTOCottages() throws IOException {
@@ -153,16 +158,13 @@ public class CottageService {
     private Cottage dtoToCottage(CottageDTO dto) {
         Cottage cottage = new Cottage();
         cottage.setName(dto.getName());
-        Address address = dto.getAddress();
-        addressRepository.save(address);
-        cottage.setAddress(address);
+        cottage.setAddress(dto.getAddress());
         cottage.setPromotionalDescription(dto.getPromotionalDescription());
         cottage.setRules(dto.getRules());
         PriceList priceList = new PriceList();
         priceList.setHourlyRate(dto.getHourlyRate());
         priceList.setDailyRate(dto.getDailyRate());
         priceList.setCancellationConditions(dto.getCancellationConditions());
-        priceListRepository.save(priceList);
         cottage.setPriceList(priceList);
         cottage.setRating(0.0);
         Map<Integer,Integer> rooms = new HashMap<>();

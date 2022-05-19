@@ -8,7 +8,7 @@ import mrsisa.project.model.Address;
 
 @Data
 @NoArgsConstructor
-public class CottageOwnerDTO {
+public class OwnerDTO {
     private String username;
     private String password;
     private String name;
@@ -18,4 +18,5 @@ public class CottageOwnerDTO {
     private String phoneNumber;
     private Address address;
     private String registrationExplanation;
+    private String role;
 }

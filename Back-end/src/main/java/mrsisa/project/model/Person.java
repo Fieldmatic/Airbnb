@@ -19,7 +19,7 @@ import java.util.List;
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Person implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String username;
     private String password;
@@ -28,7 +28,7 @@ public abstract class Person implements UserDetails {
     private String email;
     private String profilePhoto;
     private String phoneNumber;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
     private Boolean active;
     private Date lastPasswordResetDate;

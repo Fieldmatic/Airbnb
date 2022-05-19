@@ -20,7 +20,7 @@ public abstract class Bookable {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String name;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
     private String promotionalDescription;
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
@@ -29,18 +29,18 @@ public abstract class Bookable {
     private String profilePicture;
     private String rules;
     private Double rating;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Tag> additionalServices;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Review> reviews;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Action> actions;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private PriceList priceList;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Reservation> reservations;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Period> periods;
 
 }

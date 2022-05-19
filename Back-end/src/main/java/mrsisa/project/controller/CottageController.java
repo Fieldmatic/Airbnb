@@ -3,7 +3,9 @@ package mrsisa.project.controller;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
+import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.service.CottageService;
+import mrsisa.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.*;
 
 @CrossOrigin("*")
@@ -25,29 +28,29 @@ public class CottageController {
     @Autowired
     private CottageService cottageService;
 
+    @Autowired
+    private PersonRepository personRepository;
+
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
-    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
-        cottageService.add(dto, multiPartFiles);
+    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles, Principal userP) throws IOException {
+        cottageService.add(dto, multiPartFiles, userP);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
-    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     @GetMapping(value="/all")
     public ResponseEntity<List<CottageDTO>> getAllCottages() {
         List<CottageDTO> cottagesDTO = cottageService.findAll();
         return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value="/getOwnerCottages")
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
-    @GetMapping(value="/getOwnerCottages/{id}")
-    public ResponseEntity<List<CottageDTO>> getOwnerCottages(@PathVariable("id") Long id) {
-        List<CottageDTO> cottagesDTO = cottageService.findOwnerCottages(id);
+    public ResponseEntity<List<CottageDTO>> getOwnerCottages(Principal userP) {
+        List<CottageDTO> cottagesDTO = cottageService.findOwnerCottages(personRepository.findByUsername(userP.getName()).getId());
         return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
-
-
 
     @GetMapping(value = "/reviewsNumber/{id}")
     public ResponseEntity<Integer> getNumberOfCottageReviews(@PathVariable("id") Long id) {
@@ -55,14 +58,14 @@ public class CottageController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
         cottageService.edit(dto, id);
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
     }
 
-    @GetMapping(value = "/edit/{id}")
+    @GetMapping(value = "/get/{id}")
     public ResponseEntity<CottageDTO> getCottage(@PathVariable("id") Long id) throws IOException {
         Cottage cottage = cottageService.findOne(id);
         if (cottage == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);

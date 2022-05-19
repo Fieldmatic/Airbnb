@@ -1,11 +1,14 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.BoatOwnerDTO;
+import mrsisa.project.dto.OwnerDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.BoatOwner;
+import mrsisa.project.model.Role;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.BoatOwnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,9 +31,15 @@ public class BoatOwnerService {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    RoleService roleService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/boatOwner/";
 
-    public void add(BoatOwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    public void add(OwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
         BoatOwner owner = dtoToBoatOwner(dto);
         boatOwnerRepository.save(owner);
         List<String> paths = addPictures(owner, multipartFiles);
@@ -65,21 +74,21 @@ public class BoatOwnerService {
         }
     }
 
-    private BoatOwner dtoToBoatOwner(BoatOwnerDTO dto) {
+    private BoatOwner dtoToBoatOwner(OwnerDTO dto) {
         BoatOwner owner = new BoatOwner();
         owner.setName(dto.getName());
         owner.setSurname(dto.getSurname());
-        Address address = dto.getAddress();
-        addressRepository.save(address);
-        owner.setAddress(address);
+        owner.setAddress(dto.getAddress());
         owner.setUsername(dto.getUsername());
-        owner.setPassword(dto.getPassword());
+        owner.setPassword(passwordEncoder.encode(dto.getPassword()));
         owner.setActive(true);
         owner.setEmail(dto.getEmail());
         owner.setPhoneNumber(dto.getPhoneNumber());
         owner.setRegistrationExplanation(dto.getRegistrationExplanation());
         owner.setApprovedAccount(false);
         owner.setPoints(0);
+        List<Role> roles = roleService.findByName(dto.getRole());
+        owner.setRoles(roles);
         return owner;
     }
 }

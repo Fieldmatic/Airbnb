@@ -1,7 +1,6 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.BoatOwnerDTO;
-import mrsisa.project.dto.CottageOwnerDTO;
+import mrsisa.project.dto.OwnerDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +25,18 @@ public class CottageOwnerService {
     CottageOwnerRepository cottageOwnerRepository;
 
     @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
     AddressRepository addressRepository;
 
     @Autowired
     RoleService roleService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
 
 
-    public Person add(CottageOwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    public Person add(OwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
         CottageOwner owner = dtoToCottageOwner(dto);
         List<String> paths = addPictures(owner, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
@@ -73,13 +69,11 @@ public class CottageOwnerService {
         }
     }
 
-    private CottageOwner dtoToCottageOwner(CottageOwnerDTO dto) {
+    private CottageOwner dtoToCottageOwner(OwnerDTO dto) {
         CottageOwner owner = new CottageOwner();
         owner.setName(dto.getName());
         owner.setSurname(dto.getSurname());
-        Address address = dto.getAddress();
-        addressRepository.save(address);
-        owner.setAddress(address);
+        owner.setAddress(dto.getAddress());
         owner.setUsername(dto.getUsername());
         owner.setPassword(passwordEncoder.encode(dto.getPassword()));
         owner.setActive(true);
@@ -88,7 +82,7 @@ public class CottageOwnerService {
         owner.setRegistrationExplanation(dto.getRegistrationExplanation());
         owner.setApprovedAccount(false);
         owner.setPoints(0);
-        List<Role> roles = roleService.findByName("ROLE_COTTAGE_OWNER");
+        List<Role> roles = roleService.findByName(dto.getRole());
         owner.setRoles(roles);
         return owner;
     }

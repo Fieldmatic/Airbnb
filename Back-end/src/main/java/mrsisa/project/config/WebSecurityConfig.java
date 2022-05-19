@@ -59,8 +59,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.authorizeRequests()
 								.antMatchers("/api/auth/**").permitAll()		// /auth/**
-								.antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
-								.antMatchers("/api/foo").permitAll()
+								.antMatchers("/api/cottage/reviewsNumber/{id}").permitAll()
+								.antMatchers("/api/cottage/getProfilePicture/{id}").permitAll()
+								.antMatchers("/api/boat/reviewsNumber/{id}").permitAll()
+								.antMatchers("/api/boat/getProfilePicture/{id}").permitAll()
+
 
 			.anyRequest().authenticated().and()
 

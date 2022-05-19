@@ -3,6 +3,7 @@ package mrsisa.project.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -11,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class CottageOwner extends Owner {
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Cottage> cottages;
 }

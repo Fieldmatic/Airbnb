@@ -6,9 +6,11 @@ import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.BoatRepository;
+import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.repository.PriceListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -33,16 +36,30 @@ public class BoatService {
     @Autowired
     PriceListRepository priceListRepository;
 
+    @Autowired
+    PersonRepository personRepository;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
 
-    public void add(BoatDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    @Transactional
+    public void add(BoatDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Boat boat = dtoToBoat(dto);
-        boatRepository.save(boat);
         List<String> paths = addPictures(boat, multipartFiles);
         boat.setPictures(paths);
         boat.setProfilePicture(paths.get(0));
+        BoatOwner owner = (BoatOwner) personRepository.findByUsername(userP.getName());
+        boat.setBoatOwner(owner);
+        owner.getBoats().add(boat);
         boatRepository.save(boat);
     }
+
+    public List<BoatDTO> findOwnerBoats(Long id) {
+        List<BoatDTO> boatsDTO = new ArrayList<>();
+        for (Boat boat : boatRepository.findOwnerBoats(id)) {
+            boatsDTO.add(new BoatDTO(boat));
+        }
+        return boatsDTO;
+    };
 
     public List<String> addPictures(Boat boat, MultipartFile[] multipartFiles) throws IOException {
         List<String> paths = new ArrayList<>();

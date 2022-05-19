@@ -3,6 +3,7 @@ package mrsisa.project.service;
 
 import mrsisa.project.model.Person;
 import mrsisa.project.repository.PersonRepository;
+import mrsisa.project.security.auth.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,4 +25,5 @@ public class UserService implements UserDetailsService {
         Person person = personRepository.findByUsername(username);
         return person == null;
     }
+
 }

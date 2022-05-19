@@ -1,5 +1,6 @@
 package mrsisa.project.controller;
 
+import mrsisa.project.dto.ClientDTO;
 import mrsisa.project.dto.CottageOwnerDTO;
 import mrsisa.project.dto.JwtAuthenticationRequest;
 import mrsisa.project.dto.UserTokenState;
@@ -7,6 +8,7 @@ import mrsisa.project.exception.ResourceConflictException;
 import mrsisa.project.model.CottageOwner;
 import mrsisa.project.model.Person;
 import mrsisa.project.security.auth.TokenUtils;
+import mrsisa.project.service.ClientService;
 import mrsisa.project.service.CottageOwnerService;
 import mrsisa.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class AuthenticationController {
 	@Autowired
 	private CottageOwnerService cottageOwnerService;
 
+	@Autowired
+	private ClientService clientService;
+
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(
 			@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
@@ -70,6 +75,19 @@ public class AuthenticationController {
 		}
 
 		Person user = this.cottageOwnerService.add(dto,multiPartFiles);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+	}
+
+	@PostMapping(value = "/clientRegistration")
+	public ResponseEntity<String> addClient(@RequestPart("client") ClientDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
+
+		if (existUser != null) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
+		}
+
+		this.clientService.add(dto,multiPartFiles);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");
 	}

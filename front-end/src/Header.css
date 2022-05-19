@@ -13,8 +13,8 @@
 
 .header__icon {
     object-fit: contain;
-    height: 45px;
-    margin-left: 20px;
+    height: 6vh;
+    padding-left: 50px;
 }
 
 .header__center {

@@ -1,0 +1,48 @@
+
+.banner__info {
+    display: flex;
+    flex-direction: row;
+    height: 78vh;
+}
+.banner_image{
+    height: 78vh;
+    width: fit-content;
+}
+
+.explore--nearby{
+    background-color: black;
+    color: #fff;
+    padding-top: 28vh;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 40px;
+    width: 28vw;
+}
+
+.banner__info button {
+    background-color: #ff7779;
+    color: #fff;
+    text-transform: inherit;
+    margin-top: 20px;
+    width: 8vw;
+    font-weight: 600;
+}
+
+.banner__info button:hover {
+    background-color: #fff;
+    color: #ff7779;
+}
+
+.banner__info h5 {
+    margin-top: 10px;
+}
+
+
+@media only screen and (max-width: 812px) {
+    .banner__info {
+        padding-top: 10vh;        
+        padding-left: 30px;
+        padding-bottom: 40px;
+    }
+}
+

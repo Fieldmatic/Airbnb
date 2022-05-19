@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +64,7 @@ public class AdventureService {
             adventure.getAddress().setStreet(dto.getAddress().getStreet());
             adventure.getAddress().setZipCode(dto.getAddress().getZipCode());
             addressRepository.save(adventure.getAddress());
-            adventure.setPromotionalDescription(dto.getPromoDescription());
+            adventure.setPromotionalDescription(dto.getPromotionalDescription());
             adventure.setRules(dto.getRules());
             adventure.getPriceList().setHourlyRate(dto.getHourlyRate());
             adventure.getPriceList().setCancellationConditions(dto.getCancellationConditions());
@@ -135,7 +136,7 @@ public class AdventureService {
         Address address = dto.getAddress();
         addressRepository.save(address);
         adventure.setAddress(address);
-        adventure.setPromotionalDescription(dto.getPromoDescription());
+        adventure.setPromotionalDescription(dto.getPromotionalDescription());
         adventure.setRules(dto.getRules());
         PriceList priceList = new PriceList();
         priceList.setHourlyRate(dto.getHourlyRate());
@@ -158,6 +159,17 @@ public class AdventureService {
         Path path = Paths.get(PICTURES_PATH + adventure.getId());
         savePicturesOnPath(adventure, multipartFiles, paths, path);
         return paths.stream().distinct().collect(Collectors.toList());
+    }
+
+    public List<String> getPhotos(Adventure adventure) throws IOException {
+        List<String> photos = new ArrayList<>();
+        for (String photo : adventure.getPictures()) {
+            Path path = Paths.get(photo);
+            byte[] bytes = Files.readAllBytes(path);
+            String photoData = Base64.getEncoder().encodeToString(bytes);
+            photos.add(photoData);
+        }
+        return photos;
     }
 
     private void savePicturesOnPath(Adventure adventure, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {

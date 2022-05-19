@@ -16,7 +16,7 @@ export default function Popup(props) {
       <div className='popup--buttons'> 
         <button className='close-btn' onClick={() => {
           props.handleChange()
-          props.setTrigger(false)}}>Close
+          props.setTrigger(false)}}>{props.leftButtonContent}
         </button>
         <button className='saveReasonButton' onClick={() => {
           props.handleChange()

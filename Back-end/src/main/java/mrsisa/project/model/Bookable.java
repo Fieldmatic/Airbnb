@@ -23,7 +23,8 @@ public abstract class Bookable {
     @OneToOne
     private Address address;
     private String promotionalDescription;
-    @ElementCollection
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<String> pictures;
     private String profilePicture;
     private String rules;

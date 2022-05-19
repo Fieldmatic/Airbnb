@@ -58,10 +58,13 @@ public class AdventureController {
 
     @Transactional
     @GetMapping(value = "/edit/{id}")
-    public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id){
+    public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id) throws IOException {
         Adventure adventure = adventureService.findOne(id);
         if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(new AdventureDTO(adventure), HttpStatus.OK);
+        List<String> adventurePhotos = adventureService.getPhotos(adventure);
+        AdventureDTO dto = new AdventureDTO(adventure);
+        dto.setPhotos(adventurePhotos);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reviewsNumber/{id}")

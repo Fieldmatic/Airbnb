@@ -1,6 +1,7 @@
 div.entities-view {
     display: flex;
     flex-direction: column;
+    position: relative;
     text-align: center;
     align-items: center;
     padding: 10px;
@@ -69,6 +70,7 @@ span.entityCardGrade {
     align-items: left;
     width: 90px;
     height: 30px;
+    cursor: pointer;
 }
 
 .entityCardDescription {
@@ -100,6 +102,7 @@ span.entityCardGrade {
     border: white;
     padding: 15px;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
 .entityButtonWithBorder {
@@ -111,13 +114,27 @@ span.entityCardGrade {
     background-color: white;
     padding: 15px;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
-
-div.sort {
-    width: 35%;
+.searchFilterSort {
     display: flex;
     flex-direction: row;
+    gap: 10px;
+}
+
+.filter > button {
+    width: fit-content;
+    height: 4vh;
+    background-color: transparent;
+    border-color: rgba(128, 128, 128, 0.921);
+    border-width: 1px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.sort > select {
+    width: fit-content;
     border-radius: 999px;
 }
 
@@ -139,4 +156,38 @@ div.sort {
     width: 100% ;
 }
 
+.formData {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.entityDetails {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FF5A5F;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+}
+
+.entityDetailsForm {
+    display: flex;
+    flex-direction: column;
+    background-color:white;
+    width: 30%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
+    box-sizing: border-box;
+    margin: 5% 10% 50% 0;
+}
+
+.entityDetailsLabel {
+    width: 50%;
+    height: 20px;
+    padding: 30px;
+}
 

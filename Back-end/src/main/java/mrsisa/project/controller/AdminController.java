@@ -46,10 +46,11 @@ public class AdminController {
     @PutMapping(path = "/confirmProfileDeletion/{userId}/{pdrId}/{confirmation}")
     public ResponseEntity<String> confirmDeletion(@PathVariable("userId") Long userId,
                                                   @PathVariable("pdrId") Long pdrId,
-                                                  @PathVariable("confirmation") String confirmation)
+                                                  @PathVariable("confirmation") String confirmation,
+                                                  @RequestPart("message") String message)
     {
         boolean delete = Boolean.parseBoolean(confirmation);
-        boolean success = adminService.deleteAccount(userId, pdrId, delete);
+        boolean success = adminService.deleteAccount(userId, pdrId, delete, message);
         if (!success)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error! User not found.");
         if (delete)

@@ -54,7 +54,7 @@ public class EmailService {
     public void sendAccountDeletionEmail(Person user, String title, String message, boolean isDeleted) throws MailException {
         SimpleMailMessage mail = getMailMessage(user, title);
         if (isDeleted)
-            mail.setText("Hello " + user.getName() + ACCEPT_DELETION_MESSAGE + message);
+            mail.setText("Hello " + user.getName() + ACCEPT_DELETION_MESSAGE);
         else
             mail.setText("Hello " + user.getName() + DENIAL_DELETION_MESSAGE + message);
         javaMailSender.send(mail);

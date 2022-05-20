@@ -3,6 +3,7 @@ package mrsisa.project.controller;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
+import mrsisa.project.model.CottageOwner;
 import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.service.CottageService;
 import mrsisa.project.service.UserService;
@@ -80,6 +81,14 @@ public class CottageController {
         File file = new File(cottage.getProfilePicture());
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok().body(resource);
+    }
+
+
+    @DeleteMapping(value = "/deleteCottage/{id}")
+    @PreAuthorize("hasRole('COTTAGE_OWNER')")
+    public ResponseEntity<String> deleteCottage(@PathVariable Long id, Principal userP) {
+        if (cottageService.deleteCottage(id, userP)) return ResponseEntity.ok().body("Success");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Cottage has active reservations!");
     }
 
 }

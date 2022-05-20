@@ -87,4 +87,11 @@ public class BoatController {
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok().body(resource);
     }
+
+    @DeleteMapping(value = "/deleteBoat/{id}")
+    @PreAuthorize("hasRole('BOAT_OWNER')")
+    public ResponseEntity<String> deleteBoat(@PathVariable Long id, Principal userP) {
+        if (boatService.deleteBoat(id, userP)) return ResponseEntity.ok().body("Success");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Boat has active reservations!");
+    }
 }

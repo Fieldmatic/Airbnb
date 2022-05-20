@@ -42,6 +42,15 @@ class CottageService {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
     }
 
+    deleteCottage(id){
+        return axios.delete(COTTAGE_BASED_REST_API_URL + "/deleteCottage/" + id, 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
+
 }
 
 export default new CottageService()

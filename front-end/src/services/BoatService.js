@@ -40,6 +40,15 @@ class BoatService {
         )
     }
 
+    deleteBoat(id){
+        return axios.delete(BOAT_BASED_REST_API_URL + "/deleteBoat/" + id, 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
+
 }
 
 export default new BoatService()

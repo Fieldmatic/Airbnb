@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.OwnerDTO;
+import mrsisa.project.dto.ClientDTO;
 import mrsisa.project.dto.JwtAuthenticationRequest;
 import mrsisa.project.dto.UserTokenState;
 import mrsisa.project.model.Person;
@@ -8,6 +9,7 @@ import mrsisa.project.model.Role;
 import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.security.auth.TokenUtils;
 import mrsisa.project.service.BoatOwnerService;
+import mrsisa.project.service.ClientService;
 import mrsisa.project.service.CottageOwnerService;
 import mrsisa.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,7 @@ public class AuthenticationController {
 
 	@Autowired
 	private PersonRepository personRepository;
+	private ClientService clientService;
 
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(
@@ -88,5 +91,19 @@ public class AuthenticationController {
 	public ResponseEntity<String> getRole(Principal userP){
 		Role role = personRepository.findByUsername(userP.getName()).getRoles().get(0);
 		return ResponseEntity.status(HttpStatus.OK).body(role.getName());
+	}
+
+	
+	@PostMapping(value = "/clientRegistration")
+	public ResponseEntity<String> addClient(@RequestPart("client") ClientDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
+
+		if (existUser != null) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
+		}
+
+		this.clientService.add(dto,multiPartFiles);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body("Success");
 	}
 }

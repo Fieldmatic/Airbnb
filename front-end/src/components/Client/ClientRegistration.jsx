@@ -1,6 +1,6 @@
 import React from 'react'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
-import ClientService from '../../services/ClientService';
+import LoginRegisterService from '../../services/LoginRegisterService';
 import { Navigate } from "react-router-dom";
 import Header from "../../Header";
 
@@ -84,7 +84,7 @@ export default function OwnerRegistration() {
         files.map((file) => {
             data.append("files", file.file)
         })
-        ClientService.addClient(data).then((response) => {
+        LoginRegisterService.addClient(data).then((response) => {
             alert(response.data);
             setRedirect("/")
         }).catch((err) => {

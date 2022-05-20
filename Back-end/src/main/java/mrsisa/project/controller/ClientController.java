@@ -1,8 +1,6 @@
 package mrsisa.project.controller;
 
-import mrsisa.project.dto.BoatOwnerDTO;
 import mrsisa.project.dto.ClientDTO;
-import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.service.AddressService;
 import mrsisa.project.service.ClientService;
@@ -13,12 +11,13 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.Principal;
 
 
 @CrossOrigin("*")
@@ -38,9 +37,10 @@ public class ClientController {
     @Autowired
     ValidationService validationService;
 
-    @GetMapping
-    public ClientDTO getClient() {
-        return new ClientDTO(clientService.findAll().get(0));
+    @GetMapping("/get")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ClientDTO> getClient(Principal userP) {
+        return new ResponseEntity<>(new ClientDTO(clientService.findClientByUsername(userP.getName())), HttpStatus.OK);
     }
 
     @PutMapping("/update")
@@ -79,18 +79,12 @@ public class ClientController {
     }
 
 
-    @PostMapping(value = "/add")
-    public ResponseEntity<String> addClient(@RequestPart("client") ClientDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
-        if (!validationService.usernameAvailable(dto.getUsername())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is taken!");
-        clientService.add(dto, multiPartFiles);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
-    }
-
     @GetMapping(value="/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity getClientProfilePicture() throws IOException {
-        Client client = clientService.findAll().get(0);
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<InputStreamResource> getClientProfilePicture(Principal userP) throws IOException {
+        Client client = clientService.findClientByUsername(userP.getName());
         File file = new File(client.getProfilePhoto());
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 }

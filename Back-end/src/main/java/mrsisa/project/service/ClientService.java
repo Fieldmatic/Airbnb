@@ -94,7 +94,6 @@ public class ClientService {
         client.setName(dto.getName());
         client.setSurname(dto.getSurname());
         Address address = dto.getAddress();
-        addressRepository.save(address);
         client.setAddress(address);
         client.setUsername(dto.getUsername());
         client.setPassword(passwordEncoder.encode(dto.getPassword()));

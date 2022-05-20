@@ -49,6 +49,8 @@ public class AuthenticationController {
 
 	@Autowired
 	private PersonRepository personRepository;
+
+	@Autowired
 	private ClientService clientService;
 
 	@PostMapping("/login")

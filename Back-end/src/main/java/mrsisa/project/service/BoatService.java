@@ -4,10 +4,7 @@ package mrsisa.project.service;
 import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
-import mrsisa.project.repository.AddressRepository;
-import mrsisa.project.repository.BoatRepository;
-import mrsisa.project.repository.PersonRepository;
-import mrsisa.project.repository.PriceListRepository;
+import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +36,9 @@ public class BoatService {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    ReservationRepository reservationRepository;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
 
     @Transactional
@@ -51,6 +51,18 @@ public class BoatService {
         boat.setBoatOwner(owner);
         owner.getBoats().add(boat);
         boatRepository.save(boat);
+    }
+
+    @Transactional
+    public boolean deleteBoat(Long id, Principal userP) {
+        BoatOwner owner = (BoatOwner) personRepository.findByUsername(userP.getName());
+        Boat boat = boatRepository.getById(id);
+        if (boat.getBoatOwner() == owner && (reservationRepository.getActiveReservations(id).size()) == 0) {
+            owner.getBoats().remove(boat);
+            boatRepository.delete(boat);
+            return true;
+        }
+        return false;
     }
 
     public List<BoatDTO> findOwnerBoats(Long id) {

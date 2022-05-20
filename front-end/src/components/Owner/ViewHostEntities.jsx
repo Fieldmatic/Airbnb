@@ -14,6 +14,7 @@ function ViewHostEntities() {
     const [entityType, setEntityType] = React.useState("")
     const [priority, setPriority] = React.useState("priceLowest")
     const [searchQuery, setSearchQuery] = React.useState("")
+    const [entitiesEdited, setEntitiesEdited] = React.useState(false)
 
     function showAllCottages() {
         setEntityType("cottage")
@@ -57,7 +58,8 @@ function ViewHostEntities() {
                 showAllAdventures()
             })
         }
-    },[entityType, priority])
+        setEntitiesEdited(false)
+    },[entityType, priority, entitiesEdited])
 
     function handleChange(event) {
         const {name, value} = event.target
@@ -95,6 +97,7 @@ function ViewHostEntities() {
                     address={item.address}
                     promotionalDescription={item.promotionalDescription}
                     entity={entityType}
+                    setEntitiesEdited={setEntitiesEdited}
                 />
             )
             }
@@ -110,6 +113,7 @@ function ViewHostEntities() {
                     address={item.address}
                     promotionalDescription={item.promotionalDescription}
                     entity={entityType}
+                    setEntitiesEdited={setEntitiesEdited}
                 />
             )
         }

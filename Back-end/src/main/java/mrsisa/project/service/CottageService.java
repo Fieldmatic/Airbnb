@@ -40,6 +40,9 @@ public class CottageService {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    ReservationRepository reservationRepository;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
     @Transactional
@@ -128,6 +131,17 @@ public class CottageService {
         }
         return cottagesDTO;
     };
+    @Transactional
+    public boolean deleteCottage(Long id, Principal userP) {
+        CottageOwner owner = (CottageOwner) personRepository.findByUsername(userP.getName());
+        Cottage cottage = cottageRepository.getById(id);
+        if (cottage.getCottageOwner() == owner && (reservationRepository.getActiveReservations(id).size()) == 0) {
+            owner.getCottages().remove(cottage);
+            cottageRepository.delete(cottage);
+            return true;
+        }
+        return false;
+    }
 
     public void edit(CottageDTO dto, Long id) {
         Cottage cottage = cottageRepository.findById(id).orElse(null);

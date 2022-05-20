@@ -39,8 +39,8 @@ public class ClientController {
 
     @GetMapping("/get")
     @PreAuthorize("hasRole('CLIENT')")
-    public ClientDTO getClient(Principal userP) {
-        return new ClientDTO(clientService.findClientByUsername(userP.getName()));
+    public ResponseEntity<ClientDTO> getClient(Principal userP) {
+        return new ResponseEntity<>(new ClientDTO(clientService.findClientByUsername(userP.getName())), HttpStatus.OK);
     }
 
     @PutMapping("/update")
@@ -85,6 +85,6 @@ public class ClientController {
         Client client = clientService.findClientByUsername(userP.getName());
         File file = new File(client.getProfilePhoto());
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 }

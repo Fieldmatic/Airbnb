@@ -33,7 +33,6 @@ public class CottageController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
-    @PreAuthorize("hasRole('COTTAGE_OWNER')")
     @GetMapping(value="/all")
     public ResponseEntity<List<CottageDTO>> getAllCottages() {
         List<CottageDTO> cottagesDTO = cottageService.findAll();

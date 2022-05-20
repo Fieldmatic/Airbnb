@@ -19,16 +19,16 @@ class ClientService {
     }
 
     saveReason(reason) {
-        console.log(reason)
         return axios.post(CLIENT_BASED_REST_API_URL + "/saveDeletionReason", reason)
     }
 
     getProfilePicture() {
-        return axios.get(CLIENT_BASED_REST_API_URL + "/getProfilePicture", {responseType: 'blob'},
+        return axios.get(CLIENT_BASED_REST_API_URL + "/getProfilePicture",
         {
+            responseType: 'blob',
             headers: {
                 'Authorization':`Bearer ${inMemoryJwt.getToken()}`
-            } 
+            },
          })
     }
 }

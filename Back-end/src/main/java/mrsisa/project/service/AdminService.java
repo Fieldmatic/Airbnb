@@ -2,10 +2,7 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
-import mrsisa.project.model.Instructor;
-import mrsisa.project.model.Person;
-import mrsisa.project.model.ProfileDeletionReason;
-import mrsisa.project.model.RegistrationRequest;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +24,9 @@ public class AdminService {
 
     @Autowired
     RegistrationRequestRepository registrationRequestRepository;
+
+    @Autowired
+    EmailService emailService;
 
     public boolean sendRequestForProfileDeletion(Long id, ProfileDeletionReasonDTO pdrDTO) {
         Person person = personRepository.findById(id).orElse(null);
@@ -59,8 +59,8 @@ public class AdminService {
         return true;
     }
 
-    public void createRegistrationRequest(Instructor instructor) {
-        RegistrationRequest regReq = new RegistrationRequest(instructor.getRegistrationExplanation(), instructor);
+    public void createRegistrationRequest(Owner owner) {
+        RegistrationRequest regReq = new RegistrationRequest(owner.getRegistrationExplanation(), owner);
         registrationRequestRepository.save(regReq);
     }
 
@@ -71,6 +71,25 @@ public class AdminService {
                 regReqDTOs.add(new RegistrationRequestDTO(regReq));
         }
         return regReqDTOs;
+    }
+
+    public boolean registerUser(Long userId, Long regId, boolean register, String message) {
+        Person user = personRepository.findById(userId).orElse(null);
+        RegistrationRequest regReq = registrationRequestRepository.findById(regId).orElse(null);
+        if (user == null || regReq == null) return false;
+        if (register)
+            user.setActive(true);
+        regReq.setViewed(true);
+        regReq.setApproved(register);
+        personRepository.save(user);
+        registrationRequestRepository.save(regReq);
+        try {
+            String title = "AirBnb registration notification";
+            emailService.sendRegistrationEmail(user, title, message, register);
+        }catch( Exception e ){
+            return false;
+        }
+        return true;
     }
 
     private ProfileDeletionReason dtoToPDR(ProfileDeletionReasonDTO pdrDTO, Person person) {

@@ -64,6 +64,21 @@ public class AdminController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @PutMapping(path = "/registerUser/{userId}/{regId}/{confirmation}")
+    public ResponseEntity<String> registerUser(@PathVariable("userId") Long userId,
+                                               @PathVariable("regId") Long regId,
+                                               @PathVariable("confirmation") String confirmation,
+                                               @RequestPart("message") String message)
+    {
+        boolean register = Boolean.parseBoolean(confirmation);
+        boolean success = adminService.registerUser(userId, regId, register, message);
+        if (!success)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error! User not found.");
+        if (register)
+            return ResponseEntity.status(HttpStatus.OK).body("User successfully registered!");
+        return ResponseEntity.status(HttpStatus.OK).body("Request for user registration denied!");
+    }
+
 //    @GetMapping(path = "/getUserProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
 //    public ResponseEntity getAdventureProfilePicture(@PathVariable Long id) throws IOException {
 //        Person person = adminService.findPersonById(id);

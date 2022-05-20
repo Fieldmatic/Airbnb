@@ -1,6 +1,6 @@
 import React from "react"
 import AdminService from "../../services/AdminService"
-import DeletionReasonCard from "./DeletionReasonCard"
+import UserRegistrationCard from "./UserRegistrationCard"
 import Header from "../../Header";
 
 
@@ -15,7 +15,7 @@ export default function UserRegistration() {
 
     const cards = allCards.map(item => {
         return (
-            <DeletionReasonCard
+            <UserRegistrationCard
                 key={item.id}
                 id={item.id}
                 user={item.user}

@@ -24,8 +24,8 @@ class InstructorService {
         return axios.get(ADMIN_BASED_REST_API_URL + "/getUserRegistrationRequests");
     }
 
-    registrateUser(userId, regId, confirmation) {
-        return axios.put(ADMIN_BASED_REST_API_URL + "/registrateUser/" + userId + "/" + regId + "/" + confirmation);
+    async registrateUser(userId, regId, confirmation, message) {
+        return await axios.put(ADMIN_BASED_REST_API_URL + "/registerUser/" + userId + "/" + regId + "/" + confirmation, message);
     }
 }
 

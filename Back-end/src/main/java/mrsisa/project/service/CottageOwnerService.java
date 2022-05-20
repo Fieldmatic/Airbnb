@@ -33,6 +33,9 @@ public class CottageOwnerService {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    AdminService adminService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
 
 
@@ -42,6 +45,7 @@ public class CottageOwnerService {
         List<String> paths = addPictures(owner, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
         cottageOwnerRepository.save(owner);
+        adminService.createRegistrationRequest(owner);
     }
 
     public List<String> addPictures(CottageOwner owner, MultipartFile[] multipartFiles) throws IOException {

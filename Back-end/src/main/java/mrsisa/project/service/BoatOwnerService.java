@@ -28,6 +28,9 @@ public class BoatOwnerService {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    AdminService adminService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/boatOwner/";
 
     public void add(BoatOwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
@@ -36,6 +39,7 @@ public class BoatOwnerService {
         List<String> paths = addPictures(owner, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
         boatOwnerRepository.save(owner);
+        adminService.createRegistrationRequest(owner);
     }
 
     public List<String> addPictures(BoatOwner owner, MultipartFile[] multipartFiles) throws IOException {

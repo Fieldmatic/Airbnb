@@ -48,6 +48,7 @@ public class InstructorService {
         else
             instructor.setProfilePhoto(paths.get(0));
         instructorRepository.save(instructor);
+        adminService.createRegistrationRequest(instructor);
         return true;
     }
 
@@ -92,7 +93,6 @@ public class InstructorService {
         instructor.setPoints(0);
         instructor.setRegistrationExplanation(dto.getRegistrationExplanation());
         instructor.setUsername(dto.getUsername());
-        adminService.createRegistrationRequest(instructor);
         return instructor;
     }
 

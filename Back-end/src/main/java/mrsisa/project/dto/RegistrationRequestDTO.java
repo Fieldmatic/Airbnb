@@ -14,7 +14,6 @@ public class RegistrationRequestDTO {
     private Long id;
     private String reason;
     private Boolean approved;
-    private String password;
     private Person user;
 
     public RegistrationRequestDTO(RegistrationRequest registrationRequest) {

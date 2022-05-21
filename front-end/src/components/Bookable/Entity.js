@@ -119,7 +119,7 @@ function entity(props) {
                                      },
                                  }} 
                              onClick={() => navigate("/editAvailability/"+props.id)}
-                             variant='outlined'>Availability
+                             variant='outlined'>Actions
                     </Button>
                     <Button sx = {{ 
                               backgroundColor : "red", 

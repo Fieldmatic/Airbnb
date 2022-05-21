@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import Action from './ActionPanel';
+import ActionPanel from './ActionPanel';
 import Header from '../../Header';
 
 function Availability(){
@@ -10,7 +10,7 @@ function Availability(){
     return (
         <div>
             <Header/>
-            <Action bookableId = {id}/>
+            <ActionPanel bookableId = {id}/>
             //
         </div>
     )

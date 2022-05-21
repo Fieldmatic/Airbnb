@@ -4,7 +4,6 @@ import CottageService from '../../services/CottageService'
 import Counter from "../utils/Counter"
 import { useParams } from 'react-router-dom'
 import Header from "../../Header";
-import Action from './Action'
 
 export default function EditCottage(props) {
   let {id} = useParams();
@@ -192,8 +191,7 @@ export default function EditCottage(props) {
             </div>
             <button className="edit-cottage-form--save">Save</button>
           </form>
-        </div>
-        <Action bookableId = {id}/>
+        </div>      
       </div>
     </div>
   )

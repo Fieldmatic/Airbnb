@@ -12,9 +12,10 @@ import OwnerRegistration from "./components/Owner/OwnerRegistration";
 import ClientRegistration from "./components/Client/ClientRegistration";
 import InstructorRegistration from "./components/Instructor/InstructorRegistration";
 import InstructorUpdate from "./components/Instructor/InstructorUpdate";
-import ViewHostEntities from "./components/Owner/ViewHostEntities";
+import ViewHostEntities from "./components/Bookable/ViewHostEntities";
 import BookableDetails from "./components/ViewEntities/BookableDetails";
 import Login from "./components/Login/Login";
+import Actions from "./components/Bookable/Actions";
 
 
 const Views = () => {
@@ -35,6 +36,7 @@ const Views = () => {
       <Route path = "/editInstructor/:id" element = {<InstructorUpdate />} />
       <Route path = "/viewOwnerCottages" element = {<ViewHostEntities />} />
       <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
+      <Route path = "/editAvailability/:id" element = {< Actions />}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

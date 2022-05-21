@@ -33,6 +33,9 @@ public class CottageOwnerService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    AdminService adminService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
 
 
@@ -41,6 +44,7 @@ public class CottageOwnerService {
         List<String> paths = addPictures(owner, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
         cottageOwnerRepository.save(owner);
+        adminService.createRegistrationRequest(owner);
         return owner;
     }
 

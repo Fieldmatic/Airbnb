@@ -15,6 +15,9 @@ import InstructorUpdate from "./components/Instructor/InstructorUpdate";
 import ViewHostEntities from "./components/Owner/ViewHostEntities";
 import BookableDetails from "./components/ViewEntities/BookableDetails";
 import Login from "./components/Login/Login";
+import ViewCottages from "./components/Owner/ViewCottages";
+import DeletionReasons from "./components/Admin/DeletionReasons";
+import UserRegistration from "./components/Admin/UserRegistration";
 
 
 const Views = () => {
@@ -35,6 +38,9 @@ const Views = () => {
       <Route path = "/editInstructor/:id" element = {<InstructorUpdate />} />
       <Route path = "/viewOwnerCottages" element = {<ViewHostEntities />} />
       <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
+      <Route path = "/viewOwnerCottages" element = {<ViewCottages entityType = "cottage" id = "2"/>} />
+      <Route path = "/viewDeletionRequests" element= {<DeletionReasons />} />
+      <Route path = "/viewRegistrationRequests" element= {<UserRegistration />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-public class ProfileDeletionReason {
+public class RegistrationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,9 +18,10 @@ public class ProfileDeletionReason {
     private Boolean approved;
     private Boolean viewed;
 
-    public ProfileDeletionReason(String reason, Boolean approved, Person user) {
+    public RegistrationRequest(String reason, Person user) {
         this.reason = reason;
-        this.approved = approved;
         this.user = user;
+        this.viewed = false;
     }
+
 }

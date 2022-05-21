@@ -66,7 +66,7 @@ export const menuItems = [
          },
          {
           title: "Instructor",
-          path: "/registrateInstructor"
+          path: "/instructorRegistration"
          }]
     }
    ];

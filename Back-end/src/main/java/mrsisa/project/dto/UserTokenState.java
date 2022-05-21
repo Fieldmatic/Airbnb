@@ -1,4 +1,5 @@
 package mrsisa.project.dto;
+
 public class UserTokenState {
 	
     private String accessToken;

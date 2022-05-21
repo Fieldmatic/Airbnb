@@ -89,8 +89,7 @@ export default function UpdateAdventureForm(props) {
         event.preventDefault();         
         let data = new FormData()
         const adventureJson = adventureToJson();
-        console.log(adventureJson)
-        data.append("adventure", adventureJson)
+        data.append("adventure", adventureJson);
         AdventureService.updateAdventure(data, id)
         .then(response => {
             alert(response.data);

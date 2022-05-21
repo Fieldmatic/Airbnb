@@ -11,6 +11,7 @@ import mrsisa.project.model.Instructor;
 @NoArgsConstructor
 public class InstructorDTO {
 
+    private Long id;
     private String name;
     private Address address;
     private String surname;
@@ -22,6 +23,7 @@ public class InstructorDTO {
     private String biography;
 
     public InstructorDTO(Instructor instructor){
+        this.id = instructor.getId();
         this.name = instructor.getName();
         this.address = instructor.getAddress();
         this.biography = instructor.getBiography();

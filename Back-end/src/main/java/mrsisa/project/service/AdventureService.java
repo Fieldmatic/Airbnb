@@ -1,16 +1,11 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.AdventureDTO;
-import mrsisa.project.model.Address;
-import mrsisa.project.model.Adventure;
-import mrsisa.project.model.Period;
-import mrsisa.project.model.PriceList;
-import mrsisa.project.repository.AddressRepository;
-import mrsisa.project.repository.AdventureRepository;
-import mrsisa.project.repository.PeriodRepository;
-import mrsisa.project.repository.PriceListRepository;
+import mrsisa.project.model.*;
+import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -40,19 +36,28 @@ public class AdventureService {
     @Autowired
     private PeriodRepository periodRepository;
 
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private InstructorRepository instructorRepository;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
 
     public Adventure save(Adventure adventure) {
         return adventureRepository.save(adventure);
     }
 
-    public void add(AdventureDTO adventureDTO, MultipartFile[] multipartFiles) throws IOException {
+    @Transactional
+    public void add(AdventureDTO adventureDTO, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Adventure adventure = this.dtoToAdventure(adventureDTO);
-        adventureRepository.save(adventure);
         List<String> paths = addPictures(adventure, multipartFiles);
         adventure.setPictures(paths);
         adventure.setProfilePicture(paths.get(0));
-        adventureRepository.save(adventure);
+        Instructor instructor = (Instructor) personRepository.findByUsername(userP.getName());
+        adventure.setInstructor(instructor);
+        instructor.getAdventures().add(adventure);
+        instructorRepository.save(instructor);
     }
 
     public void edit(AdventureDTO dto, Long id) {

@@ -86,11 +86,7 @@ export default function OwnerRegistration() {
         files.map((file) => {
             data.append("files", file.file)
         })
-        registerOwner(data)
-        .then(response => {
-            alert(response.data)
-            setRedirect("/")
-        })
+        registerOwner(data);
     }
 
     if (redirect){
@@ -247,6 +243,7 @@ export default function OwnerRegistration() {
     function registerOwner(data) {
             RegistrationService.addCottageOwner(data).then((response) => {
                 alert(response.data);
+                setRedirect("/");
             }).catch((err) => {
                 alert(err.response.data);
             });

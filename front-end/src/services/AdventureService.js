@@ -1,10 +1,16 @@
 import axios from "axios";
+import inMemoryJwt from './inMemoryJwtService';
 
 const ADVENTURE_BASED_REST_API_URL = "http://localhost:8081/api/adventure";
 
 class AdventureService {
     addAdventure(adventure){
-        return axios.post(ADVENTURE_BASED_REST_API_URL + "/add", adventure);
+        return axios.post(ADVENTURE_BASED_REST_API_URL + "/add", adventure, 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        });
     }
 
     getAllAdventures() {
@@ -12,7 +18,7 @@ class AdventureService {
     }
     
     getAdventure(id) {
-        return axios.get(ADVENTURE_BASED_REST_API_URL + "/edit/" + id, id)
+        return axios.get(ADVENTURE_BASED_REST_API_URL + "/get/" + id, id)
     }
 
     updateAdventure(adventure, id){

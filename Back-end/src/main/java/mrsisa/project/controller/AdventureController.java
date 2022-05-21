@@ -11,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +33,18 @@ public class AdventureController {
     private AdventureService adventureService;
 
     @PostMapping(path = "/add")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<String> addAdventure(@RequestPart("adventure") AdventureDTO adventureDTO,
-                                               @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException
+                                               @RequestPart("files") MultipartFile[] multiPartFiles,
+                                               Principal userP) throws IOException
     {
-        adventureService.add(adventureDTO, multiPartFiles);
+        adventureService.add(adventureDTO, multiPartFiles, userP);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
     @GetMapping(value="/all")
     public ResponseEntity<List<AdventureDTO>> getAllAdventures() {
         List<Adventure> adventures = adventureService.findAll();
-
         List<AdventureDTO> adventuresDTO = new ArrayList<>();
         for (Adventure adventure : adventures) {
             adventuresDTO.add(new AdventureDTO(adventure));
@@ -50,14 +53,14 @@ public class AdventureController {
     }
     
     @PutMapping(value = "/edit/{id}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<String> editAdventure(@RequestPart("adventure") AdventureDTO dto, @PathVariable("id") Long id)
     {
         adventureService.edit(dto, id);
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
     }
 
-    @Transactional
-    @GetMapping(value = "/edit/{id}")
+    @GetMapping(value = "/get/{id}")
     public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id) throws IOException {
         Adventure adventure = adventureService.findOne(id);
         if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);

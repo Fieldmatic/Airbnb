@@ -25,12 +25,11 @@ export default function InstructorUpdate() {
         biography: ""
     });
 
-    let {id} = useParams();
     const [files, setFiles] = React.useState([]);
     const [profilePhoto, setProfilePhoto] = React.useState(undefined);
 
     React.useEffect(() => {
-        InstructorService.getInstructor(id).then((result) => {
+        InstructorService.getInstructor().then((result) => {
             let instructor = result.data;
             setFormData({
                 name: instructor.name, 
@@ -44,8 +43,8 @@ export default function InstructorUpdate() {
                 biography: instructor.biography
             })
         })
-        InstructorService.getProfilePicture(id).then((response) => {
-            setProfilePhoto(response.data)
+        InstructorService.getProfilePicture().then((response) => {
+            setProfilePhoto(response.data);
         })
       },[])
 
@@ -69,7 +68,7 @@ export default function InstructorUpdate() {
         files.map((file) => {
             data.append("files", file.file)
         })
-        InstructorService.updateInstructor(data, id)
+        InstructorService.updateInstructor(data)
         .then(response => {
             alert(response.data);
             window.location.reload();

@@ -107,7 +107,7 @@ function entity(props) {
                                      },
                             }}
                              className = "editButton"
-                             onClick={() => navigate("/editAvailability/"+props.id)}
+                             onClick={() => navigate("")}
                              variant='outlined'>Edit
                     </Button>
                     <Button sx = {{
@@ -118,7 +118,7 @@ function entity(props) {
                                 color: 'white',
                                      },
                                  }} 
-                             onClick={() => navigate("/editAvailability/"+props.id)}
+                             onClick={() => navigate("/addActions/"+props.id)}
                              variant='outlined'>Actions
                     </Button>
                     <Button sx = {{ 

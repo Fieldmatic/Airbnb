@@ -29,7 +29,7 @@ export default function Header(props){
              <Link to={'/addAdventure'} style={{textDecoration: 'none', color:'black'}}>Add Adventure</Link>
              <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
              <Link to={'/showEntities'} style={{textDecoration: 'none', color:'black'}}>View Offers</Link>
-             <Link to={'/viewOwnerCottages'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
+             <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
 
             </div>
              

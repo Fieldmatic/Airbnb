@@ -6,9 +6,8 @@ import mrsisa.project.service.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 
 @CrossOrigin("*")
@@ -19,13 +18,9 @@ public class ActionController {
     private ActionService actionService;
 
     @PostMapping(value = "/add")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
     public ResponseEntity<String> addAction(@RequestBody ActionDTO actionDTO) throws IOException {
-        try {
-            actionService.add(actionDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Success");
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
-        }
+            if (actionService.add(actionDTO)) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+            else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Action already exists in given date range!");
     }
 }

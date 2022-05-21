@@ -11,11 +11,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ActionDTO {
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private String startDateTime;
+    private String endDateTime;
     private Integer personLimit;
     private List<String> additionalServices;
     private Double price;
-    private LocalDateTime expirationDate;
+    private String expirationDateTime;
     private Long bookableId;
 }

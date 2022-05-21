@@ -2,7 +2,7 @@ import React from 'react';
 import "./Entity.css";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import StarIcon from '@mui/icons-material/Star';
-import {Navigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import CottageService from '../../services/CottageService';
 import BoatService from "../../services/BoatService"
 import AdventureService from "../../services/AdventureService"
@@ -23,6 +23,7 @@ function entity(props) {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const navigate = useNavigate()
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -97,15 +98,39 @@ function entity(props) {
                         <p><strong>{props.rating}</strong></p>
                     </div>
                     <div className='owner__actions'>
-                    <Button sx = {{backgroundColor : "orange", color:"white"}}className = "editButton"
-                        onClick={() => navigate("/search")}
-                        variant='outlined'>Edit
+                    <Button sx = {{
+                             backgroundColor : "orange", 
+                             color:"white",
+                             '&:hover': {
+                                backgroundColor: 'black',
+                                color: 'white',
+                                     },
+                            }}
+                             className = "editButton"
+                             onClick={() => navigate("/editAvailability/"+props.id)}
+                             variant='outlined'>Edit
                     </Button>
-                    <Button sx = {{backgroundColor : "green", color:"white"}} onClick={() => navigate("/search")}
-                    variant='outlined'>Availability
+                    <Button sx = {{
+                             backgroundColor : "green", 
+                             color:"white",
+                             '&:hover': {
+                                backgroundColor: 'black',
+                                color: 'white',
+                                     },
+                                 }} 
+                             onClick={() => navigate("/editAvailability/"+props.id)}
+                             variant='outlined'>Actions
                     </Button>
-                    <Button sx = {{backgroundColor : "red", color:"white"}} onClick={handleClickOpen}
-                    variant='outlined'>Delete
+                    <Button sx = {{ 
+                              backgroundColor : "red", 
+                              color:"white", 
+                              '&:hover': {
+                                    backgroundColor: 'black',
+                                    color: 'white',
+                                         },
+                            }} 
+                            onClick={handleClickOpen}
+                            variant='outlined'>Delete
                     </Button>
                     </div>
                     <div className="entity__price">

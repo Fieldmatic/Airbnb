@@ -20,7 +20,7 @@ public class Action {
     @ManyToMany
     private List<Tag> additionalServices;
     private Double price;
-    private LocalDateTime expirationDate;
+    private LocalDateTime expirationDateTime;
     @ManyToOne
     private Bookable bookable;
 

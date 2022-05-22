@@ -96,8 +96,7 @@ export default function Cottage() {
     files.map((file) => {
       data.append("files", file.file)
     })
-    CottageService.addCottage(data)
-    .then(response => {
+    CottageService.addCottage(data).then(response => {
       alert(response.data)
       setRedirect("/")
     })

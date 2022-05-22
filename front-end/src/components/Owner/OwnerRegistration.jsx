@@ -1,9 +1,8 @@
 import React from 'react'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
-import BoatOwnerService from "../../services/BoatOwnerService"
-import RegistrationService from "../../services/LoginRegisterService"
+import LoginRegisterService from "../../services/LoginRegisterService"
 import Header from "../../Header";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function OwnerRegistration() {
     const [formData, setFormData] = React.useState (
@@ -27,7 +26,7 @@ export default function OwnerRegistration() {
   
     )
 
-    const [redirect, setRedirect] = React.useState("");
+    let navigate = useNavigate();
 
     const [files, setFiles] = React.useState([]);
 
@@ -86,17 +85,10 @@ export default function OwnerRegistration() {
         files.map((file) => {
             data.append("files", file.file)
         })
-        registerOwner(data)
-        .then(response => {
-            alert(response.data)
-            setRedirect("/")
-        })
-    }
-
-    if (redirect){
-        return (
-            <Navigate to={redirect}/>
-        )
+        LoginRegisterService.registerOwner(data).then(response => {
+            if (response.status === 200) alert("Success");
+            navigate("/");
+        });
     }
     
     return (

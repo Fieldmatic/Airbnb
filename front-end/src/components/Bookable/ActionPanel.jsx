@@ -12,11 +12,14 @@ import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import React, {useState} from 'react'
 import ActionService from '../../services/ActionService';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider} from '@mui/material/styles';
+import "./ActionPanel.css";
+import muiStyles from '../utils/muiStyles';
 
 
 
-function Action (props) {
+function ActionPanel (props) {
+    const today = new Date()
     const [formData, setFormData] = useState(
         {
             startDate:new Date(),
@@ -24,52 +27,14 @@ function Action (props) {
             personLimit: "",
             price:"",
             bookableId:props.bookableId,
-            expirationDateTime:new Date(),
-            startTime : new Date(),
-            endTime :new Date()
+            expirationDateTime:new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(),0,0),
+            startTime : new Date(2022,1,1,11,0,0),
+            endTime :new Date(2022,1,1,11,0,0)
 
         }
     )
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [showError, setShowError] = React.useState(false);
-
-    const theme = createTheme({
-        palette: {
-          primary: {
-            main: "#FF5A5F",
-          },
-        },
-      });
-
-    const style = {
-        "& label": {
-            color: "black"
-          },
-
-          "&:hover label": {
-            fontWeight: 700
-          },
-          "& label.Mui-focused": {
-            color: "#FF5A5F"
-          },
-          "& .MuiInput-underline:after": {
-            borderBottomColor: "#FF5A5F"
-          },
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              borderColor: "black"
-            },
-            "&:hover fieldset": {
-              borderColor: "#FF5A5F",
-              borderWidth: 2
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#FF5A5F"
-            },
-            svg : {color : '#FF5A5F'}
-            
-          }
-      }
 
     function handleChange(event) {
         console.log(formData)
@@ -100,17 +65,17 @@ function Action (props) {
             personLimit: formData.personLimit,
             price:formData.price,
             bookableId:formData.bookableId,
-            startDateTime:toISODate(new Date(formData.startDate.getFullYear(),formData.startDate.getMonth(), formData.startDate.getDate(), formData.startTime.getHours(), formData.startTime.getMinutes(), formData.startTime.getSeconds())),
+            startDateTime:toISODate(new Date(formData.startDate.getFullYear(),formData.startDate.getMonth(), formData.startDate.getDate(), formData.startTime.getHours(), formData.startTime.getMinutes(),formData.startTime.getSeconds())),
             endDateTime: toISODate(new Date(formData.endDate.getFullYear(),formData.endDate.getMonth(), formData.endDate.getDate(), formData.endTime.getHours(), formData.endTime.getMinutes(), formData.endTime.getSeconds())),
             expirationDateTime : toISODate(formData.expirationDateTime)
         }
         ActionService.addAction(data)
-        .then(response => {
-            console.log(response.status)
-            if (response.status === 201) setShowSuccess(true)
-        }).catch(error => {
-            setShowError(true)
-        });
+            .then(response => {
+                console.log(response.status)
+                if (response.status === 201) setShowSuccess(true)
+            }).catch(error => {
+                setShowError(true)
+            });
       }
     
       
@@ -140,9 +105,10 @@ function Action (props) {
             <div className='actions--data'>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <Stack spacing={3}>
-                    <ThemeProvider theme={theme}>
+                    <ThemeProvider theme={muiStyles.timePickerTheme}>
                     <TimePicker
                         ampm={false}
+                        minutesStep={30}
                         label = "Check in"
                         value={formData.startTime}
                         onChange= {(newValue) => {
@@ -155,7 +121,7 @@ function Action (props) {
                             return (
                               <TextField
                                 {...params}
-                                sx={style}
+                                sx={muiStyles.style}
                               />
                             );
                           }}
@@ -165,8 +131,9 @@ function Action (props) {
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <Stack spacing={3}>
-                    <ThemeProvider theme={theme}>
+                    <ThemeProvider theme={muiStyles.timePickerTheme}>
                     <TimePicker
+                        minutesStep={30}
                         ampm={false}
                         label = "Check out"
                         value={formData.endTime}
@@ -180,7 +147,7 @@ function Action (props) {
                             return (
                               <TextField
                                 {...params}
-                                sx={style}
+                                sx={muiStyles.style}
                               />
                             );
                           }}
@@ -191,7 +158,7 @@ function Action (props) {
             </div>
             <div className='actions--data'>
             <TextField
-                sx={style} 
+                sx={muiStyles.style} 
                 id="standard-basic" 
                 className='actions--textfield'
                 label="Max guests" 
@@ -201,7 +168,7 @@ function Action (props) {
                 onChange={handleChange}
                 />
              <TextField 
-                sx={style}
+                sx={muiStyles.style}
                 id="standard-basic" 
                 label="Price" 
                 className='actions--textfield'
@@ -213,17 +180,18 @@ function Action (props) {
             </div>
             <div className='actions--data'>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <ThemeProvider theme={theme}>
+                    <ThemeProvider theme={muiStyles.timePickerTheme}>
                         <DateTimePicker
                             renderInput={(params) => {
                                 return (
                                 <TextField
                                     {...params}
-                                    sx={style}
+                                    sx={muiStyles.style}
                                 />
                                 );
                             }}
                             ampm={false}
+                            minutesStep={30}
                             color="#FF5A5F"
                             label="Expiration date"
                             className='expirationDatePicker'
@@ -258,7 +226,8 @@ function Action (props) {
 }
 
 function toISODate (dateTime) {
+  dateTime.setSeconds(0)
   return new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000).toISOString()
 }
 
-export default Action
+export default ActionPanel

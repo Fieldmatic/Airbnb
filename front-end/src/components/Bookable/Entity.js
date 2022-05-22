@@ -121,6 +121,17 @@ function entity(props) {
                              onClick={() => navigate("/addActions/"+props.id)}
                              variant='outlined'>Actions
                     </Button>
+                    <Button sx = {{
+                             backgroundColor : "blue", 
+                             color:"white",
+                             '&:hover': {
+                                backgroundColor: 'black',
+                                color: 'white',
+                                     },
+                                 }} 
+                             onClick={() => navigate("/addAvailabilityPeriods/"+props.id)}
+                             variant='outlined'>Availability Periods
+                    </Button>
                     <Button sx = {{ 
                               backgroundColor : "red", 
                               color:"white", 

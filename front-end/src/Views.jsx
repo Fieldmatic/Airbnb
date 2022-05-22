@@ -18,6 +18,7 @@ import Login from "./components/Login/Login";
 import DeletionReasons from "./components/Admin/DeletionReasons";
 import UserRegistration from "./components/Admin/UserRegistration";
 import Actions from "./components/Bookable/Actions";
+import Periods from "./components/Bookable/Periods";
 
 
 const Views = () => {
@@ -41,6 +42,7 @@ const Views = () => {
       <Route path = "/viewDeletionRequests" element= {<DeletionReasons />} />
       <Route path = "/viewRegistrationRequests" element= {<UserRegistration />} />
       <Route path = "/addActions/:id" element = {< Actions />}/>
+      <Route path = "/addAvailabilityPeriods/:id" element = {< Periods />}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -74,14 +74,6 @@ public class AdventureService {
             LocalDateTime start = LocalDateTime.parse(dto.getStartDateTime());
             LocalDateTime end = LocalDateTime.parse(dto.getEndDateTime());
             boolean periodMatchOthers = this.checkPeriodMatching(start, end, adventure);
-            if (!periodMatchOthers) {
-                Period period = new Period();
-                period.setStartDateTime(start);
-                period.setEndDateTime(end);
-                period.setAdventure(adventure);
-                adventure.getPeriods().add(period);
-                periodRepository.save(period);
-            }
             adventureRepository.save(adventure);
         }
     }

@@ -19,5 +19,5 @@ public class Period {
     private LocalDateTime endDateTime;
 
     @ManyToOne
-    private Adventure adventure;
+    private Bookable bookable;
 }

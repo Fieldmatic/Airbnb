@@ -95,7 +95,7 @@ export default function ShowActions(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <span>Action available until: {new Date(action.expirationDate).getDate()}.{new Date(action.expirationDate).getMonth()+1}.{new Date(action.expirationDate).getFullYear()}. {new Date(action.expirationDate).getHours()}:{getFormattedMinutes(new Date(action.expirationDate).getMinutes())}</span>
+                                <span>Action available until: {new Date(action.expirationDateTime).getDate()}.{new Date(action.expirationDateTime).getMonth()+1}.{new Date(action.expirationDateTime).getFullYear()}. {new Date(action.expirationDateTime).getHours()}:{getFormattedMinutes(new Date(action.expirationDateTime).getMinutes())}</span>
                             </div>
                             <div className='rightActionContainer'>
                                     <div className="showActionPrice">

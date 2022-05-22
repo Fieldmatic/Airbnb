@@ -61,8 +61,9 @@ public class ActionService {
         action.setEndDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getEndDateTime()), ZoneOffset.UTC));
         action.setPersonLimit(actionDTO.getPersonLimit());
         action.setPrice(actionDTO.getPrice());
+        action.setUsed(false);
         action.setExpirationDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDateTime()), ZoneOffset.UTC));
-        action.setExpirationDate(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDate()), ZoneOffset.UTC));
+        action.setExpirationDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDateTime()), ZoneOffset.UTC));
         return action;
     }
 }

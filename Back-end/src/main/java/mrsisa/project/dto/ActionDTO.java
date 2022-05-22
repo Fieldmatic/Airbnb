@@ -20,17 +20,16 @@ public class ActionDTO {
     private Double price;
     private String expirationDateTime;
     private Long bookableId;
-    DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public ActionDTO(Action action) {
-
         this.id = action.getId();
         this.startDateTime = FORMATTER.format(action.getStartDateTime());
         this.endDateTime = FORMATTER.format(action.getEndDateTime());
         this.personLimit = action.getPersonLimit();
         //this.additionalServices = action.getAdditionalServices();
         this.price = action.getPrice();
-        this.expirationDate = FORMATTER.format(action.getExpirationDate());
+        this.expirationDateTime = FORMATTER.format(action.getExpirationDateTime());
         this.bookableId = action.getBookable().getId();
         this.used = action.getUsed();
     }

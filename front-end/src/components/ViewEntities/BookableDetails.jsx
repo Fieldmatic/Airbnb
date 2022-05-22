@@ -25,6 +25,7 @@ export default function EntityDetails() {
     const [slideNumber, setSlideNumber] = React.useState(0)
     const [slideOpened, setSlideOpened] = React.useState(false)
     const [actions, setActions] = React.useState([])
+    const [reservationMade, setReservationMade] = React.useState(false)
     const [entity, setEntity] = React.useState(
         {
             name : "",
@@ -147,12 +148,17 @@ export default function EntityDetails() {
         return bedroomsNum;
     }
 
+    function rerenderActions() {
+        setReservationMade(prevState => !prevState)
+        console.log(reservationMade)
+    }
+
 
     React.useEffect(() => {
         ActionService.getActions(id).then(response => {
             setActions(response.data)
         })
-    }, []);
+    }, [reservationMade]);
 
     return(
         <div>
@@ -215,7 +221,7 @@ export default function EntityDetails() {
                             <h3>Cancellation conditions</h3>
                             <p>{entity.cancellationConditions}</p>
                         </div>
-                        <ShowActions actions={actions} hourlyPrice={entity.hourlyRate} dailyPrice={entity.dailyRate} bookableType={entityType}/>
+                        <ShowActions actions={actions} hourlyPrice={entity.hourlyRate} dailyPrice={entity.dailyRate} bookableType={entityType} deleteAction={rerenderActions}/>
                 </div>
             </div>
         </div>

@@ -3,11 +3,23 @@ import { Action } from 'history';
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import ReservationService from '../../services/ReservationService'
 import './BookableDetails.css'
 
 
 export default function ShowActions(props) {
+    const [open, setOpen] = React.useState(false);
+    const [actionId, setActionId] = React.useState(0);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
     
     function getOriginalPrice(action) {
         let originalPrice;
@@ -34,26 +46,31 @@ export default function ShowActions(props) {
         return formattedMins
     }
 
-    function makeQuickReservation(event) {
-        const {value} = event.target
-        ReservationService.addQuickReservation(value).then(response =>{
+    function makeQuickReservation() {
+        ReservationService.addQuickReservation(actionId).then(response =>{
             alert("Success");
+            props.deleteAction()
         })
-
+        setOpen(false);
     }
+
+
+    const handleClickOpen = (event) => {
+        const {value} = event.target
+        setOpen(true)
+        setActionId(value)
+    };
+
+    const handleClose = () => {
+    setOpen(false);
+    };
     
     return (
         <div className='showActions'>
             <h4> Make a quick reservation</h4>
             <div>
                 {props.actions.map(action => (
-                    
-                    //datum
-                    //satnica
-                    //originalna cena
-                    //popust
-                    
-                    <div className='showActionContainer'>
+                    <div className='showActionContainer' key={action.id}>
                         <div className='showAction'>
                             <div className="leftActionContainer">
                                 <div className="showActionDates">
@@ -93,7 +110,7 @@ export default function ShowActions(props) {
 
                                     </div>
                                     <Button className = "availability--periods--submit" 
-                                            onClick={makeQuickReservation}
+                                            onClick={handleClickOpen}
                                             value={action.id}
                                             variant="contained"
                                             sx = {{background:"#FF5A5F",'&:hover': {
@@ -101,11 +118,30 @@ export default function ShowActions(props) {
                                             color: 'black',
                                             },}}>Book now
                                     </Button>
+                                    <Dialog
+                                        fullScreen={fullScreen}
+                                        open={open}
+                                        onClose={handleClose}
+                                        aria-labelledby="responsive-dialog-title"
+                                        >
+                                        <DialogTitle id="responsive-dialog-title">
+                                            {"Are you sure?"}
+                                        </DialogTitle>
+                                        <DialogActions>
+                                            <Button autoFocus onClick={handleClose}>
+                                                No
+                                            </Button>
+                                            <Button onClick={makeQuickReservation} autoFocus>
+                                                Yes
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
+            {props.actions.length === 0 && <span>This {props.bookableType} has no available actions.</span>}
         </div>
     )
 }

@@ -14,6 +14,8 @@ public class ActionDTO {
     private String startDateTime;
     private String endDateTime;
     private Integer personLimit;
+    private Boolean used;
+
     private List<String> additionalServices;
     private Double price;
     private String expirationDate;
@@ -30,5 +32,6 @@ public class ActionDTO {
         this.price = action.getPrice();
         this.expirationDate = FORMATTER.format(action.getExpirationDate());
         this.bookableId = action.getBookable().getId();
+        this.used = action.getUsed();
     }
 }

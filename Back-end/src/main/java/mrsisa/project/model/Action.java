@@ -17,6 +17,7 @@ public class Action {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private Integer personLimit;
+    private Boolean used;
     @ManyToMany
     private List<Tag> additionalServices;
     private Double price;

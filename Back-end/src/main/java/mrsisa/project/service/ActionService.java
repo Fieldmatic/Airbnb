@@ -14,6 +14,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ActionService {
@@ -44,6 +46,14 @@ public class ActionService {
         return true;
     }
 
+    public List<ActionDTO> findActions(Long id) {
+        List<ActionDTO> actionsDTO = new ArrayList<>();
+        for (Action action : actionRepository.findActions(id)) {
+            actionsDTO.add(new ActionDTO(action));
+        }
+        return actionsDTO;
+    };
+
 
     Action dtoToAction(ActionDTO actionDTO){
         Action action = new Action();
@@ -52,6 +62,7 @@ public class ActionService {
         action.setPersonLimit(actionDTO.getPersonLimit());
         action.setPrice(actionDTO.getPrice());
         action.setExpirationDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDateTime()), ZoneOffset.UTC));
+        action.setExpirationDate(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDate()), ZoneOffset.UTC));
         return action;
     }
 }

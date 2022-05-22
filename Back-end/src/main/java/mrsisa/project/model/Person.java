@@ -20,6 +20,7 @@ import java.util.List;
 public abstract class Person implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
+    @Column(unique = true)
     private Long id;
     private String username;
     private String password;

@@ -3,6 +3,7 @@ package mrsisa.project.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -16,6 +17,6 @@ public class Client extends Person {
     private ClientCategory category;
     private Integer penalties;
     private Integer points;
-    @OneToMany
+    @OneToMany(cascade=CascadeType.ALL)
     private List<Reservation> reservations;
 }

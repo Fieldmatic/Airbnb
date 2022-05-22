@@ -21,11 +21,5 @@ public class OwnerController {
     @Autowired
     ValidationService validationService;
 
-    @PostMapping(value = "/add")
-    public ResponseEntity<String> addOwner(@RequestPart("owner") OwnerDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
-        if (!validationService.usernameAvailable(dto.getUsername())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is taken!");
-        cottageOwnerService.add(dto, multiPartFiles);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
-    }
 
 }

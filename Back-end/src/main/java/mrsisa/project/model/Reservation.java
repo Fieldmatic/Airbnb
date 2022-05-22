@@ -14,7 +14,6 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private Integer personLimit;

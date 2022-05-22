@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -22,5 +23,11 @@ public class ActionController {
     public ResponseEntity<String> addAction(@RequestBody ActionDTO actionDTO) throws IOException {
             if (actionService.add(actionDTO)) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
             else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Action already exists in given date range!");
+    }
+
+    @GetMapping(value="/getActions/{id}")
+    public ResponseEntity<List<ActionDTO>> getActions(@PathVariable("id") Long id) {
+        List<ActionDTO> actions = actionService.findActions(id);
+        return new ResponseEntity<>(actions, HttpStatus.OK);
     }
 }

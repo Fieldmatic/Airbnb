@@ -187,3 +187,85 @@
   .capacityNum {
     font-weight: bolder;
   }
+
+  .showActions {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.247);
+    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.247);
+  }
+
+  .showActions > h4 {
+    margin-left: 8px;
+    margin-top: 8px;
+    color: #FF5A5F;
+  }
+
+  .showActions > div {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(0, 0, 0, 0.247);
+  }
+
+  .showActionContainer {
+    border-top: 1px solid rgba(0, 0, 0, 0.247);
+    padding: 10px;
+
+  }
+
+  .showAction {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .showActionDates {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+
+  }
+
+
+  .actionDate, .actionTime {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .actionDate > div > label, .actionTime > div > label {
+    font-weight: bolder;
+    margin-right: 5px;
+  }
+
+  .rightActionContainer, .leftActionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .leftActionContainer {
+    justify-content: space-between;
+  }
+
+
+  .leftActionContainer > span {
+    color: rgba(12, 174, 12, 0.875);
+  }
+
+  .showActionPrice {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .originalAndDiscountPrice > label {
+    color: red;
+    text-decoration: line-through;
+    font-size: small;
+    margin-right: 6px;
+  }
+
+  .originalAndDiscountPrice > span {
+    font-weight: bold;
+    font-size: large;
+  }

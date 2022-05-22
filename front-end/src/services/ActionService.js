@@ -8,6 +8,10 @@ class ActionService {
         return axios.post (ACTION_BASED_REST_API_URL + "/add", formData)
     }
 
+    getActions(id){
+        return axios.get(ACTION_BASED_REST_API_URL + "/getActions/" + id, id)
+    }
+
 }
 
 

@@ -11,13 +11,20 @@ import Header from "../../Header";
 import "./BookableDetails.css"
 import AdventureService from "../../services/AdventureService";
 import BoatService from "../../services/BoatService";
+import ActionService from "../../services/ActionService";
 import BoatDetails from "./BoatDetails";
+import ShowActions from "./ShowActions";
 
 
 export default function EntityDetails() {
+
+    let {id} = useParams();
+    let {entityType} = useParams();
+
     const [reviewsNumber, setReviewsNumber] = React.useState(0)
     const [slideNumber, setSlideNumber] = React.useState(0)
     const [slideOpened, setSlideOpened] = React.useState(false)
+    const [actions, setActions] = React.useState([])
     const [entity, setEntity] = React.useState(
         {
             name : "",
@@ -40,8 +47,6 @@ export default function EntityDetails() {
             rating : 0
           }
     )
-    let {id} = useParams();
-    let {entityType} = useParams();
 
     function setBoatType(type) {
         if (type == "FISHINGBOAT") 
@@ -142,6 +147,13 @@ export default function EntityDetails() {
         return bedroomsNum;
     }
 
+
+    React.useEffect(() => {
+        ActionService.getActions(id).then(response => {
+            setActions(response.data)
+        })
+    }, []);
+
     return(
         <div>
             <Header />
@@ -203,6 +215,7 @@ export default function EntityDetails() {
                             <h3>Cancellation conditions</h3>
                             <p>{entity.cancellationConditions}</p>
                         </div>
+                        <ShowActions actions={actions} hourlyPrice={entity.hourlyRate} dailyPrice={entity.dailyRate} bookableType={entityType}/>
                 </div>
             </div>
         </div>

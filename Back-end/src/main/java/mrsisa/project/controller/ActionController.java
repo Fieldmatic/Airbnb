@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -27,5 +28,11 @@ public class ActionController {
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
         }
+    }
+
+    @GetMapping(value="/getActions/{id}")
+    public ResponseEntity<List<ActionDTO>> getActions(@PathVariable("id") Long id) {
+        List<ActionDTO> actions = actionService.findActions(id);
+        return new ResponseEntity<>(actions, HttpStatus.OK);
     }
 }

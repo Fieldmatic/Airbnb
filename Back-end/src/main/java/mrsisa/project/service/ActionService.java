@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ActionService {
@@ -23,14 +28,22 @@ public class ActionService {
         dtoToAction(actionDTO);
     }
 
+    public List<ActionDTO> findActions(Long id) {
+        List<ActionDTO> actionsDTO = new ArrayList<>();
+        for (Action action : actionRepository.findActions(id)) {
+            actionsDTO.add(new ActionDTO(action));
+        }
+        return actionsDTO;
+    };
+
 
     Action dtoToAction(ActionDTO actionDTO){
         Action action = new Action();
-        action.setStartDateTime(actionDTO.getStartDateTime());
-        action.setEndDateTime(actionDTO.getEndDateTime());
+        action.setStartDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getStartDateTime()), ZoneOffset.UTC));
+        action.setEndDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getEndDateTime()), ZoneOffset.UTC));
         action.setPersonLimit(actionDTO.getPersonLimit());
         action.setPrice(actionDTO.getPrice());
-        action.setExpirationDate(actionDTO.getExpirationDate());
+        action.setExpirationDate(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDate()), ZoneOffset.UTC));
         Bookable bookable = bookableRepository.getById(actionDTO.getBookableId());
         action.setBookable(bookable);
         bookable.getActions().add(action);

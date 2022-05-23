@@ -1,4 +1,5 @@
 import './Header.css'
+import React, {useEffect, useState} from 'react';
 import MenuItems from './MenuItems.jsx'
 import SearchIcon from '@mui/icons-material/Search';
 import LanguageIcon from '@mui/icons-material/Language';
@@ -7,12 +8,22 @@ import { Avatar } from '@mui/material';
 import { Link } from 'react-router-dom';
 import inMemoryJwt from './services/inMemoryJwtService';
 
-export default function Header(props){
+export default function Header(){
+
+    const [isUserLogged, setIsUserLogged] = useState(false);
+    
+    useEffect(() => {
+        inMemoryJwt.setToken(localStorage.getItem("user"))
+        inMemoryJwt.setExpiresIn(localStorage.getItem("expiration"))
+        if ((inMemoryJwt.getToken()) !== null) setIsUserLogged(true);
+        else setIsUserLogged(false)
+    }, [isUserLogged]);
+
     const logoutHandler = event => {
         localStorage.clear()
         inMemoryJwt.deleteExpiration()
         inMemoryJwt.deleteToken()
-        props.setIsUserLogged(false)
+        setIsUserLogged(false)
     };
 
     return (
@@ -35,7 +46,7 @@ export default function Header(props){
              
             <div className='header__right'>
                 {
-                    props.isUserLogged?
+                    isUserLogged?
                     <button type="button" onClick={logoutHandler}>Logout</button>
                     :
                     <Link to={'/login'} style={{textDecoration: 'none', color:'black'}}>Login</Link>

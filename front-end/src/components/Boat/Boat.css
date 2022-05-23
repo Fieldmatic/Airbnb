@@ -1,5 +1,5 @@
 .form--type{
-    width: 98%;
+    width: 50%;
     margin-bottom: 20px;
     height: 40px;
     border-radius: 5px;
@@ -14,4 +14,8 @@
     align-self: flex-start;
     margin-left: 4px;
     margin-bottom: 2px;
+}
+
+.form-boat-type{
+    width: 45%;
 }

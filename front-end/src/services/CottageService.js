@@ -18,7 +18,13 @@ class CottageService {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/get/" + id, id)
     }
     updateCottage(cottage, id){
-        return axios.put(COTTAGE_BASED_REST_API_URL + "/edit/" + id, cottage)
+        console.log(inMemoryJwt.getToken())
+        return axios.put(COTTAGE_BASED_REST_API_URL + "/edit/" + id, cottage,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
     }
 
     getAllCottages() {

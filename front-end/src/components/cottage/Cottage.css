@@ -13,7 +13,7 @@
     background-color: white;
     padding: 50px;
     height: 100%;
-    width: 30%;
+    width: 40%;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -25,7 +25,7 @@
 }
 
 .form--input {
-    width: 95%;
+    width: 45%;
     margin-bottom: 20px;
     height: 4vh;
     border-radius: 5px;
@@ -35,18 +35,17 @@
 }
 
 .form--input-area {
-    width: 95%;
+    width: 100%;
     margin-bottom: 20px;
-    height: 70px;
-    border-radius: 5px;
-    border: 1px solid gray;
     padding: 5px;
     font-family: 'Inter', sans-serif;
     resize: none;
+
 }
 
+
 .form--submit, .form--save {
-    width: 97%;
+    width: 100%;
     padding: 10px;
     border-radius: 5px;
     color: white;
@@ -98,4 +97,32 @@
 .bedRoom--label{
     width: 45%;
     margin-top: 2%;
+}
+
+
+.form--pair{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+.form--bedrooms{
+    width: 100%;
+    padding: 20px;
+    align-items: center;
+}
+
+.form--phoneInput{
+    width: 45%;
+}
+
+.form-account-type{
+    width: 45%;
+}
+
+.PhoneInput{
+    font-size: larger;
 }

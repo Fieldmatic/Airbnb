@@ -4,6 +4,9 @@ import BoatService from "../../services/BoatService"
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import Header from "../../Header";
 import { Navigate } from "react-router-dom";
+import muiStyles from '../utils/muiStyles';
+import { TextField } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 
 export default function Boat () {
     const [formData, setFormData] = React.useState(
@@ -53,6 +56,46 @@ export default function Boat () {
     const handleClean = (files) => {
         console.log("list cleaned", files);
     };
+
+    const boat_types = [
+        {
+        value: 'FISHINGBOAT',
+        label: 'Fishing boat',
+        },
+        {
+        value: 'CRUISER',
+        label: 'Cruiser',
+        },
+        {
+        value: 'BOWRIDER',
+        label: 'Bowrider',
+        },
+        {
+        value: 'RUNABOUT',
+        label: 'Runabout',
+        },
+        {
+        value: 'SAILBOAT',
+        label: 'Sailboat',
+        },
+        {
+        value: 'SPEEDBOAT',
+        label: 'Speedboat',
+        },
+        {
+        value: 'TRAWLER',
+        label: 'Trawler',
+        },
+        {
+        value: 'JETSKI',
+        label: 'Jetski',
+        },
+        {
+        value: 'YACHT',
+        label: 'Yacht',
+        },
+        
+      ];
 
     function handleChange(event) {
         const {name, value} = event.target
@@ -105,156 +148,233 @@ export default function Boat () {
             <div className="form-container">
                 <form className="form" onSubmit={handleSubmit}>
                 <h1 className='form--header'>Boat</h1>  
-                <input
+                <div className='form--pair'>
+                    <TextField
+                    sx={muiStyles.style} 
+                    label = "Name"
+                    variant='outlined'
+                    id="standard-basic"
                     className="form--input"
-                    type = "text"
-                    placeholder = "Name"
+                    type = "text"           
                     onChange = {handleChange}
                     name = "name"
                     value = {formData.name}   
-                />
-                <input 
+                    />
+                <TextField
+                    sx={muiStyles.style} 
+                    label = "Cancellation conditions"
+                    variant='outlined'
+                    id="standard-basic"
                     className="form--input"
-                    type = "text"
-                    placeholder = "State"
-                    onChange = {handleAddressChange}
-                    name = "state"
-                    value = {formData.address.state}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "City"
-                    onChange = {handleAddressChange}
-                    name = "city"
-                    value = {formData.address.city}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Zip"
-                    onChange = {handleAddressChange}
-                    name = "zipCode"
-                    value = {formData.address.zipCode}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Street"
-                    onChange = {handleAddressChange}
-                    name = "street"
-                    value = {formData.address.street}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Daily rate"
-                    onChange = {handleChange}
-                    name = "dailyRate"
-                    value = {formData.dailyRate}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Hourly rate"
-                    onChange = {handleChange}
-                    name = "hourlyRate"
-                    value = {formData.hourlyRate}          
-                />
-                <textarea 
-                    className="form--input-area"
-                    placeholder = "Promotional description"
-                    onChange = {handleChange}
-                    value = {formData.promotionalDescription}
-                    name = "promotionalDescription"
-                />
-                <textarea 
-                    className="form--input-area"
-                    placeholder = "Rules"
-                    onChange = {handleChange}
-                    value = {formData.rules}
-                    name = "rules"
-                />
-                <textarea 
-                    className="form--input-area"
                     placeholder = "Cancellation conditions"
                     onChange = {handleChange}
                     value = {formData.cancellationConditions}
                     name = "cancellationConditions"
-                />
-                <label className="type--label">Boat Type:</label>
-                <select 
-                    className="form--type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    name="type"
-                >
-                    <option value="FISHINGBOAT">Fishing boat</option>
-                    <option value="CRUISER">Cruiser</option>
-                    <option value="BOWRIDER">Bowrider</option>
-                    <option value="RUNABOUT">Runabout</option>
-                    <option value="SAILBOAT">Sailboat</option>
-                    <option value="SPEEDBOAT">Speedboat</option>
-                    <option value="TRAWLER">Trawler</option>
-                    <option value="JETSKI">Jetski</option>
-                    <option value="YACHT">Yacht</option>
-                </select>
-                <input 
+                    />
+                 </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Country"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "state"
+                        value = {formData.address.state}          
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Zip"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "zipCode"
+                        value = {formData.address.zipCode}          
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "City"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "city"
+                        value = {formData.address.city}          
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Street"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "street"
+                        value = {formData.address.street}          
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                    sx={muiStyles.style} 
+                    label = "Daily rate"
+                    variant='outlined'
+                    id="standard-basic" 
                     className="form--input"
                     type = "text"
-                    placeholder = "Length"
                     onChange = {handleChange}
-                    name = "length"
-                    value = {formData.length}          
-                />
-                <input 
+                    name = "dailyRate"
+                    value = {formData.dailyRate}          
+                    />
+                    <TextField
+                    sx={muiStyles.style} 
+                    label = "Hourly rate"
+                    variant='outlined'
+                    id="standard-basic"
                     className="form--input"
                     type = "text"
-                    placeholder = "Number of engines"
                     onChange = {handleChange}
-                    name = "enginesNumber"
-                    value = {formData.enginesNumber}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Engine power"
-                    onChange = {handleChange}
-                    name = "enginePower"
-                    value = {formData.enginePower}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Max speed"
-                    onChange = {handleChange}
-                    name = "maxSpeed"
-                    value = {formData.maxSpeed}          
-                />
-                <input
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Capacity"
-                    onChange = {handleChange}
-                    name = "capacity"
-                    value = {formData.capacity}
-                />
-                <textarea 
-                    className="form--input-area"
-                    placeholder = "Navigation equipment"
-                    onChange = {handleChange}
-                    value = {formData.navigationEquipment}
-                    name = "navigationEquipment"
-                />
-                <textarea 
-                    className="form--input-area"
-                    placeholder = "Fishing equipment"
-                    onChange = {handleChange}
-                    value = {formData.fishingEquipment}
-                    name = "fishingEquipment"
-                />            
+                    name = "hourlyRate"
+                    value = {formData.hourlyRate}          
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        id="outlined-select"
+                        select
+                        label="Boat type"
+                        name = "type"
+                        className='form--input'
+                        sx = {muiStyles.style}
+                        value={formData.type}
+                        onChange={handleChange}>
+                        {boat_types.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Capacity"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleChange}
+                        name = "capacity"
+                        value = {formData.capacity}
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Length"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleChange}
+                        name = "length"
+                        value = {formData.length}          
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Number of engines"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleChange}
+                        name = "enginesNumber"
+                        value = {formData.enginesNumber}          
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Engine power"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleChange}
+                        name = "enginePower"
+                        value = {formData.enginePower}          
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Max speed"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleChange}
+                        name = "maxSpeed"
+                        value = {formData.maxSpeed}          
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        id="outlined-multiline-flexible"
+                        label="Promotional description"
+                        className="form--input-area"
+                        sx = {muiStyles.style}
+                        multiline
+                        maxRows={6}
+                        name = "promotionalDescription"
+                        value={formData.promotionalDescription}
+                        onChange={handleChange}
+                    />
+                </div>
+               <div className='form--pair'>
+                    <TextField
+                        id="outlined-multiline-flexible"
+                        label="Rules"
+                        className="form--input-area"
+                        sx = {muiStyles.style}
+                        multiline
+                        maxRows={6}
+                        name = "rules"
+                        value={formData.rules}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        id="outlined-multiline-flexible"
+                        label="Navigation equipment"
+                        className="form--input-area"
+                        sx = {muiStyles.style}
+                        multiline
+                        maxRows={6}
+                        onChange = {handleChange}
+                        value = {formData.navigationEquipment}
+                        name = "navigationEquipment"
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        id="outlined-multiline-flexible"
+                        label="Fishing equipment"
+                        className="form--input-area"
+                        sx = {muiStyles.style}
+                        multiline
+                        maxRows={6} 
+                        onChange = {handleChange}
+                        value = {formData.fishingEquipment}
+                        name = "fishingEquipment"
+                    />           
+                </div>
+                <div className='form--pair'>
                 <Dropzone
-                style={{ minWidth: "95%", margin:"20px", fontSize:"18px" }}
+                style={{ minWidth: "100%", fontSize:"18px" }}
                 onChange={updateFiles}
                 minHeight="20vh"
                 onClean={handleClean}
@@ -281,8 +401,11 @@ export default function Boat () {
                 onClose={(e) => handleSee(undefined)}
                 />
             </Dropzone>
-                <button className="form--submit">Submit</button>
-                </form>
+            </div>
+            <div className='form--pair'>
+            <button className="form--submit">Submit</button>
+            </div>
+            </form>
             </div>
         </div>
     )

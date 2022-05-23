@@ -5,6 +5,8 @@ import Counter from "../utils/Counter"
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import Header from "../../Header";
 import { Navigate } from "react-router-dom";
+import { TextField } from '@mui/material';
+import muiStyles from '../utils/muiStyles';
 
 export default function Cottage() {
   const [formData, setFormData] = React.useState (
@@ -114,128 +116,179 @@ export default function Cottage() {
       <div className="form-container">
         <form className="form" onSubmit={handleSubmit}>
           <h1 className='form--header'>Cottage</h1>
-          <input
-            className="form--input"
-            type = "text"
-            placeholder = "Name"
-            onChange = {handleChange}
-            name = "name"
-            value = {formData.name}   
-          />
-          <input 
+          <div className='form--pair'>
+                <TextField
+                  sx={muiStyles.style} 
+                  label = "Name"
+                  variant='outlined'
+                  id="standard-basic"
+                  className="form--input"
+                  type = "text"           
+                  onChange = {handleChange}
+                  name = "name"
+                  value = {formData.name}   
+                />
+               <TextField
+                  sx={muiStyles.style} 
+                  label = "Cancellation conditions"
+                  variant='outlined'
+                  id="standard-basic"
+                  className="form--input"
+                  placeholder = "Cancellation conditions"
+                  onChange = {handleChange}
+                  value = {formData.cancellationConditions}
+                  name = "cancellationConditions"
+                />
+          </div>
+          <div className='form--pair'>
+              <TextField
+                  sx={muiStyles.style} 
+                  label = "Country"
+                  variant='outlined'
+                  id="standard-basic"
+                  className="form--input"
+                  type = "text"
+                  onChange = {handleAddressChange}
+                  name = "state"
+                  value = {formData.address.state}          
+              />
+              <TextField
+                  sx={muiStyles.style} 
+                  label = "Zip"
+                  variant='outlined'
+                  id="standard-basic"
+                  className="form--input"
+                  type = "text"
+                  onChange = {handleAddressChange}
+                  name = "zipCode"
+                  value = {formData.address.zipCode}          
+              />
+          </div>
+          <div className='form--pair'>
+              <TextField
+                  sx={muiStyles.style} 
+                  label = "City"
+                  variant='outlined'
+                  id="standard-basic"
+                  className="form--input"
+                  type = "text"
+                  onChange = {handleAddressChange}
+                  name = "city"
+                  value = {formData.address.city}          
+              />
+              <TextField
+                  sx={muiStyles.style} 
+                  label = "Street"
+                  variant='outlined'
+                  id="standard-basic"
+                  className="form--input"
+                  type = "text"
+                  onChange = {handleAddressChange}
+                  name = "street"
+                  value = {formData.address.street}          
+              />
+          </div>
+          <div className='form--pair'>
+            <TextField
+              sx={muiStyles.style} 
+              label = "Daily rate"
+              variant='outlined'
+              id="standard-basic" 
               className="form--input"
               type = "text"
-              placeholder = "State"
-              onChange = {handleAddressChange}
-              name = "state"
-              value = {formData.address.state}          
-          />
-          <input 
+              onChange = {handleChange}
+              name = "dailyRate"
+              value = {formData.dailyRate}          
+            />
+            <TextField
+              sx={muiStyles.style} 
+              label = "Hourly rate"
+              variant='outlined'
+              id="standard-basic"
               className="form--input"
               type = "text"
-              placeholder = "City"
-              onChange = {handleAddressChange}
-              name = "city"
-              value = {formData.address.city}          
-          />
-          <input 
-              className="form--input"
-              type = "text"
-              placeholder = "Zip"
-              onChange = {handleAddressChange}
-              name = "zipCode"
-              value = {formData.address.zipCode}          
-          />
-          <input 
-              className="form--input"
-              type = "text"
-              placeholder = "Street"
-              onChange = {handleAddressChange}
-              name = "street"
-              value = {formData.address.street}          
-          />
-          <input 
-            className="form--input"
-            type = "text"
-            placeholder = "Daily rate"
-            onChange = {handleChange}
-            name = "dailyRate"
-            value = {formData.dailyRate}          
-          />
-          <input 
-            className="form--input"
-            type = "text"
-            placeholder = "Hourly rate"
-            onChange = {handleChange}
-            name = "hourlyRate"
-            value = {formData.hourlyRate}          
-          />
-          <textarea 
-            className="form--input-area"
-            placeholder = "Promotional description"
-            onChange = {handleChange}
-            value = {formData.promotionalDescription}
-            name = "promotionalDescription"
-          />
-          <textarea 
-            className="form--input-area"
-            placeholder = "Rules"
-            onChange = {handleChange}
-            value = {formData.rules}
-            name = "rules"
-          />
-          <textarea 
-            className="form--input-area"
-            placeholder = "Cancellation conditions"
-            onChange = {handleChange}
-            value = {formData.cancellationConditions}
-            name = "cancellationConditions"
-          />
-          <div className='bedRoom'>
-            <label className='bedRoom--label'>Single rooms: </label>  
-            <Counter name = "singleRooms" value = {formData.singleRooms} handleChange = {handleRoomChange}/>
+              onChange = {handleChange}
+              name = "hourlyRate"
+              value = {formData.hourlyRate}          
+            />
           </div>
-          <div className='bedRoom'>
-          <label className='bedRoom--label'>Double rooms: </label>  
-            <Counter name = "doubleRooms" value = {formData.doubleRooms} handleChange = {handleRoomChange}/>
+          <div className='form--pair'>
+              <TextField
+                  id="outlined-multiline-flexible"
+                  label="Promotional description"
+                  className="form--input-area"
+                  sx = {muiStyles.style}
+                  multiline
+                  maxRows={6}
+                  name = "promotionalDescription"
+                  value={formData.promotionalDescription}
+                  onChange={handleChange}
+              />
           </div>
-          <div className='bedRoom'>
-            <label className='bedRoom--label'>Triple rooms: </label>  
-            <Counter name = "tripleRooms" value = {formData.tripleRooms} handleChange = {handleRoomChange}/>
+          <div className='form--pair'>
+              <TextField
+                  id="outlined-multiline-flexible"
+                  label="Rules"
+                  className="form--input-area"
+                  sx = {muiStyles.style}
+                  multiline
+                  maxRows={6}
+                  name = "rules"
+                  value={formData.rules}
+                  onChange={handleChange}
+              />
           </div>
-          <div className='bedRoom'>
-            <label className='bedRoom--label'>Quad rooms: </label>  
-            <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
+          <div className='form--bedrooms'>
+            <div className='bedRoom'>
+              <label className='bedRoom--label'>Single rooms: </label>  
+              <Counter name = "singleRooms" value = {formData.singleRooms} handleChange = {handleRoomChange}/>
+            </div>
+            <div className='bedRoom'>
+            <label className='bedRoom--label'>Double rooms: </label>  
+              <Counter name = "doubleRooms" value = {formData.doubleRooms} handleChange = {handleRoomChange}/>
+            </div>
+            <div className='bedRoom'>
+              <label className='bedRoom--label'>Triple rooms: </label>  
+              <Counter name = "tripleRooms" value = {formData.tripleRooms} handleChange = {handleRoomChange}/>
+            </div>
+            <div className='bedRoom'>
+              <label className='bedRoom--label'>Quad rooms: </label>  
+              <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
+            </div>
           </div>
-          <Dropzone
-        style={{minWidth: "95%", margin:"20px", fontSize:"18px" }}
-        onChange={updateFiles}
-        minHeight="20vh"
-        onClean={handleClean}
-        value={files}
-        maxFiles={10}
-        header={true}
-        maxFileSize={5000000}
-      >
-        {files.map((file) => (
-          <FileItem
-            {...file}
-            key={file.id}
-            onDelete={onDelete}
-            onSee={handleSee}
-            resultOnTooltip
-            preview
-            info
-            hd
-          />
-        ))}
-        <FullScreenPreview
-          imgSource={imageSrc}
-          openImage={imageSrc}
-          onClose={(e) => handleSee(undefined)}
-        />
-      </Dropzone>
-          <button className="form--submit">Submit</button>
+          <div className='form--pair'>
+            <Dropzone
+                style={{minWidth: "100%", fontSize:"18px" }}
+                onChange={updateFiles}
+                minHeight="25vh"
+                onClean={handleClean}
+                value={files}
+                maxFiles={10}
+                header={true}
+                maxFileSize={5000000}
+              >
+              {files.map((file) => (
+                <FileItem
+                  {...file}
+                  key={file.id}
+                  onDelete={onDelete}
+                  onSee={handleSee}
+                  resultOnTooltip
+                  preview
+                  info
+                  hd
+                />
+              ))}
+              <FullScreenPreview
+                imgSource={imageSrc}
+                openImage={imageSrc}
+                onClose={(e) => handleSee(undefined)}
+              />
+            </Dropzone>
+          </div>
+          <div className='form--pair'>
+            <button className="form--submit">Submit</button>
+          </div>
         </form>
       </div>
     </div>

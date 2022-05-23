@@ -11,6 +11,7 @@
     "@mui/icons-material": "^5.6.1",
     "@mui/lab": "^5.0.0-alpha.81",
     "@mui/material": "^5.7.0",
+    "@mui/x-data-grid": "^5.11.1",
     "@mui/x-date-pickers": "^5.0.0-alpha.3",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
@@ -32,6 +33,7 @@
     "react-scripts": "^5.0.1",
     "react-time-picker": "^4.5.0",
     "react-widgets": "^5.8.4",
+    "sass": "^1.52.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -25,6 +25,7 @@ export default function InstructorUpdate() {
         biography: ""
     });
 
+    const id = 1;
     const [files, setFiles] = React.useState([]);
     const [profilePhoto, setProfilePhoto] = React.useState(undefined);
 

@@ -17,6 +17,8 @@ import BookableDetails from "./components/ViewEntities/BookableDetails";
 import Login from "./components/Login/Login";
 import DeletionReasons from "./components/Admin/DeletionReasons";
 import UserRegistration from "./components/Admin/UserRegistration";
+import Admin from "./components/Admin/pages/home/Admin";
+import RequestList from "./components/Admin/pages/list/RequestList";
 
 
 const Views = () => {
@@ -39,6 +41,13 @@ const Views = () => {
       <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
       <Route path = "/viewDeletionRequests" element= {<DeletionReasons />} />
       <Route path = "/viewRegistrationRequests" element= {<UserRegistration />} />
+      <Route path = "/admin">
+        <Route index element={<Admin />} />
+        <Route path="registrationRequests">
+          <Route index element={<RequestList />} />
+          {/* <Route path=":regReqId" element={<Single />} /> */}
+        </Route>
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

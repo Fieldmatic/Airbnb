@@ -51,18 +51,24 @@ export default function AdminSidebar() {
                         </li>
                     </Link>
                     <p className="title">ENTITIES</p>
-                    <li>
-                        <PhishingIcon className="icon" />
-                        <span>Adventures</span>
-                    </li>
-                    <li>
-                        <CottageOutlinedIcon className="icon" />
-                        <span>Cottages</span>
-                    </li>
-                    <li>
-                        <DirectionsBoatOutlinedIcon className="icon" />
-                        <span>Boats</span>
-                    </li>
+                    <Link to="/admin/entities/adventures" style={{ textDecoration: "none" }}>
+                        <li>
+                            <PhishingIcon className="icon" />
+                            <span>Adventures</span>
+                        </li>
+                    </Link>
+                    <Link to="/admin/entities/cottages" style={{ textDecoration: "none" }}>
+                        <li>
+                            <CottageOutlinedIcon className="icon" />
+                            <span>Cottages</span>
+                        </li>
+                    </Link>
+                    <Link to="/admin/entities/boats" style={{ textDecoration: "none" }}>
+                        <li>
+                            <DirectionsBoatOutlinedIcon className="icon" />
+                            <span>Boats</span>
+                        </li>
+                    </Link>
                     <p className="title">SERVICE - po potrebi dodavati</p>                  
                     <li>
                         <PsychologyOutlinedIcon className="icon" />
@@ -73,10 +79,12 @@ export default function AdminSidebar() {
                         <span>Settings</span>
                     </li>
                     <p className="title">USER</p>
-                    <li>
-                        <AccountCircleOutlinedIcon className="icon" />
-                        <span>Profile</span>
-                    </li>
+                    <Link to="/admin/profile" style={{ textDecoration: "none" }}>
+                        <li>
+                            <AccountCircleOutlinedIcon className="icon" />
+                            <span>Profile</span>
+                        </li>
+                    </Link>
                     <li>
                         <ExitToAppIcon className="icon" />
                         <span>Logout</span>

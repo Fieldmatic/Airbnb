@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -44,7 +45,7 @@ const rows = [
 ];
 
 function Row(props) {
-    const { row } = props;
+    const { row, registration, func } = props;
     const [open, setOpen] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [message, setMessage] = React.useState("");   
@@ -62,9 +63,13 @@ function Row(props) {
         let rejectingMessage = new FormData()
         const dataJson = dataToJson();
         rejectingMessage.append("message", dataJson)
-        AdminService.deleteProfile(props.user.id, props.id, confirmation, rejectingMessage)
-        alert("Request for account deletion denied!")
-        window.location.reload();
+        if (registration) {
+            AdminService.registrateUser(props.user.id, props.id, confirmation, rejectingMessage)
+        }
+        else {
+            AdminService.deleteProfile(props.user.id, props.id, confirmation, rejectingMessage)
+        }
+        func(false);
     }
 
     const handleClose = () => {
@@ -77,9 +82,13 @@ function Row(props) {
         let accpetingMessage = new FormData();
         const dataJson = dataToJson();
         accpetingMessage.append("message", dataJson)
-        AdminService.deleteProfile(props.user.id, props.id, confirmation, accpetingMessage)
-        alert("Account successfully deleted!")
-        window.location.reload();
+        // if (registration) {
+        //     AdminService.registrateUser(props.user.id, props.id, confirmation, rejectingMessage)
+        // }
+        // else {
+        //     AdminService.deleteProfile(props.user.id, props.id, confirmation, rejectingMessage)
+        // }
+        func(true);
     }
 
     const handleDeny = () => {
@@ -158,27 +167,50 @@ function Row(props) {
     );
 }
 
-export default function Datatable() {
+export default function Datatable(props) {
+
+    const alertText = {
+        accept: props.registration ? "User successfully registrated!" : "Account successfully deleted!",
+        deny: props.registration ? "Request for account registration denied!" : "Request for account deletion denied!"
+    }
+
+    const [accept, setAccept] = React.useState(true);
+    const [showAlert, setShowAlert] = React.useState(false);
+
+    const getStateFromRow = (data) => {
+        setAccept(data);
+        setShowAlert(true);
+        setTimeout(() => {
+            setShowAlert(false);
+            window.location.reload();
+        }, 2500)
+      }
 
   return (
-    <TableContainer component={Paper} className="datatable">
-        <Table>
-            <TableHead>
-            <TableRow>
-                <TableCell />
-                <TableCell className="datatableHeader">E-mail</TableCell>
-                <TableCell className="datatableHeader">Name</TableCell>
-                <TableCell className="datatableHeader">Surname</TableCell>
-                <TableCell className="datatableHeader">Username</TableCell>
-                <TableCell className="datatableHeader">Option</TableCell>
-            </TableRow>
-            </TableHead>
-            <TableBody>
-            {rows.map((row) => (
-                <Row key={row.name} row={row} />
-            ))}
-            </TableBody>
-        </Table>
-    </TableContainer>
+      <div>
+        <Collapse in={showAlert}>
+            <Alert variant="filled" severity="success">{accept ? alertText.accept : alertText.deny}</Alert>
+        </Collapse>
+        
+        <TableContainer component={Paper} className="datatable">
+            <Table>
+                <TableHead>
+                <TableRow>
+                    <TableCell />
+                    <TableCell className="datatableHeader">E-mail</TableCell>
+                    <TableCell className="datatableHeader">Name</TableCell>
+                    <TableCell className="datatableHeader">Surname</TableCell>
+                    <TableCell className="datatableHeader">Username</TableCell>
+                    <TableCell className="datatableHeader">Option</TableCell>
+                </TableRow>
+                </TableHead>
+                <TableBody>
+                {rows.map((row) => (
+                    <Row key={row.name} row={row} registration={props.registration} func={getStateFromRow}/>
+                ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    </div>
   );
 }

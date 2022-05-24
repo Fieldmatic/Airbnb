@@ -36,7 +36,7 @@ export default function InstructorUpdate() {
                 name: instructor.name, 
                 address: instructor.address,
                 username: instructor.username,
-                password: instructor.password,
+                password: "",
                 confirmPassword: "",
                 surname: instructor.surname,
                 email: instructor.email,
@@ -233,7 +233,7 @@ export default function InstructorUpdate() {
                             id="file-upload"
                             type="file"
                             name="newPhoto"
-                            onChange={handleNewPhotoChange}
+                            onChange={(e) => setNewPhoto(e.target.files[0])}
                             value={newPhoto}
                             />
                     </div>

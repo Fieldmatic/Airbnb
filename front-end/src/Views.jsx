@@ -18,7 +18,9 @@ import Login from "./components/Login/Login";
 import DeletionReasons from "./components/Admin/DeletionReasons";
 import UserRegistration from "./components/Admin/UserRegistration";
 import Admin from "./components/Admin/pages/home/Admin";
-import RequestList from "./components/Admin/pages/list/RequestList";
+import Requests from "./components/Admin/pages/list/Requests";
+import AdminProfile from "./components/Admin/pages/profile/AdminProfile";
+import AdminEntities from "./components/Admin/pages/list/Entities";
 
 
 const Views = () => {
@@ -36,16 +38,20 @@ const Views = () => {
       <Route path = "/ownerRegistration" element = {<OwnerRegistration/>}/>
       <Route path = "/clientRegistration" element = {<ClientRegistration/>}/>
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
-      <Route path = "/editInstructor/:id" element = {<InstructorUpdate />} />
+      <Route path = "/editInstructor" element = {<InstructorUpdate />} />
       <Route path = "/viewOwnerCottages" element = {<ViewHostEntities />} />
       <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
       <Route path = "/viewDeletionRequests" element= {<DeletionReasons />} />
       <Route path = "/viewRegistrationRequests" element= {<UserRegistration />} />
       <Route path = "/admin">
         <Route index element={<Admin />} />
-        <Route path="registrationRequests">
-          <Route index element={<RequestList />} />
-          {/* <Route path=":regReqId" element={<Single />} /> */}
+        <Route path="registrationRequests" element={<Requests registration={true} />} />
+        <Route path="deletionRequests" element={<Requests registration={false} />} />
+        <Route path="profile" element={<AdminProfile />} />
+        <Route path="entities">
+          <Route path="adventures" element={<AdminEntities type={1} />}/>
+          <Route path="cottages" element={<AdminEntities type={2} />}/>
+          <Route path="boats" element={<AdminEntities type={3} />}/>
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

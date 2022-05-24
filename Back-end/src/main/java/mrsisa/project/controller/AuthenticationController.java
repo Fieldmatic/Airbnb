@@ -86,7 +86,7 @@ public class AuthenticationController {
 	}
 
 	@GetMapping("/getRole")
-	@PreAuthorize("hasAnyRole('ROLE_INSTRUCTOR','ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
+	@PreAuthorize("hasAnyRole('ROLE_INSTRUCTOR','ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'ROLE_ADMIN')")
 	public ResponseEntity<String> getRole(Principal userP){
 		Role role = personRepository.findByUsername(userP.getName()).getRoles().get(0);
 		return ResponseEntity.status(HttpStatus.OK).body(role.getName());

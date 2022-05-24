@@ -28,6 +28,15 @@ class InstructorService {
     async registrateUser(userId, regId, confirmation, message) {
         return await axios.put(ADMIN_BASED_REST_API_URL + "/registerUser/" + userId + "/" + regId + "/" + confirmation, message);
     }
+
+    sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+            break;
+          }
+        }
+    }
 }
 
 export default new InstructorService()

@@ -1,18 +1,18 @@
-import "./requestList.scss"
+import "./requests.scss"
 import AdminSidebar from "../../components/sidebar/AdminSidebar"
 import AdminNavbar from "../../components/navbar/AdminNavbar"
 import Datatable from "../../components/datatable/Datatable"
 
-const RequestList = () => {
+const Requests = (props) => {
   return (
     <div className="requestList">
       <AdminSidebar/>
       <div className="requestListContainer">
         <AdminNavbar/>
-        <Datatable/>
+        <Datatable registration={props.registration}/>
       </div>
     </div>
   )
 }
 
-export default RequestList
+export default Requests

@@ -26,6 +26,10 @@ class LoginRegisterService {
         return axios.post (LOGIN_REGISTER_BASED_REST_API_URL + "/clientRegistration", formData)
     }
 
+    registerInstructor(formData) {
+        return axios.post (LOGIN_REGISTER_BASED_REST_API_URL + "/instructorRegistration", formData)
+    }
+
 }
 
 

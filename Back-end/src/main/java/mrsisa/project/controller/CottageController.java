@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.dto.SearchDTO;
 import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.model.CottageOwner;
@@ -44,6 +45,19 @@ public class CottageController {
     public ResponseEntity<List<CottageDTO>> getAllCottages() {
         List<CottageDTO> cottagesDTO = cottageService.findAll();
         return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
+    }
+
+    @PostMapping(value="/allAvailableByCity")
+    public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@RequestBody SearchDTO searchDTO) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(searchDTO.getCity(), searchDTO.getStartDate(), searchDTO.getEndDate());
+        return new ResponseEntity<>(availableCottages, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/allAvailable")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<List<CottageDTO>> getAvailableCottages(@RequestBody SearchDTO searchDTO) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottages(searchDTO.getStartDate(), searchDTO.getEndDate());
+        return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 
     @GetMapping(value="/getOwnerCottages")

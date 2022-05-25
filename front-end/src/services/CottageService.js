@@ -17,12 +17,17 @@ class CottageService {
     getCottage(id) {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/get/" + id, id)
     }
+
     updateCottage(cottage, id){
         return axios.put(COTTAGE_BASED_REST_API_URL + "/edit/" + id, cottage)
     }
 
     getAllCottages() {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/all");
+    }
+
+    getAvailableCottages(searchData) {
+        return axios.post(COTTAGE_BASED_REST_API_URL + "/allAvailableByCity",searchData)
     }
 
     getOwnerCottages(){

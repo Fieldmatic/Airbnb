@@ -11,5 +11,6 @@ public interface CottageRepository extends JpaRepository<Cottage, Long> {
     @Query(value = "SELECT * FROM cottage c left join cottage_owner_cottages b on c.id = b.cottages_id where b.cottage_owner_id = ?1", nativeQuery = true)
     List<Cottage> findOwnerCottages(Long id);
 
+    List<Cottage> findCottagesByAddress_City(String city);
 
 }

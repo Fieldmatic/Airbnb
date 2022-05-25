@@ -12,6 +12,16 @@ class ReservationService {
            } 
         })
     }
+
+    getReservations(){
+        return axios.get(RESERVATION_BASED_REST_API_URL + "/getReservations",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        }
+        )
+    }
 }
 
 

@@ -22,7 +22,7 @@ export default function Home(){
                     description="Luxury boats to fulfill your dreams."
                 />   
                 <Card
-                    src="https://www.bsframework.io/wp-content/uploads/2020/12/Adventure-Travel-A-Thrilling-And-Enthralling-Experience.jpg"
+                    src="https://www.phoenixdivers-kohlanta.com/wp-content/uploads/2020/05/first-dive-experience-koh-lanta-800x533.jpg"
                     title="Adventures"
                     description="Unique activities we can do together, led by a world of hosts."
                 />   

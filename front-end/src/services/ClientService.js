@@ -31,6 +31,25 @@ class ClientService {
             },
          })
     }
+
+    getClientProfilePicture(id) {
+        return axios.get(CLIENT_BASED_REST_API_URL + "/getClientProfilePicture/" + id,
+        {
+            responseType: 'blob',
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
+    }
+
+    getClientBasicInfo(id){
+        return axios.get(CLIENT_BASED_REST_API_URL + "/getClientBasicInfo/" + id,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
+    }
 }
 
 

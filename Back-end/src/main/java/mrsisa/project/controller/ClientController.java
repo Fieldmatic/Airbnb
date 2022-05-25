@@ -1,5 +1,6 @@
 package mrsisa.project.controller;
 
+import mrsisa.project.dto.ClientBasicInfoDTO;
 import mrsisa.project.dto.ClientDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.service.AddressService;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -81,10 +83,27 @@ public class ClientController {
 
     @GetMapping(value="/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<InputStreamResource> getClientProfilePicture(Principal userP) throws IOException {
+    public ResponseEntity<InputStreamResource> getProfilePicture(Principal userP) throws IOException {
         Client client = clientService.findClientByUsername(userP.getName());
         File file = new File(client.getProfilePhoto());
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/getClientProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR','ROLE_CLIENT')")
+    @Transactional
+    public ResponseEntity<InputStreamResource> getClientProfilePicture(@PathVariable("id") Long id) throws IOException {
+        Client client = clientService.findClientById(id);
+        File file = new File(client.getProfilePhoto());
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
+
+    @GetMapping("/getClientBasicInfo/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR','ROLE_CLIENT')")
+    @Transactional
+    public ResponseEntity<ClientBasicInfoDTO> getClientBasicInfo(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(new ClientBasicInfoDTO(clientService.findClientById(id)), HttpStatus.OK);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,5 +30,11 @@ public class ReservationController {
     public ResponseEntity<String> addQuickReservation(@RequestBody String actionId, Principal userP) throws IOException {
         reservationService.add(Long.parseLong(actionId.replace("=","")), userP);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    }
+
+    @GetMapping(value = "/getReservations")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR','ROLE_CLIENT')")
+    public ResponseEntity<List<ReservationDTO>> getReservations(Principal userP) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(reservationService.getReservations(userP));
     }
 }

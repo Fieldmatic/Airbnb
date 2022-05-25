@@ -12,6 +12,7 @@ import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -53,6 +54,8 @@ public class ClientService {
     public Client save(Client client) {return clientRepository.save(client);}
 
     public Client findClientByUsername(String username) {return (Client) personRepository.findByUsername(username);}
+
+    public Client findClientById(Long id) {return clientRepository.getById(id);}
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/client/";
 

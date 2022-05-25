@@ -148,3 +148,73 @@
     left: 100%;
     top: -7px;
   }
+
+  .header-search {
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+  }
+
+  .guestsNumber {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 1% 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-top: 1px solid rgba(0, 0, 0, 0.150);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.150);
+  }
+
+  .guestsNumber > span, .entityType > span {
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .guestsNumber > div {
+    display: flex;
+    align-items:flex-end;
+    gap: 8px;
+  }
+
+  .guestsNumber > div > input{
+    font-size: large;
+  }
+
+  .searchButtons {
+    display: flex;
+    gap: 20%;
+  }
+
+  .searchButtons > button {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+  }
+
+  .searchButton {
+    color: #FF5A5F;
+  }
+
+.entityType {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.150);
+}
+
+.entityTypeRdb {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.entityTypeRdb > label {
+  margin-right: 15px;
+}
+
+.search_input {
+  border-radius: 10px;
+}

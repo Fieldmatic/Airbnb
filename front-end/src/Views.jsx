@@ -19,6 +19,7 @@ import DeletionReasons from "./components/Admin/DeletionReasons";
 import UserRegistration from "./components/Admin/UserRegistration";
 import Actions from "./components/Bookable/Actions";
 import Periods from "./components/Bookable/Periods";
+import SearchedEntities from "./components/ViewEntities/SearchedEntities";
 
 
 const Views = () => {
@@ -43,6 +44,7 @@ const Views = () => {
       <Route path = "/viewRegistrationRequests" element= {<UserRegistration />} />
       <Route path = "/addActions/:id" element = {< Actions />}/>
       <Route path = "/addAvailabilityPeriods/:id" element = {< Periods />}/>
+      <Route path = "/searchEntities" element = {<SearchedEntities/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

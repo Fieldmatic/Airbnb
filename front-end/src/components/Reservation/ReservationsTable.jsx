@@ -4,48 +4,54 @@ import ReservationService from "../../services/ReservationService"
 import ClientService from "../../services/ClientService";
 import { DataGrid } from '@mui/x-data-grid';
 
-function ReservationsTable(props) {
+function ReservationsTable() {
     const [rows, setRows] = useState([])
-    const [loaded, setLoaded] = useState (false)
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [reservations, setReservations] = useState([])
 
     useEffect(() => {
-        setRowData()           
-    }, [loaded])
-
+        ReservationService.getReservations().then(response => 
+            {
+                setReservations(response.data)
+                setRowData()
+            },
+            
+        )             
+    }, [dataLoaded])
 
     function setRowData(){
-        let rows = []
-        props.reservations.map (item => {
-            let row = {}
-            var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
+        reservations.map ((item) => {
+            var row = {}
             ClientService.getClientProfilePicture(item.clientId).then(response => {
                 row.img = response.data
-            })
-            ClientService.getClientBasicInfo(item.clientId).then(response => {
+            }).then
+            (ClientService.getClientBasicInfo(item.clientId).then(response => {
                 row.name = response.data.name
                 row.surname = response.data.surname
                 row.email = response.data.email
                 row.phoneNumber = response.data.phoneNumber
+                row.id = item.id
+                row.price = item.price
+                row.active = item.active
+                row.bookableId = item.bookableId
+                row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
+                row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
+            })).then(() => {
+                setRows(prevRows => [...prevRows, row])
             })
-            row.id = item.id
-            row.price = item.price
-            row.active = item.active
-            row.bookableId = item.bookableId
-            row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
-            row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
-            rows.push(row)   
         });
-        setRows(rows)
-        setLoaded(true)
+        setDataLoaded(true)
+
 
     }
     return (
         <div className="reservations--table">
-            {loaded && <DataGrid
+            {dataLoaded && <DataGrid
             rows={rows}
             columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
             checkboxSelection
         />}
         </div>
@@ -72,5 +78,6 @@ const columns = [
     { field: 'startDateTime', headerName: 'Started', width: 260 },
     { field: 'endDateTime', headerName: 'Ended', width: 260 },
   ];
+
 
 export default ReservationsTable

@@ -17,7 +17,7 @@ public class Reservation {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private Integer personLimit;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Tag> additionalServices;
     private Double price;
     private Boolean active;

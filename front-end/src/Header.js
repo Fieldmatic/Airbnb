@@ -106,6 +106,7 @@ export default function Header(){
                     :
                     <Link to={'/login'} style={{textDecoration: 'none', color:'black'}}>Login</Link>
                 }
+            </div>
             {!isUserLogged &&
                 <div className='header__registrations'>
                     <ul className="menus">
@@ -120,7 +121,6 @@ export default function Header(){
                 </div>
             }
                 
-            </div>
         </div>
 
     )

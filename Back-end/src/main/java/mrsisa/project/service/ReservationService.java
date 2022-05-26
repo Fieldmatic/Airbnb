@@ -3,10 +3,7 @@ package mrsisa.project.service;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReservationDTO;
 import mrsisa.project.model.*;
-import mrsisa.project.repository.ActionRepository;
-import mrsisa.project.repository.ClientRepository;
-import mrsisa.project.repository.PersonRepository;
-import mrsisa.project.repository.ReservationRepository;
+import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,17 +29,19 @@ public class ReservationService {
     @Autowired
     ActionRepository actionRepository;
 
+    @Autowired
+    BookableRepository bookableRepository;
+
 
     @Transactional
     public void add(Long actionId, Principal userP) throws IOException {
         Action action = actionRepository.getById(actionId);
         Reservation reservation = createReservationFromAction(action);
-        action.setUsed(true);
-        actionRepository.save(action);
         Client client = (Client) personRepository.findByUsername(userP.getName());
         reservation.setClient(client);
         client.getReservations().add(reservation);
-        clientRepository.save(client);
+        action.getBookable().getReservations().add(reservation);
+        action.setUsed(true);
     }
 
     @Transactional
@@ -100,7 +99,7 @@ public class ReservationService {
         reservation.setStartDateTime(action.getStartDateTime());
         reservation.setEndDateTime(action.getEndDateTime());
         reservation.setPersonLimit(action.getPersonLimit());
-        reservation.setAdditionalServices(action.getAdditionalServices());
+        reservation.setAdditionalServices(new ArrayList<Tag>(action.getAdditionalServices()));
         reservation.setActive(true);
         reservation.setPrice(action.getPrice());
         reservation.setBookable(action.getBookable());

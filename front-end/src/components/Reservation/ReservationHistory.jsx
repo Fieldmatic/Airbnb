@@ -6,22 +6,14 @@ import ReservationService from "../../services/ReservationService"
 
 
 function ReservationHistory(){
-    const [reservations, setReservations] = useState([])
 
-    useEffect(() => {
-        ReservationService.getReservations().then(response => 
-            {
-                setReservations(response.data)
-            },
-            
-        )             
-    }, [])
+
 
     return (
         <div className='reservation--history'>
             <div className='reservation--container'>
                 <Header />
-                <ReservationsTable reservations = {reservations}/>
+                <ReservationsTable/>
             </div>
 
         </div>

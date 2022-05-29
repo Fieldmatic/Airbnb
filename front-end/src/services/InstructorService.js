@@ -27,6 +27,15 @@ class InstructorService {
             }
         })
     }
+
+    sendDeletionRequest(data) {
+        return axios.post(INSTRUCTOR_BASED_REST_API_URL + "/sendDeletionRequest", data,
+        { 
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
 }
 
 export default new InstructorService()

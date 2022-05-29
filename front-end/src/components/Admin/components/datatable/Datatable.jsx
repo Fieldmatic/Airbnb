@@ -23,26 +23,24 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import "./datatable.scss"
 
-function createData(name, calories, fat, carbs, protein, price) {
+function createData(email, name, surname, username) {
   return {
+    email,
     name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
+    surname,
+    username
   };
 }
 
 
 
-const rows = [
-  createData('bane-gg@hotmail.com', 'Miladin', 'Miladinovic', "milance", 4.0, 3.99),
-  createData('bane-gg@hotmail.com', 237, 9.0, 37, 4.3, 4.99),
-  createData('bane-gg@hotmail.com', 262, 16.0, 24, 6.0, 3.79),
-  createData('bane-gg@hotmail.com', 305, 3.7, 67, 4.3, 2.5),
-  createData('bane-gg@hotmail.com', 356, 16.0, 49, 3.9, 1.5),
-];
+// const rows = [
+//   createData('bane-gg@hotmail.com', 'Miladin', 'Miladinovic', "milance"),
+//   createData('bane-gg@hotmail.com', 'Marko', 'Markovic', 'markan'),
+//   createData('bane-gg@hotmail.com', 'Pero', 'Peric', 'pero00'),
+//   createData('bane-gg@hotmail.com', 'Banz', "Ganz", 'banz'),
+//   createData('bane-gg@hotmail.com', "Banz", "Ganz", 'ganz'),
+// ];
 
 function Row(props) {
     const { row, registration, func } = props;
@@ -64,12 +62,13 @@ function Row(props) {
         const dataJson = dataToJson();
         rejectingMessage.append("message", dataJson)
         if (registration) {
-            AdminService.registrateUser(props.user.id, props.id, confirmation, rejectingMessage)
+            AdminService.registrateUser(row.user.id, row.id, confirmation, rejectingMessage)
         }
         else {
-            AdminService.deleteProfile(props.user.id, props.id, confirmation, rejectingMessage)
+            AdminService.deleteProfile(row.user.id, row.id, confirmation, rejectingMessage)
         }
-        func(false);
+        setOpenDialog(false);
+        func([false, row.id]);
     }
 
     const handleClose = () => {
@@ -82,13 +81,13 @@ function Row(props) {
         let accpetingMessage = new FormData();
         const dataJson = dataToJson();
         accpetingMessage.append("message", dataJson)
-        // if (registration) {
-        //     AdminService.registrateUser(props.user.id, props.id, confirmation, rejectingMessage)
-        // }
-        // else {
-        //     AdminService.deleteProfile(props.user.id, props.id, confirmation, rejectingMessage)
-        // }
-        func(true);
+        if (registration) {
+            AdminService.registrateUser(row.user.id, row.id, confirmation, accpetingMessage)
+        }
+        else {
+            AdminService.deleteProfile(row.user.id, row.id, confirmation, accpetingMessage)
+        }
+        func([true, row.id]);
     }
 
     const handleDeny = () => {
@@ -117,11 +116,11 @@ function Row(props) {
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
-            {row.name}
+            {row.user.email}
           </TableCell>
-          <TableCell>{row.calories}</TableCell>
-          <TableCell>{row.fat}</TableCell>
-          <TableCell>{row.carbs}</TableCell>
+          <TableCell>{row.user.name}</TableCell>
+          <TableCell>{row.user.surname}</TableCell>
+          <TableCell>{row.user.username}</TableCell>
           <TableCell className='cellAction'>
               <Button variant="outlined" color="error" onClick={handleDeny}>Deny</Button>
               <Button variant="contained" color="success" onClick={handleAccept}>Accept</Button>
@@ -134,7 +133,7 @@ function Row(props) {
                 <Typography variant="h6" gutterBottom component="div">
                   Explanation
                 </Typography>
-                <div>User registration explanation</div>
+                <div>{row.reason}</div>
               </Box>
             </Collapse>
           </TableCell>
@@ -143,7 +142,7 @@ function Row(props) {
             <DialogTitle>Deletion rejection</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Enter your reasons for rejecting account deletion
+                    Enter your reason for rejecting
                 </DialogContentText>
             <TextField
                 autoFocus
@@ -177,14 +176,29 @@ export default function Datatable(props) {
     const [accept, setAccept] = React.useState(true);
     const [showAlert, setShowAlert] = React.useState(false);
 
-    const getStateFromRow = (data) => {
-        setAccept(data);
-        setShowAlert(true);
-        setTimeout(() => {
-            setShowAlert(false);
-            window.location.reload();
-        }, 2500)
+    const [rows, setRows] = React.useState([])
+
+    React.useEffect(() => {
+      if(props.registration) {
+        AdminService.getUserRegistrationRequests().then((response) => {
+          setRows(response.data)
+        })
       }
+      else {
+        AdminService.getProfileDeletionRequests().then((response) => {
+          setRows(response.data)
+        })
+      }
+    }, [props.registration])
+
+    const getStateFromRow = (data) => {
+      setAccept(data[0]);
+      setShowAlert(true);
+      setRows(rows.filter((item) => item.id !== data[1]));
+      setTimeout(() => {
+          setShowAlert(false);
+      }, 2500)
+    }
 
   return (
       <div>
@@ -206,7 +220,7 @@ export default function Datatable(props) {
                 </TableHead>
                 <TableBody>
                 {rows.map((row) => (
-                    <Row key={row.name} row={row} registration={props.registration} func={getStateFromRow}/>
+                    <Row key={row.user.username} row={row} registration={props.registration} func={getStateFromRow}/>
                 ))}
                 </TableBody>
             </Table>

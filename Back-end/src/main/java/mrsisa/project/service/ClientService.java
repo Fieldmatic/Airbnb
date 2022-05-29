@@ -58,6 +58,7 @@ public class ClientService {
 
     public void add(ClientDTO dto, MultipartFile[] multipartFiles) throws IOException {
         Client client = dtoToClient(dto);
+        clientRepository.save(client);
         List<String> paths = addPictures(client, multipartFiles);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);

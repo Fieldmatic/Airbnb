@@ -6,9 +6,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import AdminService from "../../services/AdminService"
+import InstructorService from "../../services/InstructorService"
 
-export default function DeletionAccountDialog(props) {
+export default function DeletionAccountDialog() {
   const [open, setOpen] = React.useState(false);
 
   const [deletionData, setDeletionData] = React.useState({
@@ -37,12 +37,12 @@ export default function DeletionAccountDialog(props) {
     let data = new FormData()
     const dataJson = dataToJson();
     data.append("data", dataJson)
-    AdminService.sendDeletionRequest(props.id, data)
+    InstructorService.sendDeletionRequest(data)
     .then(response => {
         alert(response.data);
     })
-    .catch(response => {
-        alert(response.data);
+    .catch(err => {
+        alert(err);
     })
     setOpen(false);
   }

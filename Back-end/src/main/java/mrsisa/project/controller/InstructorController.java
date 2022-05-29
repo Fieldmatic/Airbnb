@@ -2,6 +2,7 @@ package mrsisa.project.controller;
 
 
 import mrsisa.project.dto.InstructorDTO;
+import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.model.Instructor;
 import mrsisa.project.service.AddressService;
 import mrsisa.project.service.InstructorService;
@@ -28,6 +29,7 @@ public class InstructorController {
 
 
     @PutMapping(value = "/update")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<InstructorDTO> updateInstructor(@RequestBody InstructorDTO dto)
     {
         Instructor instructor = instructorService.update(dto);
@@ -50,5 +52,15 @@ public class InstructorController {
         File file = new File(instructor.getProfilePhoto());
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/sendDeletionRequest")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<String> sendRequestForProfileDeletion(@RequestPart("data") ProfileDeletionReasonDTO pdrDTO, Principal userP)
+    {
+        boolean isSent = instructorService.sendProfileDeletionRequest(userP, pdrDTO);
+        if (!isSent)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Check your password!");
+        return ResponseEntity.status(HttpStatus.OK).body("Request for deleting account successfully sent!");
     }
 }

@@ -211,7 +211,7 @@ export default function InstructorUpdate() {
                         onChange={handleChange}
                         value={formData.confirmPassword}
                     />
-                    <DeletionAccountDialog id={id} />
+                    <DeletionAccountDialog />
                     <br />
                     <button
                         className="form--submit"

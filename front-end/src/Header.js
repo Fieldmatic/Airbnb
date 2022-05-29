@@ -27,10 +27,10 @@ export default function Header(props){
              <Link to={'/addCottage'} style={{textDecoration: 'none', color:'black'}}>Add Cottage</Link>
              <Link to={'/addBoat'} style={{textDecoration: 'none', color:'black'}}>Add Boat</Link>
              <Link to={'/addAdventure'} style={{textDecoration: 'none', color:'black'}}>Add Adventure</Link>
-             <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
+             <Link to={'/editInstructor'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
              <Link to={'/showEntities'} style={{textDecoration: 'none', color:'black'}}>View Offers</Link>
              <Link to={'/viewOwnerCottages'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
-
+            <Link to={'/admin'} style={{textDecoration: 'none', color:'black'}}>Admin</Link>
             </div>
              
             <div className='header__right'>

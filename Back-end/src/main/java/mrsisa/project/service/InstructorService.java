@@ -2,6 +2,7 @@ package mrsisa.project.service;
 
 
 import mrsisa.project.dto.InstructorDTO;
+import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +46,9 @@ public class InstructorService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ProfileDeletionReasonRepository profileDeletionReasonRepository;
+
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/instructor/";
     final String DEFAULT_PICTURE_PATH = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
@@ -52,6 +58,7 @@ public class InstructorService {
         if (instructor == null) {
             return null;
         }
+        instructorRepository.save(instructor);
         List<String> paths = addPictures(instructor, multipartFiles);
         if (paths.size() == 0)
             instructor.setProfilePhoto(DEFAULT_PICTURE_PATH);
@@ -141,5 +148,24 @@ public class InstructorService {
 
     public Instructor save(Instructor instructor) {
         return instructorRepository.save(instructor);
+    }
+
+    public boolean sendProfileDeletionRequest(Principal userP, ProfileDeletionReasonDTO pdrDTO) {
+        Person person = personRepository.findByUsername(userP.getName());
+        System.out.println("=================\n" + pdrDTO.getPassword() + "\n=================");
+        System.out.println("=================\n" + person.getPassword() + "\n=================");
+        System.out.println("=================\n" + passwordEncoder.encode(pdrDTO.getPassword()) + "\n=================");
+//   TODO:     if (!person.getPassword().equals(passwordEncoder.encode(pdrDTO.getPassword()))) return false;
+        ProfileDeletionReason profileDeletionReason = this.dtoToPDR(pdrDTO, person);
+        profileDeletionReasonRepository.save(profileDeletionReason);
+        return true;
+    }
+
+    private ProfileDeletionReason dtoToPDR(ProfileDeletionReasonDTO pdrDTO, Person person) {
+        ProfileDeletionReason profileDeletionReason = new ProfileDeletionReason();
+        profileDeletionReason.setReason(pdrDTO.getReason());
+        profileDeletionReason.setUser(person);
+        profileDeletionReason.setViewed(false);
+        return profileDeletionReason;
     }
 }

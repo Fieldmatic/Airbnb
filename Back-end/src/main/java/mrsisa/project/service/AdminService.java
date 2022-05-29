@@ -1,10 +1,13 @@
 package mrsisa.project.service;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,14 +34,12 @@ public class AdminService {
     @Autowired
     EmailService emailService;
 
-    public boolean sendRequestForProfileDeletion(Long id, ProfileDeletionReasonDTO pdrDTO) {
-        Person person = personRepository.findById(id).orElse(null);
-        if (person == null) return false;
-        if (!person.getPassword().equals(pdrDTO.getPassword())) return false;
-        ProfileDeletionReason profileDeletionReason = this.dtoToPDR(pdrDTO, person);
-        profileDeletionReasonRepository.save(profileDeletionReason);
-        return true;
-    }
+    @Autowired
+    RoleService roleService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     public List<ProfileDeletionReasonDTO> getProfileDeletionReasons() {
         List<ProfileDeletionReasonDTO> pdrDTOs = new ArrayList<>();
@@ -105,12 +106,32 @@ public class AdminService {
         return true;
     }
 
-    private ProfileDeletionReason dtoToPDR(ProfileDeletionReasonDTO pdrDTO, Person person) {
-        ProfileDeletionReason profileDeletionReason = new ProfileDeletionReason();
-        profileDeletionReason.setReason(pdrDTO.getReason());
-        profileDeletionReason.setUser(person);
-        profileDeletionReason.setViewed(false);
-        return profileDeletionReason;
+    /**
+     * @apiNote Use this method only one time to initialize default admin i system.
+     * */
+    public void createFirstAdmin() {
+        roleService.createRoles();
+
+        Address address = new Address();
+        address.setZipCode("123123");
+        address.setStreet("Arse Teodorovica 2");
+        address.setState("Serbia");
+        address.setCity("Novi Sad");
+
+        Administrator admin = new Administrator();
+        admin.setActive(true);
+        admin.setAddress(address);
+        admin.setEmail("bane-gg@hotmail.com");
+        admin.setLastPasswordResetDate(null);
+        admin.setName("Banz");
+        admin.setPhoneNumber("065432234");
+        admin.setSurname("Ganz");
+        admin.setUsername("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.setProfilePhoto(null);
+        List<Role> roles = roleService.findByName("ROLE_ADMIN");
+        admin.setRoles(roles);
+        adminRepository.save(admin);
     }
 
 

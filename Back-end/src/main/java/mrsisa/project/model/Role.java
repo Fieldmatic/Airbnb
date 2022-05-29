@@ -1,12 +1,15 @@
 package mrsisa.project.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
 // POJO koji implementira Spring Security GrantedAuthority kojim se mogu definisati role u aplikaciji
 @Entity
+@NoArgsConstructor
 @Table(name="ROLE")
 public class Role implements GrantedAuthority {
 
@@ -41,6 +44,10 @@ public class Role implements GrantedAuthority {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Role(String name) {
+        this.name = name;
     }
 
 }

@@ -5,12 +5,13 @@ const ADMIN_BASED_REST_API_URL = "http://localhost:8081/api/admin";
 
 class InstructorService {
 
-    sendDeletionRequest(id, data) {
-        return axios.post(ADMIN_BASED_REST_API_URL + "/sendDeletionRequest/" + id, data);
-    }
-
     getProfileDeletionRequests() {
-        return axios.get(ADMIN_BASED_REST_API_URL + "/getProfileDeletionRequests");
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getProfileDeletionRequests",
+        { 
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
     }
 
     getUserProfilePicture(id) {
@@ -18,25 +19,33 @@ class InstructorService {
     }
 
     async deleteProfile(userId, pdrId, confirmation, message) {
-        return await axios.put(ADMIN_BASED_REST_API_URL + "/confirmProfileDeletion/" + userId + "/" + pdrId + "/" + confirmation, message);
+        return await axios.put(ADMIN_BASED_REST_API_URL + "/confirmProfileDeletion/" + userId + "&" + pdrId + "&" + confirmation, message,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
     }
 
     getUserRegistrationRequests() {
-        return axios.get(ADMIN_BASED_REST_API_URL + "/getUserRegistrationRequests");
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getUserRegistrationRequests",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
     }
 
     async registrateUser(userId, regId, confirmation, message) {
-        return await axios.put(ADMIN_BASED_REST_API_URL + "/registerUser/" + userId + "/" + regId + "/" + confirmation, message);
+        return await axios.put(ADMIN_BASED_REST_API_URL + "/registerUser/" + userId + "&" + regId + "&" + confirmation, message,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
     }
 
-    sleep(milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-          if ((new Date().getTime() - start) > milliseconds){
-            break;
-          }
-        }
-    }
+    
 }
 
 export default new InstructorService()

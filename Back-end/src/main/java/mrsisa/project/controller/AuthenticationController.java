@@ -1,9 +1,6 @@
 package mrsisa.project.controller;
 
-import mrsisa.project.dto.OwnerDTO;
-import mrsisa.project.dto.ClientDTO;
-import mrsisa.project.dto.JwtAuthenticationRequest;
-import mrsisa.project.dto.UserTokenState;
+import mrsisa.project.dto.*;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.Role;
 import mrsisa.project.repository.PersonRepository;
@@ -30,6 +27,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "api/auth")
+@CrossOrigin("*")
 public class AuthenticationController {
 
 	@Autowired
@@ -74,7 +72,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/ownerRegistration")
-	public ResponseEntity<String> addOwner(@RequestPart("owner") OwnerDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+	public ResponseEntity<String> addOwner(@RequestPart("owner") PersonDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
 
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 

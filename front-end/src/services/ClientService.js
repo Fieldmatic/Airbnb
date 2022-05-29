@@ -18,10 +18,6 @@ class ClientService {
         return axios.put(CLIENT_BASED_REST_API_URL + "/update" , client)
     }
 
-    saveReason(reason) {
-        return axios.post(CLIENT_BASED_REST_API_URL + "/saveDeletionReason", reason)
-    }
-
     getProfilePicture() {
         return axios.get(CLIENT_BASED_REST_API_URL + "/getProfilePicture",
         {

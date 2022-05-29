@@ -3,7 +3,7 @@ import NotFound from "./NotFound";
 import Home from "./Home";
 import AddAdventureForm from "./components/Adventure/AddAdventureForm";
 import UpdateAdventureForm from "./components/Adventure/UpdateAdventureFrom"
-import ClientProfile from "./components/Client/ClientProfile";
+import EditProfile from "./components/Client/EditProfile";
 import Cottage from "./components/cottage/Cottage";
 import AllEntities from "./components/ViewEntities/AllEntities";
 import EditCottage from "./components/cottage/EditCottage";
@@ -31,7 +31,7 @@ const Views = () => {
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
       <Route path = "/editCottage/:id" element = {<EditCottage/>}/>
-      <Route path = "/editProfile" element = {< ClientProfile />}/>
+      <Route path = "/editProfile" element = {< EditProfile />}/>
       <Route path = "/showEntities" element = {< AllEntities />}/>
       <Route path = "/addBoat" element = {<Boat/>}/>
       <Route path = "/ownerRegistration" element = {<OwnerRegistration/>}/>

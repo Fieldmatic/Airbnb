@@ -22,5 +22,6 @@ public class ProfileDeletionReason {
         this.reason = reason;
         this.approved = approved;
         this.user = user;
+        this.viewed = false;
     }
 }

@@ -58,7 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
 			.authorizeRequests()
-								.antMatchers("/api/auth/**").permitAll()		// /auth/**
+								.antMatchers("/api/auth/login").permitAll()
+								.antMatchers("/api/auth/ownerRegistration").permitAll()
+								.antMatchers("/api/auth/clientRegistration").permitAll()
 								.antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
 								.antMatchers("/api/foo").permitAll()
 								.antMatchers("/api/cottage/all").permitAll()
@@ -96,7 +98,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		 web.ignoring().antMatchers(HttpMethod.POST, "api/auth/*");
 
 	}
 

@@ -1,6 +1,6 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.OwnerDTO;
+import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +38,7 @@ public class CottageOwnerService {
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
 
-
-    public Person add(OwnerDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    public Person add(PersonDTO dto, MultipartFile[] multipartFiles) throws IOException {
         CottageOwner owner = dtoToCottageOwner(dto);
         List<String> paths = addPictures(owner, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
@@ -73,7 +72,7 @@ public class CottageOwnerService {
         }
     }
 
-    private CottageOwner dtoToCottageOwner(OwnerDTO dto) {
+    private CottageOwner dtoToCottageOwner(PersonDTO dto) {
         CottageOwner owner = new CottageOwner();
         owner.setName(dto.getName());
         owner.setSurname(dto.getSurname());

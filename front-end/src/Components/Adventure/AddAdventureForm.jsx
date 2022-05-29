@@ -13,7 +13,7 @@ export default function AddAdventureForm() {
             state: "",
             zipCode: ""
         },
-        promoDescription: "",
+        promotionalDescription: "",
         capacity: "",
         rules: "",
         equipment: "",
@@ -172,9 +172,9 @@ export default function AddAdventureForm() {
                     <textarea 
                         placeholder="Promo description"
                         className="form--input-area"
-                        name="promoDescription"
+                        name="promotionalDescription"
                         onChange={handleChange}
-                        value={formData.promoDescription}
+                        value={formData.promotionalDescription}
                     />
                     <textarea 
                         placeholder="Behaviour rules"

@@ -84,4 +84,11 @@ public class AdventureController {
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok().body(resource);
     }
+
+    @DeleteMapping(value = "/deleteAdventure/{id}")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
+    public ResponseEntity<String> deleteAdventure(@PathVariable Long id, Principal userP) {
+        if (adventureService.deleteAdventure(id, userP)) return ResponseEntity.ok().body("Success");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Adventure has active reservations!");
+    }
 }

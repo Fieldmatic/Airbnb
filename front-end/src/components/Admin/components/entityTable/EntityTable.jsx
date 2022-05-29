@@ -1,14 +1,23 @@
 import "./entityTable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import AdventureService from "../../../../services/AdventureService"
+import BoatService from "../../../../services/BoatService"
+import CottageService from "../../../../services/CottageService"
+
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'address', headerName: 'Address', width: 180 },
+    { field: 'address', 
+      headerName: 'Address', 
+      width: 180,
+      valueGetter: (params) =>
+      `${params.row.address.state || ''}, ${params.row.address.city || ''}, ${params.row.address.street || ''}`
+    },
     {
       field: 'capacity',
       headerName: 'Capacity',
@@ -16,47 +25,79 @@ const columns = [
       width: 90,
     },
     {
-      field: 'hourlyRate',
-      headerName: 'Hourly rate',
+      field: 'rating',
+      headerName: 'Rating',
       type: 'number',
       width: 90,
     },
     {
-      field: 'promoDescription',
+      field: 'promotionalDescription',
       headerName: 'Promo description',
-      description: 'This column has a value getter and is not sortable.',
+      description: 'This column is not sortable.',
       sortable: false,
       width: 250,
     },
   ];
   
-  const rows = [
-    { id: 1, name: 'Snow', address: 'Jon Lenon 12', capacity: 35, promoDescription: 'asASdasd asdas', hourlyRate: '15' },
-    { id: 2, name: 'Lannister', address: 'Cersei asd 12', capacity: 42, promoDescription: 'sdadsada', hourlyRate: '15' },
-    { id: 3, name: 'Lannister', address: 'Jaime Oliver 6', capacity: 45, promoDescription: 'asdasd', hourlyRate: '15' },
-    { id: 4, name: 'Stark', address: 'Arya Nek 3', capacity: 16, promoDescription: 'asdasdas', hourlyRate: '15' },
-    { id: 5, name: 'Targaryen', address: 'Daenerys 4', capacity: 43, promoDescription: 'asdsadsadsadasd', hourlyRate: '15' },
-    { id: 6, name: 'Melisandre', address: 'Arse teodorovica 2', capacity: 150, promoDescription: 'asd', hourlyRate: '15' },
-    { id: 7, name: 'Clifford', address: 'Ferrara 5', capacity: 44, promoDescription: 'asdasdasd', hourlyRate: '15' },
-    { id: 8, name: 'Frances', address: 'Rossini Gilberto 22', capacity: 36, promoDescription: 'asdasda', hourlyRate: '15' },
-    { id: 9, name: 'Roxie', address: 'Harvey Steve 13', capacity: 65, promoDescription: 'asdsad', hourlyRate: '15' },
-    { id: 10, name: 'Roxie', address: 'Harvey Bejl 7', capacity: 6, promoDescription: 'asdassa', hourlyRate: '15' },
-    { id: 11, name: 'Roxie', address: 'Dyon 5', capacity: 65, promoDescription: 'dasdsad', hourlyRate: '15' },
-    { id: 12, name: 'Roxie', address: 'Jack Black 55', capacity: 612, promoDescription: 'asdsadas', hourlyRate: '15' },
-  ];
+  
 
 const EntityTable = (props) => {
-  const [data, setData] = useState(rows);
+  
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+      if (props.type === 1) {
+          AdventureService.getAllAdventures().then((response) => {
+              setRows(response.data);
+          })
+      }else if(props.type === 2) {
+          CottageService.getAllCottages().then((response) => {
+              setRows(response.data);
+          })
+      }else {
+          BoatService.getAllBoats().then((response) => {
+              setRows(response.data);
+          })
+      }
+  }, [props.type])
 
   const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
-    setOpen(true);
+    if (props.type === 1) {
+      AdventureService.deleteAdventure(id)
+      .then(() => {
+        setRows(rows.filter((item) => item.id !== id));
+        setOpenSuccess(true);
+      })
+      .catch(() => {
+        setOpenError(true);
+      })
+    }else if(props.type === 2) {
+      CottageService.getAllCottages(id)
+      .then(() => {
+        setRows(rows.filter((item) => item.id !== id));
+        setOpenSuccess(true);
+      })
+      .catch(() => {
+        setOpenError(true);
+      })
+    }else {
+      BoatService.getAllBoats(id)
+      .then(() => {
+        setRows(rows.filter((item) => item.id !== id));
+        setOpenSuccess(true);
+      })
+      .catch(() => {
+        setOpenError(true);
+      })
+    }
   };
 
-  const [open, setOpen] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenSuccess(false);
+    setOpenError(false);
   }
 
   const actionColumn = [
@@ -88,14 +129,20 @@ const EntityTable = (props) => {
         </div>
         <DataGrid
             className="datagrid"
-            rows={data}
+            rows={rows}
             columns={columns.concat(actionColumn)}
             pageSize={10}
             rowsPerPageOptions={[10]}
+            disableSelectionOnClick
         />
-        <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+        <Snackbar open={openSuccess} autoHideDuration={5000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="success" variant="filled" sx={{ width: '100%' }}>
               Entity successfully deleted!
+            </Alert>
+        </Snackbar>
+        <Snackbar open={openError} autoHideDuration={5000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="error" variant="filled" sx={{ width: '100%' }}>
+              Cannot delete entity because it is rented!
             </Alert>
         </Snackbar>
     </div>

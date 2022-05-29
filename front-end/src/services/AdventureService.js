@@ -32,6 +32,15 @@ class AdventureService {
     getProfilePicture(id) {
         return axios.get(ADVENTURE_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
     }
+
+    deleteAdventure(id){
+        return axios.delete(ADVENTURE_BASED_REST_API_URL + "/deleteAdventure/" + id, 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
 }
 
 export default new AdventureService()

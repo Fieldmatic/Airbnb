@@ -42,6 +42,9 @@ public class AdventureService {
     @Autowired
     private InstructorRepository instructorRepository;
 
+    @Autowired
+    private ReservationRepository reservationRepository;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
 
     public Adventure save(Adventure adventure) {
@@ -193,5 +196,22 @@ public class AdventureService {
                 throw new IOException("Could not save image file: " + fileName, ioe);
             }
         }
+    }
+
+    @Transactional
+    public boolean deleteAdventure(Long id, Principal userP) {
+        Adventure adventure = adventureRepository.getById(id);
+        Instructor instructor;
+        try {
+            instructor = (Instructor) personRepository.findByUsername(userP.getName());
+        } catch (ClassCastException e) {    // In ADMIN case
+            instructor = adventure.getInstructor();
+        }
+        if (adventure.getInstructor() == instructor && (reservationRepository.getActiveReservations(id).size()) == 0) {
+            instructor.getAdventures().remove(adventure);
+            adventureRepository.delete(adventure);
+            return true;
+        }
+        return false;
     }
 }

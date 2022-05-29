@@ -155,7 +155,7 @@ public class InstructorService {
         System.out.println("=================\n" + pdrDTO.getPassword() + "\n=================");
         System.out.println("=================\n" + person.getPassword() + "\n=================");
         System.out.println("=================\n" + passwordEncoder.encode(pdrDTO.getPassword()) + "\n=================");
-//   TODO:     if (!person.getPassword().equals(passwordEncoder.encode(pdrDTO.getPassword()))) return false;
+        if(!passwordEncoder.matches(pdrDTO.getPassword(), person.getPassword())) return false;
         ProfileDeletionReason profileDeletionReason = this.dtoToPDR(pdrDTO, person);
         profileDeletionReasonRepository.save(profileDeletionReason);
         return true;

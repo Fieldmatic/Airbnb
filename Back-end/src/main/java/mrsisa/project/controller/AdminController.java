@@ -1,7 +1,11 @@
 package mrsisa.project.controller;
 
+import mrsisa.project.dto.AdminDTO;
+import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
+import mrsisa.project.model.Administrator;
+import mrsisa.project.model.Instructor;
 import mrsisa.project.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +24,23 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
+
+    @GetMapping(value = "/get")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AdminDTO> getInstructor(Principal userP){
+        return new ResponseEntity<>(new AdminDTO(adminService.findAdminByUsername(userP.getName())), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/update")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AdminDTO> updateAdmin(@RequestBody AdminDTO dto)
+    {
+        Administrator admin = adminService.update(dto);
+        if (admin == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(new AdminDTO(admin), HttpStatus.OK);
+    }
 
     @GetMapping(path = "/getProfileDeletionRequests")
     @PreAuthorize("hasRole('ADMIN')")

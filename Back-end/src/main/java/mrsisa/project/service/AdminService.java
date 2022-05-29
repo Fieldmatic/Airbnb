@@ -1,12 +1,12 @@
 package mrsisa.project.service;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
+import mrsisa.project.dto.AdminDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +40,25 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+    public Administrator update(AdminDTO dto) {
+        Administrator admin = findAdminByUsername(dto.getUsername());
+        if (admin != null) {
+            if (!(dto.getPassword().equals("") && dto.getNewPassword().equals(""))) {
+                if(!passwordEncoder.matches(dto.getPassword(), admin.getPassword()))
+                    return null;
+                admin.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            }
+            admin.setName(dto.getName());
+            admin.setAddress(dto.getAddress());
+            admin.setSurname(dto.getSurname());
+            admin.setEmail(dto.getEmail());
+            admin.setPhoneNumber(dto.getPhone());
+            adminRepository.save(admin);
+            return admin;
+        }
+        return null;
+    }
 
     public List<ProfileDeletionReasonDTO> getProfileDeletionReasons() {
         List<ProfileDeletionReasonDTO> pdrDTOs = new ArrayList<>();
@@ -135,5 +154,7 @@ public class AdminService {
     }
 
 
-
+    public Administrator findAdminByUsername(String username) {
+        return (Administrator) personRepository.findByUsername(username);
+    }
 }

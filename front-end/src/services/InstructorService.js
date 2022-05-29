@@ -11,11 +11,16 @@ class InstructorService {
             headers: {
                 'Authorization':`Bearer ${inMemoryJwt.getToken()}`
             } 
-         })
+        })
     }
 
     updateInstructor(instructor) {
-        return axios.put(INSTRUCTOR_BASED_REST_API_URL + "/update", instructor)
+        return axios.put(INSTRUCTOR_BASED_REST_API_URL + "/update", instructor,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
     }
 
     getProfilePicture() {

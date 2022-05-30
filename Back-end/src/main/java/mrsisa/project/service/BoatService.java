@@ -55,8 +55,13 @@ public class BoatService {
 
     @Transactional
     public boolean deleteBoat(Long id, Principal userP) {
-        BoatOwner owner = (BoatOwner) personRepository.findByUsername(userP.getName());
         Boat boat = boatRepository.getById(id);
+        BoatOwner owner;
+        try {
+            owner = (BoatOwner) personRepository.findByUsername(userP.getName());
+        } catch (ClassCastException e) {    // In ADMIN case
+            owner = boat.getBoatOwner();
+        }
         if (boat.getBoatOwner() == owner && (reservationRepository.getActiveReservations(id).size()) == 0) {
             owner.getBoats().remove(boat);
             boatRepository.delete(boat);

@@ -1,6 +1,7 @@
 package mrsisa.project.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +17,6 @@ import java.util.List;
 public class Instructor extends Owner {
     private String biography;
     @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Adventure> adventures;
 }

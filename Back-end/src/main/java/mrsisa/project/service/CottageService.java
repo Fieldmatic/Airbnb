@@ -131,10 +131,16 @@ public class CottageService {
         }
         return cottagesDTO;
     };
+
     @Transactional
     public boolean deleteCottage(Long id, Principal userP) {
-        CottageOwner owner = (CottageOwner) personRepository.findByUsername(userP.getName());
         Cottage cottage = cottageRepository.getById(id);
+        CottageOwner owner;
+        try {
+            owner = (CottageOwner) personRepository.findByUsername(userP.getName());
+        } catch (ClassCastException e) {    // In ADMIN case
+            owner = cottage.getCottageOwner();
+        }
         if (cottage.getCottageOwner() == owner && (reservationRepository.getActiveReservations(id).size()) == 0) {
             owner.getCottages().remove(cottage);
             cottageRepository.delete(cottage);

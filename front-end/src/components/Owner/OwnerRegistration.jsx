@@ -239,6 +239,7 @@ export default function OwnerRegistration() {
     function registerOwner(data) {
             RegistrationService.addCottageOwner(data).then((response) => {
                 alert(response.data);
+                setRedirect("/");
             }).catch((err) => {
                 alert(err.response.data);
             });

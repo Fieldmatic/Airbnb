@@ -85,7 +85,7 @@ public class CottageController {
 
 
     @DeleteMapping(value = "/deleteCottage/{id}")
-    @PreAuthorize("hasRole('COTTAGE_OWNER')")
+    @PreAuthorize("hasAnyRole('COTTAGE_OWNER', 'ADMIN')")
     public ResponseEntity<String> deleteCottage(@PathVariable Long id, Principal userP) {
         if (cottageService.deleteCottage(id, userP)) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Cottage has active reservations!");

@@ -89,7 +89,7 @@ public class BoatController {
     }
 
     @DeleteMapping(value = "/deleteBoat/{id}")
-    @PreAuthorize("hasRole('BOAT_OWNER')")
+    @PreAuthorize("hasAnyRole('BOAT_OWNER', 'ADMIN')")
     public ResponseEntity<String> deleteBoat(@PathVariable Long id, Principal userP) {
         if (boatService.deleteBoat(id, userP)) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Boat has active reservations!");

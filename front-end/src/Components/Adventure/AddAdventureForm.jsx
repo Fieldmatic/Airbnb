@@ -13,7 +13,7 @@ export default function AddAdventureForm() {
             state: "",
             zipCode: ""
         },
-        promoDescription: "",
+        promotionalDescription: "",
         capacity: "",
         rules: "",
         equipment: "",
@@ -23,20 +23,7 @@ export default function AddAdventureForm() {
 
     const [redirect, setRedirect] = React.useState("");
 
-    var errorMessages = {
-        nameError: "",
-        addressError: "",
-        capacityError: "",
-        hourlyRateError: ""
-    };
-
     const [validForm, setValidFrom] = React.useState(true);
-
-    const errors = {
-        name: "You must enter adventure name",
-        address: "You must enter address",
-        number: "This field must be a number"
-      };
     
     function handleChange(event) {
         const {name, value} = event.target;
@@ -62,7 +49,6 @@ export default function AddAdventureForm() {
     
     function handleSubmit(event) {
         event.preventDefault();
-        // validateForm();
         setValidFrom(true);
         if (validForm) {
             let data = new FormData()
@@ -100,58 +86,6 @@ export default function AddAdventureForm() {
     const handleClean = (files) => {
         console.log("list cleaned", files);
     };
-
-    function validateForm() {
-        setValidFrom(true);
-        validateName();
-        validateAddress();
-        validateCapacity();
-        validateHourlyRate();
-    }
-
-    function validateName() {
-        if(formData.name === undefined || formData.name === "") { 
-            errorMessages.nameError = errors.name;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.nameError = errors.name;
-        }
-    }
-
-    function validateAddress() {
-        if(formData.address === undefined || formData.address === "") { 
-            errorMessages.addressError = errors.address;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.addressError = errors.address;
-        }
-    }
-
-    function validateCapacity() {
-        if(formData.capacity === undefined || formData.capacity === "" || isNaN(formData.capacity)) { 
-            errorMessages.capacityError = errors.number;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.capacityError = errors.number;
-        }
-    }
-
-    function validateHourlyRate() {
-        if(formData.hourlyRate === undefined || formData.hourlyRate === "" || isNaN(formData.hourlyRate)) { 
-            errorMessages.hourlyRateError = errors.number;
-            setValidFrom(false);
-        }
-        else{
-            errorMessages.hourlyRateError = errors.number;
-        }
-    }
-
-    const renderErrorMessage = (name) => (
-        <div className="form--error">{name}</div>
-    );
 
     function adventureToJson() {
         let formDataCopy = { ...formData };
@@ -238,9 +172,9 @@ export default function AddAdventureForm() {
                     <textarea 
                         placeholder="Promo description"
                         className="form--input-area"
-                        name="promoDescription"
+                        name="promotionalDescription"
                         onChange={handleChange}
-                        value={formData.promoDescription}
+                        value={formData.promotionalDescription}
                     />
                     <textarea 
                         placeholder="Behaviour rules"

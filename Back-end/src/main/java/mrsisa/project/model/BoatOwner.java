@@ -1,5 +1,6 @@
 package mrsisa.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,5 +14,6 @@ import java.util.List;
 @Entity
 public class BoatOwner extends Owner{
     @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Boat> boats;
 }

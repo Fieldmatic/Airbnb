@@ -1,6 +1,6 @@
 import React from "react";
 import "./Instructor.css";
-import InstructorService from "../../services/InstructorService"
+import LoginRegisterService from "../../services/LoginRegisterService"
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import { Navigate } from "react-router-dom";
 import Header from "../../Header";
@@ -61,9 +61,9 @@ export default function InstructorRegistration() {
         files.map((file) => {
             data.append("files", file.file)
         })
-        InstructorService.addInstructor(data)
+        LoginRegisterService.addInstructor(data)
         .then(response => {
-            if (response.data === "NC"){
+            if (response.data === "NC"){    // TODO: izmijeni da hvata eror a ne ovako nc
                 alert("Username already exist!")
             } else {
                 alert("Success!")

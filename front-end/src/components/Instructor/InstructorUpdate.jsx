@@ -25,18 +25,18 @@ export default function InstructorUpdate() {
         biography: ""
     });
 
-    let {id} = useParams();
+    const id = 1;
     const [files, setFiles] = React.useState([]);
     const [profilePhoto, setProfilePhoto] = React.useState(undefined);
 
     React.useEffect(() => {
-        InstructorService.getInstructor(id).then((result) => {
+        InstructorService.getInstructor().then((result) => {
             let instructor = result.data;
             setFormData({
                 name: instructor.name, 
                 address: instructor.address,
                 username: instructor.username,
-                password: instructor.password,
+                password: "",
                 confirmPassword: "",
                 surname: instructor.surname,
                 email: instructor.email,
@@ -44,8 +44,8 @@ export default function InstructorUpdate() {
                 biography: instructor.biography
             })
         })
-        InstructorService.getProfilePicture(id).then((response) => {
-            setProfilePhoto(response.data)
+        InstructorService.getProfilePicture().then((response) => {
+            setProfilePhoto(response.data);
         })
       },[])
 
@@ -69,7 +69,7 @@ export default function InstructorUpdate() {
         files.map((file) => {
             data.append("files", file.file)
         })
-        InstructorService.updateInstructor(data, id)
+        InstructorService.updateInstructor(data)
         .then(response => {
             alert(response.data);
             window.location.reload();
@@ -211,7 +211,7 @@ export default function InstructorUpdate() {
                         onChange={handleChange}
                         value={formData.confirmPassword}
                     />
-                    <DeletionAccountDialog id={id} />
+                    <DeletionAccountDialog />
                     <br />
                     <button
                         className="form--submit"
@@ -233,7 +233,7 @@ export default function InstructorUpdate() {
                             id="file-upload"
                             type="file"
                             name="newPhoto"
-                            onChange={handleNewPhotoChange}
+                            onChange={(e) => setNewPhoto(e.target.files[0])}
                             value={newPhoto}
                             />
                     </div>

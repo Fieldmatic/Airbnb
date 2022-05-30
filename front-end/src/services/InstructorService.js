@@ -1,22 +1,45 @@
 import axios from "axios";
+import inMemoryJwt from './inMemoryJwtService';
 
 const INSTRUCTOR_BASED_REST_API_URL = "http://localhost:8081/api/instructor";
 
 class InstructorService {
-    addInstructor(instructor){
-        return axios.post(INSTRUCTOR_BASED_REST_API_URL + "/add", instructor);
+
+    getInstructor() {
+        return axios.get(INSTRUCTOR_BASED_REST_API_URL + "/get", 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
     }
 
-    getInstructor(id) {
-        return axios.get(INSTRUCTOR_BASED_REST_API_URL + "/edit/" + id, id)
+    updateInstructor(instructor) {
+        return axios.put(INSTRUCTOR_BASED_REST_API_URL + "/update", instructor,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
     }
 
-    updateInstructor(instructor, id) {
-        return axios.put(INSTRUCTOR_BASED_REST_API_URL + "/edit/" + id, instructor)
+    getProfilePicture() {
+        return axios.get(INSTRUCTOR_BASED_REST_API_URL + "/getProfilePicture", 
+        {
+            responseType: 'blob', 
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        })
     }
 
-    getProfilePicture(id) {
-        return axios.get(INSTRUCTOR_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
+    sendDeletionRequest(data) {
+        return axios.post(INSTRUCTOR_BASED_REST_API_URL + "/sendDeletionRequest", data,
+        { 
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
     }
 }
 

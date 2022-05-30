@@ -53,7 +53,7 @@ function ViewHostEntities() {
                 showAllBoats() 
             })
         } else if (entityType === "adventure"){
-            AdventureService.getAllAdventures().then((response) => {
+            AdventureService.getInstructorAdventures().then((response) => {
                 setAllCards(response.data) 
                 showAllAdventures()
             })

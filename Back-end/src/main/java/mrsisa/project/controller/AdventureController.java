@@ -1,10 +1,12 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.AdventureDTO;
+import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
+import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.service.AdventureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -31,6 +33,9 @@ public class AdventureController {
 
     @Autowired
     private AdventureService adventureService;
+
+    @Autowired
+    private PersonRepository personRepository;
 
     @PostMapping(path = "/add")
     @PreAuthorize("hasRole('INSTRUCTOR')")
@@ -90,5 +95,12 @@ public class AdventureController {
     public ResponseEntity<String> deleteAdventure(@PathVariable Long id, Principal userP) {
         if (adventureService.deleteAdventure(id, userP)) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Adventure has active reservations!");
+    }
+
+    @GetMapping(value="/getInstructorAdventures")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<List<AdventureDTO>> getInstructorAdventures(Principal userP) {
+        List<AdventureDTO> DTOs = adventureService.getInstructorAdventures(personRepository.findByUsername(userP.getName()).getId());
+        return new ResponseEntity<>(DTOs, HttpStatus.OK);
     }
 }

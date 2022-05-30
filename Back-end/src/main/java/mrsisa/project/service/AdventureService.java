@@ -1,6 +1,7 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.AdventureDTO;
+import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -213,5 +214,13 @@ public class AdventureService {
             return true;
         }
         return false;
+    }
+
+    public List<AdventureDTO> getInstructorAdventures(Long id) {
+        List<AdventureDTO> adventureDTOS = new ArrayList<>();
+        for (Adventure adventure : adventureRepository.findInstructorAdventures(id)) {
+            adventureDTOS.add(new AdventureDTO(adventure));
+        }
+        return adventureDTOS;
     }
 }

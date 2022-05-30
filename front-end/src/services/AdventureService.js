@@ -33,6 +33,15 @@ class AdventureService {
         return axios.get(ADVENTURE_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
     }
 
+    getInstructorAdventures(){
+        return axios.get(ADVENTURE_BASED_REST_API_URL + "/getInstructorAdventures",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
+
     deleteAdventure(id){
         return axios.delete(ADVENTURE_BASED_REST_API_URL + "/deleteAdventure/" + id, 
         {

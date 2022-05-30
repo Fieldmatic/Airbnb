@@ -8,7 +8,7 @@ import mrsisa.project.model.Address;
 
 @Data
 @NoArgsConstructor
-public class OwnerDTO {
+public class PersonDTO {
     private String username;
     private String password;
     private String name;

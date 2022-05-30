@@ -55,7 +55,6 @@ function PeriodPanel (props) {
         }
         PeriodService.addPeriod(data)
         .then(response => {
-            console.log(response.status)
             if (response.status === 201 || response.status === 200) {
                 setSuccessMessage(response.data)
                 setShowSuccess(true)

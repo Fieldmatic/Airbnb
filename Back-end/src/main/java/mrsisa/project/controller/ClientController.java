@@ -33,8 +33,6 @@ public class ClientController {
     @Autowired
     private AddressService addressService;
 
-    @Autowired
-    private ProfileDeletionReasonService deletionReasonService;
 
     @Autowired
     ValidationService validationService;
@@ -71,15 +69,6 @@ public class ClientController {
         client = clientService.save(client);
         return new ResponseEntity<>(new ClientDTO(client), HttpStatus.OK);
     }
-
-    @PostMapping(value = "/saveDeletionReason", consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<String> saveReason(@RequestBody String reason) {
-        Client client = clientService.findAll().get(0);
-        ProfileDeletionReason deletionReason = new ProfileDeletionReason(reason.substring(0, reason.length() - 1).replace('+', ' '), false, client);
-        deletionReasonService.save(deletionReason);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
-    }
-
 
     @GetMapping(value="/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @PreAuthorize("hasRole('CLIENT')")

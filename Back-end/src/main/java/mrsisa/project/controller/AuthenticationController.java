@@ -24,6 +24,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "api/auth")
+@CrossOrigin("*")
 public class AuthenticationController {
 
 	@Autowired
@@ -71,7 +72,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/ownerRegistration")
-	public ResponseEntity<String> addOwner(@RequestPart("owner") OwnerDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+	public ResponseEntity<String> addOwner(@RequestPart("owner") PersonDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
 
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 

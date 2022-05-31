@@ -171,7 +171,7 @@ export default function EditProfile() {
     }
 
     return (
-        <div className="userProfile">
+        <div>
             <Header />
             <div className="userProfile">    
                 <form className={`userProfileForm ${opacityClass}`}>

@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.*;
+import mrsisa.project.model.Owner;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.Role;
 import mrsisa.project.repository.PersonRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping(value = "api/auth")
@@ -61,6 +63,11 @@ public class AuthenticationController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		Person user = (Person) authentication.getPrincipal();
+		Role role = user.getRoles().get(0);
+		if (Arrays.asList("ROLE_COTTAGE_OWNER","ROLE_BOAT_OWNER","ROLE_INSTRUCTOR").contains(role.getName())) {
+			Owner owner = (Owner) user;
+			if (!owner.getApprovedAccount()) return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
 		UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
 		if (userDetails != null) {
 			String jwt = tokenUtils.generateToken(user.getUsername());

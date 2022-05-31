@@ -13,6 +13,8 @@ function Login() {
     const navigate = useNavigate();
 
     const [showAlert, setShowAlert] = React.useState(false);
+
+    const [errorMessage, setErrorMessage] = React.useState("")
     
     const [loginData, setLoginData] = React.useState (
         {
@@ -35,19 +37,16 @@ function Login() {
     function handleSubmit(event){
         event.preventDefault()
         LoginService.login(loginData)
-                    .then(res => {         
-                        console.log(res.status)           
+                    .then(res => {                  
                         const token = res.data.accessToken;
                         const expiration = res.data.expiresIn
-                        console.log(token)
-                        console.log(expiration)
                         localStorage.setItem("user",token)
                         localStorage.setItem("expiration", expiration)
                         navigate("/")             
                     }).catch(error => {
-                     setShowAlert(true)   
-                    
-                       
+                        if (error.response.status == 403) setErrorMessage("Your registration request hasn't been accepted yet!")
+                        else setErrorMessage("User with given username and password doesn't exist!")
+                        setShowAlert(true)     
                     });    
       }
 
@@ -55,10 +54,10 @@ function Login() {
         <>
         <Header/>
         {showAlert &&
-         <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+         <Alert style={{width:"100%", height:"80px"}} variant="danger" onClose={() => setShowAlert(false)} dismissible>
          <Alert.Heading>Invalid login!</Alert.Heading>
          <p>
-         User with given username and password doesn't exist!
+         {errorMessage}
          </p>
          </Alert>
         }

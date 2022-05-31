@@ -14,6 +14,7 @@ import BoatService from "../../services/BoatService";
 import ActionService from "../../services/ActionService";
 import BoatDetails from "./BoatDetails";
 import ShowActions from "./ShowActions";
+import StarIcon from '@mui/icons-material/Star';
 
 
 export default function EntityDetails() {
@@ -159,6 +160,7 @@ export default function EntityDetails() {
             setActions(response.data)
         })
     }, [reservationMade]);
+    createAddressUrl()
 
     return(
         <div>
@@ -185,19 +187,20 @@ export default function EntityDetails() {
                             <div className="price">
                                 {(entityType === "cottage" || entityType === "boat") &&
                                 <div>
-                                <span className="price"> RSD {entity.dailyRate}</span>
+                                <span className="price"> € {entity.dailyRate}</span>
                                 <span className="night"> /night</span>
                                 </div>}
                                 {entityType === "adventure" &&
                                 <div>
-                                <span className="price"> RSD {entity.hourlyRate}</span>
+                                <span className="price"> € {entity.hourlyRate}</span>
                                 <span className="night"> /hour</span>
                                 </div>}
                             </div>
                         </div>
                         <div className="rating">
-                            <span className="rating"> {entity.rating}</span>
-                            <span className="reviews"> /{reviewsNumber} reviews</span>
+                            <StarIcon sx={{color: "#FF5A5F"}}/>
+                            <div className="rating"> {entity.rating}/10</div>
+                            <div className="reviews"> ({reviewsNumber} reviews)</div>
                         </div>
                         <div className="hotelImages">
                             {entity.photos.map((photo, i) =>(
@@ -220,10 +223,17 @@ export default function EntityDetails() {
                         <div className="paragraphs">
                             <h3>Cancellation conditions</h3>
                             <p>{entity.cancellationConditions}</p>
-                        </div>
+                        </div>          
                         <ShowActions actions={actions} hourlyPrice={entity.hourlyRate} dailyPrice={entity.dailyRate} bookableType={entityType} deleteAction={rerenderActions}/>
+                        <iframe style={{width: "100%", height:"500px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
                 </div>
             </div>
         </div>
     )
+
+    function createAddressUrl(){
+        let addressQuery = entity.address.street + ", " + entity.address.city + ", " + entity.address.state
+        addressQuery = addressQuery.replace(/ /g,"%20")
+        return addressQuery
+    }
 }

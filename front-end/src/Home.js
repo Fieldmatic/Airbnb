@@ -18,21 +18,21 @@ export default function Home(){
             <Header />
             <Banner/>
             <div className="home__section" >
-                <div onClick={() => searchEntities("cottage")}>
+                <div className = "advertisement--homepage"onClick={() => searchEntities("cottage")}>
                     <Card
                         src="https://a0.muscache.com/im/pictures/fdb46962-10c1-45fc-a228-d0b055411448.jpg?im_w=720"
                         title="Cottages"
                         description="Comfortable private places, with room for friends or family."
                     />    
                 </div>
-                <div onClick={() => searchEntities("boat")}>
+                <div className = "advertisement--homepage" onClick={() => searchEntities("boat")}>
                     <Card
                         src="https://besthqwallpapers.com/Uploads/31-12-2017/35839/thumb2-heesen-project-maia-superyacht-4k-luxury-yacht-sea.jpg"
                         title="Boats"
                         description="Luxury boats to fulfill your dreams."
                     />   
                 </div>
-                <div onClick={() => searchEntities("adventure")}>
+                <div className = "advertisement--homepage" onClick={() => searchEntities("adventure")}>
                     <Card
                         src="https://www.bsframework.io/wp-content/uploads/2020/12/Adventure-Travel-A-Thrilling-And-Enthralling-Experience.jpg"
                         title="Adventures"

@@ -141,7 +141,7 @@ export default function ShowActions(props) {
                     </div>
                 ))}
             </div>
-            {props.actions.length === 0 && <span>This {props.bookableType} has no available actions.</span>}
+            {props.actions.length === 0 && <span className='unavailable-actions'>This {props.bookableType} has no available actions.</span>}
         </div>
     )
 }

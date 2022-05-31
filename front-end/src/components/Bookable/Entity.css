@@ -2,8 +2,6 @@
     display: flex;
     position: relative;
     padding: 20px;
-    border: 2px solid rgba(0, 0, 0, 0.220);
-    border-radius: 20px;
     cursor: pointer;
 }
 
@@ -12,8 +10,8 @@
 }
 
 .entities img {
-    height: 200px;
-    width: 350px;
+    height: auto;
+    width: 400px;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -69,13 +67,10 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    font-size: 1.1rem;
 }
 
 
-.entity_rating_value {
-    font-size: x-large;
-    font-weight: bolder;
-}
 
 
 .entity__price {
@@ -89,8 +84,8 @@
 
 .entity_price_per {
     font-size: large;
-    font-weight: 500;
-    color: rgba(18, 12, 12, 0.711);
+    font-weight: bold;
+
 }
 
 .entity_right_corner {

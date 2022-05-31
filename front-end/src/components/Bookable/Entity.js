@@ -99,7 +99,7 @@ function entity(props) {
                         <StarIcon className="entity__star" />
                         <div>
                         <span className='entity_rating_value'>{props.rating}</span>
-                        <span>/{reviewsNumber} reviews</span>
+                        <span>/10 ({reviewsNumber} reviews)</span>
                         </div>
                         </div>
                     </div>
@@ -174,7 +174,7 @@ function entity(props) {
                         <div>
                         <Button className="entity_explore_button" sx = {{
                              backgroundColor : "#FF5A5F", 
-                             width : "100%",
+                             width : "10vw",
                              color:"white",
                              '&:hover': {
                                 backgroundColor: 'black',

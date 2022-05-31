@@ -25,7 +25,7 @@ export default function BoatDetails(props) {
                 <span> {props.enginePower}</span>
             </div>
             <div className="boatParam">
-                <h5> Maximal speed: </h5>
+                <h5> Maximum speed: </h5>
                 <span> {props.maxSpeed}</span>
             </div>
         </div>

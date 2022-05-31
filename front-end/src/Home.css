@@ -19,3 +19,8 @@
     }
  
  }
+
+.advertisement--homepage {
+    min-width: 350px;
+    min-height: 400px;
+ }

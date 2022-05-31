@@ -47,16 +47,15 @@ public class CottageController {
         return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value="/allAvailableByCity")
-    public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@RequestBody SearchDTO searchDTO) {
-        List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(searchDTO.getCity(), searchDTO.getStartDate(), searchDTO.getEndDate());
+    @GetMapping(value="/allAvailableByCity/{startDate}/{endDate}/{city}")
+    public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(city, startDate, endDate);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 
-    @GetMapping(value="/allAvailable")
-    @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<List<CottageDTO>> getAvailableCottages(@RequestBody SearchDTO searchDTO) {
-        List<CottageDTO> availableCottages = cottageService.getAvailableCottages(searchDTO.getStartDate(), searchDTO.getEndDate());
+    @GetMapping(value="/allAvailable/{startDate}/{endDate}")
+    public ResponseEntity<List<CottageDTO>> getAvailableCottages(@PathVariable String startDate, @PathVariable String endDate) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottages(startDate, endDate);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 

@@ -206,9 +206,9 @@ export default function EntityDetails() {
                                 </div>
                             ))}
                         </div>
-                        {entityType === "cottage" && <CottageDetails bedsNum={getNumberOfBeds()} roomsNum={getNumberOfBedrooms()}/>}
-                        {entityType === "adventure" && <AdventureDetails capacity={entity.capacity}/>}
-                        {entityType === "boat" && <BoatDetails capacity={entity.capacity} enginesNumber={entity.enginesNumber} enginePower={entity.enginePower} maxSpeed={entity.maxSpeed}/>}
+                        {entityType === "cottage" && <CottageDetails key={id} bedsNum={getNumberOfBeds()} roomsNum={getNumberOfBedrooms()}/>}
+                        {entityType === "adventure" && <AdventureDetails key={id} capacity={entity.capacity}/>}
+                        {entityType === "boat" && <BoatDetails key={id} capacity={entity.capacity} enginesNumber={entity.enginesNumber} enginePower={entity.enginePower} maxSpeed={entity.maxSpeed}/>}
                         <div className="paragraphs">
                             <h3>Description</h3>
                             <p>{entity.promotionalDescription}</p>

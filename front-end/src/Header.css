@@ -149,10 +149,44 @@
     top: -7px;
   }
 
-  .header-search {
-    position: absolute;
+  .search-period {
+    display: flex;
     padding: 10px;
+    align-items: center;
+    width: 15%;
+    height: 5vh;
+    border: 2px solid lightgray;
+    border-radius: 999px;
+  }
+
+  .search-period > input {
+    border: none;
+    outline-width: 0;
+    padding: 3px;
+    width: 100% ;
+}
+
+.header-search {
+  position: absolute;
+  display: flex;
+    flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.45);
+  width: 100vw;
+  height: 100vh;
+
+}
+
+  .header-search > div {
+    margin-left: 3%;
+    padding: 5px;
+    width: fit-content;
+    height: fit-content;
     background-color: white;
+    z-index: 100;
+    border: 1px solid gray;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+
   }
 
   .guestsNumber {
@@ -191,6 +225,10 @@
     background-color: transparent;
     border: none;
     border-radius: 10px;
+  }
+
+  .closeButton {
+    color: black;
   }
 
   .searchButton {

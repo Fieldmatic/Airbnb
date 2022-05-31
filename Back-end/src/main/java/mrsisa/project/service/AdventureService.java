@@ -1,10 +1,8 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.AdventureDTO;
-import mrsisa.project.model.Address;
-import mrsisa.project.model.Adventure;
-import mrsisa.project.model.Period;
-import mrsisa.project.model.PriceList;
+import mrsisa.project.dto.BoatDTO;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.AdventureRepository;
 import mrsisa.project.repository.PeriodRepository;
@@ -19,7 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -120,6 +120,32 @@ public class AdventureService {
 
     public void remove(Long id) {
         adventureRepository.deleteById(id);
+    }
+
+    public List<AdventureDTO> getAvailableAdventures(String startDate, String endDate, Integer capacity) {
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);
+
+        List<AdventureDTO> adventuresDTO = new ArrayList<>();
+        for (Adventure adventure: adventureRepository.findAll()) {
+            if (adventure.getCapacity() >= capacity) {
+                for (Period period : adventure.getPeriods()) {
+                    if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
+                        adventuresDTO.add(new AdventureDTO(adventure));
+                        break;
+                    }
+                }
+            }
+        }
+        return adventuresDTO;
+    }
+
+    public List<AdventureDTO> getAvailableAdventuresByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
+        List<AdventureDTO> adventuresDTO = new ArrayList<>();
+        for (AdventureDTO adventure: getAvailableAdventures(startDate, endDate, capacity))
+            if (adventure.getAddress().getCity().equals(city))
+                adventuresDTO.add(adventure);
+        return adventuresDTO;
     }
 
     private Adventure dtoToAdventure(AdventureDTO dto) {

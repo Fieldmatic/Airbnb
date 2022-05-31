@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.AdventureDTO;
+import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.model.Boat;
@@ -47,6 +48,18 @@ public class AdventureController {
             adventuresDTO.add(new AdventureDTO(adventure));
         }
         return new ResponseEntity<>(adventuresDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/allAvailableByCityAndCapacity/{startDate}/{endDate}/{city}/{capacity}")
+    public ResponseEntity<List<AdventureDTO>> getAvailableAdventuresByCityAndCapacity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city, @PathVariable Integer capacity) {
+        List<AdventureDTO> availableAdventures = adventureService.getAvailableAdventuresByCityAndCapacity(city, capacity, startDate, endDate);
+        return new ResponseEntity<>(availableAdventures, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/allAvailable/{startDate}/{endDate}/{capacity}")
+    public ResponseEntity<List<AdventureDTO>> getAvailableAdventures(@PathVariable String startDate, @PathVariable String endDate, @PathVariable Integer capacity) {
+        List<AdventureDTO> availableAdventures = adventureService.getAvailableAdventures(startDate, endDate, capacity);
+        return new ResponseEntity<>(availableAdventures, HttpStatus.OK);
     }
     
     @PutMapping(value = "/edit/{id}")

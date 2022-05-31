@@ -2,6 +2,7 @@ package mrsisa.project.controller;
 
 import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.dto.SearchDTO;
 import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.repository.PersonRepository;
@@ -71,6 +72,18 @@ public class BoatController {
             boatsDTO.add(new BoatDTO(boat));
         }
         return new ResponseEntity<>(boatsDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/allAvailableByCityAndCapacity/{startDate}/{endDate}/{city}/{capacity}")
+    public ResponseEntity<List<BoatDTO>> getAvailableBoatsByCityAndCapacity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city, @PathVariable Integer capacity) {
+        List<BoatDTO> availableBoats = boatService.getAvailableBoatsByCityAndCapacity(city, capacity, startDate, endDate);
+        return new ResponseEntity<>(availableBoats, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/allAvailable/{startDate}/{endDate}/{capacity}")
+    public ResponseEntity<List<BoatDTO>> getAvailableBoats(@PathVariable String startDate, @PathVariable String endDate, @PathVariable Integer capacity) {
+        List<BoatDTO> availableBoats = boatService.getAvailableBoats(startDate, endDate, capacity);
+        return new ResponseEntity<>(availableBoats, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reviewsNumber/{id}")

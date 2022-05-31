@@ -170,15 +170,17 @@
 
 .header-search {
   position: absolute;
-  display: flex;
-    flex-direction: column;
   background-color: rgba(0, 0, 0, 0.45);
   width: 100vw;
   height: 100vh;
+  z-index: 101;
+
 
 }
 
   .header-search > div {
+    display: flex;
+    flex-direction: column;
     margin-left: 3%;
     padding: 5px;
     width: fit-content;
@@ -258,3 +260,11 @@
 .search_input {
   border-radius: 10px;
 }
+
+.searchTime {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+}
+
+

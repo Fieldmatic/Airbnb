@@ -172,6 +172,7 @@ function AllEntities() {
             hourlyRate={item.hourlyRate}
             address={item.address}
             promotionalDescription={item.promotionalDescription}
+            additionalServices={item.additionalServices}
             entity={location.state.entityType}
             user="client"
             />)
@@ -193,8 +194,6 @@ function AllEntities() {
             ...prevState,
             [name] : value
         }))
-
-        console.log(searchQuery)
     }
 
     

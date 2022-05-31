@@ -41,7 +41,9 @@ const muiStyles = () => {
 
     const style = {
         "& label": {
-            color: "black"
+            color: "black",
+            fontWeight: "bold",
+            fontSize: "medium"
           },
 
           "&:hover label": {
@@ -55,7 +57,8 @@ const muiStyles = () => {
           },
           "& .MuiOutlinedInput-root": {                           
             "& > fieldset": {
-              borderColor: "black"
+              borderColor: "lightgray",
+              borderWidth: 2,
             },
             "&:hover fieldset": {
               borderColor: "#FF5A5F",

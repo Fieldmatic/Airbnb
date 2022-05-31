@@ -17,7 +17,6 @@ public class Boat extends Bookable {
     private Integer enginesNumber;
     private Double enginePower;
     private Double maxSpeed;
-    private Integer capacity;
 
     @ManyToOne
     private BoatOwner boatOwner;

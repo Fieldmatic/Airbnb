@@ -60,6 +60,48 @@ public class CottageService {
         cottageOwnerRepository.save(owner);
     }
 
+    public void createFirstCottage() {
+        Address address = new Address();
+        address.setZipCode("36000");
+        address.setStreet("Nikole Tesle 5");
+        address.setState("BiH");
+        address.setCity("Bijeljina");
+
+        Cottage cottage = new Cottage();
+        cottage.setName("Vikendica na Drini");
+        cottage.setAddress(address);
+        cottage.setPromotionalDescription("Nema");
+        cottage.setProfilePicture(null);
+        cottage.setRules("Nema");
+        cottage.setRating(8.3);
+        cottage.setCapacity(3);
+
+        List<Tag> additionalServices = new ArrayList<>();
+        additionalServices.add(new Tag("wiFi"));
+        additionalServices.add(new Tag("washing machine"));
+        additionalServices.add(new Tag("terrace"));
+        additionalServices.add(new Tag("coffee maker"));
+        additionalServices.add(new Tag("tea maker"));
+        additionalServices.add(new Tag("heating"));
+        additionalServices.add(new Tag("towels"));
+        additionalServices.add(new Tag("hairdryer"));
+        additionalServices.add(new Tag("toilet paper"));
+        additionalServices.add(new Tag("flat-screen TV"));
+
+
+        PriceList priceList = new PriceList();
+        priceList.setHourlyRate(1400.00);
+        priceList.setDailyRate(3000.00);
+        priceList.setCancellationConditions("Nema uslova");
+
+        priceList.setBookable(cottage);
+
+        cottage.setPriceList(priceList);
+        cottage.setAdditionalServices(additionalServices);
+
+        cottageRepository.save(cottage);
+    }
+
     public List<CottageDTO> getDTOCottages() throws IOException {
         List<Cottage> cottages = cottageRepository.findAll();
         List<CottageDTO> cottagesDTO = new ArrayList<>();
@@ -104,6 +146,7 @@ public class CottageService {
         }
     }
 
+    @Transactional
     public List<CottageDTO> findAll() {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage : cottageRepository.findAll()) {

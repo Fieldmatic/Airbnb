@@ -14,8 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Adventure extends Bookable{
 
-    private Integer capacity;
-
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<String> fishingEquipment;

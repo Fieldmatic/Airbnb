@@ -42,5 +42,7 @@ public abstract class Bookable {
     private List<Reservation> reservations;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Period> periods;
+    @ManyToMany
+    private List<Client> subscribedClients;
 
 }

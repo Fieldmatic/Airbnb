@@ -109,6 +109,8 @@ public class AuthenticationController {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
 		}
 
+		if (userService.emailTaken(dto.getEmail())) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Email is taken!");
+
 		this.clientService.add(dto,multiPartFiles);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");

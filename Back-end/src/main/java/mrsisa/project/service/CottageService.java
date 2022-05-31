@@ -176,8 +176,9 @@ public class CottageService {
         return false;
     }
 
-    public void edit(CottageDTO dto, Long id) {
+    public boolean edit(CottageDTO dto, Long id) {
         Cottage cottage = cottageRepository.findById(id).orElse(null);
+        if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
         cottage.setName(dto.getName());
         cottage.getAddress().setState(dto.getAddress().getState());
         cottage.getAddress().setCity(dto.getAddress().getCity());
@@ -195,6 +196,7 @@ public class CottageService {
         if (dto.getTripleRooms() != 0) cottage.getRooms().put(3,dto.getTripleRooms());
         if (dto.getQuadRooms() != 0) cottage.getRooms().put(4,dto.getQuadRooms());
         cottageRepository.save(cottage);
+        return true;
     }
 
     public Cottage findOne(Long id) {

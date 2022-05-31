@@ -75,8 +75,9 @@ public class CottageController {
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
     public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
-        cottageService.edit(dto, id);
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        if (cottageService.edit(dto, id)) return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Cottage has pending reservations!");
+
     }
 
     @GetMapping(value = "/get/{id}")

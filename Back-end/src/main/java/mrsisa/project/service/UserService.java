@@ -28,6 +28,10 @@ public class UserService implements UserDetailsService {
         return personRepository.findByUsername(username);
     }
 
+    public boolean emailTaken(String email) {
+        return personRepository.findByEmail(email) != null;
+    }
+
     public boolean usernameAvailable(String username){
         Person person = personRepository.findByUsername(username);
         return person == null;

@@ -3,6 +3,7 @@ package mrsisa.project.service;
 import mrsisa.project.dto.ActionDTO;
 import mrsisa.project.model.Action;
 import mrsisa.project.model.Bookable;
+import mrsisa.project.model.Client;
 import mrsisa.project.repository.ActionRepository;
 import mrsisa.project.repository.BookableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class ActionService {
     @Autowired
     private BookableRepository bookableRepository;
 
+    @Autowired
+    private EmailService emailService;
+
+    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     @Transactional
     public boolean add(ActionDTO actionDTO) throws IOException {
         Action action = dtoToAction(actionDTO);
@@ -31,6 +37,8 @@ public class ActionService {
         if (actionPeriodAvailable(bookable, action)) {
             action.setBookable(bookable);
             bookable.getActions().add(action);
+            for (Client client: bookable.getSubscribedClients())
+            emailService.sendActionNotificationEmail(client, "One of your subscriptions is on action!",  "We have a great offer for you from " + FORMATTER.format(action.getStartDateTime()) + " to " + FORMATTER.format(action.getEndDateTime()) + " for one of your favorites " + bookable.getName());
             bookableRepository.save(bookable);
             return true;
         }

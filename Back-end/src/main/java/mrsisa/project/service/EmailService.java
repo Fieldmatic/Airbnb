@@ -1,5 +1,6 @@
 package mrsisa.project.service;
 
+import mrsisa.project.model.Client;
 import mrsisa.project.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -38,6 +39,13 @@ public class EmailService {
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
         mail.setSubject(title);
         return mail;
+    }
+
+    @Async
+    public void sendActionNotificationEmail(Client client, String title, String message) throws MailException {
+        SimpleMailMessage mail = getMailMessage(client, title);
+        mail.setText("Hello " + client.getName() + ",\n\n" + message + "\n\n" + "Kind regards,\nAirbnb Team");
+        javaMailSender.send(mail);
     }
 
     @Async

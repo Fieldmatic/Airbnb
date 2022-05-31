@@ -3,10 +3,7 @@ package mrsisa.project.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Data
@@ -21,4 +18,6 @@ public class Client extends Person {
     private List<Reservation> reservations;
     @OneToMany
     private List<Report> reports;
+    @ManyToMany
+    private List<Bookable> subscriptions;
 }

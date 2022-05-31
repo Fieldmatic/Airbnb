@@ -16,6 +16,17 @@ class AdventureService {
     getAllAdventures() {
         return axios.get(ADVENTURE_BASED_REST_API_URL + "/all");
     }
+
+    getAvailableAdventures(searchData) {
+        let city = searchData.city
+        let capacity = searchData.capacity
+        let startDate = searchData.startDate
+        let endDate = searchData.endDate
+        if (city === "") {
+            return axios.get(ADVENTURE_BASED_REST_API_URL + "/allAvailable/" + startDate + "/" + endDate + "/" + capacity)
+        }
+        else return axios.get(ADVENTURE_BASED_REST_API_URL + "/allAvailableByCityAndCapacity/" + startDate + "/" + endDate + "/" + city + "/" + capacity)
+    }
     
     getAdventure(id) {
         return axios.get(ADVENTURE_BASED_REST_API_URL + "/get/" + id, id)

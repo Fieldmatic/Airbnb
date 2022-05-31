@@ -1,25 +1,26 @@
 import React from "react"
-import CottageIcon from '@mui/icons-material/Cottage'
-import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat'
-import PhishingIcon from '@mui/icons-material/Phishing'
 import CottageService from "../../services/CottageService"
 import AdventureService from "../../services/AdventureService"
 import BoatService from "../../services/BoatService"
-import EntityCard from "./EntityCard"
 import { BiFilter } from 'react-icons/bi';
-import "./EntityCard.css"
 import Header from "../../Header";
-import SearchPopup from './SearchPopup'
-import { getFunctionName } from "@mui/utils/getDisplayName"
+import FilterPopup from './FilterPopup'
+import Entity from "../Bookable/Entity"
+import {useLocation} from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import {TextField} from "@material-ui/core";
+
 
 function AllEntities() {
     const [allCards, setAllCards] = React.useState([])
-    const [entityType, setEntityType] = React.useState("cottage")
     const [priority, setPriority] = React.useState("priceLowest")
-    const [cottageButtonStyle, setCottageButtonStyle] = React.useState("entityButton")
-    const [boatButtonStyle, setBoatButtonStyle] = React.useState("entityButton")
-    const [adventureButtonStyle, setAdventureButtonStyle] = React.useState("entityButton")
     const [filterPopup, setFilterPopup] = React.useState(false)
+    const location = useLocation();
+    const [searchQuery, setSearchQuery] = React.useState({
+        name : "",
+        address : "",
+        description : ""
+    })
     const [chosenParams, setChosenParams] = React.useState({
         priceValue: 0,
         rating: "anyRate",
@@ -30,50 +31,46 @@ function AllEntities() {
         boatType: []
     })
 
-    function showAllCottages() {
-        setEntityType("cottage")
-    }
-
-    function showAllBoats() {
-        setEntityType("boat")
-    }
-
-    function showAllAdventures() {
-        setEntityType("adventure")
-    }
-
     React.useEffect(() => {
-        if (entityType === "cottage") {
-            setCottageButtonStyle("entityButtonWithBorder")
-            setBoatButtonStyle("entityButton")
-            setAdventureButtonStyle("entityButton")
-            CottageService.getAllCottages().then((response) => {
-                setAllCards(response.data) 
-            })
-        } else if (entityType === "boat") {
-            setCottageButtonStyle("entityButton")
-            setBoatButtonStyle("entityButtonWithBorder")
-            setAdventureButtonStyle("entityButton")
-            BoatService.getAllBoats().then((response) => {
-                setAllCards(response.data) 
-            })
+        if (location.state.showAll === true) {
+            if (location.state.entityType === "cottage") {
+                CottageService.getAllCottages().then((response) => {
+                    setAllCards(response.data) 
+                })
+            } else if (location.state.entityType === "boat") {
+                BoatService.getAllBoats().then((response) => {
+                    setAllCards(response.data) 
+                })
+            } else {
+                AdventureService.getAllAdventures().then((response) => {
+                    setAllCards(response.data) 
+                })
+            }
         } else {
-            setCottageButtonStyle("entityButton")
-            setBoatButtonStyle("entityButton")
-            setAdventureButtonStyle("entityButtonWithBorder")
-            AdventureService.getAllAdventures().then((response) => {
-                setAllCards(response.data) 
-            })
+            //pozvan search po periodu
+            if (location.state.entityType === "cottage") {
+                CottageService.getAvailableCottages({startDate:location.state.startDateTime, endDate:location.state.endDateTime, city:location.state.city, capacity:location.state.guestsNumber}).then((response) => {
+                    setAllCards(response.data)
+                })
+            } else if (location.state.entityType === "boat") {
+                BoatService.getAvailableBoats({startDate:location.state.startDateTime, endDate:location.state.endDateTime, city:location.state.city, capacity:location.state.guestsNumber}).then((response) => {
+                    setAllCards(response.data)
+                })
+            } else if (location.state.entityType === "adventure"){
+                AdventureService.getAvailableAdventures({startDate:location.state.startDateTime, endDate:location.state.endDateTime, city:location.state.city, capacity:location.state.guestsNumber}).then((response) => {
+                    setAllCards(response.data)
+                })
+            }
         }
-    }, [entityType, priority])
+    }, [location.state.entityType, priority])
 
     function handleChange(event) {
-        const {name, value} = event.target
+        const {value} = event.target
         setPriority(value)
     }
 
     if (priority === "priceLowest" || priority === "ratingPrice") {
-        if (entityType === "adventure") {
+        if (location.state.entityType === "adventure") {
             allCards.sort((card1, card2) => (card1.hourlyRate > card2.hourlyRate) ? 1 : -1)
         } else {
             allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? 1 : -1)        }
@@ -82,7 +79,7 @@ function AllEntities() {
         allCards.sort((card1, card2) => (card1.rating > card2.rating) ? -1 : 1)
     }
     if (priority === "priceHighest") {
-        if (entityType === "adventure") {
+        if (location.state.entityType === "adventure") {
             allCards.sort((card1, card2) => (card1.hourlyRate > card2.hourlyRate) ? -1 : 1)
         } else {
             allCards.sort((card1, card2) => (card1.dailyRate > card2.dailyRate) ? -1 : 1)
@@ -97,8 +94,6 @@ function AllEntities() {
     function getNumberOfBeds(entity) {
         let bedsNum = 0;
         bedsNum += entity.singleRooms + entity.doubleRooms + entity.tripleRooms + entity.quadRooms;
-        console.log(bedsNum)
-        console.log("bedsNum")
         return bedsNum;
     }
 
@@ -114,42 +109,76 @@ function AllEntities() {
     
     //sortiranje po rating i number of reviews
     var cards;
-    if (entityType === "cottage") {
+    if (location.state.entityType === "cottage") {
         cards = allCards.filter(item => chosenParams.priceValue === 0 || item.dailyRate <= chosenParams.priceValue)
                         .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[1]) >= item.rating))
                         .filter(item => chosenParams.bedroomNum === "anyRooms" || (chosenParams.bedroomNum === "8+" && getNumberOfBedrooms(item) === 8) || parseFloat(chosenParams.bedroomNum) === getNumberOfBedrooms(item))
                         .filter(item => chosenParams.bedsNum === "anyBeds" || parseFloat(chosenParams.bedsNum) === getNumberOfBeds(item))
-                        .map(item => makeCard(item))  
-    } else if (entityType === "boat") {
+                        .map(item => filterCardBySearch(item)) 
+    } else if (location.state.entityType === "boat") {
         cards = allCards.filter(item => chosenParams.priceValue === 0 || item.dailyRate <= chosenParams.priceValue)
                         .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[1]) >= item.rating))
                         .filter(item => chosenParams.maxSpeed === "anyMaxSpeed" || (chosenParams.maxSpeed === "30+" && item.maxSpeed >= 30) || (chosenParams.maxSpeed === "50+" && item.maxSpeed >= 50) || (chosenParams.maxSpeed === "80+" && item.maxSpeed >= 80))
                         .filter(item => chosenParams.capacity === "anyCapacity" || (parseInt(chosenParams.capacity[0]) <= item.capacity && parseInt(chosenParams.capacity[2]) >= item.capacity) || (chosenParams.capacity === "7+" && item.capacity >= 7))
-                        .map(item => makeCard(item))  
+                        .map(item => filterCardBySearch(item)) 
     } else {
         cards = allCards.filter(item => chosenParams.priceValue === 0 || item.hourlyRate <= chosenParams.priceValue)
                         .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[1]) >= item.rating))
                         .filter(item => chosenParams.capacity === "anyCapacity" || (parseInt(chosenParams.capacity[0]) <= item.capacity && parseInt(chosenParams.capacity[2]) >= item.capacity) || (chosenParams.capacity === "7+" && item.capacity >= 7))
-                        .map(item => makeCard(item))   
+                        .map(item => filterCardBySearch(item))   
 
+    }
+
+    function filterCardBySearch(item) {
+        if (checkCard(item)) return makeCard(item)
+    }
+
+    function checkCard(item) {
+        let i = 0;
+        if (searchQuery.name === "" || ifCardContainsName(item.name)) i++;;
+        if (searchQuery.description === "" || ifCardContainsDescription(item.promotionalDescription)) i++;
+        if (searchQuery.address === "" || ifCardContainsAddress(item.address)) i++;
+
+        if (i === 3) return true;
+        else return false;
+    }
+
+    function ifCardContainsName(name) {
+        if (searchQuery.name !=="" && name.toLowerCase().includes(searchQuery.name.toLowerCase()))
+            return true;
+    }
+
+    function ifCardContainsDescription(description) {
+        if (searchQuery.description !=="" && description.toLowerCase().includes(searchQuery.description.toLowerCase()))
+            return true;
+    }
+
+    function ifCardContainsAddress(address) {
+        if (searchQuery.address !=="" && (
+            address.street.toLowerCase().includes(searchQuery.address.toLowerCase()) || 
+            address.city.toLowerCase().includes(searchQuery.address.toLowerCase()) ||
+            address.state.toLowerCase().includes(searchQuery.address.toLowerCase()) 
+            ))
+            return true;
     }
     
     function makeCard(item) {
-        return (<EntityCard
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                rating={item.rating}
-                dailyRate={item.dailyRate}
-                hourlyRate={item.hourlyRate}
-                address={item.address}
-                promotionalDescription={item.promotionalDescription}
-                entity={entityType}
+        return (<Entity
+            key={item.id}
+            id={item.id}
+            name={item.name}
+            rating={item.rating}
+            dailyRate={item.dailyRate}
+            hourlyRate={item.hourlyRate}
+            address={item.address}
+            promotionalDescription={item.promotionalDescription}
+            entity={location.state.entityType}
+            user="client"
             />)
     }
 
     var maximalPrice, minimalPrice;
-    if (entityType === "adventure") {
+    if (location.state.entityType === "adventure") {
         maximalPrice = Math.max(...allCards.map(o => o.hourlyRate))
         //minimalPrice = Math.min(...allCards.map(o => o.hourlyRate))
     } else {
@@ -157,19 +186,27 @@ function AllEntities() {
         //minimalPrice = Math.min(...allCards.map(o => o.dailyRate))
     }
     //console.log(minimalPrice)
+
+    function handleSearch(event) {
+        const {name, value} = event.target
+        setSearchQuery(prevState => ({
+            ...prevState,
+            [name] : value
+        }))
+
+        console.log(searchQuery)
+    }
+
     
 
     return (
         <div>
-            <Header />
-            <div className="entities-view">
-                {filterPopup && 
-                <SearchPopup trigger={filterPopup} setTrigger={setFilterPopup} value={entityType} getFilters={setChosenParams} maxPrice = {maximalPrice}></SearchPopup>
-                }
-                <div className="searchFilterSort">
-                    <div className="sort">
+        <Header />
+        <div className="show_entities">
+            {filterPopup && <FilterPopup trigger={filterPopup} setTrigger={setFilterPopup} value={location.state.entityType} getFilters={setChosenParams} maxPrice = {maximalPrice}></FilterPopup>}
+            <div className="search_sort_filter">
+                <div className="sort">
                         <select 
-                            className="form--type"
                             name="type"
                             onChange={handleChange}
                         >
@@ -178,27 +215,63 @@ function AllEntities() {
                             <option value="rating">Rating</option>
                             <option value="ratingPrice">Best rating and lowest price</option>
                         </select>
+                </div>         
+                <div className='search'>
+                    <div>
+                        <TextField
+                            className="search-field"
+                            name="name"
+                            value={searchQuery.name}
+                            onChange = {handleSearch}
+                            variant="standard"
+                            label="Name"
+                            width="fit-content"
+                            InputProps={{
+                                disableUnderline: true,
+                            }}
+
+                        />
+                        <SearchIcon className="searchIcon"/>
                     </div>
-                    <div className="filter">
+            
+                    <div>
+                        <TextField
+                            className="search-field"
+                            name="address"
+                            value={searchQuery.address}
+                            onChange = {handleSearch}
+                            variant="standard"
+                            label="Address"
+                            InputProps={{
+                                disableUnderline: true,
+                            }}
+                        />
+                        <SearchIcon className="searchIcon"/>
+                    </div>
+
+                    <div>
+                    <TextField
+                            className="search-field"
+                            name="description"
+                            value={searchQuery.description}
+                            onChange = {handleSearch}
+                            variant="standard"
+                            label="Description"
+                            InputProps={{
+                                disableUnderline: true
+                            }}
+                        />                        
+                        <SearchIcon className="searchIcon"/> 
+                    </div>
+      
+                </div> 
+                <div className="filter">
                         <button onClick={openPopup}> <BiFilter/> Filters</button>
-                    </div>
                 </div>
-                <div className="entities">
-                    <button className={cottageButtonStyle} onClick={showAllCottages}> 
-                        <CottageIcon fontSize="large"></CottageIcon>
-                        Cottages
-                    </button>
-                    <button className={boatButtonStyle} onClick={showAllBoats}>
-                        <DirectionsBoatIcon fontSize="large"></DirectionsBoatIcon>
-                        Boats
-                    </button>
-                    <button className={adventureButtonStyle} onClick={showAllAdventures}>
-                        <PhishingIcon fontSize="large"></PhishingIcon>                
-                        Adventures
-                    </button>
-                </div>
-                {cards}
             </div>
+            <div className="numberOfEntities"><h4>{cards.length} {location.state.entityType}{cards.length !== 1? "s" : ""} found</h4></div>
+            {cards}
+        </div>
         </div>
     )
 }

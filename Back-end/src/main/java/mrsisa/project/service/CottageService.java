@@ -18,6 +18,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -106,6 +109,30 @@ public class CottageService {
         for (Cottage cottage : cottageRepository.findAll()) {
             cottagesDTO.add(new CottageDTO(cottage));
         }
+        return cottagesDTO;
+    }
+
+    public List<CottageDTO> getAvailableCottages(String startDate, String endDate) {
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);
+
+        List<CottageDTO> cottagesDTO = new ArrayList<>();
+        for (Cottage cottage: cottageRepository.findAll()) {
+            for (Period period : cottage.getPeriods()) {
+                if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
+                    cottagesDTO.add(new CottageDTO(cottage));
+                    break;
+                }
+            }
+        }
+        return cottagesDTO;
+    }
+
+    public List<CottageDTO> getAvailableCottagesByCity(String city, String startDate, String endDate) {
+        List<CottageDTO> cottagesDTO = new ArrayList<>();
+        for (CottageDTO cottage: getAvailableCottages(startDate, endDate))
+            if (cottage.getAddress().getCity().equals(city))
+                cottagesDTO.add(cottage);
         return cottagesDTO;
     }
 

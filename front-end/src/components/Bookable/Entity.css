@@ -1,9 +1,9 @@
 .entities {
     display: flex;
     position: relative;
-    margin: 20px;
     padding: 20px;
-    border-radius: 1px solid lightgray;
+    border: 2px solid rgba(0, 0, 0, 0.220);
+    border-radius: 20px;
     cursor: pointer;
 }
 
@@ -23,6 +23,7 @@
     flex-direction: column;
     justify-content: space-between;
     padding-left: 20px;
+    width: 100%;
 }
 
 .entity__heart {
@@ -32,52 +33,83 @@
 }
 
 .entity__infoTop {
-    width: 40vw;
+    width: fit-content;
 }
 
-.entity__infoTop h3 {
-    font-weight: 300;
-    margin-top: 10px;
+.entity_description {
+    border-top: 1px solid #FF5A5F;
 }
 
-.entity__infoTop p {
-    margin-top: 10px;
-    font-size: 13px;
-    color: gray;
-}
-
-.entity__location{
+.entity__location {
     display: flex;
-    align-items: center;
-}
-.location_icon{
-    margin-bottom: 20px;
+    align-items: flex-start;
+    font-size: medium;
 }
 
 .entity__infoBottom {
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.entity_explore_button {
+    background-color: #FF5A5F;
 }
 
 .entity__star {
     color: red;
 }
 
-.entity__stars {
+.location_icon {
+    color: red;
+}
+
+.entity__stars > div {
     display: flex;
+    flex-direction: row;
     align-items: center;
 }
 
 
-.entity__price p {
-    text-align: right;
+.entity_rating_value {
+    font-size: x-large;
+    font-weight: bolder;
 }
 
+
 .entity__price {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: x-large;
+    font-weight: bold;
 }
+
+
+.entity_price_per {
+    font-size: large;
+    font-weight: 500;
+    color: rgba(18, 12, 12, 0.711);
+}
+
+.entity_right_corner {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    gap: 20px;
+}
+
+.owner__actions {
+    display: flex;
+    gap: 5px;
+}
+
+.owner__actions > Button {
+    width: fit-content;
+    border-radius: 7px;
+}
+
 
 @media only screen and (max-width: 812px) {
 
@@ -115,9 +147,5 @@
     .entity__price p {
         display: none;
     }
-
-    
-  
-    
     
 }

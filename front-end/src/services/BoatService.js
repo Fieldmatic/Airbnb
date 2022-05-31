@@ -22,6 +22,17 @@ class BoatService {
         return axios.get(BOAT_BASED_REST_API_URL + "/all");
     }
 
+    getAvailableBoats(searchData) {
+        let city = searchData.city
+        let capacity = searchData.capacity
+        let startDate = searchData.startDate
+        let endDate = searchData.endDate
+        if (city === "") {
+            return axios.get(BOAT_BASED_REST_API_URL + "/allAvailable/" + startDate + "/" + endDate + "/" + capacity)
+        }
+        else return axios.get(BOAT_BASED_REST_API_URL + "/allAvailableByCityAndCapacity/" + startDate + "/" + endDate + "/" + city + "/" + capacity)
+    }
+
     getNumberOfBoatReviews(id) {
         return axios.get(BOAT_BASED_REST_API_URL + "/reviewsNumber/" + id);
     }

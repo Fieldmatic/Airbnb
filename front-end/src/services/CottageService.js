@@ -17,12 +17,23 @@ class CottageService {
     getCottage(id) {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/get/" + id, id)
     }
+
     updateCottage(cottage, id){
         return axios.put(COTTAGE_BASED_REST_API_URL + "/edit/" + id, cottage)
     }
 
     getAllCottages() {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/all");
+    }
+
+    getAvailableCottages(searchData) {
+        let city = searchData.city
+        let startDate = searchData.startDate
+        let endDate = searchData.endDate
+        if (city === "") {
+            return axios.get(COTTAGE_BASED_REST_API_URL + "/allAvailable/" + startDate + "/" + endDate)
+        }
+        else return axios.get(COTTAGE_BASED_REST_API_URL + "/allAvailableByCity/" + startDate + "/" + endDate + "/" + city)
     }
 
     getOwnerCottages(){

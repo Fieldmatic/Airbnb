@@ -17,6 +17,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -77,6 +80,33 @@ public class BoatService {
         }
         return boatsDTO;
     };
+
+    public List<BoatDTO> getAvailableBoats(String startDate, String endDate, Integer capacity) {
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);
+
+        List<BoatDTO> boatsDTO = new ArrayList<>();
+        for (Boat boat: boatRepository.findAll()) {
+            if (boat.getCapacity() >= capacity) {
+                for (Period period : boat.getPeriods()) {
+                    if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
+                        boatsDTO.add(new BoatDTO(boat));
+                        break;
+                    }
+                }
+            }
+        }
+        return boatsDTO;
+    }
+
+    public List<BoatDTO> getAvailableBoatsByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
+        List<BoatDTO> boatsDTO = new ArrayList<>();
+        for (BoatDTO boat: getAvailableBoats(startDate, endDate, capacity))
+            if (boat.getAddress().getCity().equals(city))
+                boatsDTO.add(boat);
+        return boatsDTO;
+    }
+
 
     public List<String> addPictures(Boat boat, MultipartFile[] multipartFiles) throws IOException {
         List<String> paths = new ArrayList<>();

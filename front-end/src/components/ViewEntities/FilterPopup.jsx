@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import './SearchPopup.css'
+import './FilterPopup.css'
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function SearchPopup(props) {

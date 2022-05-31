@@ -56,6 +56,18 @@ public class AdventureController {
         }
         return new ResponseEntity<>(adventuresDTO, HttpStatus.OK);
     }
+
+    @GetMapping(value="/allAvailableByCityAndCapacity/{startDate}/{endDate}/{city}/{capacity}")
+    public ResponseEntity<List<AdventureDTO>> getAvailableAdventuresByCityAndCapacity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city, @PathVariable Integer capacity) {
+        List<AdventureDTO> availableAdventures = adventureService.getAvailableAdventuresByCityAndCapacity(city, capacity, startDate, endDate);
+        return new ResponseEntity<>(availableAdventures, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/allAvailable/{startDate}/{endDate}/{capacity}")
+    public ResponseEntity<List<AdventureDTO>> getAvailableAdventures(@PathVariable String startDate, @PathVariable String endDate, @PathVariable Integer capacity) {
+        List<AdventureDTO> availableAdventures = adventureService.getAvailableAdventures(startDate, endDate, capacity);
+        return new ResponseEntity<>(availableAdventures, HttpStatus.OK);
+    }
     
     @PutMapping(value = "/edit/{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")

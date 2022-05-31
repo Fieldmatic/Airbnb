@@ -119,6 +119,10 @@
     width: 45%;
 }
 
+.form--phoneInputClient{
+    width: 100%;
+}
+
 .form-account-type{
     width: 45%;
 }

@@ -105,6 +105,7 @@ public class ClientService {
         client.setEmail(dto.getEmail());
         client.setPhoneNumber(dto.getPhoneNumber());
         client.setPoints(0);
+        client.setPenalties(0);
         List<Role> roles = roleService.findByName("ROLE_CLIENT");
         client.setRoles(roles);
         return client;

@@ -129,8 +129,8 @@ public class AdminService {
      * @apiNote Use this method only one time to initialize default admin i system.
      * */
     public void createFirstAdmin() {
+        if (findAdminByUsername("admin") != null) return;
         roleService.createRoles();
-
         Address address = new Address();
         address.setZipCode("123123");
         address.setStreet("Arse Teodorovica 2");

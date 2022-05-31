@@ -24,6 +24,7 @@ export default function Header(){
                 if (response.data === "ROLE_COTTAGE_OWNER") setRole("COTTAGE_OWNER")
                 else if (response.data === "ROLE_BOAT_OWNER") setRole("BOAT_OWNER")
                 else if (response.data ==="ROLE_INSTRUCTOR") setRole("INSTRUCTOR")
+                else if (response.data ==="ROLE_ADMIN") setRole("ADMIN")
                 else setRole("CLIENT")
             })
         }
@@ -60,6 +61,7 @@ export default function Header(){
                 <Link to={'/addCottage'} style={{textDecoration: 'none', color:'black'}}>Add Cottage</Link>
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
                 <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
+                <Link to={'/hostReservations'} style={{textDecoration: 'none', color:'black'}}>Reservation History</Link>
             </div>
         )
     }
@@ -70,6 +72,7 @@ export default function Header(){
                 <Link to={'/addBoat'} style={{textDecoration: 'none', color:'black'}}>Add Boat</Link>
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
                 <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
+                <Link to={'/hostReservations'} style={{textDecoration: 'none', color:'black'}}>Reservation History</Link>
             </div>
         )
     }
@@ -80,6 +83,7 @@ export default function Header(){
                 <Link to={'/addAdventure'} style={{textDecoration: 'none', color:'black'}}>Add Adventure</Link>
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
                 <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
+                <Link to={'/hostReservations'} style={{textDecoration: 'none', color:'black'}}>Reservation History</Link>
             </div>
         )
     }

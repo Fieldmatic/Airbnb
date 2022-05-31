@@ -108,7 +108,7 @@ function ActionPanel (props) {
                     <ThemeProvider theme={muiStyles.timePickerTheme}>
                     <TimePicker
                         ampm={false}
-                        minutesStep={30}
+                        minutesStep={60}
                         label = "Check in"
                         value={formData.startTime}
                         onChange= {(newValue) => {
@@ -191,7 +191,7 @@ function ActionPanel (props) {
                                 );
                             }}
                             ampm={false}
-                            minutesStep={30}
+                            minutesStep={60}
                             color="#FF5A5F"
                             label="Expiration date"
                             className='expirationDatePicker'

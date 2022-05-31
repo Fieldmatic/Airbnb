@@ -9,6 +9,20 @@ const muiStyles = () => {
         },
       });
 
+    const formLabelTheme = createTheme ({
+      palette: {
+        primary: {
+          main: '#000000',
+        },
+      },
+      
+    })
+    const radioStyle = {
+      '&, &.Mui-checked': {
+        color: '#FF5A5F',
+      },
+    }
+
     const style = {
         "& label": {
             color: "black"
@@ -42,7 +56,9 @@ const muiStyles = () => {
  
     return {
         style,
-        timePickerTheme
+        timePickerTheme,
+        formLabelTheme,
+        radioStyle
     };
 }
 

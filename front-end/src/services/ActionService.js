@@ -15,7 +15,7 @@ class ActionService {
     }
 
     getActions(id){
-        return axios.get(ACTION_BASED_REST_API_URL + "/getActions/" + id, id)
+        return axios.get(ACTION_BASED_REST_API_URL + "/getActions/" + id)
     }
 
 }

@@ -3,6 +3,10 @@ import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import LoginRegisterService from '../../services/LoginRegisterService';
 import { Navigate } from "react-router-dom";
 import Header from "../../Header";
+import muiStyles from '../utils/muiStyles';
+import { TextField } from '@mui/material';
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 export default function OwnerRegistration() {
     const [formData, setFormData] = React.useState (
@@ -104,96 +108,146 @@ export default function OwnerRegistration() {
             <div className="form-container">
                 <form className="form" onSubmit={handleSubmit}>
                 <h1 className='form--header'>Client Registration</h1>
-                <input
+                <div className='form--pair'>
+                <TextField
+                    sx={muiStyles.style} 
+                    label = "Name"
+                    variant='outlined'
+                    id="standard-basic"
                     className="form--input"
-                    type = "text"
-                    placeholder = "Name"
+                    type = "text"           
                     onChange = {handleChange}
                     name = "name"
                     value = {formData.name}   
                 />
-                <input
+                <TextField
+                    sx={muiStyles.style} 
+                    variant='outlined'
                     className="form--input"
                     type = "text"
-                    placeholder = "Surname"
+                    label = "Surname"
                     onChange = {handleChange}
                     name = "surname"
                     value = {formData.surname}   
                 />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "State"
-                    onChange = {handleAddressChange}
-                    name = "state"
-                    value = {formData.address.state}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "City"
-                    onChange = {handleAddressChange}
-                    name = "city"
-                    value = {formData.address.city}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Zip"
-                    onChange = {handleAddressChange}
-                    name = "zipCode"
-                    value = {formData.address.zipCode}          
-                />
-                <input 
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Street"
-                    onChange = {handleAddressChange}
-                    name = "street"
-                    value = {formData.address.street}          
-                />
-                <input
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Username"
-                    onChange = {handleChange}
-                    name = "username"
-                    value = {formData.username}   
-                />
-                <input
-                    className="form--input"
-                    type = "password"
-                    placeholder = "Password"
-                    onChange = {handleChange}
-                    name = "password"
-                    value = {formData.password}   
-                />
-                <input
-                    className="form--input"
-                    type = "password"
-                    placeholder = "Retype Password"
-                    onChange = {handleChange}
-                    name = "passwordRetype"
-                    value = {formData.passwordRetype}   
-                />
-                <input
-                    className="form--input"
-                    type = "text"
-                    placeholder = "Email"
-                    onChange = {handleChange}
-                    name = "email"
-                    value = {formData.email}   
-                />
-                <input
-                    className="form--input"
-                    type = "text"
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Country"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "state"
+                        value = {formData.address.state}          
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Zip"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "zipCode"
+                        value = {formData.address.zipCode}          
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "City"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "city"
+                        value = {formData.address.city}          
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Street"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleAddressChange}
+                        name = "street"
+                        value = {formData.address.street}          
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Username"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        placeholder = "Username"
+                        onChange = {handleChange}
+                        name = "username"
+                        value = {formData.username}   
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Email"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "text"
+                        onChange = {handleChange}
+                        name = "email"
+                        value = {formData.email}   
+                    />
+                </div>
+                <div className='form--pair'>
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Password"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "password"
+                        onChange = {handleChange}
+                        name = "password"
+                        value = {formData.password}   
+                    />
+                    <TextField
+                        sx={muiStyles.style} 
+                        label = "Retype password"
+                        variant='outlined'
+                        id="standard-basic"
+                        className="form--input"
+                        type = "password"
+                        onChange = {handleChange}
+                        name = "passwordRetype"
+                        value = {formData.passwordRetype}   
+                    />
+                </div>
+                <div className='form--pair'>
+                <PhoneInput
+                    className="form--phoneInputClient"
+                    onChange = {(value) => {
+                        setFormData(prevFormData => {
+                        return {
+                            ...prevFormData,
+                            phoneNumber:value
+                        }
+                        });
+                }}
+                    
                     placeholder = "Phone number"
-                    onChange = {handleChange}
                     name = "phoneNumber"
                     value = {formData.phoneNumber}   
-                />       
+                />
+                </div>
+                <div className='form--pair'>
                 <Dropzone
-                    style={{ minWidth: "100%", margin:"20px", fontSize:"18px" }}
+                    style={{ minWidth: "100%", fontSize:"18px" }}
                     onChange={updateFiles}
                     minHeight="20vh"
                     onClean={handleClean}
@@ -220,7 +274,10 @@ export default function OwnerRegistration() {
                     onClose={(e) => handleSee(undefined)}
                     />
                 </Dropzone>
+                </div>  
+                <div className='form--pair'>
                 <button className="form--submit">Submit</button>  
+                </div>
             </form>
             </div>
         </div>

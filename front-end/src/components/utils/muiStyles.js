@@ -80,7 +80,20 @@ const muiStyles = () => {
             },
             svg : {color : '#FF5A5F'}
             
-          }
+          },
+          select: {
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'red',
+            },
+            
+          },
+          '.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline' :{
+           borderColor: "red",
+        }
+          
+          
+            
+
       }
             
  

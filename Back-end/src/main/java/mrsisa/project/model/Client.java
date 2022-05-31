@@ -19,4 +19,6 @@ public class Client extends Person {
     private Integer points;
     @OneToMany(cascade=CascadeType.ALL)
     private List<Reservation> reservations;
+    @OneToMany
+    private List<Report> reports;
 }

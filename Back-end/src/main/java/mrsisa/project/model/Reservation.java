@@ -25,4 +25,7 @@ public class Reservation {
     private Client client;
     @ManyToOne
     private Bookable bookable;
+
+    @OneToOne
+    private Report report;
 }

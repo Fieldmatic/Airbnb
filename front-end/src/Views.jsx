@@ -43,7 +43,7 @@ const Views = () => {
       <Route path = "/viewHostEntities" element = {<ViewHostEntities />} />
       <Route path = "/addActions/:id" element = {< Actions />}/>
       <Route path = "/addAvailabilityPeriods/:id" element = {< Periods />}/>
-      <Route path = "/hostReservations/:id" element = {<ReservationHistory/>}/>
+      <Route path = "/hostReservations" element = {<ReservationHistory/>}/>
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
       <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />

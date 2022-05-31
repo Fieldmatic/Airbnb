@@ -21,6 +21,11 @@ public class ReservationDTO {
         this.active = reservation.getActive();
         this.clientId = reservation.getClient().getId();
         this.bookableId = reservation.getBookable().getId();
+        try {
+            this.reportId = reservation.getReport().getId();
+        }catch (NullPointerException ne){
+            this.reportId = null;
+        }
     }
 
     private Long id;
@@ -33,5 +38,6 @@ public class ReservationDTO {
     private Boolean active;
     private Long clientId;
     private Long bookableId;
+    private Long reportId;
     private final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 }

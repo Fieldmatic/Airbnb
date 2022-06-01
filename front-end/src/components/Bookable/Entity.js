@@ -1,6 +1,6 @@
 import React from 'react';
 import "./Entity.css";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarIcon from '@mui/icons-material/Star';
 import {useNavigate, Navigate} from "react-router-dom";
 import CottageService from '../../services/CottageService';
@@ -17,6 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import ReservationPopup from './ReservationPopup';
+import ClientService from '../../services/ClientService';
 
 
 
@@ -28,6 +29,7 @@ function entity(props) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [reservePopup, setReservePopup] = React.useState(false);
+    const [heartColor, setHeartColor] = React.useState("#A8A8A8")
     const navigate = useNavigate()
 
     const handleClickOpen = () => {
@@ -106,11 +108,28 @@ function entity(props) {
         return Math.abs(new Date(props.endDateTime) - new Date(props.startDateTime)) / 36e5;
     }
 
+
+    function fillHeart() {
+        if (heartColor === "#FF5A5F") {
+            setHeartColor("#A8A8A8")
+            ClientService.unsubscribeFromEntity(props.id).then(response =>
+                console.log("obrisan"))
+        } else {
+            setHeartColor("#FF5A5F")
+            ClientService.subscribeOnEntity(props.id).then(response =>
+                console.log("top"))
+        }
+    }
+
     return (
         <div className="entities">
             {profileImage && <img src={URL.createObjectURL(profileImage)}  alt=""/>}
-            <FavoriteBorderIcon className="entity__heart" />
-          
+            <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColor,
+        '&:hover': {
+            backgroundColor: 'lightgray',
+            color: '#FF5A5F',
+                },
+        }}/>          
             <div className="entity__info">
                 <div className="entity__infoTop">
                     <h2>{props.name}</h2>

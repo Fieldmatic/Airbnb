@@ -18,6 +18,6 @@ public class Client extends Person {
     private List<Reservation> reservations;
     @OneToMany
     private List<Report> reports;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private List<Bookable> subscriptions;
 }

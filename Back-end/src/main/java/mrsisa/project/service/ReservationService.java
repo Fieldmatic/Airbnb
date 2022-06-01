@@ -40,6 +40,9 @@ public class ReservationService {
     @Autowired
     PeriodService periodService;
 
+    @Autowired
+    EmailService emailService;
+
 
     @Transactional
     public void addQuick(Long actionId, Principal userP) throws IOException {
@@ -60,6 +63,7 @@ public class ReservationService {
         client.getReservations().add(reservation);
 
         periodService.splitPeriodAfterReservation(reservation);
+        emailService.sendReservationMail(client, reservation);
     }
 
     @Transactional

@@ -13,6 +13,15 @@ class ReservationService {
         })
     }
 
+    addReservation(dto){
+        return axios.post(RESERVATION_BASED_REST_API_URL + "/add", dto, 
+        {
+           headers: {
+               'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+           } 
+        })
+    }
+
     getReservations(){
         return axios.get(RESERVATION_BASED_REST_API_URL + "/getReservations",
         {

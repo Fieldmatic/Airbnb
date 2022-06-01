@@ -1,21 +1,22 @@
 package mrsisa.project.service;
 import mrsisa.project.dto.PeriodDTO;
-import mrsisa.project.model.Action;
-import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Period;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.PeriodRepository;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PeriodService {
@@ -24,6 +25,19 @@ public class PeriodService {
 
     @Autowired
     private PeriodRepository periodRepository;
+
+    @Transactional
+    public void createPeriodForCottage(Cottage cottage) {
+
+        Period period = new Period();
+        period.setStartDateTime(LocalDateTime.now());
+        period.setEndDateTime(LocalDateTime.now().plusDays(20));
+        period.setBookable(cottage);
+
+        Bookable bookable = bookableRepository.getById(cottage.getId());
+        bookable.getPeriods().add(period);
+        periodRepository.save(period);
+    }
 
     @Transactional
     public String add(PeriodDTO periodDTO) throws IOException {
@@ -37,6 +51,28 @@ public class PeriodService {
             return "success";
         }
         return answer;
+    }
+
+    public void splitPeriodAfterReservation(Reservation reservation)  {
+        Period firstPeriod = periodRepository.findPeriodByStartDateTimeIsLessThanEqualAndEndDateTimeIsGreaterThanEqual(reservation.getStartDateTime(), reservation.getEndDateTime());
+
+        if (diffBetweenDatesMoreThanHour(firstPeriod.getStartDateTime(), reservation.getStartDateTime())) {
+            if (diffBetweenDatesMoreThanHour(reservation.getEndDateTime(), firstPeriod.getEndDateTime())) {
+                Period secondPeriod = new Period();
+                secondPeriod.setStartDateTime(reservation.getEndDateTime());
+                secondPeriod.setEndDateTime(firstPeriod.getEndDateTime());
+                secondPeriod.setBookable(firstPeriod.getBookable());
+                reservation.getBookable().getPeriods().add(secondPeriod);
+                extendPeriod(secondPeriod, reservation.getEndDateTime(), firstPeriod.getEndDateTime());
+            }
+            extendPeriod(firstPeriod, firstPeriod.getStartDateTime(), reservation.getStartDateTime());
+        }
+        else
+            periodRepository.delete(firstPeriod);
+    }
+
+    private boolean diffBetweenDatesMoreThanHour(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return Duration.between(startDateTime, endDateTime).toHours() >= 1;
     }
 
     private String checkPeriodMatching(LocalDateTime start, LocalDateTime end, Bookable bookable) {

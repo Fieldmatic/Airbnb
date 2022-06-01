@@ -16,6 +16,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import ReservationPopup from './ReservationPopup';
+
 
 
 function entity(props) {
@@ -25,6 +27,7 @@ function entity(props) {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [reservePopup, setReservePopup] = React.useState(false);
     const navigate = useNavigate()
 
     const handleClickOpen = () => {
@@ -33,6 +36,7 @@ function entity(props) {
 
     const handleClose = () => {
     setOpen(false);
+    setReservePopup(false)
     };
 
     React.useEffect(() => {
@@ -77,6 +81,29 @@ function entity(props) {
         else if (props.entity === "boat") BoatService.deleteBoat(props.id)
         handleClose()
         props.setEntitiesEdited(true)
+    }
+
+    function openReservePopup() {
+        setReservePopup(true);
+    };
+
+
+    function getPrice() {
+        let price;
+        let hours = getNumberOfHours()
+        let days = Math.floor(hours / 24)
+        let leftHours = hours % 24
+        if (props.entity === "cottage" || props.entity === "boat") {
+            price = days * props.dailyRate + leftHours * props.hourlyRate
+        } else {
+            //adventure
+            price = hours * props.hourlyRate
+        }
+        return price
+    }
+
+    function getNumberOfHours() {
+        return Math.abs(new Date(props.endDateTime) - new Date(props.startDateTime)) / 36e5;
     }
 
     return (
@@ -171,18 +198,28 @@ function entity(props) {
                             <span className='entity_price_value'>€{props.entity === "adventure"? props.hourlyRate : props.dailyRate} </span>
                             <span className='entity_price_per'>{props.entity === "adventure" ? '/hour' : '/night'}</span>
                         </div>
-                        <div>
-                        <Button className="entity_explore_button" sx = {{
-                             backgroundColor : "#FF5A5F", 
-                             width : "10vw",
-                             color:"white",
-                             '&:hover': {
-                                backgroundColor: 'black',
-                                color: 'white',
-                                     },
-                                 }} variant='outlined'  onClick={redirectToEntityDetails}> Explore</Button>
+                        <div className='exploreAndReserveButtons'>
+                            <Button className="entity_explore_button" sx = {{
+                                backgroundColor : props.user === "client" && !props.showAll ? "#D4AF37" : "#FF5A5F", 
+                                width : "10vw",
+                                color:"white",
+                                '&:hover': {
+                                    backgroundColor: 'black',
+                                    color: 'white',
+                                        },
+                                    }} variant='outlined'  onClick={redirectToEntityDetails}> Explore</Button>
+                            {props.user === "client" && !props.showAll && <Button sx = {{
+                                backgroundColor : "#FF5A5F", 
+                                width : "10vw",
+                                color:"white",
+                                '&:hover': {
+                                    backgroundColor: 'black',
+                                    color: 'white',
+                                        },
+                                    }} variant='outlined'  onClick={openReservePopup}> Reserve</Button>}
         
-                </div>
+                        </div>
+                        <ReservationPopup handleClose={handleClose} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>
                     </div>
                 </div>
             </div>

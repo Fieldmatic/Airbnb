@@ -29,6 +29,7 @@ public abstract class Bookable {
     private String profilePicture;
     private String rules;
     private Double rating;
+    private Integer capacity;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Tag> additionalServices;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

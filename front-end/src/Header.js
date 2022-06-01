@@ -11,6 +11,12 @@ import LoginRegisterService from './services/LoginRegisterService';
 import { DateRangePicker } from 'react-date-range';
 import PeopleIcon from '@mui/icons-material/People';
 import {Link, useNavigate} from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ThemeProvider} from '@mui/material/styles';
+import { TextField } from '@mui/material';
+import muiStyles from './components/utils/muiStyles';
 
 
 
@@ -23,6 +29,8 @@ export default function Header(){
     const [searchData, setSearchData] = useState({
         startDate : new Date(),
         endDate : new Date(),
+        startTime : new Date(2022,1,1,11,0,0),
+        endTime :new Date(2022,1,1,11,0,0),
         city : "",
         guestsNumber : 1
     })
@@ -122,8 +130,8 @@ export default function Header(){
 
     function handleSearch() {
         navigate('/showEntities',{state: {
-            startDateTime: toISODate(searchData.startDate),
-            endDateTime: toISODate(searchData.endDate),
+            startDateTime:toISODate(new Date(searchData.startDate.getFullYear(),searchData.startDate.getMonth(), searchData.startDate.getDate(), searchData.startTime.getHours(), searchData.startTime.getMinutes(),searchData.startTime.getSeconds())),
+            endDateTime:toISODate(new Date(searchData.endDate.getFullYear(),searchData.endDate.getMonth(), searchData.endDate.getDate(), searchData.endTime.getHours(), searchData.endTime.getMinutes(),searchData.endTime.getSeconds())),
             guestsNumber : searchData.guestsNumber,
             city :  searchData.city, entityType: entityType, 
             showAll: false}});
@@ -204,41 +212,97 @@ export default function Header(){
             {popupState && (
                     <div className='header-search'>
                         <div>
-                        <DateRangePicker
-                            ranges={[selectionRange]}
-                            minDate={new Date()}
-                            rangeColors={["#FD5B61"]}
-                            onChange={handleDateChange}
-                        />
-                        <div className='entityType'>
-                                <span>Type of Entity</span>
-                                <div className="entityTypeRdb">
-                                <input 
-                                    type="radio"
-                                    id="cottage"
-                                    value="cottage"
-                                    checked={entityType === "cottage"}
-                                    onChange={handleEntityTypeChanged}
-                                />
-                                <label htmlFor="cottage">Cottage</label>
-                    
-                                <input 
-                                    type="radio"
-                                    id="boat"
-                                    value="boat"
-                                    checked={entityType === "boat"}
-                                    onChange={handleEntityTypeChanged}
-                                />
-                                <label htmlFor="boat">Boat</label>
-                    
-                                <input 
-                                    type="radio"
-                                    id="adventure"
-                                    value="adventure"
-                                    checked={entityType === "adventure"}
-                                    onChange={handleEntityTypeChanged}
-                                />
-                                <label htmlFor="adventure">Adventure</label>
+                            <DateRangePicker
+                                ranges={[selectionRange]}
+                                minDate={new Date()}
+                                rangeColors={["#FD5B61"]}
+                                onChange={handleDateChange}
+                            />
+
+                            <div className='searchTime'>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <ThemeProvider theme={muiStyles.timePickerTheme}>
+                                    <TimePicker
+                                        renderInput={(params) => {
+                                            return (
+                                            <TextField
+                                                {...params}
+                                                sx={muiStyles.style}
+                                            />
+                                            );
+                                        }}
+                                        ampm={false}
+                                        minutesStep={30}
+                                        color="#FF5A5F"
+                                        label="Start time"
+                                        value={searchData.startTime}
+                                        name ="startTime"
+                                        onChange= {(newValue) => {
+                                            setSearchData(prevFormData => ({
+                                                ...prevFormData,
+                                                startTime: newValue
+                                            }));
+                                        }}
+                                    />
+                                </ThemeProvider>
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <ThemeProvider theme={muiStyles.timePickerTheme}>
+                                    <TimePicker
+                                        renderInput={(params) => {
+                                            return (
+                                            <TextField
+                                                {...params}
+                                                sx={muiStyles.style}
+                                            />
+                                            );
+                                        }}
+                                        ampm={false}
+                                        minutesStep={30}
+                                        color="#FF5A5F"
+                                        label="End time"
+                                        value={searchData.endTime}
+                                        name ="endTime"
+                                        onChange= {(newValue) => {
+                                            setSearchData(prevFormData => ({
+                                                ...prevFormData,
+                                                endTime: newValue
+                                            }));
+                                        }}
+                                    />
+                                </ThemeProvider>
+                            </LocalizationProvider>
+                            </div>
+
+                            <div className='entityType'>
+                                    <span>Type of Entity</span>
+                                    <div className="entityTypeRdb">
+                                    <input 
+                                        type="radio"
+                                        id="cottage"
+                                        value="cottage"
+                                        checked={entityType === "cottage"}
+                                        onChange={handleEntityTypeChanged}
+                                    />
+                                    <label htmlFor="cottage">Cottage</label>
+                        
+                                    <input 
+                                        type="radio"
+                                        id="boat"
+                                        value="boat"
+                                        checked={entityType === "boat"}
+                                        onChange={handleEntityTypeChanged}
+                                    />
+                                    <label htmlFor="boat">Boat</label>
+                        
+                                    <input 
+                                        type="radio"
+                                        id="adventure"
+                                        value="adventure"
+                                        checked={entityType === "adventure"}
+                                        onChange={handleEntityTypeChanged}
+                                    />
+                                    <label htmlFor="adventure">Adventure</label>
                                 </div>
                         </div>
 

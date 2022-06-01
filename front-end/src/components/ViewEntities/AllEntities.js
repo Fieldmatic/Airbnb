@@ -172,6 +172,11 @@ function AllEntities() {
             hourlyRate={item.hourlyRate}
             address={item.address}
             promotionalDescription={item.promotionalDescription}
+            additionalServices={item.additionalServices}
+            capacity={item.capacity}
+            startDateTime={location.state.startDateTime}
+            endDateTime={location.state.endDateTime}
+            showAll={location.state.showAll}
             entity={location.state.entityType}
             user="client"
             />)
@@ -193,8 +198,6 @@ function AllEntities() {
             ...prevState,
             [name] : value
         }))
-
-        console.log(searchQuery)
     }
 
     

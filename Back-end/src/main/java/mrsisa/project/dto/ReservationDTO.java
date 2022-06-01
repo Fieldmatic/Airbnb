@@ -5,7 +5,11 @@ import lombok.NoArgsConstructor;
 import mrsisa.project.model.Bookable;
 import mrsisa.project.model.Client;
 import mrsisa.project.model.Reservation;
+import mrsisa.project.model.Tag;
+
+import javax.persistence.ManyToMany;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,18 +30,26 @@ public class ReservationDTO {
         }catch (NullPointerException ne){
             this.reportId = null;
         }
+        this.additionalServices = getStringAdditionalServices(reservation.getAdditionalServices());
     }
 
     private Long id;
     private String startDateTime;
     private String endDateTime;
     private Integer personLimit;
-    //@ManyToMany
-    //private List<Tag> additionalServices;
+    private List<String> additionalServices;
     private Double price;
     private Boolean active;
     private Long clientId;
     private Long bookableId;
     private Long reportId;
     private final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+    private List<String> getStringAdditionalServices(List<Tag> services) {
+        List<String> stringServices = new ArrayList<>();
+        for (Tag tag: services) {
+            stringServices.add(tag.getName());
+        }
+        return stringServices;
+    }
 }

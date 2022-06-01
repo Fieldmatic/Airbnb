@@ -1,7 +1,9 @@
 package mrsisa.project.service;
 
 import mrsisa.project.model.Client;
+import mrsisa.project.model.Bookable;
 import mrsisa.project.model.Person;
+import mrsisa.project.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -10,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -65,6 +68,21 @@ public class EmailService {
             mail.setText("Hello " + user.getName() + ACCEPT_DELETION_MESSAGE);
         else
             mail.setText("Hello " + user.getName() + DENIAL_DELETION_MESSAGE + message);
+        javaMailSender.send(mail);
+    }
+
+    @Async
+    public void sendReservationMail(Person user, Reservation reservation) throws MailException {
+        SimpleMailMessage mail = getMailMessage(user, "Reservation");
+        LocalDateTime startDateTime = reservation.getStartDateTime();
+        LocalDateTime endDateTime = reservation.getEndDateTime();
+        mail.setText("Hello " + user.getName() + ",\n\n\n" + "You have successfully booked a " + reservation.getBookable().getName() +"." +
+                    "\n\n\nRESERVATION DETAILS\n\nReservation starts: " + startDateTime.getMonth() + " " + startDateTime.getDayOfMonth() + ", " + startDateTime.getYear() + " at " + startDateTime.getHour() + ":" + (startDateTime.getMinute()<10 ? '0' : ' ') + startDateTime.getMinute() +
+                    "\nReservation ends: " + endDateTime.getMonth() + " " + endDateTime.getDayOfMonth() + ", " + endDateTime.getYear() + " at " + endDateTime.getHour() + ":" + (endDateTime.getMinute()<10 ? '0' : ' ') + endDateTime.getMinute() +
+                    "\nPrice: " + reservation.getPrice() +
+                    "\nNumber of guests: " + reservation.getPersonLimit() +
+                    "\n\n\nWe wish you a good time!, \n\n\nBest regards, \nAirBnb team");
+
         javaMailSender.send(mail);
     }
 }

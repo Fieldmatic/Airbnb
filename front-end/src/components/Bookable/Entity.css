@@ -105,6 +105,13 @@
     border-radius: 7px;
 }
 
+.exploreAndReserveButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 0;
+}
+
 
 @media only screen and (max-width: 812px) {
 

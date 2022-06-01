@@ -29,8 +29,6 @@ export default function InstructorRegistration() {
         biography: "",
         profilePhoto: ""
     });
-
-    const [redirect, setRedirect] = React.useState("");
     
     function handleChange(event) {
         const {name, value} = event.target;
@@ -136,7 +134,7 @@ export default function InstructorRegistration() {
         files.map((file) => {
             data.append("files", file.file)
         })
-        LoginRegisterService.registerInstructor(data).then(response => {
+        LoginRegisterService.addInstructor(data).then(response => {
             if (response.status === 200) alert("Success");
             navigate("/");
         });

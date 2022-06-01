@@ -46,5 +46,6 @@ public class BoatDTO {
     private List<String> navigationEquipment;
     private List<String> fishingEquipment;
     private List<String> photos;
+    private List<String> additionalServices;
 
 }

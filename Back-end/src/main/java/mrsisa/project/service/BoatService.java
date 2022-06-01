@@ -42,11 +42,16 @@ public class BoatService {
     @Autowired
     ReservationRepository reservationRepository;
 
+    @Autowired
+    TagService tagService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
 
     @Transactional
     public void add(BoatDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Boat boat = dtoToBoat(dto);
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices());
+        boat.setAdditionalServices(additionalServices);
         List<String> paths = addPictures(boat, multipartFiles);
         boat.setPictures(paths);
         boat.setProfilePicture(paths.get(0));

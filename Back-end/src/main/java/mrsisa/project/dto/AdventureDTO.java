@@ -30,6 +30,7 @@ public class AdventureDTO {
     private String startDateTime;
     private String endDateTime;
     private List<String> photos;
+    private List<String> additionalServices;
 
     public AdventureDTO(Adventure adventure){
         this.id = adventure.getId();

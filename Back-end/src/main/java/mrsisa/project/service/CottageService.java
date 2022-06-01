@@ -46,18 +46,22 @@ public class CottageService {
     @Autowired
     ReservationRepository reservationRepository;
 
+    @Autowired
+    TagService tagService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
     @Transactional
     public void add(CottageDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices());
+        cottage.setAdditionalServices(additionalServices);
         List<String> paths = addPictures(cottage, multipartFiles);
         cottage.setPictures(paths);
         cottage.setProfilePicture(paths.get(0));
         CottageOwner owner = (CottageOwner) personRepository.findByUsername(userP.getName());
         cottage.setCottageOwner(owner);
         owner.getCottages().add(cottage);
-        cottageOwnerRepository.save(owner);
     }
 
     public Cottage createFirstCottage() {

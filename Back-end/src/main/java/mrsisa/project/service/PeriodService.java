@@ -26,7 +26,7 @@ public class PeriodService {
     private PeriodRepository periodRepository;
 
     @Transactional
-    public String add(PeriodDTO periodDTO) throws IOException {
+    public String add(PeriodDTO periodDTO) {
         Period period = dtoToPeriod(periodDTO);
         Bookable bookable = bookableRepository.getById(periodDTO.getBookableId());
         String answer = checkPeriodMatching(period.getStartDateTime(), period.getEndDateTime(), bookable);

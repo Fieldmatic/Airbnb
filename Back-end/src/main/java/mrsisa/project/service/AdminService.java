@@ -40,6 +40,10 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // test
+    @Autowired
+    private InstructorRepository instructorRepository;
+
 
     public Administrator update(AdminDTO dto) {
         Administrator admin = findAdminByUsername(dto.getUsername());
@@ -151,6 +155,28 @@ public class AdminService {
         List<Role> roles = roleService.findByName("ROLE_ADMIN");
         admin.setRoles(roles);
         adminRepository.save(admin);
+
+        // za potrebe testiranja
+        Address address2 = new Address();
+        address2.setZipCode("123123");
+        address2.setStreet("Arse Teodorovica 2");
+        address2.setState("Serbia");
+        address2.setCity("Novi Sad");
+
+        Instructor instructor = new Instructor();
+        instructor.setActive(true);
+        instructor.setAddress(address2);
+        instructor.setEmail("bane-gg@hotmail.com");
+        instructor.setLastPasswordResetDate(null);
+        instructor.setName("Banz");
+        instructor.setPhoneNumber("065432234");
+        instructor.setSurname("Ganz");
+        instructor.setUsername("bane");
+        instructor.setPassword(passwordEncoder.encode("bane"));
+        instructor.setProfilePhoto(null);
+        List<Role> roles2 = roleService.findByName("ROLE_INSTRUCTOR");
+        instructor.setRoles(roles2);
+        instructorRepository.save(instructor);
     }
 
 

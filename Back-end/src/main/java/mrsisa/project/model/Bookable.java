@@ -1,5 +1,6 @@
 package mrsisa.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
@@ -29,17 +30,23 @@ public abstract class Bookable {
     private String profilePicture;
     private String rules;
     private Double rating;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Tag> additionalServices;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Review> reviews;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Action> actions;
+
     @OneToOne(cascade = CascadeType.ALL)
     private PriceList priceList;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Reservation> reservations;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Period> periods;
 

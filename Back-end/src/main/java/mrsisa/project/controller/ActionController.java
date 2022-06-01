@@ -19,7 +19,7 @@ public class ActionController {
     private ActionService actionService;
 
     @PostMapping(value = "/add")
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'INSTRUCTOR')")
     public ResponseEntity<String> addAction(@RequestBody ActionDTO actionDTO) throws IOException {
             if (actionService.add(actionDTO)) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
             else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Action already exists in given date range!");

@@ -3,6 +3,7 @@ import AdventureService from '../../services/AdventureService'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import { Navigate } from "react-router-dom";
 import Header from '../../Header';
+import Tags from '../utils/Tags'
 
 export default function AddAdventureForm() {
     const [formData, setFormData] = React.useState({
@@ -20,6 +21,8 @@ export default function AddAdventureForm() {
         cancellationConditions: "",
         hourlyRate: ""
     });
+
+    const [tags, setTags] = React.useState([]);
 
     const [redirect, setRedirect] = React.useState("");
 
@@ -51,6 +54,7 @@ export default function AddAdventureForm() {
         event.preventDefault();
         setValidFrom(true);
         if (validForm) {
+            formData.additionalServices = tags;
             let data = new FormData()
             const adventureJson = adventureToJson();
             data.append("adventure", adventureJson)
@@ -197,6 +201,9 @@ export default function AddAdventureForm() {
                         onChange={handleChange}
                         value={formData.cancellationConditions}
                     />
+                     <div className='form--pair'>
+                        <Tags tags = {tags} setTags ={setTags}/>
+                    </div>
                     <Dropzone
                         style={{ minWidth: "95%", margin:"20px", fontSize:"18px" }}
                         onChange={updateFiles}

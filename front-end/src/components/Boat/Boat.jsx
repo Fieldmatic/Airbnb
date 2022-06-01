@@ -7,6 +7,7 @@ import { Navigate } from "react-router-dom";
 import muiStyles from '../utils/muiStyles';
 import { TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import Tags from '../utils/Tags'
 
 export default function Boat () {
     const [formData, setFormData] = React.useState(
@@ -33,6 +34,8 @@ export default function Boat () {
             fishingEquipment : ""
         }
     )
+
+    const [tags, setTags] = React.useState([]);
 
     const [redirect, setRedirect] = React.useState("")
 
@@ -123,6 +126,7 @@ export default function Boat () {
 
     function handleSubmit(event){
         event.preventDefault()
+        formData.additionalServices = tags;
         let data = new FormData()
         const boatJson = getBoatJson();
         data.append("boat", boatJson)
@@ -371,6 +375,9 @@ export default function Boat () {
                         value = {formData.fishingEquipment}
                         name = "fishingEquipment"
                     />           
+                </div>
+                <div className='form--pair'>
+                    <Tags tags = {tags} setTags ={setTags}/>
                 </div>
                 <div className='form--pair'>
                 <Dropzone

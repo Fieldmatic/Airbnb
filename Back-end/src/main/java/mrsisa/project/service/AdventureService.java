@@ -48,6 +48,9 @@ public class AdventureService {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    @Autowired
+    private TagService tagService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
 
     public Adventure save(Adventure adventure) {
@@ -57,6 +60,8 @@ public class AdventureService {
     @Transactional
     public void add(AdventureDTO adventureDTO, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Adventure adventure = this.dtoToAdventure(adventureDTO);
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(adventureDTO.getAdditionalServices());
+        adventure.setAdditionalServices(additionalServices);
         adventureRepository.save(adventure);
         List<String> paths = addPictures(adventure, multipartFiles);
         adventure.setPictures(paths);

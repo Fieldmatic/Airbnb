@@ -41,4 +41,5 @@ public class CottageDTO {
     private Integer tripleRooms;
     private Integer quadRooms;
     private List<String> photos;
+    private List<String> additionalServices;
 }

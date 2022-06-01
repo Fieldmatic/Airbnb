@@ -2,6 +2,7 @@ import React from 'react'
 import './Cottage.css'
 import CottageService from '../../services/CottageService'
 import Counter from "../utils/Counter"
+import Tags from '../utils/Tags'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import Header from "../../Header";
 import { Navigate } from "react-router-dom";
@@ -28,8 +29,9 @@ export default function Cottage() {
         tripleRooms : 0,
         quadRooms : 0
       }
-
   )
+
+  const [tags, setTags] = React.useState([]);
 
   const [redirect, setRedirect] = React.useState("")
 
@@ -38,7 +40,6 @@ export default function Cottage() {
   const [imageSrc, setImageSrc] = React.useState(undefined);
 
   const updateFiles = (incommingFiles) => {
-    console.log("incomming files", incommingFiles);
     setFiles(incommingFiles);
   };
 
@@ -55,6 +56,7 @@ export default function Cottage() {
   };
 
   function handleChange(event) {
+    console.log(tags)
     const {name, value} = event.target
     setFormData(prevFormData => {
       return {
@@ -89,8 +91,10 @@ export default function Cottage() {
 
   function handleSubmit(event){
     event.preventDefault()
+    formData.additionalServices = tags;
     let data = new FormData()
     const json = JSON.stringify(formData)
+    console.log(json)
     const cottageJson = new Blob([json], {
       type: 'application/json'
     });
@@ -255,6 +259,9 @@ export default function Cottage() {
               <label className='bedRoom--label'>Quad rooms: </label>  
               <Counter name = "quadRooms" value = {formData.quadRooms} handleChange = {handleRoomChange}/>
             </div>
+          </div>
+          <div className='form--pair'>
+            <Tags tags = {tags} setTags ={setTags}/>
           </div>
           <div className='form--pair'>
             <Dropzone

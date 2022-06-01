@@ -113,7 +113,12 @@ public class ClientService {
         client.getSubscriptions().remove(bookable);
         personRepository.save(client);
     }
-    
+
+    @Transactional
+    public boolean checkIfClientIsSubscribed(Client client, Long bookableId) {
+        Bookable bookable = bookableRepository.getById(bookableId);
+        return client.getSubscriptions().contains(bookable);
+    }
 
     private Client dtoToClient(ClientDTO dto) {
         Client client = new Client();

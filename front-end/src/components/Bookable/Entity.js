@@ -108,6 +108,14 @@ function entity(props) {
         return Math.abs(new Date(props.endDateTime) - new Date(props.startDateTime)) / 36e5;
     }
 
+    React.useEffect(() => {
+        ClientService.isClientSubscribed(props.id).then(response => {
+            if (response.status === 200) setHeartColor("#FF5A5F")
+        }).catch(error => {
+            setHeartColor("#A8A8A8")
+        }
+        )
+    }, [])
 
     function fillHeart() {
         if (heartColor === "#FF5A5F") {

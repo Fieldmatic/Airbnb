@@ -58,6 +58,7 @@ function PeriodPanel (props) {
             if (response.status === 201 || response.status === 200) {
                 setSuccessMessage(response.data)
                 setShowSuccess(true)
+                props.func('AVAILABLE_PERIOD');
             }
         }).catch(error => {
             setShowError(true)

@@ -1,5 +1,0 @@
--- INSERT INTO "role" (name) VALUES ('ROLE_CLIENT');
--- INSERT INTO "role" (name) VALUES ('ROLE_ADMIN');
--- INSERT INTO "role" (name) VALUES ('ROLE_COTTAGE_OWNER');
--- INSERT INTO "role" (name) VALUES ('ROLE_BOAT_OWNER');
--- INSERT INTO "role" (name) VALUES ('ROLE_INSTRUCTOR');

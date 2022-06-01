@@ -20,7 +20,7 @@ public class PeriodController {
     private PeriodService periodService;
 
     @PostMapping(value = "/add")
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'INSTRUCTOR')")
     public ResponseEntity<String> addPeriod(@RequestBody PeriodDTO periodDTO) throws IOException {
         String answer = periodService.add(periodDTO);
         if (answer.equals("success")) return ResponseEntity.status(HttpStatus.CREATED).body("Success");

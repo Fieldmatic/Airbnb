@@ -72,7 +72,10 @@ function ActionPanel (props) {
         ActionService.addAction(data)
             .then(response => {
                 console.log(response.status)
-                if (response.status === 201) setShowSuccess(true)
+                if (response.status === 201) {
+                    setShowSuccess(true)
+                    props.func('ACTION')
+                }
             }).catch(error => {
                 setShowError(true)
             });

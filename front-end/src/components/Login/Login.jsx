@@ -72,6 +72,7 @@ function Login() {
                             <Form.Label>Username</Form.Label>
                             <Form.Control
                              type="username" 
+                             style={{border:"1px solid gray"}}
                              placeholder="Enter username" 
                              onChange = {handleChange}
                              name = "username"
@@ -81,6 +82,7 @@ function Login() {
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control
+                             style={{border:"1px solid gray"}}
                              type="password" 
                              placeholder="Enter password" 
                              onChange = {handleChange}

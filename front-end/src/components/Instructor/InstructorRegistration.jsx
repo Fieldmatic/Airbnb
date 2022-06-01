@@ -276,7 +276,7 @@ export default function InstructorRegistration() {
                 </div>
                 <div className='form--pair'>
                     <PhoneInput
-                        className="form--phoneInput"
+                        className="form--phoneInputClient"
                         onChange = {(value) => {
                             setFormData(prevFormData => {
                             return {
@@ -323,6 +323,8 @@ export default function InstructorRegistration() {
                     minHeight="20vh"
                     onClean={handleClean}
                     value={files}
+                    label='Drop your profile picture here'
+                    accept = {".jpg, .png"}
                     maxFiles={1}
                     header={true}
                     maxFileSize={5000000}

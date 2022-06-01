@@ -386,6 +386,8 @@ export default function Boat () {
                 minHeight="20vh"
                 onClean={handleClean}
                 value={files}
+                label='Drop your interior & exterior pictures here'
+                accept = {".jpg, .png"}
                 maxFiles={10}
                 header={true}
                 maxFileSize={5000000}

@@ -33,8 +33,8 @@ public class ProjectApplication implements CommandLineRunner {
 	public void run(String... args) {
 		this.adminService.createFirstAdmin();
 
-		Cottage cottage = this.cottageService.createFirstCottage();
-		this.periodService.createPeriodForCottage(cottage);
+		/*Cottage cottage = this.cottageService.createFirstCottage();
+		this.periodService.createPeriodForCottage(cottage);*/
 
 	}
 

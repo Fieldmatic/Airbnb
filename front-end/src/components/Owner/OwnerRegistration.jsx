@@ -290,6 +290,8 @@ export default function OwnerRegistration() {
                     minHeight="20vh"
                     onClean={handleClean}
                     value={files}
+                    label='Drop your profile picture here'
+                    accept = {".jpg, .png"}
                     maxFiles={1}
                     header={true}
                     maxFileSize={5000000}

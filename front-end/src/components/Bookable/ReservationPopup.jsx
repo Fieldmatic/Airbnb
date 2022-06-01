@@ -12,6 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 import { Button } from '@mui/material';
+import ReservationService from '../../services/ReservationService';
 
 
 export default function ReservationPopup(props) {
@@ -32,9 +33,8 @@ export default function ReservationPopup(props) {
           ...state,
           [event.target.name]: event.target.checked,
         });
-      };
+    };
     
-
 
     //proveri gde ces ovo
     function submitReservation(){
@@ -42,13 +42,20 @@ export default function ReservationPopup(props) {
         for (const service of Object.keys(state)) {
             if (state[service]) chosenServices.push(service);
         }
-        console.log(chosenServices)
-        // UserService.updatePassword(passwordChangeData).then(response =>{
-        //     alert(response.data)
-        //     handleClose()
-        // }).catch(error => {
-        //     alert(error.response.data)
-        // });
+        let reservation = {
+            startDateTime: props.startDateTime,
+            endDateTime: props.endDateTime,
+            additionalServices: chosenServices,
+            personLimit: props.capacity,
+            price: props.price(),
+            active: true,
+            bookableId: props.bookableId
+        }
+        ReservationService.addReservation(reservation).then(response => {
+            alert("Success");
+            props.handleClose()
+        })
+             
     }
         
     return (
@@ -77,7 +84,7 @@ export default function ReservationPopup(props) {
                         </DialogContent>
                         <DialogActions>
                         <Button sx = {{color:"#FF5A5F"}} onClick={props.handleClose}>Cancel</Button>
-                        <Button sx = {{color:"#FF5A5F"}} onClick={submitReservation}>Change</Button>
+                        <Button sx = {{color:"#FF5A5F"}} onClick={submitReservation}>Reserve</Button>
                         </DialogActions>
                     </Dialog>
         </div>

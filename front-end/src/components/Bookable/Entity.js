@@ -96,6 +96,24 @@ function entity(props) {
         // });
     }
 
+    function getPrice() {
+        let price;
+        let hours = getNumberOfHours()
+        let days = Math.floor(hours / 24)
+        let leftHours = hours % 24
+        if (props.entity === "cottage" || props.entity === "boat") {
+            price = days * props.dailyRate + leftHours * props.hourlyRate
+        } else {
+            //adventure
+            price = hours * props.hourlyRate
+        }
+        return price
+    }
+
+    function getNumberOfHours() {
+        return Math.abs(new Date(props.endDateTime) - new Date(props.startDateTime)) / 36e5;
+    }
+
     return (
         <div className="entities">
             {profileImage && <img src={URL.createObjectURL(profileImage)}  alt=""/>}
@@ -190,7 +208,7 @@ function entity(props) {
                         </div>
                         <div className='exploreAndReserveButtons'>
                             <Button sx = {{
-                                backgroundColor : props.user === "client" ? "#D4AF37" : "#FF5A5F", 
+                                backgroundColor : props.user === "client" && !props.showAll ? "#D4AF37" : "#FF5A5F", 
                                 width : "100%",
                                 color:"white",
                                 '&:hover': {
@@ -198,7 +216,7 @@ function entity(props) {
                                     color: 'white',
                                         },
                                     }} variant='outlined'  onClick={redirectToEntityDetails}> Explore</Button>
-                            {props.user === "client" && <Button sx = {{
+                            {props.user === "client" && !props.showAll && <Button sx = {{
                                 backgroundColor : "#FF5A5F", 
                                 width : "100%",
                                 color:"white",
@@ -209,7 +227,7 @@ function entity(props) {
                                     }} variant='outlined'  onClick={openReservePopup}> Reserve</Button>}
         
                     </div>
-                    <ReservationPopup handleClose={handleClose} reservePopup={reservePopup} services={props.additionalServices}/>
+                    <ReservationPopup handleClose={handleClose} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>
                     </div>
                 </div>
             </div>

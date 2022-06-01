@@ -11,8 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReservationService {
@@ -32,9 +37,12 @@ public class ReservationService {
     @Autowired
     BookableRepository bookableRepository;
 
+    @Autowired
+    PeriodService periodService;
+
 
     @Transactional
-    public void add(Long actionId, Principal userP) throws IOException {
+    public void addQuick(Long actionId, Principal userP) throws IOException {
         Action action = actionRepository.getById(actionId);
         Reservation reservation = createReservationFromAction(action);
         Client client = (Client) personRepository.findByUsername(userP.getName());
@@ -42,6 +50,16 @@ public class ReservationService {
         client.getReservations().add(reservation);
         action.getBookable().getReservations().add(reservation);
         action.setUsed(true);
+    }
+
+    @Transactional
+    public void add(ReservationDTO dto, Principal userP) throws IOException {
+        Reservation reservation = dtoToReservation(dto);
+        Client client = (Client) personRepository.findByUsername(userP.getName());
+        reservation.setClient(client);
+        client.getReservations().add(reservation);
+
+        periodService.splitPeriodAfterReservation(reservation);
     }
 
     @Transactional
@@ -105,4 +123,27 @@ public class ReservationService {
         reservation.setBookable(action.getBookable());
         return reservation;
     }
+
+    private Reservation dtoToReservation(ReservationDTO dto) {
+        Reservation reservation = new Reservation();
+        reservation.setStartDateTime(LocalDateTime.ofInstant(Instant.parse(dto.getStartDateTime()), ZoneOffset.UTC));
+        reservation.setEndDateTime(LocalDateTime.ofInstant(Instant.parse(dto.getEndDateTime()), ZoneOffset.UTC));
+        reservation.setPersonLimit(dto.getPersonLimit());
+        reservation.setPrice(dto.getPrice());
+        reservation.setActive(dto.getActive());
+        Bookable bookable = bookableRepository.getById(dto.getBookableId());
+        reservation.setBookable(bookable);
+        bookable.getReservations().add(reservation);
+
+        List<Tag> additionalServices = new ArrayList<>();
+        for (Tag tag: bookable.getAdditionalServices()) {
+            if (dto.getAdditionalServices().contains(tag.getName())) {
+                additionalServices.add(tag);
+            }
+        }
+        reservation.setAdditionalServices(additionalServices);
+
+        return reservation;
+    }
+
 }

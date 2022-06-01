@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReservationDTO;
 import mrsisa.project.service.ReservationService;
@@ -28,7 +29,14 @@ public class ReservationController {
     @PostMapping(value = "/addQuick")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> addQuickReservation(@RequestBody String actionId, Principal userP) throws IOException {
-        reservationService.add(Long.parseLong(actionId.replace("=","")), userP);
+        reservationService.addQuick(Long.parseLong(actionId.replace("=","")), userP);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    }
+
+    @PostMapping(value = "/add")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> addReservation(@RequestBody ReservationDTO dto, Principal userP) throws IOException {
+        reservationService.add(dto, userP);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 

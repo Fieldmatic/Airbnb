@@ -6,6 +6,7 @@ import mrsisa.project.model.Tag;
 import mrsisa.project.repository.CottageRepository;
 import mrsisa.project.service.AdminService;
 import mrsisa.project.service.CottageService;
+import mrsisa.project.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,11 +26,16 @@ public class ProjectApplication implements CommandLineRunner {
 	@Autowired
 	private CottageService cottageService;
 
+	@Autowired
+	private PeriodService periodService;
+
 	@Override
 	public void run(String... args) {
 		this.adminService.createFirstAdmin();
 
-		this.cottageService.createFirstCottage();
+		Cottage cottage = this.cottageService.createFirstCottage();
+		this.periodService.createPeriodForCottage(cottage);
+
 	}
 
 	public static void main(String[] args) {

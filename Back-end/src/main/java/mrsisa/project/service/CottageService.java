@@ -60,7 +60,7 @@ public class CottageService {
         cottageOwnerRepository.save(owner);
     }
 
-    public void createFirstCottage() {
+    public Cottage createFirstCottage() {
         Address address = new Address();
         address.setZipCode("36000");
         address.setStreet("Nikole Tesle 5");
@@ -100,6 +100,7 @@ public class CottageService {
         cottage.setAdditionalServices(additionalServices);
 
         cottageRepository.save(cottage);
+        return cottage;
     }
 
     public List<CottageDTO> getDTOCottages() throws IOException {
@@ -155,6 +156,8 @@ public class CottageService {
         return cottagesDTO;
     }
 
+
+    @Transactional
     public List<CottageDTO> getAvailableCottages(String startDate, String endDate) {
         LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
         LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);

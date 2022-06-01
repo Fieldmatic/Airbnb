@@ -2,6 +2,7 @@ package mrsisa.project.controller;
 
 import mrsisa.project.dto.ClientBasicInfoDTO;
 import mrsisa.project.dto.ClientDTO;
+import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.service.AddressService;
 import mrsisa.project.service.ClientService;
@@ -68,6 +69,30 @@ public class ClientController {
 
         client = clientService.save(client);
         return new ResponseEntity<>(new ClientDTO(client), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/addSub/{id}")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> addSubscription(@PathVariable("id") Long id, Principal userP) {
+        Client client = clientService.findClientByUsername(userP.getName());
+        clientService.addSubscription(client, id);
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
+    }
+
+    @DeleteMapping (value = "/deleteSub/{id}")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> deleteSubscription(@PathVariable("id") Long id, Principal userP) {
+        Client client = clientService.findClientByUsername(userP.getName());
+        clientService.deleteSubscription(client, id);
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
+    }
+
+    @GetMapping(value = "/isClientSubscribed/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT')")
+    public ResponseEntity<String> checkIfClientSubscribed(@PathVariable Long id, Principal userP) {
+        Client client = clientService.findClientByUsername(userP.getName());
+        if (clientService.checkIfClientIsSubscribed(client, id)) return ResponseEntity.ok().body("Client is subscribed");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Client is not subscribed");
     }
 
     @GetMapping(value="/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})

@@ -2,11 +2,9 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.BoatOwnerDTO;
 import mrsisa.project.dto.ClientDTO;
-import mrsisa.project.model.Address;
-import mrsisa.project.model.BoatOwner;
-import mrsisa.project.model.Client;
-import mrsisa.project.model.Role;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.AddressRepository;
+import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +21,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +35,9 @@ public class ClientService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private BookableRepository bookableRepository;
 
     @Autowired
     private RoleService roleService;
@@ -91,6 +93,31 @@ public class ClientService {
                 throw new IOException("Could not save image file: " + fileName, ioe);
             }
         }
+    }
+
+    @Transactional
+    public void addSubscription(Client client, Long bookableId) {
+        Bookable bookable = bookableRepository.getById(bookableId);
+        bookable.getSubscribedClients().add(client);
+        bookableRepository.save(bookable);
+        client.getSubscriptions().add(bookable);
+        personRepository.save(client);
+    }
+
+    @Transactional
+    public void deleteSubscription(Client client, Long bookableId) {
+        Bookable bookable = bookableRepository.getById(bookableId);
+        bookable.getSubscribedClients().remove(client);
+        bookableRepository.save(bookable);
+
+        client.getSubscriptions().remove(bookable);
+        personRepository.save(client);
+    }
+
+    @Transactional
+    public boolean checkIfClientIsSubscribed(Client client, Long bookableId) {
+        Bookable bookable = bookableRepository.getById(bookableId);
+        return client.getSubscriptions().contains(bookable);
     }
 
     private Client dtoToClient(ClientDTO dto) {

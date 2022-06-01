@@ -18,6 +18,36 @@ class ClientService {
         return axios.put(CLIENT_BASED_REST_API_URL + "/update" , client)
     }
 
+    subscribeOnEntity(id) {
+        return axios.put(CLIENT_BASED_REST_API_URL + "/addSub/" + id, id, 
+        {
+            responseType: 'blob',
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
+    }
+
+    unsubscribeFromEntity(id) {
+        return axios.delete(CLIENT_BASED_REST_API_URL + "/deleteSub/" + id, 
+        {
+            responseType: 'blob',
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
+    }
+
+    isClientSubscribed(id) {
+        return axios.get(CLIENT_BASED_REST_API_URL + "/isClientSubscribed/" + id, 
+        {
+            responseType: 'blob',
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
+    }
+
     getProfilePicture() {
         return axios.get(CLIENT_BASED_REST_API_URL + "/getProfilePicture",
         {

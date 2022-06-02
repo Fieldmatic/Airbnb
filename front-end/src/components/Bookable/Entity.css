@@ -10,8 +10,8 @@
 }
 
 .entities img {
-    height: auto;
-    width: 400px;
+    height: 230px;
+    width: auto;
     border-radius: 10px;
     overflow: hidden;
 }

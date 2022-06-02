@@ -68,7 +68,6 @@ export default function ReservationPopup(props) {
                         </DialogContentText>
                             <Box sx={{ display: 'flex' }}>
                                 <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-                                    <FormLabel component="legend">Assign responsibility</FormLabel>
                                     <FormGroup>
                                         {props.services.map(service => (
                                             <FormControlLabel

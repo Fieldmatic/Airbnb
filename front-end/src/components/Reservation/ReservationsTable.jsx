@@ -33,7 +33,7 @@ function ReservationsTable() {
             var row = {}
             ClientService.getClientProfilePicture(item.clientId).then(response => {
                 row.img = response.data
-            })
+            }).then(
             ClientService.getClientBasicInfo(item.clientId).then(response => {
                 row.id = item.id
                 row.name = response.data.name
@@ -48,7 +48,7 @@ function ReservationsTable() {
                 row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
                 row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
                 row.handleReportClicked = handleReportClicked
-            }).then(() => {
+            })).then(() => {
                 setRows(prevRows => [...prevRows, row])
             })
         });

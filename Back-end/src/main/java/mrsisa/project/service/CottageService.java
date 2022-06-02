@@ -200,7 +200,7 @@ public class CottageService {
     // public List<Cottage> findAll() {
     //     return cottageRepository.findAll();
     // }
-
+    @Transactional
     public List<CottageDTO> findOwnerCottages(Long id) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage : cottageRepository.findOwnerCottages(id)) {
@@ -249,6 +249,7 @@ public class CottageService {
         return true;
     }
 
+    @Transactional
     public Cottage findOne(Long id) {
         return cottageRepository.findById(id).orElse(null);
     }

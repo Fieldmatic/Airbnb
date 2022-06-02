@@ -18,7 +18,6 @@ public class TagService {
         for (String tag : additionalServices) {
             Tag t = new Tag();
             t.setName(tag);
-            tagRepository.save(t);
             tags.add(t);
         }
         return tags;

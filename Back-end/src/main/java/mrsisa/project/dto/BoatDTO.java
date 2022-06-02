@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Boat;
+import mrsisa.project.model.Tag;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,6 +30,7 @@ public class BoatDTO {
         this.capacity = boat.getCapacity();
         this.navigationEquipment = boat.getNavigationEquipment();
         this.fishingEquipment = boat.getFishingEquipment();
+        this.additionalServices = getStringAdditionalServices(boat.getAdditionalServices());
         this.photos = boat.getPictures();
     }
     private Long id;
@@ -48,4 +52,11 @@ public class BoatDTO {
     private List<String> photos;
     private List<String> additionalServices;
 
+    private List<String> getStringAdditionalServices(List<Tag> services) {
+        List<String> stringServices = new ArrayList<>();
+        for (Tag tag: services) {
+            stringServices.add(tag.getName());
+        }
+        return stringServices;
+    }
 }

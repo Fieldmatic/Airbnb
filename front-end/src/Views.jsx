@@ -15,8 +15,6 @@ import InstructorUpdate from "./components/Instructor/InstructorUpdate";
 import ViewHostEntities from "./components/Bookable/ViewHostEntities";
 import BookableDetails from "./components/ViewEntities/BookableDetails";
 import Login from "./components/Login/Login";
-import DeletionReasons from "./components/Admin/DeletionReasons";
-import UserRegistration from "./components/Admin/UserRegistration";
 import Actions from "./components/Bookable/Actions";
 import Periods from "./components/Bookable/Periods";
 import ReservationHistory from "./components/Reservation/ReservationHistory";

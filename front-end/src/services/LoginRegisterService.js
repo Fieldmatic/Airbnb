@@ -30,6 +30,15 @@ class LoginRegisterService {
         return axios.post(LOGIN_REGISTER_BASED_REST_API_URL + "/instructorRegistration", instructor);
     }
 
+    addAdmin(admin) {
+        return axios.post(LOGIN_REGISTER_BASED_REST_API_URL + "/adminRegistration", admin,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        });
+    }
+
 }
 
 

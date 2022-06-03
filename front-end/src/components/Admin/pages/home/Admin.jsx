@@ -4,6 +4,7 @@ import AdminSidebar from "../../components/sidebar/AdminSidebar"
 import AdminNavbar from "../../components/navbar/AdminNavbar"
 import inMemoryJwt from '../../../../services/inMemoryJwtService';
 import LoginRegisterService from '../../../../services/LoginRegisterService'
+import Widget from '../../components/widget/Widget';
 
 
 export default function Admin() {
@@ -42,7 +43,10 @@ export default function Admin() {
             <div className="homeContainer">
                 <AdminNavbar />
                 <div className="widgets">
-                    
+                    <Widget type="user" />
+                    <Widget type="order" />
+                    <Widget type="earning" />
+                    <Widget type="balance" />
                 </div>
             </div>
         </div>

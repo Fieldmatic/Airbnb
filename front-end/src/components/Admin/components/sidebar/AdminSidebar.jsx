@@ -33,10 +33,12 @@ export default function AdminSidebar() {
             <div className="center">
                 <ul>
                     <p className="title">MAIN</p>
-                    <li>
-                        <DashboardIcon className="icon" />
-                        <span>Dashboard</span>
-                    </li>
+                    <Link to="/admin" style={{ textDecoration: "none" }}>
+                        <li>
+                            <DashboardIcon className="icon" />
+                            <span>Dashboard</span>
+                        </li>
+                    </Link>
                     <p className="title">REQUESTS</p>
                     <Link to="/admin/registrationRequests" style={{ textDecoration: "none" }}>
                         <li>

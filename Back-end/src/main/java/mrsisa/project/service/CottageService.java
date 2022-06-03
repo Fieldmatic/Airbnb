@@ -51,15 +51,14 @@ public class CottageService {
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
-    @Transactional
     public void add(CottageDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
-        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices());
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), cottage);
         cottage.setAdditionalServices(additionalServices);
         List<String> paths = addPictures(cottage, multipartFiles);
         cottage.setPictures(paths);
         cottage.setProfilePicture(paths.get(0));
-        CottageOwner owner = (CottageOwner) personRepository.findByUsername(userP.getName());
+        CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
         cottage.setCottageOwner(owner);
         owner.getCottages().add(cottage);
     }
@@ -113,7 +112,7 @@ public class CottageService {
         for (Cottage cottage : cottages) {
             List<String> cottagePhotos = getPhotos(cottage);
             cottage.setPictures(cottagePhotos);
-            cottagesDTO.add(new CottageDTO(cottage));
+            cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
         }
         return cottagesDTO;
     }
@@ -151,11 +150,10 @@ public class CottageService {
         }
     }
 
-    @Transactional
     public List<CottageDTO> findAll() {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage : cottageRepository.findAll()) {
-            cottagesDTO.add(new CottageDTO(cottage));
+            cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
         }
         return cottagesDTO;
     }
@@ -170,7 +168,7 @@ public class CottageService {
         for (Cottage cottage: cottageRepository.findAll()) {
             for (Period period : cottage.getPeriods()) {
                 if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
-                    cottagesDTO.add(new CottageDTO(cottage));
+                    cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
                     break;
                 }
             }
@@ -197,17 +195,22 @@ public class CottageService {
         return photos;
     }
 
-    // public List<Cottage> findAll() {
-    //     return cottageRepository.findAll();
-    // }
-    @Transactional
+
     public List<CottageDTO> findOwnerCottages(Long id) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
-        for (Cottage cottage : cottageRepository.findOwnerCottages(id)) {
-            cottagesDTO.add(new CottageDTO(cottage));
+        for (Cottage cottage : cottageRepository.findAllByCottageOwner_Id(id)) {
+            cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
         }
         return cottagesDTO;
     };
+
+    public CottageDTO getCottage(Long id) throws IOException {
+        Cottage cottage = findOne(id);
+        if (cottage == null) return null;
+        List<String> cottagePhotos = getPhotos(cottage);
+        cottage.setPictures(cottagePhotos);
+        return new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId()));
+    }
 
     @Transactional
     public boolean deleteCottage(Long id, Principal userP) {
@@ -249,7 +252,6 @@ public class CottageService {
         return true;
     }
 
-    @Transactional
     public Cottage findOne(Long id) {
         return cottageRepository.findById(id).orElse(null);
     }

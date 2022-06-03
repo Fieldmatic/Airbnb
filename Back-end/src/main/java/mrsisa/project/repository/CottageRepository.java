@@ -6,11 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CottageRepository extends JpaRepository<Cottage, Long> {
-    @Query(value = "SELECT * FROM cottage c left join cottage_owner_cottages b on c.id = b.cottages_id where b.cottage_owner_id = ?1", nativeQuery = true)
-    List<Cottage> findOwnerCottages(Long id);
+    //@Query(value = "SELECT * FROM cottage c left join cottage_owner_cottages b on c.id = b.cottages_id where b.cottage_owner_id = ?1", nativeQuery = true)
+    //List<Cottage> findOwnerCottages(Long id);
 
-    List<Cottage> findCottagesByAddress_City(String city);
+    List<Cottage> findAllByCottageOwner_Id(Long id);
+
+    @Query(value = "SELECT c FROM Cottage c JOIN FETCH c.additionalServices where c.id=?1")
+    Optional<Cottage> findById(Long id);
 
 }

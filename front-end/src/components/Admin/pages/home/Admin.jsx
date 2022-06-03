@@ -41,6 +41,9 @@ export default function Admin() {
             <AdminSidebar />
             <div className="homeContainer">
                 <AdminNavbar />
+                <div className="widgets">
+                    
+                </div>
             </div>
         </div>
     )

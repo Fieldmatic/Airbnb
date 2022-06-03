@@ -5,6 +5,7 @@ import mrsisa.project.dto.ReservationDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,27 +44,31 @@ public class ReservationService {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    TagRepository tagRepository;
 
-    @Transactional
+
     public void addQuick(Long actionId, Principal userP) throws IOException {
         Action action = actionRepository.getById(actionId);
         Reservation reservation = createReservationFromAction(action);
-        Client client = (Client) personRepository.findByUsername(userP.getName());
+        Client client = clientRepository.findByUsername(userP.getName());
         reservation.setClient(client);
         client.getReservations().add(reservation);
         action.getBookable().getReservations().add(reservation);
         action.setUsed(true);
     }
 
-    @Transactional
     public void add(ReservationDTO dto, Principal userP) throws IOException {
         Reservation reservation = dtoToReservation(dto);
-        Client client = (Client) personRepository.findByUsername(userP.getName());
+        Client client = clientRepository.findByUsername(userP.getName());
         reservation.setClient(client);
         client.getReservations().add(reservation);
 
         periodService.splitPeriodAfterReservation(reservation);
-        emailService.sendReservationMail(client, reservation);
+        try{
+            emailService.sendReservationMail(client, reservation);
+        } catch(MailException ignored) {
+        }
     }
 
     @Transactional
@@ -140,7 +145,7 @@ public class ReservationService {
         bookable.getReservations().add(reservation);
 
         List<Tag> additionalServices = new ArrayList<>();
-        for (Tag tag: bookable.getAdditionalServices()) {
+        for (Tag tag: tagRepository.getTagsOfBookable(bookable.getId())) {
             if (dto.getAdditionalServices().contains(tag.getName())) {
                 additionalServices.add(tag);
             }

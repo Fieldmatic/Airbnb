@@ -46,7 +46,7 @@ const Views = () => {
       <Route path = "/hostReservations" element = {<ReservationHistory/>}/>
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
-      <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
+      <Route path = "/bookableDetails/:id&:entityType&:user" element = {<BookableDetails />} />
       <Route path = "/admin">
         <Route index element={<Admin />} />
         <Route path="registrationRequests" element={<Requests registration={true} />} />

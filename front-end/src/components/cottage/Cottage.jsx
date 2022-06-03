@@ -56,7 +56,6 @@ export default function Cottage() {
   };
 
   function handleChange(event) {
-    console.log(tags)
     const {name, value} = event.target
     setFormData(prevFormData => {
       return {

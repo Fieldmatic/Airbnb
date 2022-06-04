@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CottageDTO {
-    public CottageDTO(Cottage cottage){
+    public CottageDTO(Cottage cottage, List<Tag> additionalServices){
         this.id = cottage.getId();
         this.name = cottage.getName();
         this.address = cottage.getAddress();
@@ -28,7 +28,7 @@ public class CottageDTO {
         this.doubleRooms = cottage.getRooms().get(2) != null ? cottage.getRooms().get(2) : 0;
         this.tripleRooms = cottage.getRooms().get(3) != null ? cottage.getRooms().get(3) : 0;
         this.quadRooms = cottage.getRooms().get(4) != null ? cottage.getRooms().get(4) : 0;
-        this.additionalServices = getStringAdditionalServices(cottage.getAdditionalServices());
+        this.additionalServices = getStringAdditionalServices(additionalServices);
         this.photos = cottage.getPictures();
     }
     private Long id;

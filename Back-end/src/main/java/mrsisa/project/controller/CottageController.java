@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -82,11 +83,9 @@ public class CottageController {
 
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<CottageDTO> getCottage(@PathVariable("id") Long id) throws IOException {
-        Cottage cottage = cottageService.findOne(id);
+        CottageDTO cottage = cottageService.getCottage(id);
         if (cottage == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<String> cottagePhotos = cottageService.getPhotos(cottage);
-        cottage.setPictures(cottagePhotos);
-        return new ResponseEntity<>(new CottageDTO(cottage), HttpStatus.OK);
+        return new ResponseEntity<>(cottage, HttpStatus.OK);
     }
 
     @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})

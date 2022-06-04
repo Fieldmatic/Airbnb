@@ -50,7 +50,7 @@ public class BoatService {
     @Transactional
     public void add(BoatDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Boat boat = dtoToBoat(dto);
-        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices());
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
         boat.setAdditionalServices(additionalServices);
         List<String> paths = addPictures(boat, multipartFiles);
         boat.setPictures(paths);
@@ -78,9 +78,11 @@ public class BoatService {
         return false;
     }
 
+
+    @Transactional
     public List<BoatDTO> findOwnerBoats(Long id) {
         List<BoatDTO> boatsDTO = new ArrayList<>();
-        for (Boat boat : boatRepository.findOwnerBoats(id)) {
+        for (Boat boat : boatRepository.findBoatsByBoatOwner_Id(id)) {
             boatsDTO.add(new BoatDTO(boat));
         }
         return boatsDTO;

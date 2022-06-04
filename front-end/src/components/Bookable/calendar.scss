@@ -5,18 +5,17 @@
 
     .calendar-header{
         margin-bottom: 20px;
-        margin-top: 20px;
     }
 
     .wrapper-calendar {
         display: flex;
         flex-direction: column;
-        width: 60%;
+        width: 50%;
         background-color: white;
         box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
         box-sizing: border-box;
         border-radius: 10px;
-        font-size: large;
+        font-size: medium;
         margin: 2% 0 4% 2% ;
         align-items: center;
         padding: 20px;

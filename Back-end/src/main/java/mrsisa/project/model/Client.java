@@ -2,6 +2,8 @@ package mrsisa.project.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +20,7 @@ public class Client extends Person {
     private List<Reservation> reservations;
     @OneToMany
     private List<Report> reports;
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Bookable> subscriptions;
 }

@@ -32,6 +32,15 @@ function entity(props) {
     const [heartColor, setHeartColor] = React.useState("#A8A8A8")
     const navigate = useNavigate()
 
+    React.useEffect(() => {
+        {props.user === "client" && ClientService.isClientSubscribed(props.id).then(response => {
+            if (response.status === 200) setHeartColor("#FF5A5F")
+        }).catch(error => {
+            setHeartColor("#A8A8A8")
+        }
+        )}
+    }, [])
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -75,7 +84,7 @@ function entity(props) {
 
     function redirectToEntityDetails(event) {
         event.preventDefault()
-        setRedirect(`/bookableDetails/${props.id}&${props.entity}`)
+        setRedirect(`/bookableDetails/${props.id}&${props.entity}&${props.user}`)
     }
 
     function handleDelete(){
@@ -108,36 +117,28 @@ function entity(props) {
         return Math.abs(new Date(props.endDateTime) - new Date(props.startDateTime)) / 36e5;
     }
 
-    React.useEffect(() => {
-        ClientService.isClientSubscribed(props.id).then(response => {
-            if (response.status === 200) setHeartColor("#FF5A5F")
-        }).catch(error => {
-            setHeartColor("#A8A8A8")
-        }
-        )
-    }, [])
-
     function fillHeart() {
         if (heartColor === "#FF5A5F") {
             setHeartColor("#A8A8A8")
             ClientService.unsubscribeFromEntity(props.id).then(response =>
-                console.log("obrisan"))
+                console.log("obrisano"))
         } else {
             setHeartColor("#FF5A5F")
             ClientService.subscribeOnEntity(props.id).then(response =>
-                console.log("top"))
+                console.log("dodato"))
         }
     }
 
     return (
         <div className="entities">
             {profileImage && <img src={URL.createObjectURL(profileImage)}  alt=""/>}
-            <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColor,
-        '&:hover': {
-            backgroundColor: 'lightgray',
-            color: '#FF5A5F',
-                },
-        }}/>          
+            {props.user === "client" && <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColor,
+                '&:hover': {
+                    backgroundColor: 'lightgray',
+                    color: '#FF5A5F',
+                        },
+                }}/>          
+            }
             <div className="entity__info">
                 <div className="entity__infoTop">
                     <h2>{props.name}</h2>
@@ -246,7 +247,7 @@ function entity(props) {
                                     }} variant='outlined'  onClick={openReservePopup}> Reserve</Button>}
         
                         </div>
-                        <ReservationPopup handleClose={handleClose} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>
+                        {props.user === "client" && <ReservationPopup handleClose={handleClose} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>}
                     </div>
                 </div>
             </div>

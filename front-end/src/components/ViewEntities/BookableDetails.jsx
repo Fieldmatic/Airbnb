@@ -21,6 +21,7 @@ export default function EntityDetails() {
 
     let {id} = useParams();
     let {entityType} = useParams();
+    let {user} = useParams();
 
     const [reviewsNumber, setReviewsNumber] = React.useState(0)
     const [slideNumber, setSlideNumber] = React.useState(0)
@@ -106,7 +107,8 @@ export default function EntityDetails() {
     }, [])
 
     function createEntity(entityDetails) {
-        setEntity({
+        setEntity((prevState) => ({
+            ...prevState,
             name : entityDetails.name, 
             address : entityDetails.address,
             promotionalDescription : entityDetails.promotionalDescription,
@@ -116,7 +118,7 @@ export default function EntityDetails() {
             cancellationConditions : entityDetails.cancellationConditions,
             photos: entityDetails.photos,
             rating: entityDetails.rating
-        })
+        }))
     }
 
     function handleOpenSlider(i) {
@@ -151,7 +153,6 @@ export default function EntityDetails() {
 
     function rerenderActions() {
         setReservationMade(prevState => !prevState)
-        console.log(reservationMade)
     }
 
 
@@ -204,7 +205,7 @@ export default function EntityDetails() {
                         </div>
                         <div className="hotelImages">
                             {entity.photos.map((photo, i) =>(
-                                <div className="hotelImgWrapper">
+                                <div className="hotelImgWrapper" key={i}>
                                     <img src={"data:image/jpg;base64," + photo} onClick={() => handleOpenSlider(i)} alt = "" className="hotelImg"></img>
                                 </div>
                             ))}
@@ -224,8 +225,8 @@ export default function EntityDetails() {
                             <h3>Cancellation conditions</h3>
                             <p>{entity.cancellationConditions}</p>
                         </div>          
-                        <ShowActions actions={actions} hourlyPrice={entity.hourlyRate} dailyPrice={entity.dailyRate} bookableType={entityType} deleteAction={rerenderActions}/>
-                        <iframe style={{width: "100%", height:"500px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                        {user === "client" && <ShowActions actions={actions} hourlyPrice={entity.hourlyRate} dailyPrice={entity.dailyRate} bookableType={entityType} deleteAction={rerenderActions}/>}
+                        <iframe style={{width: "100%", height:"500px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>
                 </div>
             </div>
         </div>

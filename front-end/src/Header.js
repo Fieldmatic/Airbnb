@@ -10,6 +10,7 @@ import inMemoryJwt from './services/inMemoryJwtService';
 import LoginRegisterService from './services/LoginRegisterService';
 import { DateRangePicker } from 'react-date-range';
 import PeopleIcon from '@mui/icons-material/People';
+import Button from '@mui/material/Button';
 import {Link, useNavigate} from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -71,6 +72,7 @@ export default function Header(){
         inMemoryJwt.deleteToken()
         setIsUserLogged(false)
         setRole(null)
+        navigate("/")
     };
 
     function getUnauthorizedOptions(){
@@ -185,11 +187,12 @@ export default function Header(){
                 {role==="COTTAGE_OWNER" && getCottageOwnerOptions()}
                 {role==="BOAT_OWNER" && getBoatOwnerOptions()}
                 {role==="INSTRUCTOR" && getInstructorOptions()}
+                {role ==="ADMIN" && navigate("/admin")}
                     
                 <div className='header__right'>
                     {
                         isUserLogged?
-                        <button type="button" onClick={logoutHandler}>Logout</button>
+                        <span className='logout' onClick={logoutHandler}>Logout </span>
                         :
                         <Link to={'/login'} style={{textDecoration: 'none', color:'black'}}>Login</Link>
                     }
@@ -200,7 +203,6 @@ export default function Header(){
                                 return <MenuItems items={menu} key={index} />;
                             })}
                         </ul>
-                        <ExpandMoreIcon/>
                         <Link to={'/clientRegistration'} style={{textDecoration: 'none', color:'black'}}>
                             <Avatar/>
                         </Link>

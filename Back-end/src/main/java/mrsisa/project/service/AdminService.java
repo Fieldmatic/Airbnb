@@ -9,6 +9,7 @@ import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ public class AdminService {
         return null;
     }
 
+    @Transactional
     public List<ProfileDeletionReasonDTO> getProfileDeletionReasons() {
         List<ProfileDeletionReasonDTO> pdrDTOs = new ArrayList<>();
         for(ProfileDeletionReason pdr : profileDeletionReasonRepository.findAll()) {

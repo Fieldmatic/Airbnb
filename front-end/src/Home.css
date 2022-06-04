@@ -1,6 +1,7 @@
 .home__section {
     display: flex;
-    padding: 30px;
+    padding: 20px;
+    width: 100%;
 }
 
 .home__section > div {

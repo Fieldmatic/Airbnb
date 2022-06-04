@@ -87,13 +87,13 @@ function ActionPanel (props) {
         <div className='actions--container'>
             <h1 className='actions--header'>Action defining</h1>
             {showSuccess &&
-            <Alert variant='success' onClose = {() => setShowSuccess(false)} dismissible>
+            <Alert style={{width:"100%", height:"80px"}} variant='success' onClose = {() => setShowSuccess(false)} dismissible>
                 <Alert.Heading>Success!</Alert.Heading>
                 <p>Successfully added action!</p>
             </Alert>
             }
             {showError &&
-            <Alert variant='danger' onClose = {() => setShowError(false)} dismissible>
+            <Alert style={{width:"100%", height:"80px"}} variant='danger' onClose = {() => setShowError(false)} dismissible>
                 <Alert.Heading>Error!</Alert.Heading>
                 <p>Action already exists in given date range!</p>
             </Alert>

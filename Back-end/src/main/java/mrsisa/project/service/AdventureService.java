@@ -60,7 +60,7 @@ public class AdventureService {
     @Transactional
     public void add(AdventureDTO adventureDTO, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Adventure adventure = this.dtoToAdventure(adventureDTO);
-        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(adventureDTO.getAdditionalServices());
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(adventureDTO.getAdditionalServices(), adventure);
         adventure.setAdditionalServices(additionalServices);
         adventureRepository.save(adventure);
         List<String> paths = addPictures(adventure, multipartFiles);

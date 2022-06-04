@@ -14,6 +14,5 @@ import java.util.List;
 @Entity
 public class CottageOwner extends Owner {
     @OneToMany(cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Cottage> cottages;
 }

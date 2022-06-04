@@ -152,6 +152,7 @@ public class AdminService {
         admin.setUsername("admin");
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.setProfilePhoto(null);
+        admin.setIsPasswordChanged(true);
         List<Role> roles = roleService.findByName("ROLE_ADMIN");
         admin.setRoles(roles);
         adminRepository.save(admin);
@@ -182,5 +183,23 @@ public class AdminService {
 
     public Administrator findAdminByUsername(String username) {
         return (Administrator) personRepository.findByUsername(username);
+    }
+
+    public void add(AdminDTO dto) {
+        Administrator admin = new Administrator();
+        admin.setActive(true);
+        admin.setEmail(dto.getEmail());
+        admin.setAddress(dto.getAddress());
+        admin.setPassword(passwordEncoder.encode(dto.getPassword()));
+        admin.setName(dto.getName());
+        admin.setSurname(dto.getSurname());
+        admin.setProfilePhoto(null);
+        admin.setLastPasswordResetDate(null);
+        admin.setPhoneNumber(dto.getPhone());
+        admin.setUsername(dto.getUsername());
+        admin.setIsPasswordChanged(false);
+        List<Role> roles = roleService.findByName("ROLE_ADMIN");
+        admin.setRoles(roles);
+        adminRepository.save(admin);
     }
 }

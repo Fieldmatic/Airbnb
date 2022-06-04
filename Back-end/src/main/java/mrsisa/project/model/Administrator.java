@@ -12,4 +12,5 @@ import javax.persistence.Entity;
 @Entity
 public class Administrator extends Person {
 
+    private Boolean isPasswordChanged;
 }

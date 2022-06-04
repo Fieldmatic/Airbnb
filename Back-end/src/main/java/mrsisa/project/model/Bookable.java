@@ -31,7 +31,7 @@ public abstract class Bookable {
     private String rules;
     private Double rating;
     private Integer capacity;
-    @ManyToMany
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Tag> additionalServices;
 
@@ -48,7 +48,7 @@ public abstract class Bookable {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Period> periods;
     @ManyToMany
     private List<Client> subscribedClients;

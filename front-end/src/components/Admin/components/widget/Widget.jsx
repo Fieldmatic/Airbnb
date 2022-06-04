@@ -19,7 +19,7 @@ import 'react-phone-number-input/style.css'
 import LoginRegisterService from '../../../../services/LoginRegisterService';
 
 
-const Widget = ({ type }) => {
+const Widget = ({ type, showMessage }) => {
   let data;
 
   const [openRegisterDialog, setOpenRegisterDialog] = React.useState(false);
@@ -65,19 +65,21 @@ const Widget = ({ type }) => {
     setOpenRegisterDialog(false);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
     LoginRegisterService.addAdmin(formData)
     .then(response => {
-        alert(response.data)
+        setOpenRegisterDialog(false);
+        showMessage([response.data, true]);
     })
     .catch(err => {
-        alert(err);
+        setOpenRegisterDialog(false);
+        showMessage([err.response.data, false]);
     })
   };
 
-  const registerAdmin = (e) => {
-    e.preventDefault();
+  const registerAdmin = (event) => {
+    event.preventDefault();
     setOpenRegisterDialog(true);
   }
 
@@ -264,7 +266,14 @@ const Widget = ({ type }) => {
             <div className='form--pair'>
                 <PhoneInput
                     className="form--phoneInputClient"
-                    onChange = {handleChange}                  
+                    onChange = {(value) => {
+                        setFormData(prevFormData => {
+                        return {
+                            ...prevFormData,
+                            phone:value
+                        }
+                        });
+                    }}
                     placeholder = "Phone number"
                     name = "phone"
                     value = {formData.phone}   

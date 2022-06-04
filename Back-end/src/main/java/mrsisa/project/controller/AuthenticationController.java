@@ -53,6 +53,9 @@ public class AuthenticationController {
 	@Autowired
 	private InstructorService instructorService;
 
+	@Autowired
+	private AdminService adminService;
+
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(
 			@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
@@ -124,5 +127,15 @@ public class AuthenticationController {
 		}
 		this.instructorService.add(dto, multiPartFiles);
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+	}
+
+	@PostMapping(value = "/adminRegistration")
+	public ResponseEntity<String> addAdmin(@RequestBody AdminDTO dto){
+		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
+		if (existUser != null) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
+		}
+		this.adminService.add(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).body("New admin successfully registered!");
 	}
 }

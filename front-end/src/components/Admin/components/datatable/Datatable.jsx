@@ -32,16 +32,6 @@ function createData(email, name, surname, username) {
   };
 }
 
-
-
-// const rows = [
-//   createData('bane-gg@hotmail.com', 'Miladin', 'Miladinovic', "milance"),
-//   createData('bane-gg@hotmail.com', 'Marko', 'Markovic', 'markan'),
-//   createData('bane-gg@hotmail.com', 'Pero', 'Peric', 'pero00'),
-//   createData('bane-gg@hotmail.com', 'Banz', "Ganz", 'banz'),
-//   createData('bane-gg@hotmail.com', "Banz", "Ganz", 'ganz'),
-// ];
-
 function Row(props) {
     const { row, registration, func } = props;
     const [open, setOpen] = React.useState(false);

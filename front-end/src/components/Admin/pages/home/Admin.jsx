@@ -5,6 +5,8 @@ import AdminNavbar from "../../components/navbar/AdminNavbar"
 import inMemoryJwt from '../../../../services/inMemoryJwtService';
 import LoginRegisterService from '../../../../services/LoginRegisterService'
 import Widget from '../../components/widget/Widget';
+import Collapse from '@mui/material/Collapse';
+import Alert from '@mui/material/Alert';
 
 
 export default function Admin() {
@@ -36,17 +38,41 @@ export default function Admin() {
         setRole(null)
     };
 
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [message, setMessage] = React.useState({
+        success: undefined,
+        text: ""
+    })
+
+    const showMessage = (returnMessage) => {
+        setShowAlert(true);
+        setMessage(() => {
+            return {
+                success: returnMessage[1],
+                text: returnMessage[0]
+            }
+        })
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 2500)
+    }
 
     return (
         <div className="adminHome">
             <AdminSidebar />
             <div className="homeContainer">
                 <AdminNavbar />
+                <Collapse in={showAlert}>
+                    {message.success ? 
+                        <Alert variant="filled" severity="success">{message.text}</Alert> :
+                        <Alert variant="filled" severity="error">{message.text}</Alert>
+                    }           
+                </Collapse>
                 <div className="widgets">
-                    <Widget type="user" />
-                    <Widget type="order" />
-                    <Widget type="earning" />
-                    <Widget type="balance" />
+                    <Widget type="user" showMessage={showMessage}/>
+                    <Widget type="order" showMessage={showMessage}/>
+                    <Widget type="earning" showMessage={showMessage}/>
+                    <Widget type="balance" showMessage={showMessage}/>
                 </div>
             </div>
         </div>

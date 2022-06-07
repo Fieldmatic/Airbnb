@@ -136,7 +136,7 @@ public class AdminService {
      * */
     public void createFirstAdmin() {
         if (findAdminByUsername("admin") != null) return;
-        roleService.createRoles();
+        //roleService.createRoles();
         Address address = new Address();
         address.setZipCode("123123");
         address.setStreet("Arse Teodorovica 2");

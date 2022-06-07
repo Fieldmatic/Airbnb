@@ -87,7 +87,7 @@ public class AuthenticationController {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
 		}
 
-		if (dto.getRole().equals("ROLE_COTTAGE_OWNER")) this.cottageOwnerService.add(dto, multiPartFiles);
+		if (dto.getRole().equals("ROLE_COTTAGE_OWNER")) this.cottageOwnerService.add(dto, java.util.Optional.ofNullable(multiPartFiles));
 		else this.boatOwnerService.add(dto, multiPartFiles);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");

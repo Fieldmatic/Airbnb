@@ -205,7 +205,7 @@ public class CottageService {
     };
 
     public CottageDTO getCottage(Long id) throws IOException {
-        Cottage cottage = findOne(id);
+        Cottage cottage = cottageRepository.findById(id).orElse(null);
         if (cottage == null) return null;
         List<String> cottagePhotos = getPhotos(cottage);
         cottage.setPictures(cottagePhotos);

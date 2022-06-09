@@ -24,6 +24,7 @@ import Admin from "./components/Admin/pages/home/Admin";
 import Requests from "./components/Admin/pages/list/Requests";
 import AdminProfile from "./components/Admin/pages/profile/AdminProfile";
 import AdminEntities from "./components/Admin/pages/list/Entities";
+import EditBoat from "./components/Boat/EditBoat";
 
 
 const Views = () => {
@@ -35,6 +36,7 @@ const Views = () => {
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
       <Route path = "/editCottage/:id" element = {<EditCottage/>}/>
+      <Route path = "/editBoat/:id" element = {<EditBoat/>}/>
       <Route path = "/editProfile" element = {< EditProfile />}/>
       <Route path = "/showEntities" element = {< AllEntities />}/>
       <Route path = "/addBoat" element = {<Boat/>}/>

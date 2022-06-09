@@ -79,7 +79,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/ownerRegistration")
-	public ResponseEntity<String> addOwner(@RequestPart("owner") PersonDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+	public ResponseEntity<String> addOwner(@RequestPart("owner") PersonDTO dto, @RequestPart(value = "files", required = false) MultipartFile[] multiPartFiles) throws IOException {
 
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 

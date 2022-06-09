@@ -52,8 +52,8 @@ public class BoatController {
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('BOAT_OWNER')")
     public ResponseEntity<String> editBoat(@RequestBody BoatDTO dto, @PathVariable("id") Long id) {
-        boatService.edit(dto, id);
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        if (boatService.edit(dto, id)) return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Boat has pending reservations!");
     }
 
     @GetMapping(value = "/get/{id}")

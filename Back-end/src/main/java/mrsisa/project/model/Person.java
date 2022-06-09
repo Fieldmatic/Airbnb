@@ -35,8 +35,7 @@ public abstract class Person implements UserDetails {
     private Boolean active;
     private Date lastPasswordResetDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "username"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))

@@ -14,7 +14,9 @@ public interface CottageRepository extends JpaRepository<Cottage, Long> {
 
     List<Cottage> findAllByCottageOwner_Id(Long id);
 
-    @Query(value = "SELECT c FROM Cottage c JOIN FETCH c.additionalServices where c.id=?1")
+    @Query(value = "SELECT c FROM Cottage c LEFT JOIN FETCH c.additionalServices where c.id=?1")
     Optional<Cottage> findById(Long id);
+    @Query(value = "SELECT c FROM Cottage c LEFT JOIN FETCH c.reviews where c.id=?1")
+    Cottage findByIdWithReviews(Long id);
 
 }

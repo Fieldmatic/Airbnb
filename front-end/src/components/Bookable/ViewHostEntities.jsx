@@ -58,6 +58,7 @@ function ViewHostEntities() {
             if (response.data === "ROLE_COTTAGE_OWNER") setEntityType("cottage")
             else if (response.data === "ROLE_BOAT_OWNER") setEntityType("boat")
             else setEntityType("adventure")
+            setEntitiesEdited(false)
         })
 
         if (entityType === "cottage") {
@@ -76,7 +77,6 @@ function ViewHostEntities() {
                 showAllAdventures()
             })
         }
-        setEntitiesEdited(false)
     },[entityType, priority, entitiesEdited])
 
     function handleChange(event) {
@@ -150,6 +150,7 @@ function ViewHostEntities() {
             address={item.address}
             promotionalDescription={item.promotionalDescription}
             entity={entityType}
+            setEntitiesEdited = {setEntitiesEdited}
             user="owner"
             />)
     }

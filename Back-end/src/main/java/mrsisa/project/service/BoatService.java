@@ -37,7 +37,7 @@ public class BoatService {
     PriceListRepository priceListRepository;
 
     @Autowired
-    PersonRepository personRepository;
+    BoatOwnerRepository boatOwnerRepository;
 
     @Autowired
     ReservationRepository reservationRepository;
@@ -47,18 +47,18 @@ public class BoatService {
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
 
-    @Transactional
+
     public void add(BoatDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Boat boat = dtoToBoat(dto);
-        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
-        boat.setAdditionalServices(additionalServices);
         List<String> paths = addPictures(boat, multipartFiles);
         boat.setPictures(paths);
         boat.setProfilePicture(paths.get(0));
-        BoatOwner owner = (BoatOwner) personRepository.findByUsername(userP.getName());
+        BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
         boat.setBoatOwner(owner);
-        owner.getBoats().add(boat);
         boatRepository.save(boat);
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
+        boat.setAdditionalServices(additionalServices);
+        owner.getBoats().add(boat);
     }
 
     @Transactional
@@ -66,7 +66,7 @@ public class BoatService {
         Boat boat = boatRepository.getById(id);
         BoatOwner owner;
         try {
-            owner = (BoatOwner) personRepository.findByUsername(userP.getName());
+            owner = boatOwnerRepository.findByUsername(userP.getName());
         } catch (ClassCastException e) {    // In ADMIN case
             owner = boat.getBoatOwner();
         }
@@ -156,16 +156,34 @@ public class BoatService {
 
 
 
-    public void edit(BoatDTO dto, Long id) {
+    public boolean edit(BoatDTO dto, Long id) {
         Boat boat = boatRepository.findById(id).orElse(null);
+        if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
         boat.setName(dto.getName());
-        boat.setAddress(dto.getAddress());
+        boat.getAddress().setState(dto.getAddress().getState());
+        boat.getAddress().setCity(dto.getAddress().getCity());
+        boat.getAddress().setStreet(dto.getAddress().getStreet());
+        boat.getAddress().setZipCode(dto.getAddress().getZipCode());
+        addressRepository.save(boat.getAddress());
         boat.setPromotionalDescription(dto.getPromotionalDescription());
         boat.setRules(dto.getRules());
         boat.getPriceList().setHourlyRate(dto.getHourlyRate());
         boat.getPriceList().setDailyRate(dto.getDailyRate());
         boat.getPriceList().setCancellationConditions(dto.getCancellationConditions());
+        priceListRepository.save(boat.getPriceList());
+        boat.setCapacity(dto.getCapacity());
+        boat.setType(BoatType.valueOf(dto.getType()));
+        boat.setEnginesNumber(dto.getEnginesNumber());
+        boat.setEnginePower(dto.getEnginePower());
+        boat.setMaxSpeed(dto.getMaxSpeed());
+        boat.setCapacity(dto.getCapacity());
+        boat.setLength(dto.getLength());
+        boat.setNavigationEquipment(dto.getNavigationEquipment());
+        boat.setFishingEquipment(dto.getFishingEquipment());
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
+        boat.setAdditionalServices(additionalServices);
         boatRepository.save(boat);
+        return true;
     }
 
     public Boat findOne(Long id) {
@@ -180,7 +198,6 @@ public class BoatService {
         Boat boat = new Boat();
         boat.setName(dto.getName());
         Address address = dto.getAddress();
-        addressRepository.save(address);
         boat.setAddress(address);
         boat.setPromotionalDescription(dto.getPromotionalDescription());
         boat.setRules(dto.getRules());
@@ -188,12 +205,12 @@ public class BoatService {
         priceList.setHourlyRate(dto.getHourlyRate());
         priceList.setDailyRate(dto.getDailyRate());
         priceList.setCancellationConditions(dto.getCancellationConditions());
-        priceListRepository.save(priceList);
         boat.setPriceList(priceList);
         boat.setRating(0.0);
         boat.setType(BoatType.valueOf(dto.getType()));
         boat.setEnginesNumber(dto.getEnginesNumber());
         boat.setEnginePower(dto.getEnginePower());
+        boat.setLength(dto.getLength());
         boat.setMaxSpeed(dto.getMaxSpeed());
         boat.setCapacity(dto.getCapacity());
         boat.setNavigationEquipment(dto.getNavigationEquipment());

@@ -51,15 +51,17 @@ public class CottageService {
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
+
     public void add(CottageDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
-        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), cottage);
-        cottage.setAdditionalServices(additionalServices);
         List<String> paths = addPictures(cottage, multipartFiles);
         cottage.setPictures(paths);
         cottage.setProfilePicture(paths.get(0));
         CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
         cottage.setCottageOwner(owner);
+        cottageRepository.save(cottage);
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), cottage);
+        cottage.setAdditionalServices(additionalServices);
         owner.getCottages().add(cottage);
     }
 
@@ -118,7 +120,7 @@ public class CottageService {
     }
 
     public Integer getNumberOfReviews(Long id) {
-        Cottage cottage = findOne(id);
+        Cottage cottage = cottageRepository.findByIdWithReviews(id);
         return cottage.getReviews().size();
     }
 
@@ -244,10 +246,11 @@ public class CottageService {
         cottage.getPriceList().setDailyRate(dto.getDailyRate());
         cottage.getPriceList().setCancellationConditions(dto.getCancellationConditions());
         priceListRepository.save(cottage.getPriceList());
-        if (dto.getSingleRooms() != 0) cottage.getRooms().put(1,dto.getSingleRooms());
-        if (dto.getDoubleRooms() != 0) cottage.getRooms().put(2,dto.getDoubleRooms());
-        if (dto.getTripleRooms() != 0) cottage.getRooms().put(3,dto.getTripleRooms());
-        if (dto.getQuadRooms() != 0) cottage.getRooms().put(4,dto.getQuadRooms());
+        cottage.setCapacity(0);
+        if (dto.getSingleRooms() != 0) {cottage.getRooms().put(1,dto.getSingleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getSingleRooms());}
+        if (dto.getDoubleRooms() != 0) {cottage.getRooms().put(2,dto.getDoubleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getDoubleRooms() * 2);}
+        if (dto.getTripleRooms() != 0) {cottage.getRooms().put(3,dto.getTripleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getTripleRooms() * 3);}
+        if (dto.getQuadRooms() != 0) {cottage.getRooms().put(4,dto.getQuadRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getQuadRooms() *4);}
         cottageRepository.save(cottage);
         return true;
     }
@@ -270,12 +273,12 @@ public class CottageService {
         cottage.setPriceList(priceList);
         cottage.setRating(0.0);
         Map<Integer,Integer> rooms = new HashMap<>();
-        if (dto.getSingleRooms() != 0) rooms.put(1,dto.getSingleRooms());
-        if (dto.getDoubleRooms() != 0) rooms.put(2,dto.getDoubleRooms());
-        if (dto.getTripleRooms() != 0) rooms.put(3,dto.getTripleRooms());
-        if (dto.getQuadRooms() != 0) rooms.put(4,dto.getQuadRooms());
         cottage.setRooms(rooms);
-
+        cottage.setCapacity(0);
+        if (dto.getSingleRooms() != 0) {cottage.getRooms().put(1,dto.getSingleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getSingleRooms());}
+        if (dto.getDoubleRooms() != 0) {cottage.getRooms().put(2,dto.getDoubleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getDoubleRooms() * 2);}
+        if (dto.getTripleRooms() != 0) {cottage.getRooms().put(3,dto.getTripleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getTripleRooms() * 3);}
+        if (dto.getQuadRooms() != 0) {cottage.getRooms().put(4,dto.getQuadRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getQuadRooms() *4);}
         return cottage;
     }
 

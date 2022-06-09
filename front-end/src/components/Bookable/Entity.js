@@ -88,15 +88,34 @@ function entity(props) {
     }
 
     function handleDelete(){
-        if (props.entity === "cottage") CottageService.deleteCottage(props.id)
-        else if (props.entity === "boat") BoatService.deleteBoat(props.id)
+        if (props.entity === "cottage") {
+            CottageService.deleteCottage(props.id).then(() => {
+                props.setEntitiesEdited(true)
+            })
+            
+        }
+        else if (props.entity === "boat") {
+            BoatService.deleteBoat(props.id).then(() => {
+                props.setEntitiesEdited(true)
+            })
+        }
         handleClose()
-        props.setEntitiesEdited(true)
     }
 
     function openReservePopup() {
         setReservePopup(true);
     };
+
+    function handleEdit(){
+        if (props.entity === "cottage") {
+            navigate("/editCottage/"+props.id)
+            
+        }
+        else if (props.entity === "boat") {
+            navigate("/editBoat/"+props.id)
+        }
+        
+    }
 
 
     function getPrice() {
@@ -170,7 +189,7 @@ function entity(props) {
                                             },
                                     }}
                                     className = "editButton"
-                                    onClick={() => navigate("")}
+                                    onClick={handleEdit}
                                     variant='outlined'>Edit
                             </Button>
                             <Button sx = {{

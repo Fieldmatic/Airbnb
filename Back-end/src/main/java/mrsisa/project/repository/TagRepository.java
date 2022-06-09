@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-     @Query(value = "SELECT t FROM Tag t JOIN FETCH t.bookables where t.name=?1")
+     @Query(value = "SELECT t FROM Tag t LEFT JOIN FETCH t.bookables where t.name=?1")
      Optional<Tag> findByName(String name);
 
      @Query(value = "select * from tag t left join tag_bookables b on t.id = b.tag_id where b.bookables_id = ?1", nativeQuery = true)

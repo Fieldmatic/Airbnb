@@ -14,12 +14,12 @@ public class RegistrationRequestDTO {
     private Long id;
     private String reason;
     private Boolean approved;
-    private Person user;
+    private PersonBasicInfoDTO user;
 
-    public RegistrationRequestDTO(RegistrationRequest registrationRequest) {
+    public RegistrationRequestDTO(RegistrationRequest registrationRequest, PersonBasicInfoDTO personInfo) {
         this.id = registrationRequest.getId();
         this.reason = registrationRequest.getReason();
         this.approved = registrationRequest.getApproved();
-        this.user = registrationRequest.getUser();
+        this.user = personInfo;
     }
 }

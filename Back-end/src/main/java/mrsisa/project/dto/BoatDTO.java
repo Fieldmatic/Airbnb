@@ -28,6 +28,7 @@ public class BoatDTO {
         this.enginePower = boat.getEnginePower();
         this.maxSpeed = boat.getMaxSpeed();
         this.capacity = boat.getCapacity();
+        this.length = boat.getLength();
         this.navigationEquipment = boat.getNavigationEquipment();
         this.fishingEquipment = boat.getFishingEquipment();
         this.additionalServices = getStringAdditionalServices(boat.getAdditionalServices());
@@ -46,6 +47,8 @@ public class BoatDTO {
     private Integer enginesNumber;
     private Double enginePower;
     private Double maxSpeed;
+
+    private double length;
     private Integer capacity;
     private List<String> navigationEquipment;
     private List<String> fishingEquipment;

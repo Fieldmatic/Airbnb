@@ -9,12 +9,15 @@ import muiStyles from '../utils/muiStyles';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
+import Tags from '../utils/Tags';
 
 export default function EditCottage() {
   let {id} = useParams();
   const [slideNumber, setSlideNumber] = React.useState(0)
   const [slideOpened, setSlideOpened] = React.useState(false)
-  const [cottage, setFormData] = React.useState (
+  const [tags, setTags] = React.useState([]);
+  const [tagsLoaded, setTagsLoaded] = React.useState(false)
+  const [cottage, setCottage] = React.useState (
       {
         name : "",
         address: {
@@ -32,13 +35,14 @@ export default function EditCottage() {
         doubleRooms : 0,
         tripleRooms : 0,
         quadRooms : 0,
-        photos:[]
+        photos:[],
+        additionalServices:[]
       }
   )
     React.useEffect(() => {
       CottageService.getCottage(id).then((response) => {
           let cottage = response.data;
-          setFormData({
+          setCottage({
               name : cottage.name, 
               address : cottage.address,
               promotionalDescription : cottage.promotionalDescription,
@@ -52,13 +56,15 @@ export default function EditCottage() {
               quadRooms : cottage.quadRooms,
               photos:cottage.photos
           })
+          setTags(cottage.additionalServices)
+          setTagsLoaded(true)
       })
     },[])
     
 
   function handleChange(event) {
     const {name, value} = event.target
-    setFormData(prevFormData => {
+    setCottage(prevFormData => {
       return {
         ...prevFormData,
         [name]: value
@@ -85,7 +91,7 @@ export default function EditCottage() {
   function handleAddressChange(event) {
     const {name, value} = event.target
     const address = cottage.address
-    setFormData(prevFormData => {
+    setCottage(prevFormData => {
         return {
             ...prevFormData,
             address: {
@@ -97,7 +103,7 @@ export default function EditCottage() {
   }
 
   function handleRoomChange(name, value) {
-    setFormData(prevFormData => {
+    setCottage(prevFormData => {
       return {
         ...prevFormData,
         [name]: value
@@ -107,6 +113,7 @@ export default function EditCottage() {
 
   function handleSubmit(event){
     event.preventDefault()
+    cottage.additionalServices = tags;
     CottageService.updateCottage(cottage, id)
     .then(response => {
       alert(response.data);
@@ -242,6 +249,10 @@ export default function EditCottage() {
                   value={cottage.rules}
                   onChange={handleChange}
               />
+          </div>
+          <div className='form--pair'>
+                    {tagsLoaded && <Tags tags = {tags} setTags ={setTags}/> }
+                    
           </div>
           <div className='form--bedrooms'>
             <div className='bedRoom'>

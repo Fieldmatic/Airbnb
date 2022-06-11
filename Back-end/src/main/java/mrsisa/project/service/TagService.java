@@ -20,9 +20,9 @@ public class TagService {
     public List<Tag> getAdditionalServicesFromDTO(List<String> additionalServices, Bookable bookable){
         List<Tag> tags = new ArrayList<>();
         for (String tagName : additionalServices) {
-            Optional<Tag> tag = tagRepository.findByName(tagName);
+            Optional<Tag> tag = Optional.ofNullable(tagRepository.findByName(tagName));
             if (tag.isPresent()) {
-                tag.get().getBookables().add(bookable);
+                if (!(tag.get().getBookables().contains(bookable)))  tag.get().getBookables().add(bookable);
                 tags.add(tag.get());
             } else {
                 Tag newTag = new Tag(tagName, bookable);
@@ -31,6 +31,38 @@ public class TagService {
             }
         }
         return tags;
+    }
+
+    public void setNewAdditionalServices(List<String> additionalServices, Bookable bookable){
+        for (String tagName : additionalServices) {
+            Optional<Tag> tag = Optional.ofNullable(tagRepository.findByName(tagName));
+            if (tag.isPresent() && (!(tag.get().getBookables().contains(bookable)))) {
+                tag.get().getBookables().add(bookable);
+                bookable.getAdditionalServices().add(tag.get());
+            } else if (!tag.isPresent()){
+                Tag newTag = new Tag(tagName, bookable);
+                tagRepository.save(newTag);
+                bookable.getAdditionalServices().add(newTag);
+            }
+        }
+    }
+
+    public void saveTags(List<Tag> tags){
+        tagRepository.saveAll(tags);
+    }
+
+    public void removeRelationships(Bookable bookable){
+        List<Tag> tagsWithRelationship = tagRepository.findByBookableId(bookable.getId());
+        for(Tag tag : tagsWithRelationship) {
+            tag.getBookables().remove(bookable);
+            tagRepository.save(tag);
+        }
+
+    }
+
+    public void removeRelationship(Bookable bookable, Tag tag){
+        tag.getBookables().remove(bookable);
+        tagRepository.save(tag);
     }
 
     public List<Tag> getAdditionalServicesOfBookable(Long id) {

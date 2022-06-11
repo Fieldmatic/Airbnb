@@ -47,6 +47,7 @@ export default function EditBoat() {
     React.useEffect(() => {
       BoatService.getBoat(id).then((response) => {
           let boat = response.data;
+          console.log(boat)
           setBoat({
               name : boat.name, 
               address : boat.address,
@@ -66,7 +67,6 @@ export default function EditBoat() {
               photos:boat.photos
           })
           setTags(boat.additionalServices)
-          console.log(tags)
           setTagsLoaded(true)
       })
     },[])
@@ -113,6 +113,7 @@ export default function EditBoat() {
 
   function handleChange(event) {
     const {name, value} = event.target
+    console.log(tags)
     setBoat(prevboat => {
       return {
         ...prevboat,
@@ -154,13 +155,23 @@ export default function EditBoat() {
   function handleSubmit(event){
     event.preventDefault()
     boat.additionalServices = tags;
-    boat.navigationEquipment = boat.navigationEquipment.trim().split(",");
-    boat.fishingEquipment = boat.fishingEquipment.trim().split(",");
+    prepareEquipment(boat);
     BoatService.updateBoat(boat, id)
     .then(response => {
       alert(response.data);
       window.location.reload();
     });
+  }
+
+  function prepareEquipment(boat){
+    try{
+      boat.navigationEquipment = boat.navigationEquipment.trim().split(",");
+    }catch(e){
+    }
+    try{
+      boat.fishingEquipment = boat.fishingEquipment.trim().split(",");
+    }catch(e){
+    }
   }
 
   return (

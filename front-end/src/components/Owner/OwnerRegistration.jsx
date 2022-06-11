@@ -74,7 +74,6 @@ export default function OwnerRegistration() {
             [name]: value
         }
         })
-        console.log(formData)
     }
 
     function handleAddressChange(event) {

@@ -52,11 +52,11 @@ public class CottageServiceTest {
         reviews.add(new Review());
         Cottage cottage = new Cottage();
         cottage.setReviews(reviews);
-        when(cottageRepository.findById(1L)).thenReturn(java.util.Optional.of(cottage));
+        when(cottageRepository.findByIdWithReviews(1L)).thenReturn(cottage);
 
         assertEquals((int) cottageService.getNumberOfReviews(1L),cottage.getReviews().size());
 
-        verify(cottageRepository,times(1)).findById(1L);
+        verify(cottageRepository,times(1)).findByIdWithReviews(1L);
         verifyNoMoreInteractions(cottageRepository);
     }
 }

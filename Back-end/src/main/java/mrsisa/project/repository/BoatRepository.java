@@ -14,9 +14,6 @@ public interface BoatRepository extends JpaRepository<Boat, Long> {
 
     List<Boat> findBoatsByBoatOwner_Id(Long id);
 
-    @Query(value = "SELECT b FROM Boat b LEFT JOIN FETCH b.additionalServices where b.id=?1")
-    Optional<Boat> findById(Long id);
-
     @Query(value = "SELECT b FROM Boat b LEFT JOIN FETCH b.reviews where b.id=?1")
     Cottage findByIdWithReviews(Long id);
 }

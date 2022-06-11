@@ -62,6 +62,7 @@ public class CottageService {
         cottageRepository.save(cottage);
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), cottage);
         cottage.setAdditionalServices(additionalServices);
+        cottageRepository.save(cottage);
         owner.getCottages().add(cottage);
     }
 
@@ -114,7 +115,7 @@ public class CottageService {
         for (Cottage cottage : cottages) {
             List<String> cottagePhotos = getPhotos(cottage);
             cottage.setPictures(cottagePhotos);
-            cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
+            cottagesDTO.add(new CottageDTO(cottage));
         }
         return cottagesDTO;
     }
@@ -155,7 +156,7 @@ public class CottageService {
     public List<CottageDTO> findAll() {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage : cottageRepository.findAll()) {
-            cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
+            cottagesDTO.add(new CottageDTO(cottage));
         }
         return cottagesDTO;
     }
@@ -170,7 +171,7 @@ public class CottageService {
         for (Cottage cottage: cottageRepository.findAll()) {
             for (Period period : cottage.getPeriods()) {
                 if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
-                    cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
+                    cottagesDTO.add(new CottageDTO(cottage));
                     break;
                 }
             }
@@ -197,11 +198,10 @@ public class CottageService {
         return photos;
     }
 
-
     public List<CottageDTO> findOwnerCottages(Long id) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage : cottageRepository.findAllByCottageOwner_Id(id)) {
-            cottagesDTO.add(new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId())));
+            cottagesDTO.add(new CottageDTO(cottage));
         }
         return cottagesDTO;
     };
@@ -211,7 +211,7 @@ public class CottageService {
         if (cottage == null) return null;
         List<String> cottagePhotos = getPhotos(cottage);
         cottage.setPictures(cottagePhotos);
-        return new CottageDTO(cottage, tagService.getAdditionalServicesOfBookable(cottage.getId()));
+        return new CottageDTO(cottage);
     }
 
     @Transactional
@@ -230,7 +230,7 @@ public class CottageService {
         }
         return false;
     }
-
+    @Transactional
     public boolean edit(CottageDTO dto, Long id) {
         Cottage cottage = cottageRepository.findById(id).orElse(null);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
@@ -251,8 +251,22 @@ public class CottageService {
         if (dto.getDoubleRooms() != 0) {cottage.getRooms().put(2,dto.getDoubleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getDoubleRooms() * 2);}
         if (dto.getTripleRooms() != 0) {cottage.getRooms().put(3,dto.getTripleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getTripleRooms() * 3);}
         if (dto.getQuadRooms() != 0) {cottage.getRooms().put(4,dto.getQuadRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getQuadRooms() *4);}
+        tagService.setNewAdditionalServices(dto.getAdditionalServices(), cottage);
+        handleDeletedTags(cottage,dto.getAdditionalServices());
         cottageRepository.save(cottage);
         return true;
+    }
+
+    private void handleDeletedTags(Cottage cottage,List<String> additionalServices){
+
+        for(int i = cottage.getAdditionalServices().size() - 1; i >= 0; --i)
+        {
+            if (!(additionalServices.contains(cottage.getAdditionalServices().get(i).getName()))){
+                tagService.removeRelationship(cottage, cottage.getAdditionalServices().get(i));
+                cottage.getAdditionalServices().remove(cottage.getAdditionalServices().get(i));
+            }
+        }
+
     }
 
     public Cottage findOne(Long id) {

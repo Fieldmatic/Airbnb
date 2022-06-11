@@ -58,6 +58,7 @@ public class BoatService {
         boatRepository.save(boat);
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
         boat.setAdditionalServices(additionalServices);
+        boatRepository.save(boat);
         owner.getBoats().add(boat);
     }
 
@@ -72,6 +73,7 @@ public class BoatService {
         }
         if (boat.getBoatOwner() == owner && (reservationRepository.getActiveReservations(id).size()) == 0) {
             owner.getBoats().remove(boat);
+            tagService.removeRelationships(boat);
             boatRepository.delete(boat);
             return true;
         }
@@ -79,7 +81,6 @@ public class BoatService {
     }
 
 
-    @Transactional
     public List<BoatDTO> findOwnerBoats(Long id) {
         List<BoatDTO> boatsDTO = new ArrayList<>();
         for (Boat boat : boatRepository.findBoatsByBoatOwner_Id(id)) {
@@ -155,7 +156,7 @@ public class BoatService {
     }
 
 
-
+    @Transactional
     public boolean edit(BoatDTO dto, Long id) {
         Boat boat = boatRepository.findById(id).orElse(null);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
@@ -180,10 +181,24 @@ public class BoatService {
         boat.setLength(dto.getLength());
         boat.setNavigationEquipment(dto.getNavigationEquipment());
         boat.setFishingEquipment(dto.getFishingEquipment());
-        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
-        boat.setAdditionalServices(additionalServices);
+        tagService.setNewAdditionalServices(dto.getAdditionalServices(), boat);
+        handleDeletedTags(boat,dto.getAdditionalServices());
         boatRepository.save(boat);
+
         return true;
+
+    }
+
+    private void handleDeletedTags(Boat boat,List<String> additionalServices){
+
+        for(int i = boat.getAdditionalServices().size() - 1; i >= 0; --i)
+        {
+            if (!(additionalServices.contains(boat.getAdditionalServices().get(i).getName()))){
+                tagService.removeRelationship(boat, boat.getAdditionalServices().get(i));
+                boat.getAdditionalServices().remove(boat.getAdditionalServices().get(i));
+            }
+        }
+
     }
 
     public Boat findOne(Long id) {

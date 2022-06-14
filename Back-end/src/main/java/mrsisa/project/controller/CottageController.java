@@ -37,8 +37,8 @@ public class CottageController {
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
-    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles, Principal userP) throws IOException {
-        cottageService.add(dto, multiPartFiles, userP);
+    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles, Principal userP) throws IOException {
+        cottageService.add(dto, Optional.ofNullable(multiPartFiles), userP);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
@@ -73,10 +73,10 @@ public class CottageController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/edit/{id}")
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
-    public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
-        if (cottageService.edit(dto, id)) return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+    public ResponseEntity<String> editCottage(@RequestPart("cottage") CottageDTO dto,@RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles, @PathVariable("id") Long id) throws IOException {
+        if (cottageService.edit(dto, id,Optional.ofNullable(multiPartFiles))) return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Cottage has pending reservations!");
 
     }

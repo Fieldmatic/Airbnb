@@ -10,6 +10,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
 import Tags from '../utils/Tags';
+import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 
 export default function EditCottage() {
   let {id} = useParams();
@@ -60,6 +61,27 @@ export default function EditCottage() {
           setTagsLoaded(true)
       })
     },[])
+
+    const [files, setFiles] = React.useState([]);
+
+    const [imageSrc, setImageSrc] = React.useState(undefined);
+
+    const updateFiles = (incommingFiles) => {
+        console.log("incomming files", incommingFiles);
+        setFiles(incommingFiles);
+    };
+
+    const onDelete = (id) => {
+        setFiles(files.filter((x) => x.id !== id));
+    };
+
+    const handleSee = (imageSource) => {
+        setImageSrc(imageSource);
+    };
+
+    const handleClean = (files) => {
+        console.log("list cleaned", files);
+    };
     
 
   function handleChange(event) {
@@ -114,7 +136,18 @@ export default function EditCottage() {
   function handleSubmit(event){
     event.preventDefault()
     cottage.additionalServices = tags;
-    CottageService.updateCottage(cottage, id)
+    let data = new FormData()
+    const json = JSON.stringify(cottage)
+    const cottageJson = new Blob([json], {
+      type: 'application/json'
+    });
+    data.append("cottage", cottageJson)
+    if (files.map.length > 0){
+      files.map((file) => {
+        data.append("files", file.file)
+      })
+   }
+    CottageService.updateCottage(data, id)
     .then(response => {
       alert(response.data);
       window.location.reload();
@@ -272,6 +305,39 @@ export default function EditCottage() {
               <Counter name = "quadRooms" value = {cottage.quadRooms} handleChange = {handleRoomChange}/>
             </div>
           </div>
+          <div className='form--pair'>
+                <Dropzone
+                style={{ minWidth: "100%", fontSize:"18px" }}
+                onChange={updateFiles}
+                minHeight="20vh"
+                onClean={handleClean}
+                value={files}
+                label='Drop your interior & exterior pictures here'
+                accept = {".jpg, .png"}
+                maxFiles={10}
+                header={true}
+                maxFileSize={5000000}
+            >
+                {files.map((file) => (
+                <FileItem
+                    {...file}
+                    key={file.id}
+                    onDelete={onDelete}
+                    onSee={handleSee}
+                    resultOnTooltip
+                    preview
+                    info
+                    hd
+                />
+                ))}
+                <FullScreenPreview
+                imgSource={imageSrc}
+                openImage={imageSrc}
+                onClose={(e) => handleSee(undefined)}
+                />
+            </Dropzone>
+            </div>
+          <div className='form--pair'></div>
           <div className='form--pair'>
           {slideOpened && 
                     <div className="slider">

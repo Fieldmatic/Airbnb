@@ -1,6 +1,7 @@
 import React from 'react'
 import CottageService from '../../services/CottageService'
 import Counter from "../utils/Counter"
+import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import { useParams } from 'react-router-dom'
 import Header from "../../Header";
 import { TextField } from '@mui/material';
@@ -70,6 +71,28 @@ export default function EditBoat() {
           setTagsLoaded(true)
       })
     },[])
+
+    const [files, setFiles] = React.useState([]);
+
+    const [imageSrc, setImageSrc] = React.useState(undefined);
+
+    const updateFiles = (incommingFiles) => {
+        console.log("incomming files", incommingFiles);
+        setFiles(incommingFiles);
+    };
+
+    const onDelete = (id) => {
+        setFiles(files.filter((x) => x.id !== id));
+    };
+
+    const handleSee = (imageSource) => {
+        setImageSrc(imageSource);
+    };
+
+    const handleClean = (files) => {
+        console.log("list cleaned", files);
+    };
+
     
     const boat_types = [
       {
@@ -156,7 +179,15 @@ export default function EditBoat() {
     event.preventDefault()
     boat.additionalServices = tags;
     prepareEquipment(boat);
-    BoatService.updateBoat(boat, id)
+    let data = new FormData()
+    const boatJson = getBoatJson();
+    data.append("boat", boatJson)
+    if (files.map.length > 0){
+      files.map((file) => {
+        data.append("files", file.file)
+      })
+   }
+    BoatService.updateBoat(data, id)
     .then(response => {
       alert(response.data);
       window.location.reload();
@@ -409,6 +440,38 @@ export default function EditBoat() {
                     {tagsLoaded && <Tags tags = {tags} setTags ={setTags}/> }
                     
                 </div>
+                <div className='form--pair'>
+                <Dropzone
+                style={{ minWidth: "100%", fontSize:"18px" }}
+                onChange={updateFiles}
+                minHeight="20vh"
+                onClean={handleClean}
+                value={files}
+                label='Drop your interior & exterior pictures here'
+                accept = {".jpg, .png"}
+                maxFiles={10}
+                header={true}
+                maxFileSize={5000000}
+            >
+                {files.map((file) => (
+                <FileItem
+                    {...file}
+                    key={file.id}
+                    onDelete={onDelete}
+                    onSee={handleSee}
+                    resultOnTooltip
+                    preview
+                    info
+                    hd
+                />
+                ))}
+                <FullScreenPreview
+                imgSource={imageSrc}
+                openImage={imageSrc}
+                onClose={(e) => handleSee(undefined)}
+                />
+            </Dropzone>
+            </div>
           <div className='form--pair'>
           {slideOpened && 
                     <div className="slider">
@@ -437,4 +500,13 @@ export default function EditBoat() {
       </div>
     </div>
   )
+
+  function getBoatJson() {
+    const json = JSON.stringify(boat);
+    const boatJson = new Blob([json], {
+        type: 'application/json'
+    });
+    return boatJson;
+}
+
 }

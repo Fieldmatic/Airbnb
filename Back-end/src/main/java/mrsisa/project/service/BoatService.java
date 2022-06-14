@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -23,6 +24,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,11 +50,14 @@ public class BoatService {
     final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
 
 
-    public void add(BoatDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
+    public void add(BoatDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
         Boat boat = dtoToBoat(dto);
-        List<String> paths = addPictures(boat, multipartFiles);
-        boat.setPictures(paths);
-        boat.setProfilePicture(paths.get(0));
+        List<String> photoPaths = new ArrayList<>();
+        if (photoFiles.isPresent()){
+            photoPaths = addPictures(boat, photoFiles.get());
+            boat.setProfilePicture(photoPaths.get(0));
+        }
+        boat.setPictures(photoPaths);
         BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
         boat.setBoatOwner(owner);
         boatRepository.save(boat);
@@ -157,9 +162,17 @@ public class BoatService {
 
 
     @Transactional
-    public boolean edit(BoatDTO dto, Long id) {
+    public boolean edit(BoatDTO dto, Long id, Optional<MultipartFile[]> newPhotos) throws IOException {
         Boat boat = boatRepository.findById(id).orElse(null);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
+        if (newPhotos.isPresent())
+        {
+            List<String> paths = addPictures(boat, newPhotos.get());
+            assert boat != null;
+            boat.getPictures().addAll(paths);
+            if (boat.getProfilePicture() == null) boat.setProfilePicture(paths.get(0));
+        }
+
         boat.setName(dto.getName());
         boat.getAddress().setState(dto.getAddress().getState());
         boat.getAddress().setCity(dto.getAddress().getCity());

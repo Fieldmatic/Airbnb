@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.Instant;
@@ -48,6 +49,7 @@ public class ReservationService {
     TagRepository tagRepository;
 
 
+    @Transactional
     public void addQuick(Long actionId, Principal userP) throws IOException {
         Action action = actionRepository.getById(actionId);
         Reservation reservation = createReservationFromAction(action);
@@ -61,9 +63,30 @@ public class ReservationService {
     public void add(ReservationDTO dto, Principal userP) throws IOException {
         Reservation reservation = dtoToReservation(dto);
         Client client = clientRepository.findByUsername(userP.getName());
+        Bookable bookable = bookableRepository.getById(dto.getBookableId());
         reservation.setClient(client);
+        reservationRepository.save(reservation);
         client.getReservations().add(reservation);
+        clientRepository.save(client);
+        bookable.getReservations().add(reservation);
+        bookableRepository.save(bookable);
+        periodService.splitPeriodAfterReservation(reservation);
+        try{
+            emailService.sendReservationMail(client, reservation);
+        } catch(MailException ignored) {
+        }
+    }
 
+    public void addReservationForClient(ReservationDTO dto, String clientEmail){
+        Reservation reservation = dtoToReservation(dto);
+        Client client = clientRepository.findByEmail(clientEmail);
+        Bookable bookable = bookableRepository.getById(dto.getBookableId());
+        reservation.setClient(client);
+        reservationRepository.save(reservation);
+        client.getReservations().add(reservation);
+        clientRepository.save(client);
+        bookable.getReservations().add(reservation);
+        bookableRepository.save(bookable);
         periodService.splitPeriodAfterReservation(reservation);
         try{
             emailService.sendReservationMail(client, reservation);

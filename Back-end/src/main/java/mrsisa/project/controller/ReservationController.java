@@ -40,6 +40,13 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
+    @PostMapping(value = "/reserveForClient/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR')")
+    public ResponseEntity<String> reserveForClient(@RequestBody ReservationDTO dto, @PathVariable("email") String email) throws IOException {
+        reservationService.addReservationForClient(dto, email);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    }
+
     @GetMapping(value = "/getReservations")
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR','ROLE_CLIENT')")
     public ResponseEntity<List<ReservationDTO>> getReservations(Principal userP) throws IOException {

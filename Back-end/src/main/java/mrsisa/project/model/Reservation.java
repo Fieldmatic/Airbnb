@@ -1,14 +1,17 @@
 package mrsisa.project.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Reservation {
     @Id
@@ -17,7 +20,7 @@ public class Reservation {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private Integer personLimit;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Tag> additionalServices;
     private Double price;
     private Boolean active;

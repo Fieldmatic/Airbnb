@@ -46,7 +46,7 @@ public abstract class Bookable {
     @OneToOne(cascade = CascadeType.ALL)
     private PriceList priceList;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "bookable",fetch = FetchType.LAZY, cascade = CascadeType.ALL)

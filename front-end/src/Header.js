@@ -82,10 +82,12 @@ export default function Header(){
         )
     }
 
+
     function getClientOptions(){
         return (
             <div className='header__links'>
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
+                <Link to={'/showWishList'} style={{textDecoration: 'none', color:'black'}}>Wish list</Link>
             </div>
         )
     }

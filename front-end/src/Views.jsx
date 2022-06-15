@@ -25,6 +25,7 @@ import Requests from "./components/Admin/pages/list/Requests";
 import AdminProfile from "./components/Admin/pages/profile/AdminProfile";
 import AdminEntities from "./components/Admin/pages/list/Entities";
 import EditBoat from "./components/Boat/EditBoat";
+import ShowWishList from "./components/ViewEntities/ShowWishList";
 
 
 const Views = () => {
@@ -39,6 +40,7 @@ const Views = () => {
       <Route path = "/editBoat/:id" element = {<EditBoat/>}/>
       <Route path = "/editProfile" element = {< EditProfile />}/>
       <Route path = "/showEntities" element = {< AllEntities />}/>
+      <Route path = "/showWishList" element = {< ShowWishList />}/>
       <Route path = "/addBoat" element = {<Boat/>}/>
       <Route path = "/ownerRegistration" element = {<OwnerRegistration/>}/>
       <Route path = "/clientRegistration" element = {<ClientRegistration/>}/>
@@ -48,7 +50,7 @@ const Views = () => {
       <Route path = "/hostReservations" element = {<ReservationHistory/>}/>
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
-      <Route path = "/bookableDetails/:id&:entityType&:user" element = {<BookableDetails />} />
+      <Route path = "/bookableDetails/:id&:entityType&:user&:heartColor" element = {<BookableDetails />} />
       <Route path = "/admin">
         <Route index element={<Admin />} />
         <Route path="registrationRequests" element={<Requests registration={true} />} />

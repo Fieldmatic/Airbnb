@@ -2,6 +2,7 @@ package mrsisa.project.service;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
 import mrsisa.project.dto.AdminDTO;
+import mrsisa.project.dto.PersonBasicInfoDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.model.*;
@@ -9,6 +10,7 @@ import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,11 +68,12 @@ public class AdminService {
         return null;
     }
 
+    @Transactional
     public List<ProfileDeletionReasonDTO> getProfileDeletionReasons() {
         List<ProfileDeletionReasonDTO> pdrDTOs = new ArrayList<>();
         for(ProfileDeletionReason pdr : profileDeletionReasonRepository.findAll()) {
             if (!pdr.getViewed())
-                pdrDTOs.add(new ProfileDeletionReasonDTO(pdr));
+                pdrDTOs.add(new ProfileDeletionReasonDTO(pdr, new PersonBasicInfoDTO(pdr.getUser())));
         }
         return pdrDTOs;
     }
@@ -103,7 +106,7 @@ public class AdminService {
         List<RegistrationRequestDTO> regReqDTOs = new ArrayList<>();
         for(RegistrationRequest regReq : registrationRequestRepository.findAll()) {
             if (!regReq.getViewed())
-                regReqDTOs.add(new RegistrationRequestDTO(regReq));
+                regReqDTOs.add(new RegistrationRequestDTO(regReq, new PersonBasicInfoDTO(regReq.getUser())));
         }
         return regReqDTOs;
     }
@@ -136,7 +139,7 @@ public class AdminService {
      * */
     public void createFirstAdmin() {
         if (findAdminByUsername("admin") != null) return;
-        roleService.createRoles();
+        //roleService.createRoles();
         Address address = new Address();
         address.setZipCode("123123");
         address.setStreet("Arse Teodorovica 2");

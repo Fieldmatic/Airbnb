@@ -56,7 +56,6 @@ export default function Cottage() {
   };
 
   function handleChange(event) {
-    console.log(tags)
     const {name, value} = event.target
     setFormData(prevFormData => {
       return {
@@ -94,7 +93,6 @@ export default function Cottage() {
     formData.additionalServices = tags;
     let data = new FormData()
     const json = JSON.stringify(formData)
-    console.log(json)
     const cottageJson = new Blob([json], {
       type: 'application/json'
     });

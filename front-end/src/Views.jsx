@@ -23,6 +23,7 @@ import Requests from "./components/Admin/pages/list/Requests";
 import AdminProfile from "./components/Admin/pages/profile/AdminProfile";
 import AdminEntities from "./components/Admin/pages/list/Entities";
 import Reviews from "./components/Admin/pages/list/Reviews";
+import EditBoat from "./components/Boat/EditBoat";
 
 
 const Views = () => {
@@ -34,6 +35,7 @@ const Views = () => {
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
       <Route path = "/editCottage/:id" element = {<EditCottage/>}/>
+      <Route path = "/editBoat/:id" element = {<EditBoat/>}/>
       <Route path = "/editProfile" element = {< EditProfile />}/>
       <Route path = "/showEntities" element = {< AllEntities />}/>
       <Route path = "/addBoat" element = {<Boat/>}/>
@@ -45,7 +47,7 @@ const Views = () => {
       <Route path = "/hostReservations" element = {<ReservationHistory/>}/>
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
-      <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
+      <Route path = "/bookableDetails/:id&:entityType&:user" element = {<BookableDetails />} />
       <Route path = "/admin">
         <Route index element={<Admin />} />
         <Route path="requests">

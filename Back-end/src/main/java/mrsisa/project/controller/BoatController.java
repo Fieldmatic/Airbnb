@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -36,8 +38,8 @@ public class BoatController {
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('BOAT_OWNER')")
-    public ResponseEntity<String> addBoat(@RequestPart("boat") BoatDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles, Principal userP) throws IOException {
-        boatService.add(dto, multiPartFiles, userP);
+    public ResponseEntity<String> addBoat(@RequestPart("boat") BoatDTO dto, @RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles, Principal userP) throws IOException {
+        boatService.add(dto, Optional.ofNullable(multiPartFiles), userP);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
@@ -48,11 +50,11 @@ public class BoatController {
         return new ResponseEntity<>(boatsDTO, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/edit/{id}")
     @PreAuthorize("hasRole('BOAT_OWNER')")
-    public ResponseEntity<String> editBoat(@RequestBody BoatDTO dto, @PathVariable("id") Long id) {
-        boatService.edit(dto, id);
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+    public ResponseEntity<String> editBoat(@RequestPart("boat") BoatDTO dto, @RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles, @PathVariable("id") Long id) throws IOException {
+        if (boatService.edit(dto, id, Optional.ofNullable(multiPartFiles))) return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Boat has pending reservations!");
     }
 
     @GetMapping(value = "/get/{id}")

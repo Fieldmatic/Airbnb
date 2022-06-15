@@ -13,6 +13,14 @@ class BoatService {
             } 
          })
     }
+    updateBoat(boat, id){
+        return axios.put(BOAT_BASED_REST_API_URL + "/edit/" + id, boat,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
 
     getBoat(id) {
         return axios.get(BOAT_BASED_REST_API_URL + "/get/" + id, id)

@@ -41,8 +41,10 @@ public class BookableService {
 
     private List<BookableCalendarDTO> getBookableActions(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {
         for (Action action : bookable.getActions()) {
-            calendarDTOS.add(new BookableCalendarDTO(
-                    "ACTION", action.getStartDateTime().toString(), action.getEndDateTime().toString(), "#008383"));
+            if (!action.getUsed()) {
+                calendarDTOS.add(new BookableCalendarDTO(
+                        "ACTION", action.getStartDateTime().toString(), action.getEndDateTime().toString(), "#008383"));
+            }
         }
         return calendarDTOS;
     }

@@ -14,12 +14,12 @@ public class ProfileDeletionReasonDTO {
     private String reason;
     private Boolean approved;
     private String password;
-    private Person user;
+    private PersonBasicInfoDTO user;
 
-    public ProfileDeletionReasonDTO(ProfileDeletionReason profileDeletionReason) {
+    public ProfileDeletionReasonDTO(ProfileDeletionReason profileDeletionReason,PersonBasicInfoDTO personInfo) {
         this.id = profileDeletionReason.getId();
         this.reason = profileDeletionReason.getReason();
         this.approved = profileDeletionReason.getApproved();
-        this.user = profileDeletionReason.getUser();
+        this.user = personInfo;
     }
 }

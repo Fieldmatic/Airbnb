@@ -51,16 +51,21 @@ public class CottageService {
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
-    @Transactional
-    public void add(CottageDTO dto, MultipartFile[] multipartFiles, Principal userP) throws IOException {
+
+    public void add(CottageDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
-        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices());
-        cottage.setAdditionalServices(additionalServices);
-        List<String> paths = addPictures(cottage, multipartFiles);
+        List<String> paths = new ArrayList<>();
+        if (photoFiles.isPresent()){
+            paths = addPictures(cottage, photoFiles.get());
+            cottage.setProfilePicture(paths.get(0));
+        }
         cottage.setPictures(paths);
-        cottage.setProfilePicture(paths.get(0));
-        CottageOwner owner = (CottageOwner) personRepository.findByUsername(userP.getName());
+        CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
         cottage.setCottageOwner(owner);
+        cottageRepository.save(cottage);
+        List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), cottage);
+        cottage.setAdditionalServices(additionalServices);
+        cottageRepository.save(cottage);
         owner.getCottages().add(cottage);
     }
 
@@ -119,7 +124,7 @@ public class CottageService {
     }
 
     public Integer getNumberOfReviews(Long id) {
-        Cottage cottage = findOne(id);
+        Cottage cottage = cottageRepository.findByIdWithReviews(id);
         return cottage.getReviews().size();
     }
 
@@ -151,7 +156,6 @@ public class CottageService {
         }
     }
 
-    @Transactional
     public List<CottageDTO> findAll() {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage : cottageRepository.findAll()) {
@@ -197,17 +201,21 @@ public class CottageService {
         return photos;
     }
 
-    // public List<Cottage> findAll() {
-    //     return cottageRepository.findAll();
-    // }
-
     public List<CottageDTO> findOwnerCottages(Long id) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
-        for (Cottage cottage : cottageRepository.findOwnerCottages(id)) {
+        for (Cottage cottage : cottageRepository.findAllByCottageOwner_Id(id)) {
             cottagesDTO.add(new CottageDTO(cottage));
         }
         return cottagesDTO;
     };
+
+    public CottageDTO getCottage(Long id) throws IOException {
+        Cottage cottage = cottageRepository.findById(id).orElse(null);
+        if (cottage == null) return null;
+        List<String> cottagePhotos = getPhotos(cottage);
+        cottage.setPictures(cottagePhotos);
+        return new CottageDTO(cottage);
+    }
 
     @Transactional
     public boolean deleteCottage(Long id, Principal userP) {
@@ -225,10 +233,17 @@ public class CottageService {
         }
         return false;
     }
-
-    public boolean edit(CottageDTO dto, Long id) {
+    @Transactional
+    public boolean edit(CottageDTO dto, Long id, Optional<MultipartFile[]> newPhotos) throws IOException {
         Cottage cottage = cottageRepository.findById(id).orElse(null);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
+        if (newPhotos.isPresent())
+        {
+            List<String> paths = addPictures(cottage, newPhotos.get());
+            assert cottage != null;
+            cottage.getPictures().addAll(paths);
+            if (cottage.getProfilePicture() == null) cottage.setProfilePicture(paths.get(0));
+        }
         cottage.setName(dto.getName());
         cottage.getAddress().setState(dto.getAddress().getState());
         cottage.getAddress().setCity(dto.getAddress().getCity());
@@ -241,12 +256,27 @@ public class CottageService {
         cottage.getPriceList().setDailyRate(dto.getDailyRate());
         cottage.getPriceList().setCancellationConditions(dto.getCancellationConditions());
         priceListRepository.save(cottage.getPriceList());
-        if (dto.getSingleRooms() != 0) cottage.getRooms().put(1,dto.getSingleRooms());
-        if (dto.getDoubleRooms() != 0) cottage.getRooms().put(2,dto.getDoubleRooms());
-        if (dto.getTripleRooms() != 0) cottage.getRooms().put(3,dto.getTripleRooms());
-        if (dto.getQuadRooms() != 0) cottage.getRooms().put(4,dto.getQuadRooms());
+        cottage.setCapacity(0);
+        if (dto.getSingleRooms() != 0) {cottage.getRooms().put(1,dto.getSingleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getSingleRooms());}
+        if (dto.getDoubleRooms() != 0) {cottage.getRooms().put(2,dto.getDoubleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getDoubleRooms() * 2);}
+        if (dto.getTripleRooms() != 0) {cottage.getRooms().put(3,dto.getTripleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getTripleRooms() * 3);}
+        if (dto.getQuadRooms() != 0) {cottage.getRooms().put(4,dto.getQuadRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getQuadRooms() *4);}
+        tagService.setNewAdditionalServices(dto.getAdditionalServices(), cottage);
+        handleDeletedTags(cottage,dto.getAdditionalServices());
         cottageRepository.save(cottage);
         return true;
+    }
+
+    private void handleDeletedTags(Cottage cottage,List<String> additionalServices){
+
+        for(int i = cottage.getAdditionalServices().size() - 1; i >= 0; --i)
+        {
+            if (!(additionalServices.contains(cottage.getAdditionalServices().get(i).getName()))){
+                tagService.removeRelationship(cottage, cottage.getAdditionalServices().get(i));
+                cottage.getAdditionalServices().remove(cottage.getAdditionalServices().get(i));
+            }
+        }
+
     }
 
     public Cottage findOne(Long id) {
@@ -267,12 +297,12 @@ public class CottageService {
         cottage.setPriceList(priceList);
         cottage.setRating(0.0);
         Map<Integer,Integer> rooms = new HashMap<>();
-        if (dto.getSingleRooms() != 0) rooms.put(1,dto.getSingleRooms());
-        if (dto.getDoubleRooms() != 0) rooms.put(2,dto.getDoubleRooms());
-        if (dto.getTripleRooms() != 0) rooms.put(3,dto.getTripleRooms());
-        if (dto.getQuadRooms() != 0) rooms.put(4,dto.getQuadRooms());
         cottage.setRooms(rooms);
-
+        cottage.setCapacity(0);
+        if (dto.getSingleRooms() != 0) {cottage.getRooms().put(1,dto.getSingleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getSingleRooms());}
+        if (dto.getDoubleRooms() != 0) {cottage.getRooms().put(2,dto.getDoubleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getDoubleRooms() * 2);}
+        if (dto.getTripleRooms() != 0) {cottage.getRooms().put(3,dto.getTripleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getTripleRooms() * 3);}
+        if (dto.getQuadRooms() != 0) {cottage.getRooms().put(4,dto.getQuadRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getQuadRooms() *4);}
         return cottage;
     }
 

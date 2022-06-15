@@ -7,6 +7,7 @@ import mrsisa.project.model.Client;
 import mrsisa.project.repository.ActionRepository;
 import mrsisa.project.repository.BookableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +38,12 @@ public class ActionService {
         if (actionPeriodAvailable(bookable, action)) {
             action.setBookable(bookable);
             bookable.getActions().add(action);
-            for (Client client: bookable.getSubscribedClients())
-            emailService.sendActionNotificationEmail(client, "One of your subscriptions is on action!",  "We have a great offer for you from " + FORMATTER.format(action.getStartDateTime()) + " to " + FORMATTER.format(action.getEndDateTime()) + " for one of your favorites " + bookable.getName());
+            for (Client client: bookable.getSubscribedClients()) {
+                try{
+                emailService.sendActionNotificationEmail(client, "One of your subscriptions is on action!", "We have a great offer for you from " + FORMATTER.format(action.getStartDateTime()) + " to " + FORMATTER.format(action.getEndDateTime()) + " for one of your favorites " + bookable.getName());
+                } catch(MailException ignored) {
+                }
+            }
             bookableRepository.save(bookable);
             return true;
         }

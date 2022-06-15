@@ -2,10 +2,10 @@
 .banner__info {
     display: flex;
     flex-direction: row;
-    height: 78vh;
+    height: 80vh;
 }
 .banner_image{
-    height: 78vh;
+    height: 80vh;
     width: fit-content;
 }
 

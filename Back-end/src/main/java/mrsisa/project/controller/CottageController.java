@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,8 +37,8 @@ public class CottageController {
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
-    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles, Principal userP) throws IOException {
-        cottageService.add(dto, multiPartFiles, userP);
+    public ResponseEntity<String> addCottage(@RequestPart("cottage") CottageDTO dto, @RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles, Principal userP) throws IOException {
+        cottageService.add(dto, Optional.ofNullable(multiPartFiles), userP);
         return ResponseEntity.status(HttpStatus.CREATED).body("Success");
     }
 
@@ -72,21 +73,19 @@ public class CottageController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/edit/{id}")
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
-    public ResponseEntity<String> editCottage(@RequestBody CottageDTO dto, @PathVariable("id") Long id) {
-        if (cottageService.edit(dto, id)) return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+    public ResponseEntity<String> editCottage(@RequestPart("cottage") CottageDTO dto,@RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles, @PathVariable("id") Long id) throws IOException {
+        if (cottageService.edit(dto, id,Optional.ofNullable(multiPartFiles))) return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Cottage has pending reservations!");
 
     }
 
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<CottageDTO> getCottage(@PathVariable("id") Long id) throws IOException {
-        Cottage cottage = cottageService.findOne(id);
+        CottageDTO cottage = cottageService.getCottage(id);
         if (cottage == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<String> cottagePhotos = cottageService.getPhotos(cottage);
-        cottage.setPictures(cottagePhotos);
-        return new ResponseEntity<>(new CottageDTO(cottage), HttpStatus.OK);
+        return new ResponseEntity<>(cottage, HttpStatus.OK);
     }
 
     @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})

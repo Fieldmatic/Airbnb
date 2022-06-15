@@ -1,12 +1,10 @@
 package mrsisa.project.controller;
 
-import mrsisa.project.dto.ClientBasicInfoDTO;
+import mrsisa.project.dto.PersonBasicInfoDTO;
 import mrsisa.project.dto.ClientDTO;
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.service.AddressService;
 import mrsisa.project.service.ClientService;
-import mrsisa.project.service.ProfileDeletionReasonService;
 import mrsisa.project.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -117,7 +115,7 @@ public class ClientController {
     @GetMapping("/getClientBasicInfo/{id}")
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR','ROLE_CLIENT')")
     @Transactional
-    public ResponseEntity<ClientBasicInfoDTO> getClientBasicInfo(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(new ClientBasicInfoDTO(clientService.findClientById(id)), HttpStatus.OK);
+    public ResponseEntity<PersonBasicInfoDTO> getClientBasicInfo(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(new PersonBasicInfoDTO(clientService.findClientById(id)), HttpStatus.OK);
     }
 }

@@ -18,10 +18,43 @@ import CottageOutlinedIcon from '@mui/icons-material/CottageOutlined';
 import DirectionsBoatOutlinedIcon from '@mui/icons-material/DirectionsBoatOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import DocumentScannerOutlinedIcon from '@mui/icons-material/DocumentScannerOutlined';
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
+import { useState, useEffect } from "react";
+import inMemoryJwt from '../../../../services/inMemoryJwtService'
+import LoginRegisterService from '../../../../services/LoginRegisterService';
 
 
 export default function AdminSidebar() {
+
+    const [isUserLogged, setIsUserLogged] = useState(false);
+    const [role, setRole] = useState(null);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        inMemoryJwt.setToken(localStorage.getItem("user"))
+        inMemoryJwt.setExpiresIn(localStorage.getItem("expiration"))
+        if ((inMemoryJwt.getToken()) !== null) setIsUserLogged(true);
+        else setIsUserLogged(false)
+        if (isUserLogged){
+            LoginRegisterService.getUserRole().then(response => {
+                if (response.data === "ROLE_COTTAGE_OWNER") setRole("COTTAGE_OWNER")
+                else if (response.data === "ROLE_BOAT_OWNER") setRole("BOAT_OWNER")
+                else if (response.data ==="ROLE_INSTRUCTOR") setRole("INSTRUCTOR")
+                else if (response.data ==="ROLE_ADMIN") setRole("ADMIN")
+                else setRole("CLIENT")
+            })
+        }
+    }, [isUserLogged]);
+
+    const logoutHandler = event => {
+        localStorage.clear()
+        inMemoryJwt.deleteExpiration()
+        inMemoryJwt.deleteToken()
+        setIsUserLogged(false)
+        setRole(null)
+        navigate("/")
+    };
 
     return (
         <div className="adminSidebar">
@@ -95,7 +128,7 @@ export default function AdminSidebar() {
                     </Link>
                     <li>
                         <ExitToAppIcon className="icon" />
-                        <span>Logout</span>
+                        <span onClick={logoutHandler}>Logout</span>
                     </li>
                     </ul>
                 </div>               

@@ -99,25 +99,32 @@ public class ClientService {
     public void addSubscription(Client client, Long bookableId) {
         Bookable bookable = bookableRepository.getById(bookableId);
         bookable.getSubscribedClients().add(client);
-        bookableRepository.save(bookable);
+        //bookableRepository.save(bookable);
         client.getSubscriptions().add(bookable);
         personRepository.save(client);
     }
 
     @Transactional
     public void deleteSubscription(Client client, Long bookableId) {
-        Bookable bookable = bookableRepository.getById(bookableId);
-        bookable.getSubscribedClients().remove(client);
-        bookableRepository.save(bookable);
-
-        client.getSubscriptions().remove(bookable);
+        for (Bookable bookable: client.getSubscriptions()) {
+            if (bookable.getId().equals(bookableId)) {
+                client.getSubscriptions().remove(bookable);
+                break;
+            }
+        }
         personRepository.save(client);
     }
 
     @Transactional
     public boolean checkIfClientIsSubscribed(Client client, Long bookableId) {
-        Bookable bookable = bookableRepository.getById(bookableId);
-        return client.getSubscriptions().contains(bookable);
+//        Bookable bookable = bookableRepository.getById(bookableId);
+//        return client.getSubscriptions().contains(bookable);
+        for (Bookable bookable: client.getSubscriptions()) {
+            if (bookable.getId().equals(bookableId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Client dtoToClient(ClientDTO dto) {

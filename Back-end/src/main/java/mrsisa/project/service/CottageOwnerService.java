@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,10 +39,12 @@ public class CottageOwnerService {
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
 
-    public Person add(PersonDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    public Person add(PersonDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
         CottageOwner owner = dtoToCottageOwner(dto);
-        List<String> paths = addPictures(owner, multipartFiles);
-        owner.setProfilePhoto(paths.get(0));
+        if (multipartFiles.isPresent()) {
+            List<String> paths = addPictures(owner, multipartFiles.get());
+            owner.setProfilePhoto(paths.get(0));
+        }
         cottageOwnerRepository.save(owner);
         adminService.createRegistrationRequest(owner);
         return owner;
@@ -89,4 +92,8 @@ public class CottageOwnerService {
         owner.setRoles(roles);
         return owner;
     }
+
+    public CottageOwner findCottageOwnerByUsername(String username){return cottageOwnerRepository.findByUsername(username);}
+
+    public List<CottageOwner> findAll(){return cottageOwnerRepository.findAll();}
 }

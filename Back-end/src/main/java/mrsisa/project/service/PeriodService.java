@@ -54,7 +54,7 @@ public class PeriodService {
     }
 
     public void splitPeriodAfterReservation(Reservation reservation)  {
-        Period firstPeriod = periodRepository.findPeriodByStartDateTimeIsLessThanEqualAndEndDateTimeIsGreaterThanEqual(reservation.getStartDateTime(), reservation.getEndDateTime());
+        Period firstPeriod = periodRepository.findPeriodByStartDateTimeIsLessThanEqualAndEndDateTimeIsGreaterThanEqualAndBookable_Id(reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getBookable().getId());
 
         if (diffBetweenDatesMoreThanHour(firstPeriod.getStartDateTime(), reservation.getStartDateTime())) {
             if (diffBetweenDatesMoreThanHour(reservation.getEndDateTime(), firstPeriod.getEndDateTime())) {

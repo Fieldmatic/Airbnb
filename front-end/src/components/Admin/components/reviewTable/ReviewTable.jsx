@@ -21,17 +21,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { pink } from '@mui/material/colors';
 import Checkbox from '@mui/material/Checkbox';
 import "./reviewTable.scss"
 
 
 function Row(props) {
-    const { row, registration, func } = props;
+    const { row, func } = props;
     const [open, setOpen] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [message, setMessage] = React.useState("");   
-    const [confirmation, setConfirmation] = React.useState("true");
 
     const handleMessageChange = (event) => {
         const {value} = event.target;
@@ -45,14 +43,14 @@ function Row(props) {
         let rejectingMessage = new FormData()
         const dataJson = dataToJson();
         rejectingMessage.append("message", dataJson)
-        if (registration) {
-            AdminService.registrateUser(row.user.id, row.id, confirmation, rejectingMessage)
-        }
-        else {
-            AdminService.deleteProfile(row.user.id, row.id, confirmation, rejectingMessage)
-        }
+        // if (registration) {
+        //     AdminService.registrateUser(row.user.id, row.id, confirmation, rejectingMessage)
+        // }
+        // else {
+        //     AdminService.deleteProfile(row.user.id, row.id, confirmation, rejectingMessage)
+        // }
         setOpenDialog(false);
-        func([false, row.id]);
+        func(row.id);
     }
 
     const handleClose = () => {
@@ -60,22 +58,6 @@ function Row(props) {
     };
 
     const handleReply = () => {
-        setConfirmation("true");
-        setMessage("");
-        // let accpetingMessage = new FormData();
-        // const dataJson = dataToJson();
-        // accpetingMessage.append("message", dataJson)
-        // if (registration) {
-        //     AdminService.registrateUser(row.user.id, row.id, confirmation, accpetingMessage)
-        // }
-        // else {
-        //     AdminService.deleteProfile(row.user.id, row.id, confirmation, accpetingMessage)
-        // }
-        func([true, row.id]);
-    }
-
-    const handleDeny = () => {
-        setConfirmation("false");
         setOpenDialog(true);
     }
 
@@ -86,6 +68,11 @@ function Row(props) {
         // });
         return json;
     }
+
+    let colorType;
+    if (row.type === "REQUEST_PENALTY") colorType = "passive";
+    else if (row.type === "COMMEND") colorType = "active";
+    else colorType = "pending";
   
     return (
       <React.Fragment>
@@ -103,8 +90,10 @@ function Row(props) {
             {row.id}
           </TableCell>
           <TableCell>{row.client}</TableCell>
-          <TableCell>{row.showedUp}</TableCell>
-          <TableCell>{row.type}</TableCell>
+          <TableCell className='clientShowedUp'>{row.showedUp ? "YES" : "NO"}</TableCell>
+          <TableCell><div className={"cellWithStatus " + colorType}>
+              {row.type.replace("_", " ")}
+          </div></TableCell>
           <TableCell className='cellAction'>
               <Button variant="contained" color="success" onClick={handleReply}>Reply</Button>
           </TableCell>
@@ -116,34 +105,35 @@ function Row(props) {
                 <Typography variant="h6" gutterBottom component="div">
                   Comment
                 </Typography>
-                <div>{row.comment}</div>
+                <div>{'"' + row.comment + '"'}</div>
+                {row.type === "REQUEST_PENALTY" && 
                 <div> Give penalty
                     <Checkbox
-                        {...label}
-                        defaultChecked
+                        defaultChecked={!row.showedUp}
                         sx={{
-                            color: pink[800],
+                            color: '#FF5A5F',
                             '&.Mui-checked': {
-                            color: pink[600],
+                            color: '#FF5A5F',
                             },
                         }}
                     />
                 </div>
+                }           
               </Box>
             </Collapse>
           </TableCell>
         </TableRow>
         <Dialog open={openDialog} onClose={handleClose}>
-            <DialogTitle>Deletion rejection</DialogTitle>
+            <DialogTitle>Answer</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Enter your reason for rejecting
+                    Enter your answer
                 </DialogContentText>
             <TextField
                 autoFocus
                 margin="dense"
                 id="message"
-                label="Reason for rejecting"
+                label="Answer"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -154,35 +144,33 @@ function Row(props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleAcceptMessage}>Accept</Button>
+                <Button onClick={handleAcceptMessage}>Send</Button>
             </DialogActions>
         </Dialog>
       </React.Fragment>
     );
 }
 
-export default function Datatable(props) {
+export default function ReviewTable() {
 
-    const alertText = {
-        accept: props.registration ? "User successfully registrated!" : "Account successfully deleted!",
-        deny: props.registration ? "Request for account registration denied!" : "Request for account deletion denied!"
-    }
-
-    const [accept, setAccept] = React.useState(true);
+    const alertText = "Email with your message successfully sent.";
     const [showAlert, setShowAlert] = React.useState(false);
 
-    const [rows, setRows] = React.useState([])
+    const [rows, setRows] = React.useState([
+        {id: 1, client: "pero", showedUp: false, type: "REQUEST_PENALTY", comment: "Zahtevam da\
+        se korisnku da penal jer je bezobrazannnn!"},
+        {id: 2, client: "djuro", showedUp: true, type: "COMMEND", comment: "Svaka caastt!"},
+    ])
 
-    React.useEffect(() => {
-        ReportService.getAllReports().then((response) => {
-            setRows(response.data)
-        })
-    }, []) // props.registration
+    // React.useEffect(() => {
+    //     ReportService.getAllReports().then((response) => {
+    //         setRows(response.data)
+    //     })
+    // }, []) // props.registration
 
     const getStateFromRow = (data) => {
-      setAccept(data[0]);
       setShowAlert(true);
-      setRows(rows.filter((item) => item.id !== data[1]));
+      setRows(rows.filter((item) => item.id !== data));
       setTimeout(() => {
           setShowAlert(false);
       }, 2500)
@@ -191,7 +179,7 @@ export default function Datatable(props) {
     return (
         <div>
             <Collapse in={showAlert}>
-                <Alert variant="filled" severity="success">{accept ? alertText.accept : alertText.deny}</Alert>
+                <Alert variant="filled" severity="success">{alertText}</Alert>
             </Collapse>
             
             <TableContainer component={Paper} className="datatable">
@@ -208,7 +196,7 @@ export default function Datatable(props) {
                     </TableHead>
                     <TableBody>
                     {rows.map((row) => (
-                        <Row key={row.id} row={row} registration={props?.registration} func={getStateFromRow}/>
+                        <Row key={row.id} row={row} func={getStateFromRow}/>
                     ))}
                     </TableBody>
                 </Table>

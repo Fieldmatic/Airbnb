@@ -23,14 +23,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import "./datatable.scss"
 
-function createData(email, name, surname, username) {
-  return {
-    email,
-    name,
-    surname,
-    username
-  };
-}
 
 function Row(props) {
     const { row, registration, func } = props;

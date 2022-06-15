@@ -39,6 +39,7 @@ function Login() {
         LoginService.login(loginData)
                     .then(res => {                  
                         const token = res.data.accessToken;
+                        console.log(token)
                         const expiration = res.data.expiresIn
                         localStorage.setItem("user",token)
                         localStorage.setItem("expiration", expiration)

@@ -14,4 +14,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @Query(value = "SELECT c FROM Client c LEFT JOIN FETCH c.reservations where c.email=?1")
     Client findByEmail(String email);
 
+    @Query(value = "SELECT c FROM Client c LEFT JOIN FETCH c.subscriptions where c.username=?1")
+    Client findClientByUsernameWithSubscriptions(String username);
 }

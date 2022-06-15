@@ -33,12 +33,16 @@ function entity(props) {
     const navigate = useNavigate()
 
     React.useEffect(() => {
-        {props.user === "client" && ClientService.isClientSubscribed(props.id).then(response => {
-            if (response.status === 200) setHeartColor("#FF5A5F")
-        }).catch(error => {
-            setHeartColor("#A8A8A8")
-        }
-        )}
+        if (props.user === "client") {
+            if (props.favorite) 
+                setHeartColor("#FF5A5F")
+            else {
+            ClientService.isClientSubscribed(props.id).then(response => {
+                if (response.status === 200) setHeartColor("#FF5A5F")
+            }).catch(error => {
+                setHeartColor("#A8A8A8")
+            }
+            )}}
     }, [])
 
     const handleClickOpen = () => {
@@ -84,7 +88,9 @@ function entity(props) {
 
     function redirectToEntityDetails(event) {
         event.preventDefault()
-        setRedirect(`/bookableDetails/${props.id}&${props.entity}&${props.user}`)
+        let heart = heartColor
+        heart = heart.replace("#", "")
+        setRedirect(`/bookableDetails/${props.id}&${props.entity}&${props.user}&${heart}`)
     }
 
     function handleDelete(){

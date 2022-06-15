@@ -179,6 +179,7 @@ function AllEntities() {
             showAll={location.state.showAll}
             entity={location.state.entityType}
             user="client"
+            favorite={false}
             />)
     }
 

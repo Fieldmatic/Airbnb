@@ -22,6 +22,15 @@ class ReservationService {
         })
     }
 
+    reserveForClient(reservation, email){
+        return axios.post(RESERVATION_BASED_REST_API_URL + "/reserveForClient/" + email, reservation, 
+        {
+           headers: {
+               'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+           } 
+        })
+    }
+
     getReservations(){
         return axios.get(RESERVATION_BASED_REST_API_URL + "/getReservations",
         {

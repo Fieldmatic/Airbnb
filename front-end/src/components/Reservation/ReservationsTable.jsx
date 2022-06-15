@@ -6,8 +6,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 import ReportService from "../../services/ReportService"
 import ReservationReport from "./ReservationReport";
+import {useNavigate} from 'react-router-dom';
 
 function ReservationsTable() {
+
+    const navigate = useNavigate();
     const [rows, setRows] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
     const [reservations, setReservations] = useState([])
@@ -48,6 +51,7 @@ function ReservationsTable() {
                 row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
                 row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
                 row.handleReportClicked = handleReportClicked
+                row.handleReserveAgain = handleReserveAgain
             })).then(() => {
                 setRows(prevRows => [...prevRows, row])
             })
@@ -59,6 +63,10 @@ function ReservationsTable() {
         setId(id)
         setEmail(email)
         setShowReportDialog(true)
+    }
+
+    function handleReserveAgain(email, bookableId){
+        navigate('/reserveAgain/' + bookableId + "&" + email);
     }
 
     function handleReportClose(){
@@ -124,7 +132,8 @@ const columns = [
                                                                 backgroundColor: 'white',
                                                                 color: '#FF5A5F',
                                                                     },
-                                                                  }}                                                          
+                                                                  }}                       
+                                                            onClick = { () => {params.row.handleReserveAgain(params.row.email, params.row.bookableId)}}                                    
                                                             variant='outlined'>Reserve again
                                                 </Button>)
             else if (params.row.active === "Finished") return ( <Button sx = {{ 

@@ -25,6 +25,7 @@ import Requests from "./components/Admin/pages/list/Requests";
 import AdminProfile from "./components/Admin/pages/profile/AdminProfile";
 import AdminEntities from "./components/Admin/pages/list/Entities";
 import EditBoat from "./components/Boat/EditBoat";
+import ReserveForClient from "./components/Owner/Reservation/ReserveForClient";
 
 
 const Views = () => {
@@ -49,6 +50,7 @@ const Views = () => {
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
       <Route path = "/bookableDetails/:id&:entityType&:user" element = {<BookableDetails />} />
+      <Route path = "/reserveAgain/:bookableId&:email" element = {<ReserveForClient/>} />
       <Route path = "/admin">
         <Route index element={<Admin />} />
         <Route path="registrationRequests" element={<Requests registration={true} />} />

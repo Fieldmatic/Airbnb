@@ -1,7 +1,6 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.BoatOwnerDTO;
-import mrsisa.project.dto.ClientDTO;
+import mrsisa.project.dto.*;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.BookableRepository;
@@ -59,6 +58,10 @@ public class ClientService {
 
     public Client findClientById(Long id) {return clientRepository.getById(id);}
 
+    public Client findClientByUsernameWithSubscriptions(String username) {
+        return clientRepository.findClientByUsernameWithSubscriptions(username);
+    }
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/client/";
 
     public void add(ClientDTO dto, MultipartFile[] multipartFiles) throws IOException {
@@ -95,16 +98,13 @@ public class ClientService {
         }
     }
 
-    @Transactional
     public void addSubscription(Client client, Long bookableId) {
-        Bookable bookable = bookableRepository.getById(bookableId);
+        Bookable bookable = bookableRepository.getByIdWithSubscribedClients(bookableId);
         bookable.getSubscribedClients().add(client);
-        //bookableRepository.save(bookable);
         client.getSubscriptions().add(bookable);
         personRepository.save(client);
     }
 
-    @Transactional
     public void deleteSubscription(Client client, Long bookableId) {
         for (Bookable bookable: client.getSubscriptions()) {
             if (bookable.getId().equals(bookableId)) {
@@ -117,14 +117,39 @@ public class ClientService {
 
     @Transactional
     public boolean checkIfClientIsSubscribed(Client client, Long bookableId) {
-//        Bookable bookable = bookableRepository.getById(bookableId);
-//        return client.getSubscriptions().contains(bookable);
         for (Bookable bookable: client.getSubscriptions()) {
             if (bookable.getId().equals(bookableId)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public List<CottageDTO> getClientCottageSubscriptions(Client client) {
+       List<CottageDTO> cottages = new ArrayList<>();
+       for (Bookable bookable: client.getSubscriptions()) {
+           if (bookable instanceof Cottage)
+               cottages.add(new CottageDTO((Cottage) bookable));
+       }
+       return cottages;
+    }
+
+    public List<BoatDTO> getClientBoatSubscriptions(Client client) {
+        List<BoatDTO> boats = new ArrayList<>();
+        for (Bookable bookable: client.getSubscriptions()) {
+            if (bookable instanceof Boat)
+                boats.add(new BoatDTO((Boat) bookable));
+        }
+        return boats;
+    }
+
+    public List<AdventureDTO> getClientAdventureSubscriptions(Client client) {
+        List<AdventureDTO> adventures = new ArrayList<>();
+        for (Bookable bookable: client.getSubscriptions()) {
+            if (bookable instanceof Adventure)
+                adventures.add(new AdventureDTO((Adventure) bookable));
+        }
+        return adventures;
     }
 
     private Client dtoToClient(ClientDTO dto) {

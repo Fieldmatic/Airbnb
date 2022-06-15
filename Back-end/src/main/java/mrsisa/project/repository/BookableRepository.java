@@ -14,4 +14,7 @@ public interface BookableRepository extends JpaRepository<Bookable,Long> {
 
     @Query(value = "SELECT b FROM Bookable b LEFT JOIN FETCH b.actions where b.id=?1")
     Bookable getByIdWithActions(Long id);
+
+    @Query(value = "SELECT b FROM Bookable b LEFT JOIN FETCH b.subscribedClients where b.id=?1")
+    Bookable getByIdWithSubscribedClients(Long id);
 }

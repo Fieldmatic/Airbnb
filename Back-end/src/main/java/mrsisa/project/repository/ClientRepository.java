@@ -10,4 +10,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Query(value = "SELECT c FROM Client c JOIN FETCH c.reservations where c.username=?1")
     Client findByUsername(String username);
+
+    @Query(value = "SELECT c FROM Client c JOIN FETCH c.subscriptions where c.username=?1")
+    Client findClientByUsernameWithSubscriptions(String username);
 }

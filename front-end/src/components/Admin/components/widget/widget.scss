@@ -45,7 +45,7 @@
       }
   
       .icon {
-        font-size: 18px;
+        font-size: 25px;
         padding: 5px;
         border-radius: 5px;
         align-self: flex-end;
@@ -58,9 +58,9 @@
         // align-self: flex-end;
       }
     }
-  }
+}
 
-  .form--pair-3{
+.form--pair-3{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -68,4 +68,16 @@
     padding: 20px;
     gap: 20px;
     align-items: center;
+}
+
+.moneyPercentField {
+  display: flex;
+  // justify-content: space-between;
+  padding: 20px;
+  width: 100%;
+
+  .percentSymbol {
+    padding-top: 8px;
+    padding-left: 5px;
+  }
 }

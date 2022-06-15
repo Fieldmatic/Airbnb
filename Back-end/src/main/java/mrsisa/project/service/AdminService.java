@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -152,7 +154,6 @@ public class AdminService {
         admin.setUsername("admin");
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.setProfilePhoto(null);
-        admin.setIsPasswordChanged(true);
         List<Role> roles = roleService.findByName("ROLE_ADMIN");
         admin.setRoles(roles);
         adminRepository.save(admin);
@@ -164,8 +165,9 @@ public class AdminService {
         address2.setState("Serbia");
         address2.setCity("Novi Sad");
 
-        Instructor instructor = new Instructor();
+        CottageOwner instructor = new CottageOwner();
         instructor.setActive(true);
+        instructor.setApprovedAccount(true);
         instructor.setAddress(address2);
         instructor.setEmail("bane-gg@hotmail.com");
         instructor.setLastPasswordResetDate(null);
@@ -175,9 +177,27 @@ public class AdminService {
         instructor.setUsername("bane");
         instructor.setPassword(passwordEncoder.encode("bane"));
         instructor.setProfilePhoto(null);
-        List<Role> roles2 = roleService.findByName("ROLE_INSTRUCTOR");
+        List<Role> roles2 = roleService.findByName("ROLE_COTTAGE_OWNER");
         instructor.setRoles(roles2);
-        instructorRepository.save(instructor);
+        personRepository.save(instructor);
+
+        Address address3 = new Address();
+        address3.setZipCode("123123");
+        address3.setStreet("Arse Teodorovica 2");
+        address3.setState("Serbia");
+        address3.setCity("Novi Sad");
+
+        Client client = new Client();
+        client.setActive(true);
+        client.setAddress(address3);
+        client.setPenalties(0);
+        client.setName("Klinjo");
+        client.setSurname("Klinjasti");
+        client.setUsername("c");
+        client.setPassword(passwordEncoder.encode("c"));
+        List<Role> roles3 = roleService.findByName("ROLE_CLIENT");
+        client.setRoles(roles3);
+        personRepository.save(client);
     }
 
 
@@ -197,8 +217,7 @@ public class AdminService {
         admin.setLastPasswordResetDate(null);
         admin.setPhoneNumber(dto.getPhone());
         admin.setUsername(dto.getUsername());
-        admin.setIsPasswordChanged(false);
-        List<Role> roles = roleService.findByName("ROLE_ADMIN");
+        List<Role> roles = roleService.findByName("ROLE_NEW_ADMIN");
         admin.setRoles(roles);
         adminRepository.save(admin);
     }

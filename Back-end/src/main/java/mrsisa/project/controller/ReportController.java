@@ -1,5 +1,6 @@
 package mrsisa.project.controller;
 
+import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.ReportDTO;
 import mrsisa.project.model.Report;
 import mrsisa.project.service.ReportService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,11 +30,16 @@ public class ReportController {
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR')")
     public ReportDTO getReport(@PathVariable("reservationId") Long id) {
         Report report = reportService.findByReservationId(id);
-        if (report!=null) return new ReportDTO(report);
+        if (report != null) return new ReportDTO(report);
         else return null;
 
     }
 
-
+    @GetMapping(value = "/getAllReports")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ReportDTO>> getAllReports() {
+        List<ReportDTO> list = reportService.getAllReports();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 
 }

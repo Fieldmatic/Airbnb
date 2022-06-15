@@ -1,0 +1,19 @@
+.datatable {
+    height: 600px;
+    padding: 20px;
+  
+    .datatableHeader{
+      font-size: 2.5vh;
+      font-weight: bold;
+    }
+  
+    .cellAction {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+  }
+  
+  
+  
+  

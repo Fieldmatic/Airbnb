@@ -22,6 +22,7 @@ import Admin from "./components/Admin/pages/home/Admin";
 import Requests from "./components/Admin/pages/list/Requests";
 import AdminProfile from "./components/Admin/pages/profile/AdminProfile";
 import AdminEntities from "./components/Admin/pages/list/Entities";
+import Reviews from "./components/Admin/pages/list/Reviews";
 
 
 const Views = () => {
@@ -47,14 +48,19 @@ const Views = () => {
       <Route path = "/bookableDetails/:id&:entityType" element = {<BookableDetails />} />
       <Route path = "/admin">
         <Route index element={<Admin />} />
-        <Route path="registrationRequests" element={<Requests registration={true} />} />
-        <Route path="deletionRequests" element={<Requests registration={false} />} />
-        <Route path="profile" element={<AdminProfile />} />
+        <Route path="requests">
+          <Route path="registrationRequests" element={<Requests registration={true} />} />
+          <Route path="deletionRequests" element={<Requests registration={false} />} />
+        </Route>
         <Route path="entities">
           <Route path="adventures" element={<AdminEntities type={1} />}/>
           <Route path="cottages" element={<AdminEntities type={2} />}/>
           <Route path="boats" element={<AdminEntities type={3} />}/>
         </Route>
+        <Route path="reviews">
+          <Route path="complaints" element={<Reviews />}/>
+        </Route>
+        <Route path="profile" element={<AdminProfile />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

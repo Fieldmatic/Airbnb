@@ -2,6 +2,6 @@ package mrsisa.project.model;
 
 public enum ReportType {
     COMMEND,
-    REQUESTPENALTY,
+    REQUEST_PENALTY,
     NEUTRAL
 }

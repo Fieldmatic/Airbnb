@@ -11,6 +11,4 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Entity
 public class Administrator extends Person {
-
-    private Boolean isPasswordChanged;
 }

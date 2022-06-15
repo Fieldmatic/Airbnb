@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ReportService {
     @Autowired
@@ -29,6 +32,7 @@ public class ReportService {
         Reservation reservation = reservationRepository.getById(reportDTO.getReservationId());
         report.setClient(clientRepository.getByEmail(reportDTO.getClientEmail()));
         report.setReservation(reservationRepository.getById(reportDTO.getReservationId()));
+        report.setViewed(false);
         reservation.setReport(report);
         client.getReports().add(report);
         if (!report.isShowedUp()) client.setPenalties(client.getPenalties() - 1);
@@ -49,4 +53,12 @@ public class ReportService {
     @Transactional
     public Report findByReservationId(Long id){ return reportRepository.findByReservationId(id);}
 
+    public List<ReportDTO> getAllReports() {
+        List<ReportDTO> reportDTOS = new ArrayList<>();
+        for(Report report : reportRepository.findAll()) {
+            if (!report.isViewed())
+                reportDTOS.add(new ReportDTO(report));
+        }
+        return reportDTOS;
+    }
 }

@@ -15,6 +15,7 @@ public class Report {
     private Long id;
     private String comment;
     private boolean showedUp;
+    private boolean viewed;
     private ReportType type;
     @ManyToOne
     private Client client;

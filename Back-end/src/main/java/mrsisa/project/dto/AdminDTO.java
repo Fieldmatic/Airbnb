@@ -7,6 +7,8 @@ import mrsisa.project.model.Address;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Instructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class AdminDTO {
@@ -20,6 +22,7 @@ public class AdminDTO {
     private String email;
     private String phone;
     private String newPassword;
+    private Date lastPasswordResetDate;
 
     public AdminDTO(Administrator administrator){
         this.id = administrator.getId();
@@ -30,6 +33,7 @@ public class AdminDTO {
         this.password = administrator.getPassword();
         this.email = administrator.getEmail();
         this.phone = administrator.getPhoneNumber();
+        this.lastPasswordResetDate = administrator.getLastPasswordResetDate();
     }
 
 }

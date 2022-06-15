@@ -16,6 +16,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PhishingIcon from '@mui/icons-material/Phishing';
 import CottageOutlinedIcon from '@mui/icons-material/CottageOutlined';
 import DirectionsBoatOutlinedIcon from '@mui/icons-material/DirectionsBoatOutlined';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
+import DocumentScannerOutlinedIcon from '@mui/icons-material/DocumentScannerOutlined';
 import { Link } from "react-router-dom";
 
 
@@ -40,13 +42,13 @@ export default function AdminSidebar() {
                         </li>
                     </Link>
                     <p className="title">REQUESTS</p>
-                    <Link to="/admin/registrationRequests" style={{ textDecoration: "none" }}>
+                    <Link to="/admin/requests/registrationRequests" style={{ textDecoration: "none" }}>
                         <li>
                         <PersonOutlineIcon className="icon" />
                         <span>Registration</span>
                         </li>
                     </Link>
-                    <Link to="/admin/deletionRequests" style={{ textDecoration: "none" }}>
+                    <Link to="/admin/requests/deletionRequests" style={{ textDecoration: "none" }}>
                         <li>
                         <DeleteOutlineIcon className="icon" />
                         <span>Deletion</span>
@@ -71,15 +73,19 @@ export default function AdminSidebar() {
                             <span>Boats</span>
                         </li>
                     </Link>
-                    <p className="title">SERVICE - po potrebi dodavati</p>                  
-                    <li>
-                        <PsychologyOutlinedIcon className="icon" />
-                        <span>Logs</span>
-                    </li>
-                    <li>
-                        <SettingsApplicationsIcon className="icon" />
-                        <span>Settings</span>
-                    </li>
+                    <p className="title">REVIEWS</p>
+                    <Link to="/admin/reviews/complaints" style={{ textDecoration: "none" }}>
+                        <li>
+                            <ReceiptLongOutlinedIcon className="icon" />
+                            <span>Complaints</span>
+                        </li>
+                    </Link>
+                    <Link to="#" style={{ textDecoration: "none" }}>
+                        <li>
+                            <DocumentScannerOutlinedIcon className="icon" />
+                            <span>Revisions</span>
+                        </li>
+                    </Link>
                     <p className="title">USER</p>
                     <Link to="/admin/profile" style={{ textDecoration: "none" }}>
                         <li>

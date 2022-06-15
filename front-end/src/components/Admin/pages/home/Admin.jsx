@@ -5,6 +5,7 @@ import AdminNavbar from "../../components/navbar/AdminNavbar"
 import inMemoryJwt from '../../../../services/inMemoryJwtService';
 import LoginRegisterService from '../../../../services/LoginRegisterService'
 import Widget from '../../components/widget/Widget';
+import NewAdminWidget from '../../components/widget/NewAdminWidget';
 import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
 
@@ -69,7 +70,7 @@ export default function Admin() {
                     }           
                 </Collapse>
                 <div className="widgets">
-                    <Widget type="user" showMessage={showMessage}/>
+                    <NewAdminWidget showMessage={showMessage}/>
                     <Widget type="order" showMessage={showMessage}/>
                     <Widget type="earning" showMessage={showMessage}/>
                     <Widget type="balance" showMessage={showMessage}/>

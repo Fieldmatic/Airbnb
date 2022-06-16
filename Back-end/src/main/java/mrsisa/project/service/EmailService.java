@@ -1,9 +1,6 @@
 package mrsisa.project.service;
 
-import mrsisa.project.model.Client;
-import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Person;
-import mrsisa.project.model.Reservation;
+import mrsisa.project.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -84,5 +81,24 @@ public class EmailService {
                     "\n\n\nWe wish you a good time!, \n\n\nBest regards, \nAirBnb team");
 
         javaMailSender.send(mail);
+    }
+
+    @Async
+    public void sendReportMail(Client client, Owner owner, String message, boolean penalty) {
+        SimpleMailMessage mail1 = getMailMessage(client, "Complaint");
+        SimpleMailMessage mail2 = getMailMessage(owner, "Complaint");
+        if (penalty) {
+            mail1.setText("Hello " + client.getName() + ", \n\n\nYour behavior has been appealed and you have got" +
+                    " a penalty.\nHere is what admin said: " + message);
+            mail2.setText("Hello " + owner.getName() + ", \n\n\nWe appreciate your complaint and client has got" +
+                    "a penalty.\nHere is what admin said: " + message);
+        }
+        else {
+            mail1.setText("Hello " + client.getName() + ", \n\n\nYour behavior has been appealed but you have not got" +
+                    " a penalty.\nHere is what admin said: " + message);
+            mail2.setText("Hello " + owner.getName() + ", \n\n\nWe appreciate your complaint but client has not got" +
+                    "a penalty.\nHere is what admin said: " + message);
+        }
+        javaMailSender.send(mail1, mail2);
     }
 }

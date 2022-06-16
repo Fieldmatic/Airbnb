@@ -68,11 +68,6 @@ function Row(props) {
         // });
         return json;
     }
-
-    let colorType;
-    if (row.type === "REQUEST_PENALTY") colorType = "passive";
-    else if (row.type === "COMMEND") colorType = "active";
-    else colorType = "pending";
   
     return (
       <React.Fragment>
@@ -89,11 +84,13 @@ function Row(props) {
           <TableCell component="th" scope="row">
             {row.id}
           </TableCell>
-          <TableCell>{row.client}</TableCell>
-          <TableCell className='clientShowedUp'>{row.showedUp ? "YES" : "NO"}</TableCell>
-          <TableCell><div className={"cellWithStatus " + colorType}>
-              {row.type.replace("_", " ")}
-          </div></TableCell>
+          <TableCell>{row.ownerUsername}</TableCell>
+          <TableCell>{row.clientUsername}</TableCell>
+          <TableCell>
+              <div className={"cellWithStatus " + (row.showedUp ? "active" : "passive")}>
+                {row.showedUp ? "YES" : "NO"}
+              </div>
+          </TableCell>    
           <TableCell className='cellAction'>
               <Button variant="contained" color="success" onClick={handleReply}>Reply</Button>
           </TableCell>
@@ -106,7 +103,6 @@ function Row(props) {
                   Comment
                 </Typography>
                 <div>{'"' + row.comment + '"'}</div>
-                {row.type === "REQUEST_PENALTY" && 
                 <div> Give penalty
                     <Checkbox
                         defaultChecked={!row.showedUp}
@@ -118,7 +114,6 @@ function Row(props) {
                         }}
                     />
                 </div>
-                }           
               </Box>
             </Collapse>
           </TableCell>
@@ -157,9 +152,10 @@ export default function ReviewTable() {
     const [showAlert, setShowAlert] = React.useState(false);
 
     const [rows, setRows] = React.useState([
-        {id: 1, client: "pero", showedUp: false, type: "REQUEST_PENALTY", comment: "Zahtevam da\
-        se korisnku da penal jer je bezobrazannnn!"},
-        {id: 2, client: "djuro", showedUp: true, type: "COMMEND", comment: "Svaka caastt!"},
+        {id: 1, clientUsername: "pero", showedUp: false, comment: "Zahtevam da\
+        se korisnku da penal jer je bezobrazannnn!", ownerUsername: "banz"},
+        {id: 2, clientUsername: "djuro", showedUp: true, comment: "Svaka caastt!",
+         ownerUsername: "banz"},
     ])
 
     // React.useEffect(() => {
@@ -188,9 +184,9 @@ export default function ReviewTable() {
                     <TableRow>
                         <TableCell />
                         <TableCell className="datatableHeader">ID</TableCell>
+                        <TableCell className="datatableHeader">Owner</TableCell>
                         <TableCell className="datatableHeader">Client</TableCell>
                         <TableCell className="datatableHeader">Client showed up</TableCell>
-                        <TableCell className="datatableHeader">Report type</TableCell>
                         <TableCell className="datatableHeader">Option</TableCell>
                     </TableRow>
                     </TableHead>

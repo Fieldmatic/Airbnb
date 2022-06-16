@@ -32,6 +32,15 @@ class ReportService {
         })
     }
 
+    async reviewReport(id, penalty, message) {
+        return await axios.post(REPORT_BASED_REST_API_URL + "/reviewReport/" + id + "&" + penalty, message,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
+    }
+
 
 }
 

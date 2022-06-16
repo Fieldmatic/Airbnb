@@ -17,6 +17,7 @@
         padding: 5px;
         border-radius: 5px;
         width: fit-content;
+        margin-left: 3vw;
     
         &.active {
           background-color: rgba(0, 128, 0, 0.05);
@@ -32,9 +33,6 @@
         }
     }
 
-    .clientShowedUp {
-        text-decoration: underline;
-    }
   }
   
   

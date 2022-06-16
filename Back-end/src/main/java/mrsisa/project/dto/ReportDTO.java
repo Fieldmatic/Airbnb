@@ -2,12 +2,8 @@ package mrsisa.project.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mrsisa.project.model.Client;
 import mrsisa.project.model.Report;
 import mrsisa.project.model.ReportType;
-import mrsisa.project.model.Reservation;
-
-import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +13,9 @@ public class ReportDTO {
     private boolean showedUp;
     private ReportType type;
     private String clientEmail;
-    private String client;
+    private String clientUsername;
+
+    private String ownerUsername;
 
     public ReportDTO(Report report) {
         this.reservationId = report.getReservation().getId();
@@ -25,6 +23,6 @@ public class ReportDTO {
         this.showedUp = report.isShowedUp();
         this.type = report.getType();
         this.clientEmail = report.getClient().getEmail();
-        this.client = report.getClient().getUsername();
+        this.clientUsername = report.getClient().getUsername();
     }
 }

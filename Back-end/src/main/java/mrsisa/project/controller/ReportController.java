@@ -42,4 +42,16 @@ public class ReportController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/reviewReport/{id}&{penalty}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> reviewReport(@PathVariable Long id,
+                                               @PathVariable Boolean penalty,
+                                               @RequestBody String message) {
+        Report report = reportService.findByReservationId(id);
+        if (report == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error! Report not found.");
+        reportService.reviewReport(report, message, penalty);
+        return ResponseEntity.status(HttpStatus.OK).body("Email sent!");
+    }
+
 }

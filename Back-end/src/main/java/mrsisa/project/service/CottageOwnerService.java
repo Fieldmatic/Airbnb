@@ -1,6 +1,7 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.PersonDTO;
+import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +36,9 @@ public class CottageOwnerService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    CottageRepository cottageRepository;
 
     @Autowired
     AdminService adminService;
@@ -94,6 +100,45 @@ public class CottageOwnerService {
     }
 
     public CottageOwner findCottageOwnerByUsername(String username){return cottageOwnerRepository.findByUsername(username);}
+
+    public ReservationStatisticsDTO getReservationStatistics(Principal userP){
+        CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
+        ReservationStatisticsDTO statistics = new ReservationStatisticsDTO();
+        for (Cottage cottage : owner.getCottages()){
+            List<Reservation> reservations = cottageRepository.findByIdWithReservations(cottage.getId()).getReservations();
+            for (Reservation reservation : reservations) {
+                String year = String.valueOf(reservation.getEndDateTime().getYear());
+                String month = String.valueOf(reservation.getEndDateTime().getMonth());
+                String week = String.valueOf(calcNextMonday(reservation.getEndDateTime()));
+                if (!statistics.getYearlyStatistics().containsKey(year)) statistics.getYearlyStatistics().put(year, 1);
+                else statistics.getYearlyStatistics().put(year, statistics.getYearlyStatistics().get(year) + 1);
+                if (!statistics.getMonthlyStatistics().containsKey(month)) statistics.getMonthlyStatistics().put(month, 1);
+                else statistics.getMonthlyStatistics().put(month, statistics.getMonthlyStatistics().get(month) + 1);
+                if (!statistics.getWeeklyStatistics().containsKey(week)) statistics.getWeeklyStatistics().put(week, 1);
+                else statistics.getWeeklyStatistics().put(week, statistics.getWeeklyStatistics().get(week)+1);
+            }
+        }
+        return statistics;
+    }
+
+    public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP) {
+        CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
+        Map<String, Double> incomeByCottage = new HashMap<>();
+        for (Cottage cottage : owner.getCottages()){
+            List<Reservation> reservations = cottageRepository.findByIdWithReservations(cottage.getId()).getReservations();
+            for (Reservation reservation : reservations) {
+                if (reservation.getEndDateTime().isAfter(start) && reservation.getEndDateTime().isBefore(end)){
+                    if (!incomeByCottage.containsKey(cottage.getName())) incomeByCottage.put(cottage.getName(), reservation.getPrice());
+                    else incomeByCottage.put(cottage.getName(), incomeByCottage.get(cottage.getName()) + reservation.getPrice());
+                }
+            }
+        }
+        return incomeByCottage;
+    }
+
+    private LocalDateTime calcNextMonday(LocalDateTime dateTime) {
+        return dateTime.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+    }
 
     public List<CottageOwner> findAll(){return cottageOwnerRepository.findAll();}
 }

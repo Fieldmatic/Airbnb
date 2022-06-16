@@ -1,6 +1,5 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReservationDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
@@ -8,18 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ReservationService {

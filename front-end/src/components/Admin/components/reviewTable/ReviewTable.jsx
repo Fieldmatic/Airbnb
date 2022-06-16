@@ -29,26 +29,23 @@ function Row(props) {
     const { row, func } = props;
     const [open, setOpen] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
-    const [message, setMessage] = React.useState("");   
+    const [message, setMessage] = React.useState("");
+    const [penalty, setPenalty] = React.useState(false);
 
     const handleMessageChange = (event) => {
         const {value} = event.target;
         setMessage(value);
     }
 
+    const handlePenaltyChange = (event) => {
+        setPenalty(current => !current);
+    }
+
     const handleAcceptMessage = () => {
         if(message === "") {
             return;
         }
-        let rejectingMessage = new FormData()
-        const dataJson = dataToJson();
-        rejectingMessage.append("message", dataJson)
-        // if (registration) {
-        //     AdminService.registrateUser(row.user.id, row.id, confirmation, rejectingMessage)
-        // }
-        // else {
-        //     AdminService.deleteProfile(row.user.id, row.id, confirmation, rejectingMessage)
-        // }
+        ReportService.reviewReport(row.id, penalty, message);
         setOpenDialog(false);
         func(row.id);
     }
@@ -59,14 +56,6 @@ function Row(props) {
 
     const handleReply = () => {
         setOpenDialog(true);
-    }
-
-    function dataToJson() {
-        const json = JSON.stringify(message);
-        // const dataJson = new Blob([json], {
-        //     type: 'application/json'
-        // });
-        return json;
     }
   
     return (
@@ -106,6 +95,8 @@ function Row(props) {
                 <div> Give penalty
                     <Checkbox
                         defaultChecked={!row.showedUp}
+                        onChange={handlePenaltyChange}
+                        value={penalty}
                         sx={{
                             color: '#FF5A5F',
                             '&.Mui-checked': {
@@ -158,11 +149,11 @@ export default function ReviewTable() {
          ownerUsername: "banz"},
     ])
 
-    // React.useEffect(() => {
-    //     ReportService.getAllReports().then((response) => {
-    //         setRows(response.data)
-    //     })
-    // }, []) // props.registration
+    React.useEffect(() => {
+        ReportService.getAllReports().then((response) => {
+            setRows(response.data)
+        })
+    }, []) // props.registration
 
     const getStateFromRow = (data) => {
       setShowAlert(true);

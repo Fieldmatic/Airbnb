@@ -18,6 +18,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import ReservationPopup from './ReservationPopup';
 import ClientService from '../../services/ClientService';
+import BookableService from '../../services/BookableService';
 
 
 
@@ -59,25 +60,19 @@ function entity(props) {
             CottageService.getNumberOfCottageReviews(props.id).then((response) => {
                 setReviewsNumber(response.data) 
             })
-            CottageService.getProfilePicture(props.id).then((response) => {
-                setProfileImage(response.data)
-            })
         } else if (props.entity === "boat") {
             BoatService.getNumberOfBoatReviews(props.id).then((response) => {
                 setReviewsNumber(response.data) 
-            })
-            BoatService.getProfilePicture(props.id).then((response) => {
-                setProfileImage(response.data)
             })
         //avanture
         } else {
             AdventureService.getNumberOfAdventureReviews(props.id).then((response) => {
                 setReviewsNumber(response.data) 
             })
-            AdventureService.getProfilePicture(props.id).then((response) => {
-                setProfileImage(response.data)
-            })
         }
+        BookableService.getProfilePicture(props.id).then((response) => {
+            setProfileImage(response.data)
+        })
    }, [])
 
    if (redirect) {

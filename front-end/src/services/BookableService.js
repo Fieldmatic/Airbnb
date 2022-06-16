@@ -33,6 +33,10 @@ class BookableService {
         })
     }
 
+    getProfilePicture(id) {
+        return axios.get(BOOKABLE_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
+    }
+
 }
 
 

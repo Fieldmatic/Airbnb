@@ -32,7 +32,7 @@ public abstract class Bookable {
     private Double rating;
     private Integer capacity;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<Tag> additionalServices;
 

@@ -27,7 +27,7 @@ import AdminEntities from "./components/Admin/pages/list/Entities";
 import EditBoat from "./components/Boat/EditBoat";
 import ReserveForClient from "./components/Owner/Reservation/ReserveForClient";
 import ShowWishList from "./components/ViewEntities/ShowWishList";
-
+import Statistics from "./components/Owner/Statistics";
 
 const Views = () => {
   return (
@@ -37,6 +37,7 @@ const Views = () => {
       <Route path = "/addAdventure" element = {<AddAdventureForm />}/>
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
+      <Route path = "/statistics" element = {<Statistics/>}/>
       <Route path = "/editCottage/:id" element = {<EditCottage/>}/>
       <Route path = "/editBoat/:id" element = {<EditBoat/>}/>
       <Route path = "/editProfile" element = {< EditProfile />}/>

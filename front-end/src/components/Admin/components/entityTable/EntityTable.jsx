@@ -72,7 +72,7 @@ const EntityTable = (props) => {
         setOpenError(true);
       })
     }else if(props.type === 2) {
-      CottageService.getAllCottages(id)
+      CottageService.deleteCottage(id)
       .then(() => {
         setRows(rows.filter((item) => item.id !== id));
         setOpenSuccess(true);
@@ -81,7 +81,7 @@ const EntityTable = (props) => {
         setOpenError(true);
       })
     }else {
-      BoatService.getAllBoats(id)
+      BoatService.deleteBoat(id)
       .then(() => {
         setRows(rows.filter((item) => item.id !== id));
         setOpenSuccess(true);

@@ -26,6 +26,10 @@ public class BookableService {
         return bookableRepository.findById(id).orElse(null);
     }
 
+    public Bookable findOne(Long id) {
+        return bookableRepository.findById(id).orElse(null);
+    }
+
     @Transactional
     public List<BookableCalendarDTO> getBookableEvents(int type, Long id) {
         List<BookableCalendarDTO> calendarDTOS = new ArrayList<>();

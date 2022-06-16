@@ -139,6 +139,7 @@ public class AdventureService {
         adventureRepository.deleteById(id);
     }
 
+    @Transactional
     public List<AdventureDTO> getAvailableAdventures(String startDate, String endDate, Integer capacity) {
         LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
         LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);

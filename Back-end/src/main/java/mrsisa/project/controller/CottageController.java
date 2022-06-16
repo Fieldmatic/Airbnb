@@ -84,14 +84,6 @@ public class CottageController {
         return new ResponseEntity<>(cottage, HttpStatus.OK);
     }
 
-    @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity getCottageProfilePicture(@PathVariable Long id) throws IOException {
-        Cottage cottage = cottageService.findOne(id);
-        File file = new File(cottage.getProfilePicture());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
-    }
-
 
     @DeleteMapping(value = "/deleteCottage/{id}")
     @PreAuthorize("hasAnyRole('COTTAGE_OWNER', 'ADMIN')")

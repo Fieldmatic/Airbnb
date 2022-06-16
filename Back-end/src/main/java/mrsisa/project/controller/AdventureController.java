@@ -94,14 +94,6 @@ public class AdventureController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity getAdventureProfilePicture(@PathVariable Long id) throws IOException {
-        Adventure adventure = adventureService.findOne(id);
-        File file = new File(adventure.getProfilePicture());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
-    }
-
     @DeleteMapping(value = "/deleteAdventure/{id}")
     @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
     public ResponseEntity<String> deleteAdventure(@PathVariable Long id, Principal userP) {

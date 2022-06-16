@@ -95,14 +95,6 @@ public class BoatController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity getBoatProfilePicture(@PathVariable Long id) throws IOException {
-        Boat boat = boatService.findOne(id);
-        File file = new File(boat.getProfilePicture());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
-    }
-
     @DeleteMapping(value = "/deleteBoat/{id}")
     @PreAuthorize("hasAnyRole('BOAT_OWNER', 'ADMIN')")
     public ResponseEntity<String> deleteBoat(@PathVariable Long id, Principal userP) {

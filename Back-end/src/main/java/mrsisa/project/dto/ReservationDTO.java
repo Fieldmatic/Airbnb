@@ -2,12 +2,10 @@ package mrsisa.project.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Client;
-import mrsisa.project.model.Reservation;
-import mrsisa.project.model.Tag;
+import mrsisa.project.model.*;
 
 import javax.persistence.ManyToMany;
+import java.awt.print.Book;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +23,11 @@ public class ReservationDTO {
         this.active = reservation.getActive();
         this.clientId = reservation.getClient().getId();
         this.bookableId = reservation.getBookable().getId();
+        String[] bookableTypeParts = reservation.getBookable().getClass().getTypeName().split("[.]");
+        this.bookableType = bookableTypeParts[bookableTypeParts.length-1];
+        this.bookableName = reservation.getBookable().getName();
+        this.bookableAddress = reservation.getBookable().getAddress();
+        this.ownerPhoneNumber = getBookableOwnerPhoneNum(reservation.getBookable());
         try {
             this.reportId = reservation.getReport().getId();
         }catch (NullPointerException ne){
@@ -42,7 +45,11 @@ public class ReservationDTO {
     private Boolean active;
     private Long clientId;
     private Long bookableId;
+    private String bookableName;
+    private Address bookableAddress;
+    private String ownerPhoneNumber;
     private Long reportId;
+    private String bookableType;
     private final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     private List<String> getStringAdditionalServices(List<Tag> services) {
@@ -51,5 +58,13 @@ public class ReservationDTO {
             stringServices.add(tag.getName());
         }
         return stringServices;
+    }
+
+    private String getBookableOwnerPhoneNum(Bookable bookable) {
+        String phoneNumber = "";
+        if (bookable instanceof Cottage) phoneNumber = ((Cottage) bookable).getCottageOwner().getPhoneNumber();
+        else if (bookable instanceof Boat) phoneNumber = ((Boat) bookable).getBoatOwner().getPhoneNumber();
+        else if (bookable instanceof Adventure) phoneNumber = ((Adventure) bookable).getInstructor().getPhoneNumber();
+        return phoneNumber;
     }
 }

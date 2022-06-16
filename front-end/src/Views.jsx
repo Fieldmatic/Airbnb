@@ -28,6 +28,8 @@ import EditBoat from "./components/Boat/EditBoat";
 import ReserveForClient from "./components/Owner/Reservation/ReserveForClient";
 import ShowWishList from "./components/ViewEntities/ShowWishList";
 import Statistics from "./components/Owner/Statistics";
+import ClientReservationHistory from "./components/Reservation/ClientReservationHistory"
+
 
 const Views = () => {
   return (
@@ -54,6 +56,9 @@ const Views = () => {
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
       <Route path = "/reserveAgain/:bookableId&:email" element = {<ReserveForClient/>} />
       <Route path = "/bookableDetails/:id&:entityType&:user&:heartColor" element = {<BookableDetails />} />
+      <Route path = "/reservationHistory/:entityType" element = {<ClientReservationHistory />} />
+
+
       <Route path = "/admin">
         <Route index element={<Admin />} />
         <Route path="registrationRequests" element={<Requests registration={true} />} />

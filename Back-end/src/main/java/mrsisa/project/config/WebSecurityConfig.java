@@ -73,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 								.antMatchers("/api/cottage/reviewsNumber/{id}").permitAll()
 								.antMatchers("/api/boat/reviewsNumber/{id}").permitAll()
 								.antMatchers("/api/adventure/reviewsNumber/{id}").permitAll()
+								.antMatchers("/api/bookable/getProfilePicture/{id}").permitAll()
 
 				//proveri da li moze i instruktor da vidi vikendice
 								.antMatchers("/api/cottage/get/{id}").permitAll()

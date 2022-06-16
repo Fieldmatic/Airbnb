@@ -168,7 +168,7 @@ public class AdminService {
         address2.setState("Serbia");
         address2.setCity("Novi Sad");
 
-        CottageOwner instructor = new CottageOwner();
+        Instructor instructor = new Instructor();
         instructor.setActive(true);
         instructor.setApprovedAccount(true);
         instructor.setAddress(address2);
@@ -178,9 +178,10 @@ public class AdminService {
         instructor.setPhoneNumber("065432234");
         instructor.setSurname("Ganz");
         instructor.setUsername("bane");
+        instructor.setBiography("Ja sam jedan jako dobar instruktor pecanja i obozavam da pecam ribe.");
         instructor.setPassword(passwordEncoder.encode("bane"));
         instructor.setProfilePhoto(null);
-        List<Role> roles2 = roleService.findByName("ROLE_COTTAGE_OWNER");
+        List<Role> roles2 = roleService.findByName("ROLE_INSTRUCTOR");
         instructor.setRoles(roles2);
         personRepository.save(instructor);
 

@@ -18,7 +18,7 @@ public class InstructorDTO {
     private String username;
     private String password;
     private String email;
-    private String phone;
+    private String phoneNumber;
     private String registrationExplanation;
     private String biography;
 
@@ -31,7 +31,7 @@ public class InstructorDTO {
         this.username = instructor.getUsername();
         this.password = instructor.getPassword();
         this.email = instructor.getEmail();
-        this.phone = instructor.getPhoneNumber();
+        this.phoneNumber = instructor.getPhoneNumber();
         this.registrationExplanation = instructor.getRegistrationExplanation();
     }
 }

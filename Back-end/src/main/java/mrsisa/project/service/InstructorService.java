@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -82,7 +81,7 @@ public class InstructorService {
             instructor.setSurname(dto.getSurname());
             instructor.setEmail(dto.getEmail());
             instructor.setPassword(dto.getPassword());
-            instructor.setPhoneNumber(dto.getPhone());
+            instructor.setPhoneNumber(dto.getPhoneNumber());
             instructorRepository.save(instructor);
             return instructor;
         }
@@ -106,7 +105,7 @@ public class InstructorService {
         instructor.setSurname(dto.getSurname());
         instructor.setEmail(dto.getEmail());
         instructor.setPassword(passwordEncoder.encode(dto.getPassword()));
-        instructor.setPhoneNumber(dto.getPhone());
+        instructor.setPhoneNumber(dto.getPhoneNumber());
         instructor.setPoints(0);
         instructor.setRegistrationExplanation(dto.getRegistrationExplanation());
         instructor.setUsername(dto.getUsername());

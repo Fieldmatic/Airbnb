@@ -47,7 +47,11 @@
     align-items: center;
     justify-content: space-between;
     height: 4vh;
-    margin-bottom: 0.4vh;
+    margin-bottom: 1.5vh;
+}
+
+.user-form-data-bio{
+    margin-top: 6vh;
 }
 
 .updateBtn {

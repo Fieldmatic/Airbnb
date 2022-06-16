@@ -15,6 +15,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import muiStyles from "../utils/muiStyles"
 import UserService from '../../services/UserService';
+import InstructorService from "../../services/InstructorService";
+
 
 export default function EditProfile() {
     const [reasonForDeletion, setReasonForDeletion] = useState("")
@@ -30,7 +32,8 @@ export default function EditProfile() {
             phoneNumberButton: false,
             streetButton: false,
             cityButton: false,
-            stateButton: false
+            stateButton: false,
+            biographyButton: false
         }   
     )
     const [user, setUser] = useState(
@@ -45,7 +48,8 @@ export default function EditProfile() {
                 city: "",
                 state: "",
                 zipCode: ""
-            }
+            },
+            biography: ""
         }
     )
 
@@ -128,6 +132,7 @@ export default function EditProfile() {
     useEffect(() => {
         LoginRegisterService.getUserRole().then(response => {
             if ((response.data === "ROLE_COTTAGE_OWNER") || (response.data ==="ROLE_BOAT_OWNER")) setUserRole("OWNER")
+            else if (response.data === "ROLE_INSTRUCTOR") setUserRole("INSTRUCTOR")
             else if (response.data === "ROLE_CLIENT") setUserRole("CLIENT")
         })
         if (userRole === "CLIENT") {
@@ -139,7 +144,11 @@ export default function EditProfile() {
             OwnerService.getOwner().then(response => {
                 setUser(response.data)
             })
-
+        }
+        else if (userRole === "INSTRUCTOR") {
+            InstructorService.getInstructor().then(response => {
+                setUser(response.data)
+            })
         }
     }, [userRole])
 
@@ -151,6 +160,11 @@ export default function EditProfile() {
         }
         else if (userRole === "OWNER") {
             OwnerService.getProfilePicture().then((response)=> {
+                setProfileImage(response.data)
+            })
+        }
+        else if (userRole === "INSTRUCTOR") {
+            InstructorService.getProfilePicture().then((response)=> {
                 setProfileImage(response.data)
             })
         }
@@ -261,6 +275,23 @@ export default function EditProfile() {
                 }
                 <button className="updateBtn" id="stateButton" onClick={toggleShown}> {editClicked.stateButton? "Save" : "Edit"}</button>
                 </div>
+                {user.biography && 
+                    <div className='user-form-data user-form-data-bio'>                 
+                    <label className="userLabel"> Biography </label>
+                    {editClicked.biographyButton? 
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="state"
+                        value={user?.biography}
+                    />
+                    : 
+                        <label className='userLabel'> {user?.biography}</label>
+                    }
+                    <button className="updateBtn" id="biographyButton" onClick={toggleShown}> {editClicked.biographyButton? "Save" : "Edit"}</button>
+                    </div>
+                }
+                
                 <div className='delete--reset'>
                     <Button 
                         variant="outlined" 
@@ -287,6 +318,18 @@ export default function EditProfile() {
                             autoFocus
                             sx = {muiStyles.style}
                             margin="dense"
+                            id="passwordConfirm"
+                            label="Old password"
+                            type="password"
+                            fullWidth
+                            variant="standard"
+                            value={passwordChangeData.oldPassword}
+                            name = "oldPassword"
+                            onChange={handlePasswordChange}
+                        />
+                        <TextField
+                            sx = {muiStyles.style}
+                            margin="dense"
                             id="password"
                             label="New password"
                             type="password"
@@ -294,19 +337,6 @@ export default function EditProfile() {
                             variant="standard"
                             value={passwordChangeData.newPassword}
                             name = "newPassword"
-                            onChange={handlePasswordChange}
-                        />
-                        <TextField
-                            autoFocus
-                            sx = {muiStyles.style}
-                            margin="dense"
-                            id="passwordConfirm"
-                            label="Confirm password"
-                            type="password"
-                            fullWidth
-                            variant="standard"
-                            value={passwordChangeData.oldPassword}
-                            name = "oldPassword"
                             onChange={handlePasswordChange}
                         />
                         </DialogContent>

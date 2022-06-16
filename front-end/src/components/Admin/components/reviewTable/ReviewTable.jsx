@@ -153,7 +153,7 @@ export default function ReviewTable() {
         ReportService.getAllReports().then((response) => {
             setRows(response.data)
         })
-    }, []) // props.registration
+    }, []) // props.registration - mozda treba staviti nesto tu da se azurira
 
     const getStateFromRow = (data) => {
       setShowAlert(true);

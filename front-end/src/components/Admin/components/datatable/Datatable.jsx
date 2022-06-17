@@ -160,15 +160,42 @@ export default function Datatable(props) {
 
     const [rows, setRows] = React.useState([])
 
+    const [showMessageAlert, setShowMessageAlert] = React.useState(false);
+    const [message, setMessage] = React.useState({
+        success: undefined,
+        text: ""
+    })
+
+    const showMessage = (returnMessage) => {
+        setShowMessageAlert(true);
+        setMessage(() => {
+            return {
+                success: returnMessage[1],
+                text: returnMessage[0]
+            }
+        })
+        setTimeout(() => {
+            setShowMessageAlert(false);
+        }, 2500)
+    }
+
     React.useEffect(() => {
       if(props.registration) {
         AdminService.getUserRegistrationRequests().then((response) => {
           setRows(response.data)
+        }).catch(err => {
+          if (err.response.status == 403) {
+            showMessage(["You must change your password first and then login again!", false])
+          }
         })
       }
       else {
         AdminService.getProfileDeletionRequests().then((response) => {
           setRows(response.data)
+        }).catch(err => {
+          if (err.response.status == 403) {
+            showMessage(["You must change your password first and then login again!", false])
+          }
         })
       }
     }, [props.registration])
@@ -184,6 +211,13 @@ export default function Datatable(props) {
 
   return (
       <div>
+        <Collapse in={showMessageAlert}>
+          {message.success ? 
+              <Alert variant="filled" severity="success">{message.text}</Alert> :
+              <Alert variant="filled" severity="error">{message.text}</Alert>
+          }           
+        </Collapse>
+
         <Collapse in={showAlert}>
             <Alert variant="filled" severity="success">{accept ? alertText.accept : alertText.deny}</Alert>
         </Collapse>

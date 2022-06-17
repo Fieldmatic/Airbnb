@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import AdventureService from "../../../../services/AdventureService"
 import BoatService from "../../../../services/BoatService"
 import CottageService from "../../../../services/CottageService"
+import Collapse from '@mui/material/Collapse';
 
 
 const columns = [
@@ -45,18 +46,46 @@ const EntityTable = (props) => {
   
   const [rows, setRows] = useState([]);
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState({
+    success: undefined,
+    text: ""
+  })
+
+  const showMessage = (returnMessage) => {
+    setShowAlert(true);
+    setMessage(() => {
+        return {
+            success: returnMessage[1],
+            text: returnMessage[0]
+        }
+    })
+    setTimeout(() => {
+        setShowAlert(false);
+    }, 2500)
+  }
+
   useEffect(() => {
       if (props.type === 1) {
-          AdventureService.getAllAdventures().then((response) => {
+          AdventureService.getAllAdventuresAdmin().then((response) => {
               setRows(response.data);
+          }).catch(err => {
+            if (err.response.status == 403)
+              showMessage(["You must change your password first and then login again!", false])
           })
       }else if(props.type === 2) {
-          CottageService.getAllCottages().then((response) => {
+          CottageService.getAllCottagesAdmin().then((response) => {
               setRows(response.data);
+          }).catch(err => {
+            if (err.response.status == 403)
+              showMessage(["You must change your password first and then login again!", false])
           })
       }else {
-          BoatService.getAllBoats().then((response) => {
+          BoatService.getAllBoatsAdmin().then((response) => {
               setRows(response.data);
+          }).catch(err => {
+            if (err.response.status == 403)
+              showMessage(["You must change your password first and then login again!", false])
           })
       }
   }, [props.type])
@@ -123,28 +152,37 @@ const EntityTable = (props) => {
     },
   ];
   return (
-    <div className="entityTable">
-        <div className="entityTableTitle">
-            {props.title}
-        </div>
-        <DataGrid
-            className="datagrid"
-            rows={rows}
-            columns={columns.concat(actionColumn)}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            disableSelectionOnClick
-        />
-        <Snackbar open={openSuccess} autoHideDuration={5000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="success" variant="filled" sx={{ width: '100%' }}>
-              Entity successfully deleted!
-            </Alert>
-        </Snackbar>
-        <Snackbar open={openError} autoHideDuration={5000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="error" variant="filled" sx={{ width: '100%' }}>
-              Cannot delete entity because it is rented!
-            </Alert>
-        </Snackbar>
+    <div>
+      <Collapse in={showAlert}>
+          {message.success ? 
+              <Alert variant="filled" severity="success">{message.text}</Alert> :
+              <Alert variant="filled" severity="error">{message.text}</Alert>
+          }           
+      </Collapse>
+    
+      <div className="entityTable">
+          <div className="entityTableTitle">
+              {props.title}
+          </div>
+          <DataGrid
+              className="datagrid"
+              rows={rows}
+              columns={columns.concat(actionColumn)}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              disableSelectionOnClick
+          />
+          <Snackbar open={openSuccess} autoHideDuration={5000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="success" variant="filled" sx={{ width: '100%' }}>
+                Entity successfully deleted!
+              </Alert>
+          </Snackbar>
+          <Snackbar open={openError} autoHideDuration={5000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="error" variant="filled" sx={{ width: '100%' }}>
+                Cannot delete entity because it is rented!
+              </Alert>
+          </Snackbar>
+      </div>
     </div>
   );
 };

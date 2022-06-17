@@ -89,6 +89,24 @@ class AdminService {
             }
         });
     }
+
+    getLoyaltyProgram() {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getLoyaltyProgram",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
+
+    updateLoyaltyProgram(loyaltyProgram) {
+        return axios.put(ADMIN_BASED_REST_API_URL + "/updateLoyaltyProgram", loyaltyProgram,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
     
 }
 

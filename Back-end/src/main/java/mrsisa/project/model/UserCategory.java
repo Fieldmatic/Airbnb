@@ -11,7 +11,8 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @Entity
-public class ClientCategory {
+public class UserCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

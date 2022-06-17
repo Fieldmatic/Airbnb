@@ -55,7 +55,6 @@
         font-size: 50px;
         padding: 5px;
         border-radius: 5px;
-        // align-self: flex-end;
       }
     }
 }
@@ -70,9 +69,52 @@
     align-items: center;
 }
 
+.categoryContainer{
+  margin-top: 10px;
+  padding: 20px;
+  width: 100%;
+}
+
+.category {
+  margin: 10px;
+  border-radius: 8px;
+  padding: 10px;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto;
+
+  p {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  &.bronze {
+    font-size: 20px;
+    color: #8a5622;
+    background-color: #cd853f;
+    border: 1px solid #a46628;
+  }
+  &.silver {
+    font-size: 20px;
+    color: rgb(102, 102, 102);
+    background-color: silver;
+    border: 1px solid rgb(132, 132, 132);
+  }
+  &.gold {
+    font-size: 20px;
+    color: rgb(188, 143, 28);
+    background-color: gold;
+    border: 1px solid goldenrod;
+  }
+}
+
 .moneyPercentField {
   display: flex;
-  // justify-content: space-between;
   padding: 20px;
   width: 100%;
 

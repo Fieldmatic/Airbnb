@@ -4,7 +4,7 @@ import AdminSidebar from "../../components/sidebar/AdminSidebar"
 import AdminNavbar from "../../components/navbar/AdminNavbar"
 import inMemoryJwt from '../../../../services/inMemoryJwtService';
 import LoginRegisterService from '../../../../services/LoginRegisterService'
-import Widget from '../../components/widget/Widget';
+import LoyaltyWidget from '../../components/widget/LoyaltyWidget';
 import NewAdminWidget from '../../components/widget/NewAdminWidget';
 import MoneyWidget from '../../components/widget/MoneyWidget';
 import Collapse from '@mui/material/Collapse';
@@ -92,8 +92,11 @@ export default function Admin() {
 
         AdminService.getChartData(dateRangeCopy.startDate, dateRangeCopy.endDate).then((response) => {
             setChartData(response.data);
-        }).catch(() => {
-            alert("Sorry, no data to display.")
+        }).catch((err) => {
+            if (err.response.status == 403)
+                showMessage(["You must change your password first and then login again!", false])
+            else
+                showMessage(["Sorry, no data to display.", false])
         })
         
     }
@@ -111,7 +114,7 @@ export default function Admin() {
                 </Collapse>
                 <div className="widgets">
                     <NewAdminWidget showMessage={showMessage}/>
-                    <Widget type="order" showMessage={showMessage}/>
+                    <LoyaltyWidget showMessage={showMessage}/>
                     <MoneyWidget type="moneyPercent" showMessage={showMessage}/>
                     <MoneyWidget type="total" showMessage={showMessage}/>
                 </div>

@@ -60,7 +60,7 @@ const Views = () => {
           <Route path="boats" element={<AdminEntities type={3} />}/>
         </Route>
         <Route path="reviews">
-          <Route path="complaints" element={<Reviews />}/>
+          <Route path="complaints" element={<Reviews refresh={true}/>}/>
         </Route>
         <Route path="profile" element={<AdminProfile />} />
       </Route>

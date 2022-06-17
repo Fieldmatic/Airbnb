@@ -72,8 +72,13 @@ const NewAdminWidget = ({ showMessage }) => {
             showMessage([response.data, true]);
         })
         .catch(err => {
-            setOpenRegisterDialog(false);
-            showMessage([err.response.data, false]);
+            if (err.response.status == 403){
+                setOpenRegisterDialog(false);
+                showMessage(["You must change your password first and then login again!", false]);
+            } else {
+                setOpenRegisterDialog(false);
+                showMessage([err.response.data, false]);
+            }
         })
     };
 
@@ -89,8 +94,8 @@ const NewAdminWidget = ({ showMessage }) => {
             <AddOutlinedIcon
             className="bigIcon"
             style={{
-                color: "green",
-                backgroundColor: "rgba(0, 128, 0, 0.2)",
+                color: "crimson",
+                backgroundColor: "rgba(255, 0, 0, 0.2)",
             }}
             />
         </Link>

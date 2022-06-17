@@ -47,9 +47,14 @@ const MoneyWidget = ({ type, showMessage }) => {
       showMessage(["Money percentage successfully updated.", true]);
       setMoneyPercentageFloat(moneyConfig.moneyPercentage);
       setOpenMoneyPercentDialog(false);
-    }).catch(() => {
-      showMessage(["Money percentage must be a number!", false]);
-      setOpenMoneyPercentDialog(false);
+    }).catch((err) => {
+      if (err.response.status == 403) {
+        showMessage(["You must change your password first and then login again!", false]);
+        setOpenMoneyPercentDialog(false);  
+      } else {
+        showMessage(["Money percentage must be a number!", false]);
+        setOpenMoneyPercentDialog(false);
+      }
     })
   };
 
@@ -62,6 +67,11 @@ const MoneyWidget = ({ type, showMessage }) => {
     AdminService.getPaymentConfig().then((response) => {
       setMoneyConfig(response.data);
       setMoneyPercentageFloat(response.data.moneyPercentage);
+    }).catch(err => {
+      if (err.response.status == 403) {
+        showMessage(["You must change your password first and then login again!", false]);
+        setOpenMoneyPercentDialog(false);  
+      }
     })
   }, [])
 
@@ -149,7 +159,7 @@ const MoneyWidget = ({ type, showMessage }) => {
         </div>
         <div className="right">
             <div className="percentage positive">
-            {data?.percent && (parseFloat(moneyPercentageFloat)*100) + "%"}
+            {data?.percent && (isNaN(parseFloat(moneyPercentageFloat)*100)? 0 : parseFloat(moneyPercentageFloat)*100) + "%"}
             {data?.isMoney && "RSD"}
             </div>
             {data?.icon}

@@ -137,23 +137,46 @@ function Row(props) {
     );
 }
 
-export default function ReviewTable() {
+export default function ReviewTable(props) {
 
     const alertText = "Email with your message successfully sent.";
     const [showAlert, setShowAlert] = React.useState(false);
 
-    const [rows, setRows] = React.useState([
-        {id: 1, clientUsername: "pero", showedUp: false, comment: "Zahtevam da\
-        se korisnku da penal jer je bezobrazannnn!", ownerUsername: "banz"},
-        {id: 2, clientUsername: "djuro", showedUp: true, comment: "Svaka caastt!",
-         ownerUsername: "banz"},
-    ])
+    const [rows, setRows] = React.useState([]);
+
+    //{id: 1, clientUsername: "pero", showedUp: false, comment: "Zahtevam da\
+    // se korisnku da penal jer je bezobrazannnn!", ownerUsername: "banz"},
+    // {id: 2, clientUsername: "djuro", showedUp: true, comment: "Svaka caastt!",
+    //  ownerUsername: "banz"},
+
+    const [showMessageAlert, setShowMessageAlert] = React.useState(false);
+    const [message, setMessage] = React.useState({
+        success: undefined,
+        text: ""
+    })
+
+    const showMessage = (returnMessage) => {
+        setShowMessageAlert(true);
+        setMessage(() => {
+            return {
+                success: returnMessage[1],
+                text: returnMessage[0]
+            }
+        })
+        setTimeout(() => {
+            setShowMessageAlert(false);
+        }, 2500)
+    }
 
     React.useEffect(() => {
         ReportService.getAllReports().then((response) => {
             setRows(response.data)
+        }).catch(err => {
+            if (err.response.status == 403) {
+              showMessage(["You must change your password first and then login again!", false])
+            }
         })
-    }, []) // props.registration - mozda treba staviti nesto tu da se azurira
+    }, [])  // mozda treba neki refresh
 
     const getStateFromRow = (data) => {
       setShowAlert(true);
@@ -165,6 +188,13 @@ export default function ReviewTable() {
 
     return (
         <div>
+            <Collapse in={showMessageAlert}>
+                {message.success ? 
+                    <Alert variant="filled" severity="success">{message.text}</Alert> :
+                    <Alert variant="filled" severity="error">{message.text}</Alert>
+                }           
+            </Collapse>
+            
             <Collapse in={showAlert}>
                 <Alert variant="filled" severity="success">{alertText}</Alert>
             </Collapse>

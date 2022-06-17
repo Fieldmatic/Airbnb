@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -50,6 +51,9 @@ public class AdminService {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
+
 
     public Administrator update(AdminDTO dto) {
         Administrator admin = findAdminByUsername(dto.getUsername());
@@ -58,6 +62,7 @@ public class AdminService {
                 if(!passwordEncoder.matches(dto.getPassword(), admin.getPassword()))
                     return null;
                 admin.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+                admin.setLastPasswordResetDate(new Date());
             }
             admin.setName(dto.getName());
             admin.setAddress(dto.getAddress());
@@ -137,13 +142,23 @@ public class AdminService {
     }
 
     /**
-     * @apiNote Use this method only one time to initialize default admin i system.
+     * @apiNote Use this method only one time to initialize default admin and system.
      * */
     public void createFirstAdmin() {
         Payment payment = new Payment();
         payment.setMoneyPercentage(0.03);
         payment.setTotal(0);
         paymentService.save(payment);
+
+        LoyaltyProgram loyaltyProgram = new LoyaltyProgram();
+        loyaltyProgram.setBronzePoints(100);
+        loyaltyProgram.setSilverPoints(250);
+        loyaltyProgram.setGoldPoints(500);
+        loyaltyProgram.setClientPoints(5);
+        loyaltyProgram.setOwnerPoints(3);
+        loyaltyProgramService.save(loyaltyProgram);
+        this.createOwnerCategories(loyaltyProgram);
+        this.createClientCategories(loyaltyProgram);
 
         if (findAdminByUsername("admin") != null) return;
         //roleService.createRoles();
@@ -157,7 +172,7 @@ public class AdminService {
         admin.setActive(true);
         admin.setAddress(address);
         admin.setEmail("bane-gg@hotmail.com");
-        admin.setLastPasswordResetDate(null);
+        admin.setLastPasswordResetDate(new Date());
         admin.setName("Banz");
         admin.setPhoneNumber("065432234");
         admin.setSurname("Ganz");
@@ -211,6 +226,51 @@ public class AdminService {
         personRepository.save(client);
     }
 
+    private void createClientCategories(LoyaltyProgram loyaltyProgram) {
+        ClientCategory category1 = new ClientCategory();
+        category1.setName(CategoryName.REGULAR);
+        category1.setPoints(0);
+        category1.setDiscount(0.0);
+
+        OwnerCategory ownerCategory2 = new OwnerCategory();
+        ownerCategory2.setName(CategoryName.BRONZE);
+        ownerCategory2.setPoints(loyaltyProgram.getBronzePoints());
+        ownerCategory2.setDiscount(0.05);
+
+        OwnerCategory ownerCategory3 = new OwnerCategory();
+        ownerCategory3.setName(CategoryName.SILVER);
+        ownerCategory3.setPoints(loyaltyProgram.getSilverPoints());
+        ownerCategory3.setDiscount(0.10);
+
+        OwnerCategory ownerCategory4 = new OwnerCategory();
+        ownerCategory4.setName(CategoryName.GOLD);
+        ownerCategory4.setPoints(loyaltyProgram.getGoldPoints());
+        ownerCategory4.setDiscount(0.15);
+    }
+
+    private void createOwnerCategories(LoyaltyProgram loyaltyProgram) {
+        OwnerCategory ownerCategory1 = new OwnerCategory();
+        ownerCategory1.setName(CategoryName.REGULAR);
+        ownerCategory1.setPoints(0);
+        ownerCategory1.setDiscount(0.0);
+
+        OwnerCategory ownerCategory2 = new OwnerCategory();
+        ownerCategory2.setName(CategoryName.BRONZE);
+        ownerCategory2.setPoints(loyaltyProgram.getBronzePoints());
+        ownerCategory2.setDiscount(0.05);
+
+        OwnerCategory ownerCategory3 = new OwnerCategory();
+        ownerCategory3.setName(CategoryName.SILVER);
+        ownerCategory3.setPoints(loyaltyProgram.getSilverPoints());
+        ownerCategory3.setDiscount(0.10);
+
+        OwnerCategory ownerCategory4 = new OwnerCategory();
+        ownerCategory4.setName(CategoryName.GOLD);
+        ownerCategory4.setPoints(loyaltyProgram.getGoldPoints());
+        ownerCategory4.setDiscount(0.15);
+
+    }
+
     public Administrator findAdminByUsername(String username) {
         return (Administrator) personRepository.findByUsername(username);
     }
@@ -227,7 +287,7 @@ public class AdminService {
         admin.setLastPasswordResetDate(null);
         admin.setPhoneNumber(dto.getPhone());
         admin.setUsername(dto.getUsername());
-        List<Role> roles = roleService.findByName("ROLE_NEW_ADMIN");
+        List<Role> roles = roleService.findByName("ROLE_ADMIN");
         admin.setRoles(roles);
         adminRepository.save(admin);
     }
@@ -270,4 +330,13 @@ public class AdminService {
     public void updatePaymentConfig(Payment newPayment) {
         paymentService.save(newPayment);
     }
+
+    public LoyaltyProgram getLoyaltyProgram() {
+        return loyaltyProgramService.getLoyaltyProgram();
+    }
+
+    public void updateLoyaltyProgram(LoyaltyProgram newProgram) {
+        loyaltyProgramService.save(newProgram);
+    }
+
 }

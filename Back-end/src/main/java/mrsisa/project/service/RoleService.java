@@ -23,13 +23,11 @@ public class RoleService {
         Role role3 = new Role("ROLE_COTTAGE_OWNER");
         Role role4 = new Role("ROLE_BOAT_OWNER");
         Role role5 = new Role("ROLE_INSTRUCTOR");
-        Role role6 = new Role("ROLE_NEW_ADMIN");
         roleRepository.save(role1);
         roleRepository.save(role2);
         roleRepository.save(role3);
         roleRepository.save(role4);
         roleRepository.save(role5);
-        roleRepository.save(role6);
     }
 
     public void save(Role role) {

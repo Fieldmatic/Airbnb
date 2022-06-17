@@ -17,6 +17,15 @@ class AdventureService {
         return axios.get(ADVENTURE_BASED_REST_API_URL + "/all");
     }
 
+    getAllAdventuresAdmin() {
+        return axios.get(ADVENTURE_BASED_REST_API_URL + "/getAll",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        });
+    }
+
     getAvailableAdventures(searchData) {
         let city = searchData.city
         let capacity = searchData.capacity

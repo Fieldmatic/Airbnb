@@ -11,11 +11,14 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @Entity
-public class ClientCategory {
+public class LoyaltyProgram {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private CategoryName name;
-    private Integer points;
-    private Double discount;
+    private int clientPoints;
+    private int ownerPoints;
+    private int bronzePoints;
+    private int silverPoints;
+    private int goldPoints;
 }

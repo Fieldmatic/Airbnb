@@ -3,10 +3,12 @@ package mrsisa.project.controller;
 import mrsisa.project.dto.AdventureDTO;
 import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.repository.PersonRepository;
+import mrsisa.project.service.AdminService;
 import mrsisa.project.service.AdventureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -36,6 +38,9 @@ public class AdventureController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private AdminService adminService;
 
     @PostMapping(path = "/add")
     @PreAuthorize("hasRole('INSTRUCTOR')")
@@ -114,5 +119,23 @@ public class AdventureController {
     public ResponseEntity<List<AdventureDTO>> getInstructorAdventures(Principal userP) {
         List<AdventureDTO> DTOs = adventureService.getInstructorAdventures(personRepository.findByUsername(userP.getName()).getId());
         return new ResponseEntity<>(DTOs, HttpStatus.OK);
+    }
+
+    /**
+     * @apiNote This method is only for admin to limit new admin not to get adventures until he
+     * changes password
+     */
+    @GetMapping(value="/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AdventureDTO>> getAll(Principal userP) {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        List<Adventure> adventures = adventureService.findAll();
+        List<AdventureDTO> adventuresDTO = new ArrayList<>();
+        for (Adventure adventure : adventures) {
+            adventuresDTO.add(new AdventureDTO(adventure));
+        }
+        return new ResponseEntity<>(adventuresDTO, HttpStatus.OK);
     }
 }

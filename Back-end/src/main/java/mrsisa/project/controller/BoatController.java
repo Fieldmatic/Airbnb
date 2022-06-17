@@ -3,9 +3,11 @@ package mrsisa.project.controller;
 import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.SearchDTO;
+import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Boat;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.repository.PersonRepository;
+import mrsisa.project.service.AdminService;
 import mrsisa.project.service.BoatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -35,6 +37,9 @@ public class BoatController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private AdminService adminService;
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('BOAT_OWNER')")
@@ -108,5 +113,23 @@ public class BoatController {
     public ResponseEntity<String> deleteBoat(@PathVariable Long id, Principal userP) {
         if (boatService.deleteBoat(id, userP)) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Boat has active reservations!");
+    }
+
+    /**
+     * @apiNote This method is only for admin to limit new admin not to get boats until he
+     * changes password
+     */
+    @GetMapping(value="/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<BoatDTO>> getAll(Principal userP) {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        List<Boat> boats = boatService.findAll();
+        List<BoatDTO> boatsDTO = new ArrayList<>();
+        for (Boat boat : boats) {
+            boatsDTO.add(new BoatDTO(boat));
+        }
+        return new ResponseEntity<>(boatsDTO, HttpStatus.OK);
     }
 }

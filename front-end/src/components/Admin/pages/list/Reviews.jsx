@@ -9,7 +9,7 @@ const Reviews = (props) => {
       <AdminSidebar/>
       <div className="requestListContainer">
         <AdminNavbar/>
-        <ReviewTable/>
+        <ReviewTable refresh={props.refresh}/>
       </div>
     </div>
   )

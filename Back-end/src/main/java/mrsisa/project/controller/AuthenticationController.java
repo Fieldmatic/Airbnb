@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.*;
+import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Owner;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.Role;
@@ -130,7 +131,11 @@ public class AuthenticationController {
 	}
 
 	@PostMapping(value = "/adminRegistration")
-	public ResponseEntity<String> addAdmin(@RequestBody AdminDTO dto){
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<String> addAdmin(@RequestBody AdminDTO dto, Principal userP){
+		Administrator admin = adminService.findAdminByUsername(userP.getName());
+		if (admin.getLastPasswordResetDate() == null)
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 		if (existUser != null) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");

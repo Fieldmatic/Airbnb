@@ -12,24 +12,23 @@ import Header from '../../Header';
 import BookableService from "../../services/BookableService";
 import { gridNumberComparator } from "@mui/x-data-grid/hooks";
 import { useLocation } from "react-router-dom";
+import ReviewsReport from "./ReviewsReport";
+import ReviewService from "../../services/ReviewService";
 
 
 export default function ClientReservationHistory() {
   let location = useLocation();
   let {entityType} = useParams();
 
-  //useEffect(() => {
-    //setDataLoaded(true)
-  //}, [location]);
-  
-
     const [rows, setRows] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
     const [reservations, setReservations] = useState([])
     const [showReportDialog, setShowReportDialog] = useState(false)
-    const [email, setEmail] = useState("")
-    const [id, setId] = useState("")
-
+    const [bookableId, setBookableId] = useState("")
+    const [ownerId, setOwnerId] = useState("")
+    const [reservationId, setReservationId] = useState("")
+    const [ownerReviewed, setOwnerReviewed] = useState(false)
+    const [bookableReviewed, setBookableReviewed] = useState(false)
 
     useEffect(() => {
         ReservationService.getReservations().then(response => 
@@ -41,30 +40,64 @@ export default function ClientReservationHistory() {
         )             
     }, [dataLoaded, location])
 
+    function refreshPage(){
+      window.location.reload();
+    }
+
     function setRowData(){
         setRows([])
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
         reservations.map ((item) => {
-            if ((entityType === "Future" && item.active) || ( entityType !== "Future" && item.bookableType === entityType && !item.active)) {
+          //&& !item.active DODAJ OVO
+            if ((entityType === "Future" && item.active) || ( entityType !== "Future" && item.bookableType === entityType)) {
                 var row = {}
                 BookableService.getProfilePicture(item.bookableId).then(response => {
                     row.img = response.data
                     row.id = item.id
                     row.name = item.bookableName
                     row.price = item.price + " €"
-
+                    row.ownerReviewed = item.ownerReviewed
+                    row.bookableReviewed = item.bookableReviewed
+                    console.log("kurcina")
+                    console.log(row.ownerReviewed)
+                    console.log(row.bookableReviewed)
                     row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
                     row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
                     row.address = item.bookableAddress.street + ", " + item.bookableAddress.city + ", " + item.bookableAddress.state
                     row.phoneNumber = item.ownerPhoneNumber
                     row.capacity = item.personLimit
                     row.duration = getPeriodBetweenDates(item.startDateTime, item.endDateTime)
-                }).then(() => {
+                    row.bookableId = item.bookableId
+                    row.ownerId = item.ownerId
+                    row.handleReviewsClicked = handleReviewsClicked
+                  })
+                  .then(() => {
                     setRows(prevRows => [...prevRows, row])
                 })
         }});
         setDataLoaded(true)
     }
+
+    function handleReviewsClicked(id1, id2, id3, ownerRated, bookableRated){
+      setBookableId(id1)
+      setOwnerId(id2)
+      setReservationId(id3)
+      setOwnerReviewed(ownerRated)
+      setBookableReviewed(bookableRated)
+      setShowReportDialog(true)
+  }
+
+  function handleReportClose(){
+      setShowReportDialog(false)
+  }
+
+  function handleReportSubmit(data) {
+    ReviewService.addReview(data).then(response => {
+      alert(response.data)
+      refreshPage()
+  })
+
+  }
 
     return (
         <div>
@@ -80,7 +113,7 @@ export default function ClientReservationHistory() {
             checkboxSelection
              />}
             </div>
-            {showReportDialog && <ReservationReport handleReportSubmit = {handleReportSubmit} id = {id.toString()} email = {email} handleOpen = {handleReportClicked} handleClose = {handleReportClose}/>}
+            {showReportDialog && <ReviewsReport ownerReviewed={ownerReviewed} entityReviewed={bookableReviewed} handleReportSubmit = {handleReportSubmit} id = {reservationId.toString()} bookableId = {bookableId.toString()} ownerId = {ownerId.toString()} handleOpen = {handleReviewsClicked} handleClose = {handleReportClose}/>}
             </div>
         </div>
 
@@ -133,8 +166,6 @@ function getPeriodBetweenDates(date1, date2) {
 }
 
 
-
-
 const columns = [
     { field: 'id', headerName: 'ID', width: 30 },
     { field: 'name', headerName: 'Name', width: 230, sortable: true,
@@ -154,7 +185,23 @@ const columns = [
     { field: 'duration', headerName: 'Duration', width: 170, sortable: true, sortComparator: durationCustomComparator },
     { field: 'startDateTime', headerName: 'Start', width: 260, sortComparator: dateCustomComparator},
     { field: 'endDateTime', headerName: 'End', width: 260, sortComparator: dateCustomComparator},
-
+    { field : 'reviews', headerName : 'Optional', width : 190,
+    renderCell:(params) => {
+      if ((!params.row.ownerReviewed) || (!params.row.bookableReviewed))
+          return ( <Button 
+                    sx = {{ 
+                    backgroundColor : "#FF5A5F", 
+                    color:"white", 
+                    '&:hover': {
+                        backgroundColor: 'white',
+                        color: '#FF5A5F',
+                            },
+                          }}                       
+                    onClick = { () => {params.row.handleReviewsClicked(params.row.bookableId, params.row.ownerId, params.row.id, params.row.ownerReviewed, params.row.bookableReviewed)}}                                    
+                    variant='outlined'>Leave a review
+                </Button>)
+  }}
+  //Write a complaint
   ];
 
 

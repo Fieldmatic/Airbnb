@@ -20,6 +20,9 @@ public abstract class Bookable {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
+    @Version
+    @Column(name = "optLock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Integer version = 0;
     private String name;
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;

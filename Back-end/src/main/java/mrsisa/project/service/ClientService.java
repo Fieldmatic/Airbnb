@@ -54,7 +54,9 @@ public class ClientService {
 
     public Client save(Client client) {return clientRepository.save(client);}
 
-    public Client findClientByUsername(String username) {return (Client) personRepository.findByUsername(username);}
+    public Client findClientByUsername(String username) {return clientRepository.findByUsername(username);}
+
+    public Client findClientByEmail(String email) {return clientRepository.findByEmail(email);}
 
     public Client findClientById(Long id) {return clientRepository.getById(id);}
 

@@ -5,6 +5,7 @@ import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,27 +56,10 @@ public class ReservationService {
         action.setUsed(true);
     }
 
-    public void add(ReservationDTO dto, Principal userP) throws IOException {
-        Reservation reservation = dtoToReservation(dto);
-        Client client = clientRepository.findByUsername(userP.getName());
+    @Transactional
+    public void add(ReservationDTO dto, Client client) throws IOException {
         Bookable bookable = bookableRepository.getById(dto.getBookableId());
-        reservation.setClient(client);
-        reservationRepository.save(reservation);
-        client.getReservations().add(reservation);
-        clientRepository.save(client);
-        bookable.getReservations().add(reservation);
-        bookableRepository.save(bookable);
-        periodService.splitPeriodAfterReservation(reservation);
-        try{
-            emailService.sendReservationMail(client, reservation);
-        } catch(MailException ignored) {
-        }
-    }
-
-    public void addReservationForClient(ReservationDTO dto, String clientEmail){
-        Reservation reservation = dtoToReservation(dto);
-        Client client = clientRepository.findByEmail(clientEmail);
-        Bookable bookable = bookableRepository.getById(dto.getBookableId());
+        Reservation reservation = dtoToReservation(dto, bookable);
         reservation.setClient(client);
         reservationRepository.save(reservation);
         client.getReservations().add(reservation);
@@ -151,19 +135,16 @@ public class ReservationService {
         return reservation;
     }
 
-    private Reservation dtoToReservation(ReservationDTO dto) {
+    private Reservation dtoToReservation(ReservationDTO dto, Bookable bookable) {
         Reservation reservation = new Reservation();
         reservation.setStartDateTime(LocalDateTime.ofInstant(Instant.parse(dto.getStartDateTime()), ZoneOffset.UTC));
         reservation.setEndDateTime(LocalDateTime.ofInstant(Instant.parse(dto.getEndDateTime()), ZoneOffset.UTC));
         reservation.setPersonLimit(dto.getPersonLimit());
         reservation.setPrice(dto.getPrice());
         reservation.setActive(dto.getActive());
-        Bookable bookable = bookableRepository.getById(dto.getBookableId());
         reservation.setBookable(bookable);
-        bookable.getReservations().add(reservation);
-
         List<Tag> additionalServices = new ArrayList<>();
-        for (Tag tag: tagRepository.getTagsOfBookable(bookable.getId())) {
+        for (Tag tag: bookable.getAdditionalServices()) {
             if (dto.getAdditionalServices().contains(tag.getName())) {
                 additionalServices.add(tag);
             }

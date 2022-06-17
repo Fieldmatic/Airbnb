@@ -40,7 +40,7 @@ public class ActionService {
             bookable.getActions().add(action);
             for (Client client: bookable.getSubscribedClients()) {
                 try{
-                emailService.sendActionNotificationEmail(client, "One of your subscriptions is on action!", "We have a great offer for you from " + FORMATTER.format(action.getStartDateTime()) + " to " + FORMATTER.format(action.getEndDateTime()) + " for one of your favorites " + bookable.getName());
+                    emailService.sendActionNotificationEmail(client, "One of your subscriptions is on action!", "We have a great offer for you from " + FORMATTER.format(action.getStartDateTime()) + " to " + FORMATTER.format(action.getEndDateTime()) + " for one of your favorites " + bookable.getName());
                 } catch(MailException ignored) {
                 }
             }

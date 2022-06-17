@@ -6,6 +6,7 @@ import inMemoryJwt from '../../../../services/inMemoryJwtService';
 import LoginRegisterService from '../../../../services/LoginRegisterService'
 import Widget from '../../components/widget/Widget';
 import NewAdminWidget from '../../components/widget/NewAdminWidget';
+import MoneyWidget from '../../components/widget/MoneyWidget';
 import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
 import Chart from '../../components/chart/Chart';
@@ -111,8 +112,8 @@ export default function Admin() {
                 <div className="widgets">
                     <NewAdminWidget showMessage={showMessage}/>
                     <Widget type="order" showMessage={showMessage}/>
-                    <Widget type="earning" showMessage={showMessage}/>
-                    <Widget type="balance" showMessage={showMessage}/>
+                    <MoneyWidget type="moneyPercent" showMessage={showMessage}/>
+                    <MoneyWidget type="total" showMessage={showMessage}/>
                 </div>
                 <div className="charts">
                     <div className='dateRange'>

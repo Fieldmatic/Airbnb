@@ -3,6 +3,7 @@ package mrsisa.project.controller;
 import mrsisa.project.dto.*;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Instructor;
+import mrsisa.project.model.Payment;
 import mrsisa.project.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,6 +96,20 @@ public class AdminController {
         if (chartData.size() == 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(chartData);
         return new ResponseEntity<>(chartData, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/getPaymentConfig")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Payment> getPaymentConfig() {
+        Payment payment = adminService.getPaymentConfig();
+        return new ResponseEntity<>(payment, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/updatePaymentConfig")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> updatePaymentConfig(@RequestBody Payment payment) {
+        adminService.updatePaymentConfig(payment);
+        return ResponseEntity.status(HttpStatus.OK).body("Payment config successfully updated!");
     }
 
 

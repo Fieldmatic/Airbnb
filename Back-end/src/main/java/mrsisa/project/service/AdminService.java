@@ -262,4 +262,12 @@ public class AdminService {
         }
         return false;
     }
+
+    public Payment getPaymentConfig() {
+        return paymentService.getPaymentConfig();
+    }
+
+    public void updatePaymentConfig(Payment newPayment) {
+        paymentService.save(newPayment);
+    }
 }

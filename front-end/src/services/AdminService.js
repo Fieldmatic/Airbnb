@@ -71,6 +71,24 @@ class AdminService {
             }
         });
     }
+
+    getPaymentConfig() {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getPaymentConfig",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
+
+    updatePaymentConfig(paymentConfig) {
+        return axios.put(ADMIN_BASED_REST_API_URL + "/updatePaymentConfig", paymentConfig,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
     
 }
 

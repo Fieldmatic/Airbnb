@@ -25,4 +25,8 @@ public class PaymentService {
     public Payment save(Payment payment) {
         return paymentRepository.save(payment);
     }
+
+    public Payment getPaymentConfig() {
+        return paymentRepository.findAll().get(0);
+    }
 }

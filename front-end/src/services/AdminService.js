@@ -3,7 +3,7 @@ import inMemoryJwt from './inMemoryJwtService';
 
 const ADMIN_BASED_REST_API_URL = "http://localhost:8081/api/admin";
 
-class InstructorService {
+class AdminService {
 
     getAdmin() {
         return axios.get(ADMIN_BASED_REST_API_URL + "/get", 
@@ -63,7 +63,15 @@ class InstructorService {
         });
     }
 
+    getChartData(startDate, endDate) {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getChartData/" + startDate + "&" + endDate,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
     
 }
 
-export default new InstructorService()
+export default new AdminService()

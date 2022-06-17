@@ -8,12 +8,28 @@ import Widget from '../../components/widget/Widget';
 import NewAdminWidget from '../../components/widget/NewAdminWidget';
 import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
+import Chart from '../../components/chart/Chart';
+
+import { TextField } from '@mui/material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { ThemeProvider} from '@mui/material/styles';
+import muiStyles from '../../../utils/muiStyles';
+import Button from '@mui/material/Button';
+import AdminService from '../../../../services/AdminService';
 
 
 export default function Admin() {
 
     const [isUserLogged, setIsUserLogged] = useState(false);
     const [role, setRole] = useState(null);
+
+    const [dateRange, setDateRange] = useState({
+        startDate: new Date(),
+        endDate: new Date()
+    })
+    const [chartData, setChartData] = useState([])
     
     useEffect(() => {
         inMemoryJwt.setToken(localStorage.getItem("user"))
@@ -58,6 +74,29 @@ export default function Admin() {
         }, 2500)
     }
 
+    const showOnChart = (e) => {
+        e.preventDefault();
+        let dateRangeCopy = { ...dateRange };
+        const offset = dateRange.startDate.getTimezoneOffset();
+        let startDateTemp = new Date(dateRange.startDate.getTime() - (offset*60*1000))
+        let endDateTemp = new Date(dateRange.endDate.getTime() - (offset*60*1000))
+
+        dateRangeCopy.startDate = startDateTemp.toISOString().split('T')[0] + "T" + "00:00:00";
+        dateRangeCopy.endDate = endDateTemp.toISOString().split('T')[0] + "T" + "00:00:00";
+        const json = JSON.stringify(dateRangeCopy);
+        const dateRangeJson = new Blob([json], {
+            type: 'application/json'
+        });
+        
+
+        AdminService.getChartData(dateRangeCopy.startDate, dateRangeCopy.endDate).then((response) => {
+            setChartData(response.data);
+        }).catch(() => {
+            alert("Sorry, no data to display.")
+        })
+        
+    }
+
     return (
         <div className="adminHome">
             <AdminSidebar />
@@ -74,6 +113,76 @@ export default function Admin() {
                     <Widget type="order" showMessage={showMessage}/>
                     <Widget type="earning" showMessage={showMessage}/>
                     <Widget type="balance" showMessage={showMessage}/>
+                </div>
+                <div className="charts">
+                    <div className='dateRange'>
+                        <div className='dateRangeTitle'>Date range</div>
+                        <div className="dateRangePicker">
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <ThemeProvider theme={muiStyles.timePickerTheme}>
+                                    <DatePicker
+                                        renderInput={(params) => {
+                                            return (
+                                            <TextField
+                                                {...params}
+                                                sx={muiStyles.style}
+                                            />
+                                            );
+                                        }}
+                                        color="#FF5A5F"
+                                        label="Start date"
+                                        className='expirationDatePicker'
+                                        value={dateRange.startDate}
+                                        name ="startDate"
+                                        onChange= {(newValue) => {
+                                            setDateRange(prevFormData => ({
+                                                ...prevFormData,
+                                                startDate: newValue
+                                            }));
+                                        }}
+                                    />
+                                </ThemeProvider>
+                            </LocalizationProvider>
+                        </div>
+                        <div className="dateRangePicker">
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <ThemeProvider theme={muiStyles.timePickerTheme}>
+                                    <DatePicker
+                                        renderInput={(params) => {
+                                            return (
+                                            <TextField
+                                                {...params}
+                                                sx={muiStyles.style}
+                                            />
+                                            );
+                                        }}
+                                        color="#FF5A5F"
+                                        label="End date"
+                                        className='expirationDatePicker'
+                                        value={dateRange.endDate}
+                                        name ="endDate"
+                                        onChange= {(newValue) => {
+                                            setDateRange(prevFormData => ({
+                                                ...prevFormData,
+                                                endDate: newValue
+                                            }));
+                                        }}
+                                    />
+                                </ThemeProvider>
+                            </LocalizationProvider>
+                        </div>
+                        <div className="acceptBtnContainer">
+                            <Button variant="contained" 
+                            style={{
+                                backgroundColor: "#FF5A5F",
+                            }}
+                            onClick={showOnChart}
+                            >
+                                Show on chart
+                            </Button>
+                        </div>
+                    </div>
+                    <Chart title="Income chart" aspect={2 / 1} data={chartData}/>
                 </div>
             </div>
         </div>

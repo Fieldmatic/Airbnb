@@ -1,10 +1,6 @@
 package mrsisa.project.service;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
-import mrsisa.project.dto.AdminDTO;
-import mrsisa.project.dto.PersonBasicInfoDTO;
-import mrsisa.project.dto.ProfileDeletionReasonDTO;
-import mrsisa.project.dto.RegistrationRequestDTO;
+import mrsisa.project.dto.*;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -36,6 +32,9 @@ public class AdminService {
     RegistrationRequestRepository registrationRequestRepository;
 
     @Autowired
+    ReservationRepository reservationRepository;
+
+    @Autowired
     EmailService emailService;
 
     @Autowired
@@ -47,6 +46,9 @@ public class AdminService {
     // test
     @Autowired
     private InstructorRepository instructorRepository;
+
+    @Autowired
+    private PaymentService paymentService;
 
 
     public Administrator update(AdminDTO dto) {
@@ -138,6 +140,11 @@ public class AdminService {
      * @apiNote Use this method only one time to initialize default admin i system.
      * */
     public void createFirstAdmin() {
+        Payment payment = new Payment();
+        payment.setMoneyPercentage(0.03);
+        payment.setTotal(0);
+        paymentService.save(payment);
+
         if (findAdminByUsername("admin") != null) return;
         //roleService.createRoles();
         Address address = new Address();
@@ -204,7 +211,6 @@ public class AdminService {
         personRepository.save(client);
     }
 
-
     public Administrator findAdminByUsername(String username) {
         return (Administrator) personRepository.findByUsername(username);
     }
@@ -224,5 +230,36 @@ public class AdminService {
         List<Role> roles = roleService.findByName("ROLE_NEW_ADMIN");
         admin.setRoles(roles);
         adminRepository.save(admin);
+    }
+
+    public List<ChartDataDTO> getChartData(String startDate, String endDate) {
+        LocalDateTime start = LocalDateTime.parse(startDate);
+        LocalDateTime end = LocalDateTime.parse(endDate);
+        List<ChartDataDTO> chartData = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        double percentage = paymentService.getMoneyPercentage();
+
+        for (Reservation r : reservationRepository.findAll()) {
+            if(start.isBefore(r.getEndDateTime()) && end.isAfter(r.getEndDateTime()) && !r.getActive()){
+                String date = r.getEndDateTime().format(formatter);
+                if (!this.dateInChartData(date, chartData)) {
+                    chartData.add(new ChartDataDTO(date, r.getPrice() * percentage));
+                } else {
+                    for (ChartDataDTO dto : chartData) {
+                        if (date.equals(dto.getDate()))
+                            dto.setTotal(dto.getTotal() + r.getPrice() * percentage);
+                    }
+                }
+            }
+        }
+        return chartData;
+    }
+
+    private boolean dateInChartData(String date, List<ChartDataDTO> chartData) {
+        for (ChartDataDTO dto : chartData) {
+            if (dto.getDate().equals(date))
+                return true;
+        }
+        return false;
     }
 }

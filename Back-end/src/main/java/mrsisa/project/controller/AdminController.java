@@ -1,9 +1,6 @@
 package mrsisa.project.controller;
 
-import mrsisa.project.dto.AdminDTO;
-import mrsisa.project.dto.InstructorDTO;
-import mrsisa.project.dto.ProfileDeletionReasonDTO;
-import mrsisa.project.dto.RegistrationRequestDTO;
+import mrsisa.project.dto.*;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Instructor;
 import mrsisa.project.service.AdminService;
@@ -89,6 +86,17 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.OK).body("User successfully registered!");
         return ResponseEntity.status(HttpStatus.OK).body("Request for user registration denied!");
     }
+
+    @GetMapping(path = "/getChartData/{startDate}&{endDate}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ChartDataDTO>> getChartData(@PathVariable String startDate,
+                                                           @PathVariable String endDate) {
+        List<ChartDataDTO> chartData = adminService.getChartData(startDate, endDate);
+        if (chartData.size() == 0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(chartData);
+        return new ResponseEntity<>(chartData, HttpStatus.OK);
+    }
+
 
 //    @GetMapping(path = "/getUserProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
 //    public ResponseEntity getAdventureProfilePicture(@PathVariable Long id) throws IOException {

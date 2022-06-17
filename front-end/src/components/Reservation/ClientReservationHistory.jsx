@@ -48,8 +48,7 @@ export default function ClientReservationHistory() {
         setRows([])
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
         reservations.map ((item) => {
-          //&& !item.active DODAJ OVO
-            if ((entityType === "Future" && item.active) || ( entityType !== "Future" && item.bookableType === entityType)) {
+            if ((entityType === "Future" && item.active) || (!item.active && entityType !== "Future" && item.bookableType === entityType)) {
                 var row = {}
                 BookableService.getProfilePicture(item.bookableId).then(response => {
                     row.img = response.data
@@ -58,9 +57,6 @@ export default function ClientReservationHistory() {
                     row.price = item.price + " €"
                     row.ownerReviewed = item.ownerReviewed
                     row.bookableReviewed = item.bookableReviewed
-                    console.log("kurcina")
-                    console.log(row.ownerReviewed)
-                    console.log(row.bookableReviewed)
                     row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
                     row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
                     row.address = item.bookableAddress.street + ", " + item.bookableAddress.city + ", " + item.bookableAddress.state
@@ -187,7 +183,7 @@ const columns = [
     { field: 'endDateTime', headerName: 'End', width: 260, sortComparator: dateCustomComparator},
     { field : 'reviews', headerName : 'Optional', width : 190,
     renderCell:(params) => {
-      if ((!params.row.ownerReviewed) || (!params.row.bookableReviewed))
+      if (params.row.active && ((!params.row.ownerReviewed) || (!params.row.bookableReviewed)))
           return ( <Button 
                     sx = {{ 
                     backgroundColor : "#FF5A5F", 

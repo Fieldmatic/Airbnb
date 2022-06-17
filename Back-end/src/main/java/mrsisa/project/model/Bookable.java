@@ -2,7 +2,9 @@ package mrsisa.project.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -13,7 +15,8 @@ import java.util.List;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Bookable {
@@ -39,7 +42,7 @@ public abstract class Bookable {
     @Fetch(FetchMode.SUBSELECT)
     private List<Tag> additionalServices;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Review> reviews;
 

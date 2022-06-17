@@ -6,3 +6,8 @@
 .reservation--container{
     flex:6;       
 }
+
+.starRateReviews {
+    display: flex;
+    flex-direction: row;
+}

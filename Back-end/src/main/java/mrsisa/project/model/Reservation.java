@@ -24,11 +24,18 @@ public class Reservation {
     private List<Tag> additionalServices;
     private Double price;
     private Boolean active;
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean reported = false;
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean ownerReviewed = false;
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean bookableReviewed = false;
     @ManyToOne
     private Client client;
     @ManyToOne
     private Bookable bookable;
-
     @OneToOne
     private Report report;
+    @OneToOne
+    private Review review;
 }

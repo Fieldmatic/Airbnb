@@ -17,19 +17,19 @@ export default function Calendar({ bookableId, updateType }) {
         BookableService.getBookableAvailable(bookableId).then((response) => {
             setAvailablePeriod(response.data);
         })
-    }, [updateType === "AVAILABLE_PERIOD"]);
+    }, [updateType.availablePeriod]);
 
     React.useEffect(() => {
         BookableService.getBookableReservations(bookableId).then((response) => {
             setRentedPeriod(response.data);
         })
-    }, []);
+    }, [updateType.reservation]);
 
     React.useEffect(() => {
         BookableService.getBookableActions(bookableId).then((response) => {
             setActionPeriod(response.data);
         })
-    }, [updateType === "ACTION"]);
+    }, [updateType.action]);
 
   
     return (

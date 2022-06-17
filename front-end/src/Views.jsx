@@ -32,6 +32,8 @@ import ClientReservationHistory from "./components/Reservation/ClientReservation
 
 
 const Views = () => {
+
+
   return (
     <Routes>
       <Route index element = {<Home/>}/>
@@ -56,7 +58,7 @@ const Views = () => {
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
       <Route path = "/reserveAgain/:bookableId&:email" element = {<ReserveForClient/>} />
       <Route path = "/bookableDetails/:id&:entityType&:user&:heartColor" element = {<BookableDetails />} />
-      <Route path = "/reservationHistory/:entityType" element = {<ClientReservationHistory />} />
+      <Route path = "/reservationHistory/:entityType" element = {<ClientReservationHistory/>} />
 
 
       <Route path = "/admin">

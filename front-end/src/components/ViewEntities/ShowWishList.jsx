@@ -4,12 +4,16 @@ import Header from "../../Header";
 import FilterPopup from './FilterPopup'
 import Entity from "../Bookable/Entity"
 import ClientService from "../../services/ClientService";
+import { useLocation } from "react-router-dom";
+
 
 
 export default function ShowWishList() {
     const [cottages, setCottages] = React.useState([])
     const [boats, setBoats] = React.useState([])
     const [adventures, setAdventures] = React.useState([])
+
+    let location = useLocation();
 
     let cottageCards = []
     let boatCards = []
@@ -26,7 +30,7 @@ export default function ShowWishList() {
             setAdventures(response.data) 
         })
         
-    }, [])
+    }, [location])
     
     cottageCards = cottages.map(item => {
         return makeCard(item, "cottage")})
@@ -55,6 +59,12 @@ export default function ShowWishList() {
             favorite={true}
             />)
     }
+
+    function checkIfAllListAreEmpty() {
+        if ((cottageCards.length === 0) && (boatCards.length === 0) && (adventureCards.length === 0)) {
+            return true;
+        } return false;
+    }
     
 
     return (
@@ -62,7 +72,7 @@ export default function ShowWishList() {
         <Header />
         <div className="show_entities">
             <div className="numberOfEntities">
-                {cottageCards.length === 0 && <h4> Your wish list is empty. </h4>}
+                {checkIfAllListAreEmpty() && <h4> Your wish list is empty. </h4>}
             </div>
             {cottageCards}
             {boatCards}

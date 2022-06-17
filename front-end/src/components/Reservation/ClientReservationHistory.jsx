@@ -11,18 +11,25 @@ import {useNavigate} from 'react-router-dom';
 import Header from '../../Header';
 import BookableService from "../../services/BookableService";
 import { gridNumberComparator } from "@mui/x-data-grid/hooks";
+import { useLocation } from "react-router-dom";
 
 
 export default function ClientReservationHistory() {
+  let location = useLocation();
+  let {entityType} = useParams();
 
-    let {entityType} = useParams();
-    
+  //useEffect(() => {
+    //setDataLoaded(true)
+  //}, [location]);
+  
+
     const [rows, setRows] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
     const [reservations, setReservations] = useState([])
     const [showReportDialog, setShowReportDialog] = useState(false)
     const [email, setEmail] = useState("")
     const [id, setId] = useState("")
+
 
     useEffect(() => {
         ReservationService.getReservations().then(response => 
@@ -32,14 +39,13 @@ export default function ClientReservationHistory() {
             },
             
         )             
-    }, [dataLoaded])
+    }, [dataLoaded, location])
 
     function setRowData(){
         setRows([])
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
         reservations.map ((item) => {
-            //ovde ces dodati proveru && (!item.active)
-            if (item.bookableType === entityType) {
+            if ((entityType === "Future" && item.active) || ( entityType !== "Future" && item.bookableType === entityType && !item.active)) {
                 var row = {}
                 BookableService.getProfilePicture(item.bookableId).then(response => {
                     row.img = response.data
@@ -141,7 +147,7 @@ const columns = [
           )
       },
     },
-    { field: 'address', headerName: 'Address', width: 180, sortable: false},
+    { field: 'address', headerName: 'Address', width: 240, sortable: false},
     { field: 'price', headerName: 'Price', width: 110, sortable: true, sortComparator: doubleCustomComparator},
     { field: 'phoneNumber', headerName: 'Phone number', width: 180, sortable: false },
     { field: 'capacity', headerName: 'Guests number', width: 120, sortable: true, sortComparator: gridNumberComparator },

@@ -2,7 +2,9 @@ package mrsisa.project.model;
 
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -15,7 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Person implements UserDetails {
@@ -23,6 +26,9 @@ public abstract class Person implements UserDetails {
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(unique = true)
     private Long id;
+    @Version
+    @Column(name = "optLock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Integer version;
     private String username;
     private String password;
     private String name;

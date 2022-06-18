@@ -136,7 +136,7 @@ function ActionPanel (props) {
                     <Stack spacing={3}>
                     <ThemeProvider theme={muiStyles.timePickerTheme}>
                     <TimePicker
-                        minutesStep={30}
+                        minutesStep={60}
                         ampm={false}
                         label = "Check out"
                         value={formData.endTime}
@@ -162,7 +162,6 @@ function ActionPanel (props) {
             <div className='actions--data'>
             <TextField
                 sx={muiStyles.style} 
-                id="standard-basic" 
                 className='actions--textfield'
                 label="Max guests" 
                 variant="standard"
@@ -172,7 +171,6 @@ function ActionPanel (props) {
                 />
              <TextField 
                 sx={muiStyles.style}
-                id="standard-basic" 
                 label="Price" 
                 className='actions--textfield'
                 variant="standard" 
@@ -184,7 +182,7 @@ function ActionPanel (props) {
             <div className='actions--data'>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <ThemeProvider theme={muiStyles.timePickerTheme}>
-                        <DateTimePicker
+                        <DateTimePicker                        
                             renderInput={(params) => {
                                 return (
                                 <TextField

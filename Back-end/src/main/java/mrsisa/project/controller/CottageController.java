@@ -9,14 +9,12 @@ import mrsisa.project.model.CottageOwner;
 import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.service.AdminService;
 import mrsisa.project.service.CottageService;
-import mrsisa.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,13 +51,13 @@ public class CottageController {
         return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value="/allAvailableByCity/{startDate}/{endDate}/{city}")
+    @GetMapping(value="/allAvailableByCity/{startDate}/{endDate}/{city}/{capacity}")
     public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city) {
         List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(city, startDate, endDate);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 
-    @GetMapping(value="/allAvailable/{startDate}/{endDate}")
+    @GetMapping(value="/allAvailable/{startDate}/{endDate}/{capacity}")
     public ResponseEntity<List<CottageDTO>> getAvailableCottages(@PathVariable String startDate, @PathVariable String endDate) {
         List<CottageDTO> availableCottages = cottageService.getAvailableCottages(startDate, endDate);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
@@ -91,14 +89,6 @@ public class CottageController {
         CottageDTO cottage = cottageService.getCottage(id);
         if (cottage == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(cottage, HttpStatus.OK);
-    }
-
-    @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity getCottageProfilePicture(@PathVariable Long id) throws IOException {
-        Cottage cottage = cottageService.findOne(id);
-        File file = new File(cottage.getProfilePicture());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
     }
 
 

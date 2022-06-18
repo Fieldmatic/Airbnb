@@ -1,37 +1,37 @@
 .action-dateRangePicker{
-    width: 100%;
+    width: 98%;
     box-shadow: 2px 2px 15px 2px rgba(0.3,1,2,0.3);
     margin-bottom: 3%;
 }
 
 .actions--data{
-    margin: 3% 0 6% 0;
+    margin: 1em 0 2em 0;
     display: flex;
-    width: 95%;
+    width: 98%;
     justify-content: space-between;
 }
 
 .actions--textfield{
-    width: 40%;
+    width: 34%;
 }
 .action--submit{
     width: 40%;
     margin-left: 10px;
 }
 .expirationDatePicker{
-    width:100%;
+    width:98%;
 }
 
 .actions--container{
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 43%;
     background-color: white;
     box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
     box-sizing: border-box;
     border-radius: 10px;
     font-size: large;
-    margin: 2% 0 4% 2% ;
+    margin: 1.5em 1.5em 10% 8em ;
     align-items: center;
     padding: 20px;
 

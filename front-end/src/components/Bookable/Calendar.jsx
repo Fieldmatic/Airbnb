@@ -111,6 +111,21 @@ export default function Calendar({ bookableId, updateType }) {
                 />
                 
                 </div>
+        <div className="wrapper-calendar">
+            <h1 className="calendar-header">Calendar</h1>
+            <div className="calendar-body">
+            <FullCalendar
+                headerToolbar={{start: 'today prev,next', center: 'title', end: 'dayGridMonth timeGridWeek'}}
+                plugins={[ dayGridPlugin, interactionPlugin, timeGridPlugin ]}
+                initialView="dayGridMonth"
+                events={availablePeriod.concat(rentedPeriod, actionPeriod)}
+                eventTimeFormat={{
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12:false,
+                    meridiem: false
+                }}
+            />
             </div>
         </>
     )

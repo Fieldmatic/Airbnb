@@ -1,24 +1,26 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReservationDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class ReservationService {
@@ -47,28 +49,62 @@ public class ReservationService {
     @Autowired
     TagRepository tagRepository;
 
+    @Autowired
+    PeriodRepository periodRepository;
 
-    public void addQuick(Long actionId, Principal userP) throws IOException {
-        Action action = actionRepository.getById(actionId);
-        Reservation reservation = createReservationFromAction(action);
-        Client client = clientRepository.findByUsername(userP.getName());
-        reservation.setClient(client);
-        client.getReservations().add(reservation);
-        action.getBookable().getReservations().add(reservation);
-        action.setUsed(true);
+    @Transactional
+    public boolean addQuick(Long actionId, Principal userP) throws IOException {
+        try {
+            Action action = actionRepository.getById(actionId);
+            Reservation reservation = createReservationFromAction(action);
+            Client client = clientRepository.findByUsername(userP.getName());
+            reservation.setClient(client);
+            client.getReservations().add(reservation);
+            action.getBookable().getReservations().add(reservation);
+            action.setUsed(true);
+            return true;
+        }
+        catch (ObjectOptimisticLockingFailureException e) {
+            return  false;
+        }
     }
 
-    public void add(ReservationDTO dto, Principal userP) throws IOException {
-        Reservation reservation = dtoToReservation(dto);
-        Client client = clientRepository.findByUsername(userP.getName());
-        reservation.setClient(client);
-        client.getReservations().add(reservation);
-
-        periodService.splitPeriodAfterReservation(reservation);
-        try{
-            emailService.sendReservationMail(client, reservation);
-        } catch(MailException ignored) {
+    @Transactional
+    public boolean add(ReservationDTO dto, Client client) throws IOException {
+        Bookable bookable = bookableRepository.getById(dto.getBookableId());
+        Reservation reservation = dtoToReservation(dto, bookable);
+        if (checkIfClientAlreadyCanceledReservation(client, reservation.getStartDateTime(), reservation.getEndDateTime(), dto.getBookableId())) {
+            return false;
         }
+
+        Optional<Period> period = periodRepository.findPeriodByBookableIdAndStartBeforeOrEqualAndEndAfterOrEqual(reservation.getBookable().getId(),reservation.getStartDateTime(), reservation.getEndDateTime());
+        if (period.isPresent()){
+            reservation.setClient(client);
+            reservationRepository.save(reservation);
+            client.getReservations().add(reservation);
+            clientRepository.save(client);
+            bookable.getReservations().add(reservation);
+            bookableRepository.save(bookable);
+            periodService.splitPeriodAfterReservation(period.get(),reservation, bookable);
+            try{
+                emailService.sendReservationMail(client, reservation);
+            } catch(MailException ignored) {
+            }
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean checkIfClientAlreadyCanceledReservation(Client client, LocalDateTime start, LocalDateTime end, Long bookableId) {
+        //ako je otkazana rezervacija tog dana
+        LocalDate startDate = start.toLocalDate();
+        LocalDate endDate = end.toLocalDate();
+        for (Reservation reservation: client.getReservations()) {
+            if (reservation.getCanceled() && reservation.getBookable().getId().equals(bookableId) && startDate.isEqual(reservation.getStartDateTime().toLocalDate()) && endDate.isEqual(reservation.getEndDateTime().toLocalDate())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Transactional
@@ -121,6 +157,18 @@ public class ReservationService {
         return reservationsDTO;
     }
 
+    @Transactional
+    public List<ReservationDTO> getClientFutureReservations(Principal userP){
+        Person person = personRepository.findByUsername(userP.getName());
+        List<ReservationDTO> reservationsDTO = new ArrayList<>();
+        List<ReservationDTO> reservations = getClientReservations(person);
+        for (ReservationDTO reservation : reservations) {
+            if (reservation.getActive())
+                reservationsDTO.add(reservation);
+        }
+        return reservationsDTO;
+    }
+
     private Reservation createReservationFromAction(Action action) {
         Reservation reservation = new Reservation();
         reservation.setStartDateTime(action.getStartDateTime());
@@ -133,19 +181,16 @@ public class ReservationService {
         return reservation;
     }
 
-    private Reservation dtoToReservation(ReservationDTO dto) {
+    private Reservation dtoToReservation(ReservationDTO dto, Bookable bookable) {
         Reservation reservation = new Reservation();
         reservation.setStartDateTime(LocalDateTime.ofInstant(Instant.parse(dto.getStartDateTime()), ZoneOffset.UTC));
         reservation.setEndDateTime(LocalDateTime.ofInstant(Instant.parse(dto.getEndDateTime()), ZoneOffset.UTC));
         reservation.setPersonLimit(dto.getPersonLimit());
         reservation.setPrice(dto.getPrice());
         reservation.setActive(dto.getActive());
-        Bookable bookable = bookableRepository.getById(dto.getBookableId());
         reservation.setBookable(bookable);
-        bookable.getReservations().add(reservation);
-
         List<Tag> additionalServices = new ArrayList<>();
-        for (Tag tag: tagRepository.getTagsOfBookable(bookable.getId())) {
+        for (Tag tag: bookable.getAdditionalServices()) {
             if (dto.getAdditionalServices().contains(tag.getName())) {
                 additionalServices.add(tag);
             }
@@ -153,6 +198,26 @@ public class ReservationService {
         reservation.setAdditionalServices(additionalServices);
 
         return reservation;
+    }
+
+    @Transactional
+    public boolean cancelReservation(Long id) {
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        if (optionalReservation.isPresent()) {
+            Reservation reservation = optionalReservation.get();
+            if (getDaysToReservationStart(reservation.getStartDateTime()) >= 3) {
+                reservation.setCanceled(true);
+                reservationRepository.save(reservation);
+                periodService.addPeriodOnReservationCancelling(reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getBookable());
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    private Long getDaysToReservationStart(LocalDateTime startDateTime) {
+        return DAYS.between(LocalDateTime.now(), startDateTime);
     }
 
 }

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 
 @RestController
@@ -49,9 +51,12 @@ public class InstructorController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<InputStreamResource> getInstructorProfilePicture(Principal userP) throws IOException {
         Instructor instructor = instructorService.findInstructorByUsername(userP.getName());
-        File file = new File(instructor.getProfilePhoto());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return new ResponseEntity<>(resource, HttpStatus.OK);
+        try {
+            File file = new File(instructor.getProfilePhoto());
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(file.toPath())), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(Paths.get("src/main/resources/static/pictures/defaults/default-profile-picture.jpg"))),HttpStatus.OK);
+        }
     }
 
     @PostMapping(path = "/sendDeletionRequest")

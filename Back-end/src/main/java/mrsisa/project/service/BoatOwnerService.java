@@ -1,10 +1,11 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.PersonDTO;
-import mrsisa.project.model.BoatOwner;
-import mrsisa.project.model.Role;
+import mrsisa.project.dto.ReservationStatisticsDTO;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.BoatOwnerRepository;
+import mrsisa.project.repository.BoatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +41,12 @@ public class BoatOwnerService {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    BoatRepository boatRepository;
+
+    @Autowired
+    BookableService bookableService;
 
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/boatOwner/";
@@ -76,6 +86,30 @@ public class BoatOwnerService {
             }
         }
     }
+
+    public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){
+        BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
+        ReservationStatisticsDTO statistics = new ReservationStatisticsDTO();
+        if (bookableId.isPresent()) bookableService.fillBookableReservationStatistics(bookableId.get(), statistics);
+        else {
+            for (Boat boat : owner.getBoats()) bookableService.fillBookableReservationStatistics(boat.getId(), statistics);
+        }
+        return statistics;
+    }
+
+    public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP, Optional<Long> bookableId) {
+        BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
+        Map<String, Double> incomeByBoat = new HashMap<>();
+        if (bookableId.isPresent()){
+            bookableService.fillBookableIncomeStatistics(start,end,incomeByBoat,bookableId.get());
+        }
+        else {
+            for (Boat boat : owner.getBoats()) bookableService.fillBookableIncomeStatistics(start, end, incomeByBoat, boat.getId());
+        }
+        return incomeByBoat;
+    }
+
+    public BoatOwner findBoatOwnerByUsername(String username){return boatOwnerRepository.findByUsername(username);}
 
     private BoatOwner dtoToBoatOwner(PersonDTO dto) {
         BoatOwner owner = new BoatOwner();

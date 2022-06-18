@@ -94,6 +94,7 @@ public class BoatService {
         return boatsDTO;
     };
 
+    @Transactional
     public List<BoatDTO> getAvailableBoats(String startDate, String endDate, Integer capacity) {
         LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
         LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);
@@ -216,6 +217,10 @@ public class BoatService {
 
     public Boat findOne(Long id) {
         return boatRepository.findById(id).orElse(null);
+    }
+
+    public Integer getNumberOfReviews(Long id) {
+        return boatRepository.findByIdWithReviews(id).getReviews().size();
     }
 
     public List<Boat> findAll() {

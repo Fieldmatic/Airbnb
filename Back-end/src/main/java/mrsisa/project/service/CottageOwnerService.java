@@ -1,11 +1,13 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.PersonDTO;
+import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,9 +16,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +39,13 @@ public class CottageOwnerService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
+    CottageRepository cottageRepository;
+
+    @Autowired
     AdminService adminService;
+
+    @Autowired
+    BookableService bookableService;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
 
@@ -94,6 +104,28 @@ public class CottageOwnerService {
     }
 
     public CottageOwner findCottageOwnerByUsername(String username){return cottageOwnerRepository.findByUsername(username);}
+
+    public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){
+        CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
+        ReservationStatisticsDTO statistics = new ReservationStatisticsDTO();
+        if (bookableId.isPresent()) bookableService.fillBookableReservationStatistics(bookableId.get(), statistics);
+        else {
+            for (Cottage cottage : owner.getCottages()) bookableService.fillBookableReservationStatistics(cottage.getId(), statistics);
+        }
+        return statistics;
+    }
+
+    public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP,  Optional<Long> bookableId) {
+        CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
+        Map<String, Double> incomeByCottage = new HashMap<>();
+        if (bookableId.isPresent()){
+            bookableService.fillBookableIncomeStatistics(start,end,incomeByCottage,bookableId.get());
+        }
+        else {
+            for (Cottage cottage : owner.getCottages()) bookableService.fillBookableIncomeStatistics(start, end, incomeByCottage, cottage.getId());
+        }
+        return incomeByCottage;
+    }
 
     public List<CottageOwner> findAll(){return cottageOwnerRepository.findAll();}
 }

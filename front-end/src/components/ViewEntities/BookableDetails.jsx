@@ -15,6 +15,10 @@ import ActionService from "../../services/ActionService";
 import BoatDetails from "./BoatDetails";
 import ShowActions from "./ShowActions";
 import StarIcon from '@mui/icons-material/Star';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ClientService from '../../services/ClientService';
+
+
 
 
 export default function EntityDetails() {
@@ -22,7 +26,10 @@ export default function EntityDetails() {
     let {id} = useParams();
     let {entityType} = useParams();
     let {user} = useParams();
+    let {heartColor} = useParams();
+    heartColor = "#" + heartColor;
 
+    const [heartColorState, setHeartColor] = React.useState(heartColor)
     const [reviewsNumber, setReviewsNumber] = React.useState(0)
     const [slideNumber, setSlideNumber] = React.useState(0)
     const [slideOpened, setSlideOpened] = React.useState(false)
@@ -163,6 +170,19 @@ export default function EntityDetails() {
     }, [reservationMade]);
     createAddressUrl()
 
+    function fillHeart() {
+        if (heartColorState === "#FF5A5F") {
+            setHeartColor("#A8A8A8")
+            ClientService.unsubscribeFromEntity(id).then(response =>
+                console.log("obrisano"))
+        } else {
+            setHeartColor("#FF5A5F")
+            ClientService.subscribeOnEntity(id).then(response =>
+                console.log("dodato"))
+        }
+    }
+
+
     return(
         <div>
             <Header />
@@ -186,6 +206,13 @@ export default function EntityDetails() {
                                 <span> {entity.address.street}, {entity.address.city}, {entity.address.state}</span>
                             </div>
                             <div className="price">
+                                {user === "client" && <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColorState,
+                                    '&:hover': {
+                                        backgroundColor: 'lightgray',
+                                        color: '#FF5A5F',
+                                            },
+                                    }}/>          
+                                }
                                 {(entityType === "cottage" || entityType === "boat") &&
                                 <div>
                                 <span className="price"> € {entity.dailyRate}</span>

@@ -2,7 +2,6 @@ import './Header.css'
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import React, {useEffect, useState} from 'react';
-import MenuItems from './MenuItems.jsx'
 import SearchIcon from '@mui/icons-material/Search';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Avatar } from '@mui/material';
@@ -18,7 +17,47 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ThemeProvider} from '@mui/material/styles';
 import { TextField } from '@mui/material';
 import muiStyles from './components/utils/muiStyles';
+import { styled, alpha } from '@mui/material/styles';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import PhishingIcon from '@mui/icons-material/Phishing';
+import HouseboatIcon from '@mui/icons-material/Houseboat';
+import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
+import CabinIcon from '@mui/icons-material/Cabin';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
+const StyledMenu = styled((props) => (
+    <Menu
+      elevation={0}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      {...props}
+    />
+  ))(({ theme }) => ({
+    '& .MuiPaper-root': {
+      borderRadius: 6,
+      marginTop: theme.spacing(1),
+      minWidth: 180,
+      '& .MuiMenu-list': {
+        padding: '4px 0',
+      },
+      '& .MuiMenuItem-root': {
+        '& .MuiSvgIcon-root': {
+          fontSize: 29,
+          color: "#FF5A5F",
+          marginRight: theme.spacing(1.5),
+        },
+      },
+    },
+  }));
 
 
 
@@ -82,10 +121,65 @@ export default function Header(){
         )
     }
 
+    const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
     function getClientOptions(){
         return (
             <div className='header__links'>
+                 
+            <div>
+            <Button
+                id="demo-customized-button"
+                aria-controls={open ? 'demo-customized-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                variant="contained"
+                disableElevation
+                onClick={handleClick}
+                endIcon={<KeyboardArrowDownIcon />}
+            >
+            Your reservations
+            </Button>
+            <StyledMenu
+                id="demo-customized-menu"
+                MenuListProps={{
+                'aria-labelledby': 'demo-customized-button',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+            >
+            <MenuItem onClick={handleClose} disableRipple>
+            <CabinIcon />
+            <Link to={'/reservationHistory/Cottage'} style={{textDecoration: 'none', color:'black'}}>Cottages history</Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose} disableRipple>
+            <DirectionsBoatIcon />
+            <Link to={'/reservationHistory/Boat'} style={{textDecoration: 'none', color:'black'}}>Boats history</Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose} disableRipple>
+            <PhishingIcon />
+            <Link to={'/reservationHistory/Adventure'} style={{textDecoration: 'none', color:'black'}}>Adventures history</Link>
+            </MenuItem>
+
+            <Divider sx={{ my: 0.5 }} />
+            <MenuItem onClick={handleClose} disableRipple>
+            <CalendarMonthIcon />
+            <Link to={'/futureReservations'} style={{textDecoration: 'none', color:'black'}}>Future reservations</Link>
+            </MenuItem>
+        </StyledMenu>
+        </div>
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
+                <Link to={'/showWishList'} style={{textDecoration: 'none', color:'black'}}>Wish list</Link>
+                
             </div>
         )
     }
@@ -97,6 +191,7 @@ export default function Header(){
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
                 <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
                 <Link to={'/hostReservations'} style={{textDecoration: 'none', color:'black'}}>Reservation History</Link>
+                <Link to = {'/statistics'}style={{textDecoration: 'none', color:'black'}}>Statistics</Link>
             </div>
         )
     }
@@ -108,6 +203,7 @@ export default function Header(){
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
                 <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
                 <Link to={'/hostReservations'} style={{textDecoration: 'none', color:'black'}}>Reservation History</Link>
+                <Link to = {'/statistics'}style={{textDecoration: 'none', color:'black'}}>Statistics</Link>
             </div>
         )
     }
@@ -119,6 +215,7 @@ export default function Header(){
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
                 <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
                 <Link to={'/hostReservations'} style={{textDecoration: 'none', color:'black'}}>Reservation History</Link>
+                <Link to = {'/statistics'}style={{textDecoration: 'none', color:'black'}}>Statistics</Link>
             </div>
         )
     }
@@ -130,6 +227,10 @@ export default function Header(){
         
     }
 
+    function refreshPage(){
+        window.location.reload();
+    }
+
     function handleSearch() {
         navigate('/showEntities',{state: {
             startDateTime:toISODate(new Date(searchData.startDate.getFullYear(),searchData.startDate.getMonth(), searchData.startDate.getDate(), searchData.startTime.getHours(), searchData.startTime.getMinutes(),searchData.startTime.getSeconds())),
@@ -137,6 +238,7 @@ export default function Header(){
             guestsNumber : searchData.guestsNumber,
             city :  searchData.city, entityType: entityType, 
             showAll: false}});
+        refreshPage()
         setPopupState(false)
 
     }
@@ -198,11 +300,39 @@ export default function Header(){
                     }
                 {!isUserLogged &&
                     <div className='header__registrations'>
-                        <ul className="menus">
-                            {menuItems.map((menu, index) => {
-                                return <MenuItems items={menu} key={index} />;
-                            })}
-                        </ul>
+                        <div>
+                            <Button
+                                id="demo-customized-button"
+                                aria-controls={open ? 'demo-customized-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                variant="contained"
+                                disableElevation
+                                onClick={handleClick}
+                                endIcon={<KeyboardArrowDownIcon />}
+                            >
+                            Become a host
+                            </Button>
+                            <StyledMenu
+                                id="demo-customized-menu"
+                                MenuListProps={{
+                                'aria-labelledby': 'demo-customized-button',
+                                }}
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                            >
+                            <MenuItem onClick={handleClose} disableRipple>
+                            <HouseboatIcon/>
+                            <Link to={'/ownerRegistration'} style={{textDecoration: 'none', color:'black'}}>{"Cottage & boat owner"}</Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleClose} disableRipple>
+                            <PhishingIcon />
+                            <Link to={'/instructorRegistration'} style={{textDecoration: 'none', color:'black'}}>Instructor</Link>
+                            </MenuItem>
+                            </StyledMenu>
+                        </div>
+
                         <Link to={'/clientRegistration'} style={{textDecoration: 'none', color:'black'}}>
                             <Avatar/>
                         </Link>
@@ -234,7 +364,7 @@ export default function Header(){
                                             );
                                         }}
                                         ampm={false}
-                                        minutesStep={30}
+                                        minutesStep={60}
                                         color="#FF5A5F"
                                         label="Start time"
                                         value={searchData.startTime}
@@ -260,7 +390,7 @@ export default function Header(){
                                             );
                                         }}
                                         ampm={false}
-                                        minutesStep={30}
+                                        minutesStep={60}
                                         color="#FF5A5F"
                                         label="End time"
                                         value={searchData.endTime}
@@ -332,20 +462,3 @@ export default function Header(){
         return new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000).toISOString()
       }
 }
-
-
-
-export const menuItems = [
-    {
-        title: "Become a host",
-        submenu: [
-         {
-          title: "Cottage & boat owner",
-          path: "/ownerRegistration"
-         },
-         {
-          title: "Instructor",
-          path: "/instructorRegistration"
-         }]
-    }
-   ];

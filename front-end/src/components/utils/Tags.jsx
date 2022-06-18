@@ -22,7 +22,6 @@ export default function Tags(props){
                         event.target.value = "";
                     }
                     }}
-                    autofocus
                 />
                 </div>
                 <ul className="TagList">

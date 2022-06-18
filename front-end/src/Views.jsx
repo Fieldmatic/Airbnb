@@ -24,9 +24,17 @@ import AdminProfile from "./components/Admin/pages/profile/AdminProfile";
 import AdminEntities from "./components/Admin/pages/list/Entities";
 import Reviews from "./components/Admin/pages/list/Reviews";
 import EditBoat from "./components/Boat/EditBoat";
+import ReserveForClient from "./components/Owner/Reservation/ReserveForClient";
+import ShowWishList from "./components/ViewEntities/ShowWishList";
+import Statistics from "./components/Owner/Statistics";
+import ClientReservationHistory from "./components/Reservation/ClientReservationHistory"
+import BookableStatistics from "./components/Owner/BookableStatistics";
+import ClientFutureReservations from "./components/Reservation/ClientFutureReservations"
 
 
 const Views = () => {
+
+
   return (
     <Routes>
       <Route index element = {<Home/>}/>
@@ -34,10 +42,13 @@ const Views = () => {
       <Route path = "/addAdventure" element = {<AddAdventureForm />}/>
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
+      <Route path = "/statistics" element = {<Statistics/>}/>
+      <Route path = "/statistics/:id" element = {<BookableStatistics/>}/>
       <Route path = "/editCottage/:id" element = {<EditCottage/>}/>
       <Route path = "/editBoat/:id" element = {<EditBoat/>}/>
       <Route path = "/editProfile" element = {< EditProfile />}/>
       <Route path = "/showEntities" element = {< AllEntities />}/>
+      <Route path = "/showWishList" element = {< ShowWishList />}/>
       <Route path = "/addBoat" element = {<Boat/>}/>
       <Route path = "/ownerRegistration" element = {<OwnerRegistration/>}/>
       <Route path = "/clientRegistration" element = {<ClientRegistration/>}/>
@@ -47,7 +58,12 @@ const Views = () => {
       <Route path = "/hostReservations" element = {<ReservationHistory/>}/>
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
       <Route path = "/editInstructor" element = {<InstructorUpdate />} />
-      <Route path = "/bookableDetails/:id&:entityType&:user" element = {<BookableDetails />} />
+      <Route path = "/reserveAgain/:bookableId&:email" element = {<ReserveForClient/>} />
+      <Route path = "/bookableDetails/:id&:entityType&:user&:heartColor" element = {<BookableDetails />} />
+      <Route path = "/reservationHistory/:entityType" element = {<ClientReservationHistory/>} />
+      <Route path = "/futureReservations" element = {<ClientFutureReservations/>} />
+
+
       <Route path = "/admin">
         <Route index element={<Admin />} />
         <Route path="requests">

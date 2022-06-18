@@ -1,12 +1,15 @@
 package mrsisa.project.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 public class Report {
     @Id

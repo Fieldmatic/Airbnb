@@ -131,6 +131,10 @@ public class AdventureService {
         return adventureRepository.findById(id).orElseGet(null);
     }
 
+    public Integer getNumberOfReviews(Long id) {
+        return adventureRepository.findByIdWithReviews(id).getReviews().size();
+    }
+
     public List<Adventure> findAll() {
         return adventureRepository.findAll();
     }
@@ -139,6 +143,7 @@ public class AdventureService {
         adventureRepository.deleteById(id);
     }
 
+    @Transactional
     public List<AdventureDTO> getAvailableAdventures(String startDate, String endDate, Integer capacity) {
         LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
         LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);

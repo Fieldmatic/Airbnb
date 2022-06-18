@@ -22,15 +22,16 @@ public class ClientDTO {
     private String phoneNumber;
     private Address address;
     private UserCategory category;
-    private int points;
+    private Integer points;
+    private Integer penalties;
 
     public ClientDTO(Client client) {
         this(client.getId(), client.getUsername(), client.getPassword(), client.getName(), client.getSurname(),
-                client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress(), client.getCategory(), client.getPoints());
+                client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress(), client.getCategory(), client.getPoints(), client.getPenalties());
     }
 
     public ClientDTO(Long id, String username, String password, String name, String surname, String email,
-                     String profilePhoto, String phoneNumber, Address address, UserCategory category, int points) {
+                     String profilePhoto, String phoneNumber, Address address, UserCategory category, Integer points, Integer penalties) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -42,5 +43,6 @@ public class ClientDTO {
         this.address = address;
         this.category = category;
         this.points = points;
+        this.penalties = penalties;
     }
 }

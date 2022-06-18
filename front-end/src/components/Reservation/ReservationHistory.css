@@ -6,3 +6,15 @@
 .reservation--container{
     flex:6;       
 }
+
+.starRateReviews {
+    display: flex;
+    flex-direction: row;
+}
+
+.checkIcon {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+}

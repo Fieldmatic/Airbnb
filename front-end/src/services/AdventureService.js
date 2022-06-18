@@ -49,10 +49,6 @@ class AdventureService {
         return axios.get(ADVENTURE_BASED_REST_API_URL + "/reviewsNumber/" + id);
     }
 
-    getProfilePicture(id) {
-        return axios.get(ADVENTURE_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
-    }
-
     getInstructorAdventures(){
         return axios.get(ADVENTURE_BASED_REST_API_URL + "/getInstructorAdventures",
         {

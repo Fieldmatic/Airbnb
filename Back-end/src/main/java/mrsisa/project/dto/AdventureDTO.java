@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.model.Period;
+import mrsisa.project.model.Tag;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -44,6 +46,14 @@ public class AdventureDTO {
         this.equipment = adventure.getFishingEquipment();
         this.rating = adventure.getRating();
         this.photos = adventure.getPictures();
+        this.additionalServices = getStringAdditionalServices(adventure.getAdditionalServices());
     }
 
+    private List<String> getStringAdditionalServices(List<Tag> services) {
+        List<String> stringServices = new ArrayList<>();
+        for (Tag tag: services) {
+            stringServices.add(tag.getName());
+        }
+        return stringServices;
+    }
 }

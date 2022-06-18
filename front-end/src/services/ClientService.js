@@ -48,6 +48,33 @@ class ClientService {
          })
     }
 
+    getClientCottages() {
+        return axios.get(CLIENT_BASED_REST_API_URL + "/getClientCottageSubscriptions", 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
+        }
+
+    getClientBoats() {
+        return axios.get(CLIENT_BASED_REST_API_URL + "/getClientBoatSubscriptions", 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+            })
+        }
+
+    getClientAdventures() {
+        return axios.get(CLIENT_BASED_REST_API_URL + "/getClientAdventureSubscriptions", 
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+            })
+        }
+
     getProfilePicture() {
         return axios.get(CLIENT_BASED_REST_API_URL + "/getProfilePicture",
         {

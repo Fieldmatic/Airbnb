@@ -119,7 +119,6 @@ export default function OwnerRegistration() {
                     sx={muiStyles.style} 
                     label = "Name"
                     variant='outlined'
-                    id="standard-basic"
                     className="form--input"
                     type = "text"           
                     onChange = {handleChange}
@@ -142,7 +141,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "Country"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -153,7 +151,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "Zip"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -166,7 +163,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "City"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -177,7 +173,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "Street"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -190,7 +185,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "Username"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         placeholder = "Username"
@@ -202,7 +196,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "Email"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleChange}
@@ -215,7 +208,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "Password"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "password"
                         onChange = {handleChange}
@@ -226,7 +218,6 @@ export default function OwnerRegistration() {
                         sx={muiStyles.style} 
                         label = "Retype password"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "password"
                         onChange = {handleChange}

@@ -94,17 +94,7 @@ public class AdventureController {
 
     @GetMapping(value = "/reviewsNumber/{id}")
     public ResponseEntity<Integer> getNumberOfAdventureReviews(@PathVariable("id") Long id) {
-        Adventure adventure = adventureService.findOne(id);
-        Integer reviews = adventure.getReviews().size();
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
-    }
-
-    @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity getAdventureProfilePicture(@PathVariable Long id) throws IOException {
-        Adventure adventure = adventureService.findOne(id);
-        File file = new File(adventure.getProfilePicture());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
+        return new ResponseEntity<>(adventureService.getNumberOfReviews(id), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteAdventure/{id}")

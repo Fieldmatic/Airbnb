@@ -2,13 +2,18 @@ package mrsisa.project.model;
 
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Owner extends Person {
     private Integer points;
@@ -16,5 +21,9 @@ public class Owner extends Person {
     private String registrationExplanation;
     @ManyToOne
     private UserCategory category;
+    @OneToMany
+    private List<Review> reviews;
+    @OneToMany
+    private List<Complaint> complaints;
 
 }

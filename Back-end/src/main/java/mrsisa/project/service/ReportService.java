@@ -40,7 +40,7 @@ public class ReportService {
         report.setViewed(false);
         reservation.setReport(report);
         client.getReports().add(report);
-        if (!report.isShowedUp()) client.setPenalties(client.getPenalties() - 1);
+        if (!report.isShowedUp()) client.setPenalties(client.getPenalties() + 1);
         reportRepository.save(report);
         clientRepository.save(client);
         reservationRepository.save(reservation);

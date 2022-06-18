@@ -16,6 +16,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import muiStyles from "../utils/muiStyles"
 import UserService from '../../services/UserService';
 import InstructorService from "../../services/InstructorService";
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import { ThemeProvider} from '@mui/material/styles';
+import WarningIcon from '@mui/icons-material/Warning';
 
 
 export default function EditProfile() {
@@ -50,8 +54,9 @@ export default function EditProfile() {
                 zipCode: ""
             },
             biography: "",
-            points: "",
+            points: 0,
             category: ""
+            penalties: 0
         }
     )
 
@@ -192,7 +197,21 @@ export default function EditProfile() {
             <div className="userProfile">    
                 <form className={`userProfileForm ${opacityClass}`}>
                 <h1 className='editProfile-header'>Edit your profile</h1>
-                {profileImage && <ProfilePicture profileImage = {profileImage} category={user.category.name}/>}
+                {userRole === "CLIENT" ? (
+                    <div className='profileImageAndPenalites'>
+                    {profileImage && <ProfilePicture profileImage = {profileImage} category={user.category.name} />}
+                    <div className='penalitesAndWorning'>
+                        {user.penalties >= 3 && <label> <WarningIcon sx={{color:"red"}}/> You can't make a reservation this month because you have three penalties. </label>}
+                        <div className='penalties'>
+                                <label>The number of your penalties: </label>
+                                <label className='penaltiesNum'> {user.penalties} </label>
+                        </div>
+                    </div>
+                </div>
+                ) : (
+                    profileImage && <ProfilePicture profileImage = {profileImage} category={user.category.name} />
+                )
+                }
                 <div className='user-form-data'>
                     <label className="userLabel"> First Name </label>
                     {editClicked.nameButton ? 

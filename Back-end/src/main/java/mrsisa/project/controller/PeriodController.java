@@ -23,9 +23,16 @@ public class PeriodController {
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'INSTRUCTOR')")
     public ResponseEntity<String> addPeriod(@RequestBody PeriodDTO periodDTO) throws IOException {
         String answer = periodService.add(periodDTO);
-        if (answer.equals("success")) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
-        else if (answer.equals("occupied")) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Period already exists in given date range!");
-        else return ResponseEntity.status(HttpStatus.OK).body("Existing period extended.");
+        switch (answer) {
+            case "success":
+                return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+            case "occupied":
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Period already exists in given date range!");
+            case "Reservation exists in given period!":
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Reservation exists in given period!");
+            default:
+                return ResponseEntity.status(HttpStatus.OK).body("Existing period extended.");
+        }
     }
 }
 

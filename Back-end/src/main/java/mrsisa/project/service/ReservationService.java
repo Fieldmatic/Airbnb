@@ -93,6 +93,9 @@ public class ReservationService {
             periodService.splitPeriodAfterReservation(period.get(),reservation, bookable);
             client.setPoints(client.getPoints() + loyaltyProgramService.getLoyaltyProgram().getClientPoints());
             this.tryChangeClientCategory(client, loyaltyProgramService.getLoyaltyProgram());
+            Owner owner = (Owner) personRepository.findById(getBookableOwnerId(reservation.getBookable())).get();
+            owner.setPoints(owner.getPoints() + loyaltyProgramService.getLoyaltyProgram().getOwnerPoints());
+            this.tryChangeOwnerCategory(owner, loyaltyProgramService.getLoyaltyProgram());
             try{
                 emailService.sendReservationMail(client, reservation);
             } catch(MailException ignored) {
@@ -100,6 +103,27 @@ public class ReservationService {
             return true;
         }
         else return false;
+    }
+
+    private void tryChangeOwnerCategory(Owner owner, LoyaltyProgram loyaltyProgram) {
+        if (owner.getPoints() < loyaltyProgram.getBronzePoints()) {
+            owner.setCategory(userCategoryService.getRegularCategory());
+        } else if (owner.getPoints() >= loyaltyProgram.getBronzePoints() && owner.getPoints() < loyaltyProgram.getSilverPoints()) {
+            owner.setCategory(userCategoryService.getBronzeCategory());
+        } else if (owner.getPoints() >= loyaltyProgram.getSilverPoints() && owner.getPoints() < loyaltyProgram.getGoldPoints()) {
+            owner.setCategory(userCategoryService.getSilverCategory());
+        } else if (owner.getPoints() >= loyaltyProgram.getGoldPoints()) {
+            owner.setCategory(userCategoryService.getGoldCategory());
+        }
+        personRepository.save(owner);
+    }
+
+    private Long getBookableOwnerId(Bookable bookable) {
+        Long id = 0L;
+        if (bookable instanceof Cottage) id = ((Cottage) bookable).getCottageOwner().getId();
+        else if (bookable instanceof Boat) id = ((Boat) bookable).getBoatOwner().getId();
+        else if (bookable instanceof Adventure) id = ((Adventure) bookable).getInstructor().getId();
+        return id;
     }
 
     private void tryChangeClientCategory(Client client, LoyaltyProgram loyaltyProgram) {

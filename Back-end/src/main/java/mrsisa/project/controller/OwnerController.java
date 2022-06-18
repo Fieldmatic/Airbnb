@@ -1,7 +1,6 @@
 package mrsisa.project.controller;
-import mrsisa.project.dto.PeriodDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
-import mrsisa.project.dto.UserDetailsDTO;
+import mrsisa.project.dto.OwnerDetailsDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +19,6 @@ import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,9 +45,9 @@ public class OwnerController {
 
     @GetMapping("/get")
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
-    public ResponseEntity<UserDetailsDTO> getOwner(Principal userP) {
-        Person owner = this.userService.getByUsername(userP.getName());
-        return new ResponseEntity<>(new UserDetailsDTO(owner), HttpStatus.OK);
+    public ResponseEntity<OwnerDetailsDTO> getOwner(Principal userP) {
+        Owner owner = (Owner) this.userService.getByUsername(userP.getName());
+        return new ResponseEntity<>(new OwnerDetailsDTO(owner), HttpStatus.OK);
     }
 
     @GetMapping(value="/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})

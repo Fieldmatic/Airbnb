@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Instructor;
+import mrsisa.project.model.UserCategory;
 
 
 @Data
@@ -21,6 +22,8 @@ public class InstructorDTO {
     private String phoneNumber;
     private String registrationExplanation;
     private String biography;
+    private UserCategory category;
+    private Integer points;
 
     public InstructorDTO(Instructor instructor){
         this.id = instructor.getId();
@@ -33,5 +36,7 @@ public class InstructorDTO {
         this.email = instructor.getEmail();
         this.phoneNumber = instructor.getPhoneNumber();
         this.registrationExplanation = instructor.getRegistrationExplanation();
+        this.category = instructor.getCategory();
+        this.points = instructor.getPoints();
     }
 }

@@ -43,7 +43,7 @@ public class BookableService {
         for (Action action : bookable.getActions()) {
             if (!action.getUsed()) {
                 calendarDTOS.add(new BookableCalendarDTO(
-                        "ACTION", action.getStartDateTime().toString(), action.getEndDateTime().toString(), "#008383"));
+                        "ACTION", action.getStartDateTime().toString(), action.getEndDateTime().toString(), "#008383", null));
             }
         }
         return calendarDTOS;
@@ -51,8 +51,10 @@ public class BookableService {
 
     private List<BookableCalendarDTO> getBookableReserved(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {
         for (Reservation reservation : bookable.getReservations()) {
+            String client = reservation.getClient().getName() + " " + reservation.getClient().getSurname() + " (" +
+                    reservation.getClient().getUsername() + ")";
             calendarDTOS.add(new BookableCalendarDTO(
-                    "RESERVED", reservation.getStartDateTime().toString(), reservation.getEndDateTime().toString(), "#870000"));
+                    "RESERVED", reservation.getStartDateTime().toString(), reservation.getEndDateTime().toString(), "#870000", client));
         }
         return calendarDTOS;
     }
@@ -60,7 +62,7 @@ public class BookableService {
     private List<BookableCalendarDTO> getBookableAvailable(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {
         for (Period period : bookable.getPeriods()) {
             calendarDTOS.add(new BookableCalendarDTO(
-                    "AVAILABLE", period.getStartDateTime().toString(), period.getEndDateTime().toString(), "#0f5e06"));
+                    "AVAILABLE", period.getStartDateTime().toString(), period.getEndDateTime().toString(), "#0f5e06", null));
         }
         return calendarDTOS;
     }

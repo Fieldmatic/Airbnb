@@ -14,31 +14,13 @@ function Actions(){
         action: false
     });
 
-    const updateCalendar = (newType) => {
-        if (newType === "AVAILABLE_PERIOD") {
-            setUpdateType(prevVal => {
-                return {
-                    ...prevVal,
-                    availablePeriod: !prevVal.availablePeriod
-                }
-            });
-        }
-        else if (newType === "ACTION") {
-            setUpdateType(prevVal => {
-                return {
-                    ...prevVal,
-                    action: !prevVal.action
-                }
-            });
-        }
-        else {
-            setUpdateType(prevVal => {
-                return {
-                    ...prevVal,
-                    reservation: !prevVal.reservation
-                }
-            });
-        }
+    const updateCalendar = () => {
+        setUpdateType(prevVal => {
+            return {
+                ...prevVal,
+                action: !prevVal.action
+            }
+        });
     }
 
     return (

@@ -74,7 +74,7 @@ function ActionPanel (props) {
                 console.log(response.status)
                 if (response.status === 201) {
                     setShowSuccess(true)
-                    props.func('ACTION')
+                    props.func()
                 }
             }).catch(error => {
                 setShowError(true)

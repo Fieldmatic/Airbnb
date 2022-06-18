@@ -40,6 +40,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-time-picker": "^4.5.0",
+    "react-tooltip": "^4.2.21",
     "react-widgets": "^5.8.4",
     "recharts": "^2.1.10",
     "sass": "^1.52.1",

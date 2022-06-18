@@ -51,6 +51,9 @@ public class AdventureService {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private PictureService pictureService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
 
     public Adventure save(Adventure adventure) {
@@ -63,7 +66,7 @@ public class AdventureService {
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(adventureDTO.getAdditionalServices(), adventure);
         adventure.setAdditionalServices(additionalServices);
         adventureRepository.save(adventure);
-        List<String> paths = addPictures(adventure, multipartFiles);
+        List<String> paths = pictureService.addPictures(adventure.getId(),PICTURES_PATH, multipartFiles);
         adventure.setPictures(paths);
         adventure.setProfilePicture(paths.get(0));
         Instructor instructor = (Instructor) personRepository.findByUsername(userP.getName());
@@ -162,6 +165,17 @@ public class AdventureService {
         return adventuresDTO;
     }
 
+    public List<String> getPhotos(Adventure adventure) throws IOException {
+        List<String> photos = new ArrayList<>();
+        for (String photo : adventure.getPictures()) {
+            Path path = Paths.get(photo);
+            byte[] bytes = Files.readAllBytes(path);
+            String photoData = Base64.getEncoder().encodeToString(bytes);
+            photos.add(photoData);
+        }
+        return photos;
+    }
+
     public List<AdventureDTO> getAvailableAdventuresByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
         List<AdventureDTO> adventuresDTO = new ArrayList<>();
         for (AdventureDTO adventure: getAvailableAdventures(startDate, endDate, capacity))
@@ -188,45 +202,6 @@ public class AdventureService {
         adventure.setFishingEquipment(dto.getEquipment());
         // Po potrebi dodati kreiranje perioda zauzetosti
         return adventure;
-    }
-
-    public List<String> addPictures(Adventure adventure, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + adventure.getId());
-        savePicturesOnPath(adventure, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
-    public List<String> getPhotos(Adventure adventure) throws IOException {
-        List<String> photos = new ArrayList<>();
-        for (String photo : adventure.getPictures()) {
-            Path path = Paths.get(photo);
-            byte[] bytes = Files.readAllBytes(path);
-            String photoData = Base64.getEncoder().encodeToString(bytes);
-            photos.add(photoData);
-        }
-        return photos;
-    }
-
-    private void savePicturesOnPath(Adventure adventure, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + adventure.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
     }
 
     @Transactional

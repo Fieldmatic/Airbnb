@@ -47,6 +47,9 @@ public class BoatService {
     @Autowired
     TagService tagService;
 
+    @Autowired
+    PictureService pictureService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
 
 
@@ -54,7 +57,7 @@ public class BoatService {
         Boat boat = dtoToBoat(dto);
         List<String> photoPaths = new ArrayList<>();
         if (photoFiles.isPresent()){
-            photoPaths = addPictures(boat, photoFiles.get());
+            photoPaths = pictureService.addPictures(boat.getId(),PICTURES_PATH, photoFiles.get());
             boat.setProfilePicture(photoPaths.get(0));
         }
         boat.setPictures(photoPaths);
@@ -121,18 +124,6 @@ public class BoatService {
         return boatsDTO;
     }
 
-
-    public List<String> addPictures(Boat boat, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + boat.getId());
-        savePicturesOnPath(boat, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
     public List<String> getPhotos(Boat boat) throws IOException {
         List<String> photos = new ArrayList<>();
         for (String photo : boat.getPictures()) {
@@ -144,31 +135,13 @@ public class BoatService {
         return photos;
     }
 
-    private void savePicturesOnPath(Boat boat, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + boat.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
-    }
-
-
     @Transactional
     public boolean edit(BoatDTO dto, Long id, Optional<MultipartFile[]> newPhotos) throws IOException {
         Boat boat = boatRepository.findById(id).orElse(null);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
         if (newPhotos.isPresent())
         {
-            List<String> paths = addPictures(boat, newPhotos.get());
+            List<String> paths = pictureService.addPictures(boat.getId(),PICTURES_PATH, newPhotos.get());
             assert boat != null;
             boat.getPictures().addAll(paths);
             if (boat.getProfilePicture() == null) boat.setProfilePicture(paths.get(0));

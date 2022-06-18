@@ -46,6 +46,9 @@ public class CottageService {
     @Autowired
     TagService tagService;
 
+    @Autowired
+    PictureService pictureService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
 
@@ -53,7 +56,7 @@ public class CottageService {
         Cottage cottage = dtoToCottage(dto);
         List<String> paths = new ArrayList<>();
         if (photoFiles.isPresent()){
-            paths = addPictures(cottage, photoFiles.get());
+            paths = pictureService.addPictures(cottage.getId(),PICTURES_PATH, photoFiles.get());
             cottage.setProfilePicture(paths.get(0));
         }
         cottage.setPictures(paths);
@@ -64,49 +67,6 @@ public class CottageService {
         cottage.setAdditionalServices(additionalServices);
         cottageRepository.save(cottage);
         owner.getCottages().add(cottage);
-    }
-
-    public Cottage createFirstCottage() {
-        Address address = new Address();
-        address.setZipCode("36000");
-        address.setStreet("Nikole Tesle 5");
-        address.setState("BiH");
-        address.setCity("Bijeljina");
-
-        Cottage cottage = new Cottage();
-        cottage.setName("Vikendica na Drini");
-        cottage.setAddress(address);
-        cottage.setPromotionalDescription("Nema");
-        cottage.setProfilePicture(null);
-        cottage.setRules("Nema");
-        cottage.setRating(8.3);
-        cottage.setCapacity(3);
-
-        List<Tag> additionalServices = new ArrayList<>();
-        additionalServices.add(new Tag("wiFi"));
-        additionalServices.add(new Tag("washing machine"));
-        additionalServices.add(new Tag("terrace"));
-        additionalServices.add(new Tag("coffee maker"));
-        additionalServices.add(new Tag("tea maker"));
-        additionalServices.add(new Tag("heating"));
-        additionalServices.add(new Tag("towels"));
-        additionalServices.add(new Tag("hairdryer"));
-        additionalServices.add(new Tag("toilet paper"));
-        additionalServices.add(new Tag("flat-screen TV"));
-
-
-        PriceList priceList = new PriceList();
-        priceList.setHourlyRate(1400.00);
-        priceList.setDailyRate(3000.00);
-        priceList.setCancellationConditions("Nema uslova");
-
-        priceList.setBookable(cottage);
-
-        cottage.setPriceList(priceList);
-        cottage.setAdditionalServices(additionalServices);
-
-        cottageRepository.save(cottage);
-        return cottage;
     }
 
     public List<CottageDTO> getDTOCottages() throws IOException {
@@ -123,34 +83,6 @@ public class CottageService {
     public Integer getNumberOfReviews(Long id) {
         Cottage cottage = cottageRepository.findByIdWithReviews(id);
         return cottage.getReviews().size();
-    }
-
-    public List<String> addPictures(Cottage cottage, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + cottage.getId());
-        savePicturesOnPath(cottage, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
-    private void savePicturesOnPath(Cottage cottage, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + cottage.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
     }
 
     public List<CottageDTO> findAll() {
@@ -236,7 +168,7 @@ public class CottageService {
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
         if (newPhotos.isPresent())
         {
-            List<String> paths = addPictures(cottage, newPhotos.get());
+            List<String> paths = pictureService.addPictures(cottage.getId(),PICTURES_PATH, newPhotos.get());
             assert cottage != null;
             cottage.getPictures().addAll(paths);
             if (cottage.getProfilePicture() == null) cottage.setProfilePicture(paths.get(0));
@@ -300,6 +232,49 @@ public class CottageService {
         if (dto.getDoubleRooms() != 0) {cottage.getRooms().put(2,dto.getDoubleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getDoubleRooms() * 2);}
         if (dto.getTripleRooms() != 0) {cottage.getRooms().put(3,dto.getTripleRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getTripleRooms() * 3);}
         if (dto.getQuadRooms() != 0) {cottage.getRooms().put(4,dto.getQuadRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getQuadRooms() *4);}
+        return cottage;
+    }
+
+    public Cottage createFirstCottage() {
+        Address address = new Address();
+        address.setZipCode("36000");
+        address.setStreet("Nikole Tesle 5");
+        address.setState("BiH");
+        address.setCity("Bijeljina");
+
+        Cottage cottage = new Cottage();
+        cottage.setName("Vikendica na Drini");
+        cottage.setAddress(address);
+        cottage.setPromotionalDescription("Nema");
+        cottage.setProfilePicture(null);
+        cottage.setRules("Nema");
+        cottage.setRating(8.3);
+        cottage.setCapacity(3);
+
+        List<Tag> additionalServices = new ArrayList<>();
+        additionalServices.add(new Tag("wiFi"));
+        additionalServices.add(new Tag("washing machine"));
+        additionalServices.add(new Tag("terrace"));
+        additionalServices.add(new Tag("coffee maker"));
+        additionalServices.add(new Tag("tea maker"));
+        additionalServices.add(new Tag("heating"));
+        additionalServices.add(new Tag("towels"));
+        additionalServices.add(new Tag("hairdryer"));
+        additionalServices.add(new Tag("toilet paper"));
+        additionalServices.add(new Tag("flat-screen TV"));
+
+
+        PriceList priceList = new PriceList();
+        priceList.setHourlyRate(1400.00);
+        priceList.setDailyRate(3000.00);
+        priceList.setCancellationConditions("Nema uslova");
+
+        priceList.setBookable(cottage);
+
+        cottage.setPriceList(priceList);
+        cottage.setAdditionalServices(additionalServices);
+
+        cottageRepository.save(cottage);
         return cottage;
     }
 

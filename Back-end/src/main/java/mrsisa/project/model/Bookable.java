@@ -25,7 +25,7 @@ public abstract class Bookable {
     private Long id;
     @Version
     @Column(name = "optLock", columnDefinition = "integer DEFAULT 0", nullable = false)
-    private Integer version = 0;
+    private Integer version;
     private String name;
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;

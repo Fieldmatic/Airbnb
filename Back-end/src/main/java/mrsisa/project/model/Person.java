@@ -28,7 +28,7 @@ public abstract class Person implements UserDetails {
     private Long id;
     @Version
     @Column(name = "optLock", columnDefinition = "integer DEFAULT 0", nullable = false)
-    private Integer version = 0;
+    private Integer version;
     private String username;
     private String password;
     private String name;

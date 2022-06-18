@@ -13,25 +13,6 @@ class ReviewService {
             } 
          })
     }
-
-    isOwnerReviewed(id) {
-        return axios.get(REVIEW_BASED_REST_API_URL + "/isOwnerReviewed/" + id, 
-        {
-            headers: {
-                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
-            },
-         })
-    }
-
-    isBookableReviewed(id) {
-        return axios.get(REVIEW_BASED_REST_API_URL + "/isBookableReviewed/" + id, 
-        {
-            headers: {
-                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
-            },
-         })
-    }
-
 }
 
 

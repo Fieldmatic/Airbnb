@@ -13,7 +13,10 @@ import BookableService from "../../services/BookableService";
 import { gridNumberComparator } from "@mui/x-data-grid/hooks";
 import { useLocation } from "react-router-dom";
 import ReviewsReport from "./ReviewsReport";
+import ComplaintsReport from "./ComplaintsReport";
 import ReviewService from "../../services/ReviewService";
+import ComplaintService from "../../services/ComplaintService";
+import CheckIcon from '@mui/icons-material/Check';
 
 
 export default function ClientReservationHistory() {
@@ -24,11 +27,14 @@ export default function ClientReservationHistory() {
     const [dataLoaded, setDataLoaded] = useState(false);
     const [reservations, setReservations] = useState([])
     const [showReportDialog, setShowReportDialog] = useState(false)
+    const [showComplaintDialog, setShowComplaintDialog] = useState(false)
     const [bookableId, setBookableId] = useState("")
     const [ownerId, setOwnerId] = useState("")
     const [reservationId, setReservationId] = useState("")
     const [ownerReviewed, setOwnerReviewed] = useState(false)
     const [bookableReviewed, setBookableReviewed] = useState(false)
+    const [ownerComplained, setOwnerComplained] = useState(false)
+    const [bookableComplained, setBookableComplained] = useState(false)
 
     useEffect(() => {
         ReservationService.getReservations().then(response => 
@@ -48,15 +54,19 @@ export default function ClientReservationHistory() {
         setRows([])
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
         reservations.map ((item) => {
-            if ((entityType === "Future" && item.active) || (!item.active && entityType !== "Future" && item.bookableType === entityType)) {
+          //DODAAAJ !
+            if ((entityType === "Future" && item.active) || (item.active && entityType !== "Future" && item.bookableType === entityType)) {
                 var row = {}
                 BookableService.getProfilePicture(item.bookableId).then(response => {
                     row.img = response.data
                     row.id = item.id
+                    row.active = item.active
                     row.name = item.bookableName
                     row.price = item.price + " €"
                     row.ownerReviewed = item.ownerReviewed
                     row.bookableReviewed = item.bookableReviewed
+                    row.ownerComplained = item.ownerComplained
+                    row.bookableComplained = item.bookableComplained
                     row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
                     row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
                     row.address = item.bookableAddress.street + ", " + item.bookableAddress.city + ", " + item.bookableAddress.state
@@ -66,6 +76,7 @@ export default function ClientReservationHistory() {
                     row.bookableId = item.bookableId
                     row.ownerId = item.ownerId
                     row.handleReviewsClicked = handleReviewsClicked
+                    row.handleComplaintsClicked = handleComplaintsClicked
                   })
                   .then(() => {
                     setRows(prevRows => [...prevRows, row])
@@ -83,17 +94,31 @@ export default function ClientReservationHistory() {
       setShowReportDialog(true)
   }
 
+  function handleComplaintsClicked(id1, id2, id3, ownerCompl, bookableCompl){
+    setBookableId(id1)
+    setOwnerId(id2)
+    setReservationId(id3)
+    setOwnerComplained(ownerCompl)
+    setBookableComplained(bookableCompl)
+    setShowComplaintDialog(true)
+  }
+
   function handleReportClose(){
       setShowReportDialog(false)
+      setShowComplaintDialog(false)
   }
 
   function handleReportSubmit(data) {
     ReviewService.addReview(data).then(response => {
       alert(response.data)
       refreshPage()
-  })
+  })}
 
-  }
+  function handleComplaintSubmit(data) {
+    ComplaintService.addComplaint(data).then(response => {
+      alert(response.data)
+      refreshPage()
+  })}
 
     return (
         <div>
@@ -110,6 +135,7 @@ export default function ClientReservationHistory() {
              />}
             </div>
             {showReportDialog && <ReviewsReport ownerReviewed={ownerReviewed} entityReviewed={bookableReviewed} handleReportSubmit = {handleReportSubmit} id = {reservationId.toString()} bookableId = {bookableId.toString()} ownerId = {ownerId.toString()} handleOpen = {handleReviewsClicked} handleClose = {handleReportClose}/>}
+            {showComplaintDialog && <ComplaintsReport ownerComplained={ownerComplained} bookableComplained={bookableComplained} handleReportSubmit = {handleComplaintSubmit} id = {reservationId.toString()} bookableId = {bookableId.toString()} ownerId = {ownerId.toString()} handleOpen = {handleReviewsClicked} handleClose = {handleReportClose}/>}
             </div>
         </div>
 
@@ -196,8 +222,31 @@ const columns = [
                     onClick = { () => {params.row.handleReviewsClicked(params.row.bookableId, params.row.ownerId, params.row.id, params.row.ownerReviewed, params.row.bookableReviewed)}}                                    
                     variant='outlined'>Leave a review
                 </Button>)
+         else {
+          return (<div className='checkIcon'><CheckIcon style={{ fontSize: 35, color: '#FF5A5F' }} /> </div>)
+        }
+  }},
+  { field : 'complaints', headerName : 'Optional', width : 190,
+    renderCell:(params) => {
+      //DODAAJ !
+
+      if (params.row.active && ((!params.row.ownerComplained) || (!params.row.bookableComplained)))
+          return ( <Button 
+                    sx = {{ 
+                      backgroundColor : "#34568B", 
+                      color:"white", 
+                      '&:hover': {
+                      backgroundColor: 'white',
+                      color: '#34568B',
+                          },
+                          }}                       
+                    onClick = { () => {params.row.handleComplaintsClicked(params.row.bookableId, params.row.ownerId, params.row.id, params.row.ownerComplained, params.row.bookableComplained)}}                                    
+                    variant='outlined'>Leave a complaint
+                </Button>)
+      else {
+        return (<div className='checkIcon'><CheckIcon style={{ fontSize: 35, color: '#34568B' }} /> </div>)
+      }
   }}
-  //Write a complaint
   ];
 
 

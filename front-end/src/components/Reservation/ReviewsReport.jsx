@@ -14,6 +14,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import { Button } from '@mui/material';
 import { ThemeProvider} from '@mui/material/styles';
 import StarRateIcon from '@mui/icons-material/StarRate';
+import Alert from '@mui/material/Alert';
+
 import "./ReservationHistory.css"
 
 export default function ReviewsReport(props) {
@@ -22,6 +24,7 @@ export default function ReviewsReport(props) {
     if (!props.ownerReviewed) initialType = 'OWNER';
     else if (!props.entityReviewed) initialType = 'ENTITY';
 
+    const [alertMessage, setAlertMessage] = React.useState('');
     const [rateValue, setRateValue] = React.useState(' ');
     const [rateChanged, setRateChanged] = React.useState(false);
     const [reviewType, setReviewType] = React.useState(initialType);
@@ -55,6 +58,7 @@ export default function ReviewsReport(props) {
     }, [reviewType])
 
     const handleReviewTypeChange = (event) => {
+        setAlertMessage('')
         setReviewType(event.target.value);
     };
 
@@ -75,6 +79,7 @@ export default function ReviewsReport(props) {
     }
 
     function selectRate(number) {
+        setAlertMessage('')
         clearAllStars()
         setRateValue(number)
         setRateChanged(true)
@@ -130,18 +135,28 @@ export default function ReviewsReport(props) {
         } 
     }
 
+    function checkInputs() {
+        if (ownerData.rate === 0 && entityData.rate === 0) {
+            setAlertMessage("Entering a rate is required. Please try again.")
+            return false;
+        } return true;
+    }
+
+
     function handleSend(){
-        const data = {
-            reservationId : props.id,
-            ownerId : props.ownerId,
-            bookableId : props.bookableId,
-            ownerRating : ownerData.rate,
-            bookableRating : entityData.rate,
-            ownerComment : ownerData.comment,
-            bookableComment : entityData.comment
+        if (checkInputs()) {
+            const data = {
+                reservationId : props.id,
+                ownerId : props.ownerId,
+                bookableId : props.bookableId,
+                ownerRating : ownerData.rate,
+                bookableRating : entityData.rate,
+                ownerComment : ownerData.comment,
+                bookableComment : entityData.comment
+            }
+            props.handleReportSubmit(data)
+            props.handleClose()
         }
-        props.handleReportSubmit(data)
-        props.handleClose()
     }
 
     
@@ -153,7 +168,7 @@ export default function ReviewsReport(props) {
                         <DialogContentText sx = {{color:"#000000"}}>
                         You can rate both the owner and the entity, if you haven't already.
                         </DialogContentText>
-                        <FormControl sx={{ m: 3 }} variant="standard">
+                        <FormControl sx={{ m: 5 }} variant="standard">
                             <ThemeProvider theme={muiStyles.formLabelTheme}>
                                 <FormLabel sx={{color:"black"}}>What do you want to review? </FormLabel>
                             </ThemeProvider>
@@ -169,7 +184,7 @@ export default function ReviewsReport(props) {
                         </FormControl>
 
                         {reviewType !== '' && (
-                            <FormControl sx={{ m: 3 }} variant="standard" id="stars">
+                            <FormControl sx={{ m: 6 }} variant="standard" id="stars">
                             <ThemeProvider theme={muiStyles.formLabelTheme}>
                                 <FormLabel sx={{color:"black"}}>Rate : </FormLabel>
                             </ThemeProvider>
@@ -207,6 +222,8 @@ export default function ReviewsReport(props) {
                         <Button sx = {{color:"#FF5A5F"}} onClick={props.handleClose}>Cancel</Button>
                         <Button sx = {{color:"#FF5A5F"}} onClick={handleSend}>Send</Button>
                         </DialogActions>
+                        {alertMessage !== '' && <Alert severity="warning">{alertMessage}</Alert>}
+
         </Dialog>
 
   )

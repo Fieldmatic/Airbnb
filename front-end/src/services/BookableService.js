@@ -33,9 +33,19 @@ class BookableService {
         })
     }
 
+    getRating(id){
+        return axios.get(BOOKABLE_BASED_REST_API_URL + "/rating/" + id,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
+    }
+
     getProfilePicture(id) {
         return axios.get(BOOKABLE_BASED_REST_API_URL + "/getProfilePicture/" + id, {responseType: 'blob'})
     }
+
 
 }
 

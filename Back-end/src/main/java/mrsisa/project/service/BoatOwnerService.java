@@ -21,10 +21,7 @@ import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +44,9 @@ public class BoatOwnerService {
 
     @Autowired
     BoatRepository boatRepository;
+
+    @Autowired
+    BookableService bookableService;
 
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/boatOwner/";
@@ -87,43 +87,26 @@ public class BoatOwnerService {
         }
     }
 
-    public ReservationStatisticsDTO getReservationStatistics(Principal userP){
+    public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){
         BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
         ReservationStatisticsDTO statistics = new ReservationStatisticsDTO();
-        for (Boat boat : owner.getBoats()){
-            List<Reservation> reservations = boatRepository.findByIdWithReservations(boat.getId()).getReservations();
-            for (Reservation reservation : reservations) {
-                String year = String.valueOf(reservation.getEndDateTime().getYear());
-                String month = String.valueOf(reservation.getEndDateTime().getMonth());
-                String week = String.valueOf(calcNextMonday(reservation.getEndDateTime()));
-                if (!statistics.getYearlyStatistics().containsKey(year)) statistics.getYearlyStatistics().put(year, 1);
-                else statistics.getYearlyStatistics().put(year, statistics.getYearlyStatistics().get(year) + 1);
-                if (!statistics.getMonthlyStatistics().containsKey(month)) statistics.getMonthlyStatistics().put(month, 1);
-                else statistics.getMonthlyStatistics().put(month, statistics.getMonthlyStatistics().get(month) + 1);
-                if (!statistics.getWeeklyStatistics().containsKey(week)) statistics.getWeeklyStatistics().put(week, 1);
-                else statistics.getWeeklyStatistics().put(week, statistics.getWeeklyStatistics().get(week)+1);
-            }
+        if (bookableId.isPresent()) bookableService.fillBookableReservationStatistics(bookableId.get(), statistics);
+        else {
+            for (Boat boat : owner.getBoats()) bookableService.fillBookableReservationStatistics(boat.getId(), statistics);
         }
         return statistics;
     }
 
-    public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP) {
+    public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP, Optional<Long> bookableId) {
         BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
-        Map<String, Double> incomeByCottage = new HashMap<>();
-        for (Boat boat : owner.getBoats()){
-            List<Reservation> reservations = boatRepository.findByIdWithReservations(boat.getId()).getReservations();
-            for (Reservation reservation : reservations) {
-                if (reservation.getEndDateTime().isAfter(start) && reservation.getEndDateTime().isBefore(end)){
-                    if (!incomeByCottage.containsKey(boat.getName())) incomeByCottage.put(boat.getName(), reservation.getPrice());
-                    else incomeByCottage.put(boat.getName(), incomeByCottage.get(boat.getName()) + reservation.getPrice());
-                }
-            }
+        Map<String, Double> incomeByBoat = new HashMap<>();
+        if (bookableId.isPresent()){
+            bookableService.fillBookableIncomeStatistics(start,end,incomeByBoat,bookableId.get());
         }
-        return incomeByCottage;
-    }
-
-    private LocalDateTime calcNextMonday(LocalDateTime dateTime) {
-        return dateTime.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+        else {
+            for (Boat boat : owner.getBoats()) bookableService.fillBookableIncomeStatistics(start, end, incomeByBoat, boat.getId());
+        }
+        return incomeByBoat;
     }
 
     public BoatOwner findBoatOwnerByUsername(String username){return boatOwnerRepository.findByUsername(username);}

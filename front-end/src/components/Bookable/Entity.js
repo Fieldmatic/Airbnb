@@ -216,6 +216,17 @@ function entity(props) {
                                     variant='outlined'>Availability Periods
                             </Button>
                             <Button sx = {{ 
+                                    backgroundColor : "black", 
+                                    color:"white", 
+                                    '&:hover': {
+                                            backgroundColor: 'white',
+                                            color: 'blacl',
+                                                },
+                                    }} 
+                                    onClick={() => navigate("/statistics/"+props.id)}
+                                    variant='outlined'>Statistics
+                            </Button>
+                            <Button sx = {{ 
                                     backgroundColor : "red", 
                                     color:"white", 
                                     '&:hover': {

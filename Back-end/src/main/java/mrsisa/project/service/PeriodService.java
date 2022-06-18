@@ -84,10 +84,6 @@ public class PeriodService {
         bookableRepository.save(bookable);
     }
 
-    private boolean diffBetweenDatesMoreThanHour(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return Duration.between(startDateTime, endDateTime).toHours() >= 1;
-    }
-
     private String checkPeriodMatching(LocalDateTime start, LocalDateTime end, Bookable bookable) {
         for (Period period : bookable.getPeriods()) {
             if (start.isEqual(period.getStartDateTime()) && end.isEqual(period.getEndDateTime()))

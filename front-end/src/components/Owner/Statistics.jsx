@@ -7,8 +7,8 @@ export default function Statistics() {
     return (
         <div className='statistics'>
         <Header/>   
-        <ReservationsChart/>
-        <IncomeChart/>   
+        <ReservationsChart allStatistics = {true}/>
+        <IncomeChart allStatistics = {true}/>   
         </div>  
         );
 }

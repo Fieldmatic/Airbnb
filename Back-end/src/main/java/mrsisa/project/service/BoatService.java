@@ -219,6 +219,10 @@ public class BoatService {
         return boatRepository.findById(id).orElse(null);
     }
 
+    public Integer getNumberOfReviews(Long id) {
+        return boatRepository.findByIdWithReviews(id).getReviews().size();
+    }
+
     public List<Boat> findAll() {
         return boatRepository.findAll();
     }

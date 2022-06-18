@@ -3,9 +3,7 @@ import mrsisa.project.dto.PeriodDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.dto.UserDetailsDTO;
 import mrsisa.project.model.*;
-import mrsisa.project.service.BoatOwnerService;
-import mrsisa.project.service.CottageOwnerService;
-import mrsisa.project.service.UserService;
+import mrsisa.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -21,7 +19,9 @@ import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -36,6 +36,12 @@ public class OwnerController {
 
     @Autowired
     BoatOwnerService boatOwnerService;
+
+    @Autowired
+    BookableService bookableService;
+
+    @Autowired
+    InstructorService instructorService;
 
 
     @GetMapping("/get")
@@ -74,31 +80,40 @@ public class OwnerController {
 
     }
 
-    @GetMapping(value = "/reservationsStatistics")
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
-    public ResponseEntity<ReservationStatisticsDTO> getReservationStatistics(Principal userP) {
+    @GetMapping(value = {"/reservationsStatistics","/reservationsStatistics/{bookable_id}"})
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR')")
+    public ResponseEntity<ReservationStatisticsDTO> getReservationStatistics(Principal userP, @PathVariable(required = false) Long bookable_id) {
         Role role = userService.getByUsername(userP.getName()).getRoles().get(0);
         switch (role.getName()){
             case "ROLE_COTTAGE_OWNER" :
-                return new ResponseEntity<>(cottageOwnerService.getReservationStatistics(userP), HttpStatus.OK);
-
+                if (bookable_id != null) return new ResponseEntity<>(cottageOwnerService.getReservationStatistics(userP, Optional.of(bookable_id)), HttpStatus.OK);
+                else return new ResponseEntity<>(cottageOwnerService.getReservationStatistics(userP, Optional.empty()), HttpStatus.OK);
             case "ROLE_BOAT_OWNER" :
-                return new ResponseEntity<>(boatOwnerService.getReservationStatistics(userP), HttpStatus.OK);
-            default: return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                if (bookable_id != null) return new ResponseEntity<>(boatOwnerService.getReservationStatistics(userP, Optional.of(bookable_id)), HttpStatus.OK);
+                else return new ResponseEntity<>(boatOwnerService.getReservationStatistics(userP, Optional.empty()), HttpStatus.OK);
+            case "ROLE_INSTRUCTOR":
+                if (bookable_id != null) return new ResponseEntity<>(instructorService.getReservationStatistics(userP, Optional.of(bookable_id)), HttpStatus.OK);
+                else return new ResponseEntity<>(instructorService.getReservationStatistics(userP, Optional.empty()), HttpStatus.OK);
+                default: return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping(value = "/incomeStatistics/{startDateTime}/{endDateTime}")
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
-    public ResponseEntity<Map<String, Double>> getIncomeStatisticsInPeriod(@PathVariable(name = "startDateTime") String startISOString,@PathVariable(name = "endDateTime") String endISOString, Principal userP) throws IOException {
+    @GetMapping(value = {"/incomeStatistics/{startDateTime}/{endDateTime}","/incomeStatistics/{startDateTime}/{endDateTime}/{bookable_id}"})
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR')")
+    public ResponseEntity<Map<String, Double>> getIncomeStatisticsInPeriod(@PathVariable(name = "startDateTime") String startISOString,@PathVariable(name = "endDateTime") String endISOString,@PathVariable(required = false) Long bookable_id,  Principal userP) throws IOException {
         Role role = userService.getByUsername(userP.getName()).getRoles().get(0);
         LocalDateTime start = LocalDateTime.ofInstant(Instant.parse(startISOString), ZoneOffset.UTC);
         LocalDateTime end = LocalDateTime.ofInstant(Instant.parse(endISOString), ZoneOffset.UTC);
         switch (role.getName()){
             case "ROLE_COTTAGE_OWNER" :
-                return new ResponseEntity<>(cottageOwnerService.getIncomeStatistics(start,end,userP), HttpStatus.OK);
+                if (bookable_id != null) return new ResponseEntity<>(cottageOwnerService.getIncomeStatistics(start,end,userP, Optional.of(bookable_id)), HttpStatus.OK);
+                else return new ResponseEntity<>(cottageOwnerService.getIncomeStatistics(start,end,userP,Optional.empty()), HttpStatus.OK);
             case "ROLE_BOAT_OWNER" :
-                return new ResponseEntity<>(boatOwnerService.getIncomeStatistics(start,end,userP), HttpStatus.OK);
+                if (bookable_id != null) return new ResponseEntity<>(boatOwnerService.getIncomeStatistics(start,end,userP, Optional.of(bookable_id)), HttpStatus.OK);
+                else return new ResponseEntity<>(boatOwnerService.getIncomeStatistics(start,end,userP,Optional.empty()), HttpStatus.OK);
+            case "ROLE_INSTRUCTOR":
+                if (bookable_id != null) return new ResponseEntity<>(instructorService.getIncomeStatistics(start,end,userP, Optional.of(bookable_id)), HttpStatus.OK);
+                else return new ResponseEntity<>(instructorService.getIncomeStatistics(start,end,userP,Optional.empty()), HttpStatus.OK);
             default: return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

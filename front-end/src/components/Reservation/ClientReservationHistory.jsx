@@ -126,6 +126,11 @@ export default function ClientReservationHistory() {
         <div>
             <div className="reservations--table" style={{ display: 'flex', height: '80vh' }}>
             {dataLoaded && <DataGrid 
+            initialState={{
+              sorting: {
+                sortModel: [{ field: 'id', sort: 'asc' }],
+              },
+            }}
             rows={rows}
             columns={columns}
             pageSize={10}
@@ -189,7 +194,7 @@ function getPeriodBetweenDates(date1, date2) {
 
 
 const columns = [
-    { field: 'id', headerName: 'ID', width: 30 },
+    { field: 'id', headerName: 'ID', width: 60, sortable: true, sortComparator: gridNumberComparator},
     { field: 'name', headerName: 'Name', width: 230, sortable: true,
       renderCell:(params) => {
           return (

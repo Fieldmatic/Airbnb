@@ -89,9 +89,7 @@ public class AdventureController {
 
     @GetMapping(value = "/reviewsNumber/{id}")
     public ResponseEntity<Integer> getNumberOfAdventureReviews(@PathVariable("id") Long id) {
-        Adventure adventure = adventureService.findOne(id);
-        Integer reviews = adventure.getReviews().size();
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
+        return new ResponseEntity<>(adventureService.getNumberOfReviews(id), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteAdventure/{id}")

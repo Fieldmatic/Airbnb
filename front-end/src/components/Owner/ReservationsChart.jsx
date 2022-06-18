@@ -17,6 +17,7 @@ import {
   import "./Statistics.css"
   import { MenuItem} from '@mui/material';
   import OwnerService from '../../services/OwnerService';
+import BookableService from '../../services/BookableService';
 
 
 ChartJS.register(
@@ -30,9 +31,9 @@ ChartJS.register(
     Legend
   );
 
-export default function ReservationsChart() {
+export default function ReservationsChart(props) {
     const [reportType,setReportType] = useState("reservationsMonthly")
-    const [avgRaiting, setAvgRaiting] = useState(null)
+    const [avgRating, setAvgRating] = useState(null)
     const [reservationData, setReservationData] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false)
     const [lineChartData, setLineChartData] = useState({
@@ -47,14 +48,24 @@ export default function ReservationsChart() {
     }
 
     useEffect(() => {
-        OwnerService.getAverageRaiting().then((response) => {
-            setAvgRaiting(response.data.toFixed(2))
-        })
-        OwnerService.getReservationStatistics().then((response) => {
+        if (props.allStatistics){
+            OwnerService.getReservationStatistics().then((response) => {
+                setReservationData(response.data)
+                setDataLoaded(true)              
+            })
+            OwnerService.getAverageRating().then((response) => {
+                setAvgRating(response.data.toFixed(2))
+            })
+        }
+        else {
+            OwnerService.getReservationStatisticsBookable(props.bookableId).then((response) => {
             setReservationData(response.data)
             setDataLoaded(true)
-            
-        })
+            })  
+            BookableService.getRating(props.bookableId).then((response) => {
+                setAvgRating(response.data.toFixed(2))
+            })            
+            }
     },[]) 
 
     useEffect(() => {
@@ -65,9 +76,9 @@ export default function ReservationsChart() {
         <div className='reservationStatsContainer'>          
                 <div className='statOptions'>
                     <div>       
-                        <span>Average raiting of your entities </span>
+                        <span>Average rating</span>
                         <StarIcon className="entity__star" />               
-                        <span className='entity_rating_value'>{avgRaiting}</span>
+                        <span className='entity_rating_value'>{avgRating}</span>
                         <span>/10</span>
                     </div>
                     <TextField

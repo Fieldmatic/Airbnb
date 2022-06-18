@@ -3,6 +3,7 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
+import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +47,8 @@ public class InstructorService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BookableService bookableService;
     @Autowired
     private ProfileDeletionReasonRepository profileDeletionReasonRepository;
 
@@ -140,6 +143,28 @@ public class InstructorService {
                 throw new IOException("Could not save image file: " + fileName, ioe);
             }
         }
+    }
+
+    public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){
+        Instructor instructor = instructorRepository.findByUsername(userP.getName());
+        ReservationStatisticsDTO statistics = new ReservationStatisticsDTO();
+        if (bookableId.isPresent()) bookableService.fillBookableReservationStatistics(bookableId.get(), statistics);
+        else {
+            for (Adventure adventure : instructor.getAdventures()) bookableService.fillBookableReservationStatistics(adventure.getId(), statistics);
+        }
+        return statistics;
+    }
+
+    public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP, Optional<Long> bookableId) {
+        Instructor instructor = instructorRepository.findByUsername(userP.getName());
+        Map<String, Double> incomeByAdventure = new HashMap<>();
+        if (bookableId.isPresent()){
+            bookableService.fillBookableIncomeStatistics(start,end,incomeByAdventure,bookableId.get());
+        }
+        else {
+            for (Adventure adventure : instructor.getAdventures()) bookableService.fillBookableIncomeStatistics(start, end, incomeByAdventure, adventure.getId());
+        }
+        return incomeByAdventure;
     }
 
     public Instructor findInstructorByUsername(String username) {

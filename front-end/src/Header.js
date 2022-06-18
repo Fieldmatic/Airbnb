@@ -215,6 +215,7 @@ export default function Header(){
                 <Link to={'/editProfile'} style={{textDecoration: 'none', color:'black'}}>Edit Your Profile</Link>
                 <Link to={'/viewHostEntities'} style={{textDecoration: 'none', color:'black'}}>View your entities</Link>
                 <Link to={'/hostReservations'} style={{textDecoration: 'none', color:'black'}}>Reservation History</Link>
+                <Link to = {'/statistics'}style={{textDecoration: 'none', color:'black'}}>Statistics</Link>
             </div>
         )
     }

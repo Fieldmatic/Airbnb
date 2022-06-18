@@ -131,6 +131,10 @@ public class AdventureService {
         return adventureRepository.findById(id).orElseGet(null);
     }
 
+    public Integer getNumberOfReviews(Long id) {
+        return adventureRepository.findByIdWithReviews(id).getReviews().size();
+    }
+
     public List<Adventure> findAll() {
         return adventureRepository.findAll();
     }

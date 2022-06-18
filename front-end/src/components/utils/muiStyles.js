@@ -9,10 +9,10 @@ import TextField from "@material-ui/core/TextField";
 const muiStyles = () => {
     const useStyles = makeStyles(() => ({
       input1: {
-        height: 10
+        height: 20
       },
       input2: {
-        height: 10,
+        height: 20,
       }
     }));
 

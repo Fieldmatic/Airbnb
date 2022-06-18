@@ -32,7 +32,12 @@ export default function IncomeChart(props) {
     useEffect(() => {
         let StartISOString = toISODate(incomeDates.startDateTime)
         let EndISOString = toISODate(incomeDates.endDateTime)
-        OwnerService.getIncomeStatistics(StartISOString, EndISOString).then((response) =>{
+        if (props.allStatistics)
+            OwnerService.getIncomeStatistics(StartISOString, EndISOString).then((response) =>{
+                setIncomeData(response.data)
+                setDataLoaded(true)        
+            })
+        else OwnerService.getIncomeStatisticsBookable(StartISOString, EndISOString, props.bookableId).then((response) =>{
             setIncomeData(response.data)
             setDataLoaded(true)        
         })
@@ -150,7 +155,7 @@ const pieChartOptions = {
       },
       title: {
         display: true,
-        text: 'Income in euros for every entity',
+        text: 'Income in euros',
       },
     },
   };

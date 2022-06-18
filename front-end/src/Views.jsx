@@ -29,6 +29,7 @@ import ReserveForClient from "./components/Owner/Reservation/ReserveForClient";
 import ShowWishList from "./components/ViewEntities/ShowWishList";
 import Statistics from "./components/Owner/Statistics";
 import ClientReservationHistory from "./components/Reservation/ClientReservationHistory"
+import BookableStatistics from "./components/Owner/BookableStatistics";
 
 
 const Views = () => {
@@ -42,6 +43,7 @@ const Views = () => {
       <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
       <Route path = "/statistics" element = {<Statistics/>}/>
+      <Route path = "/statistics/:id" element = {<BookableStatistics/>}/>
       <Route path = "/editCottage/:id" element = {<EditCottage/>}/>
       <Route path = "/editBoat/:id" element = {<EditBoat/>}/>
       <Route path = "/editProfile" element = {< EditProfile />}/>

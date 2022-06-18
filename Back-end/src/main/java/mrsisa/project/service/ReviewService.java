@@ -29,15 +29,6 @@ public class ReviewService {
     @Autowired
     private OwnerRepository ownerRepository;
 
-    public boolean checkIfOwnerReviewed(Long reservationId) {
-        Optional<Review> review = reviewRepository.findReviewByReservation_Id(reservationId);
-        if (review.isPresent()) {
-            Review review1 = review.get();
-            if (!review1.getOwnerComment().isEmpty() || review1.getOwnerRating() != 0)
-                return true;
-        }
-        return false;
-    }
 
     public boolean checkIfReviewed(String review, int rate) {
         if (review.isEmpty() && rate == 0)

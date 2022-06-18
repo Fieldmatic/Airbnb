@@ -46,6 +46,10 @@ public abstract class Bookable {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Review> reviews;
 
+    @OneToMany
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Complaint> complaints;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Action> actions;
 

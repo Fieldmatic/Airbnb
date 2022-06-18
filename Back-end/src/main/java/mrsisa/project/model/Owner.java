@@ -23,5 +23,7 @@ public class Owner extends Person {
     private OwnerCategory category;
     @OneToMany
     private List<Review> reviews;
+    @OneToMany
+    private List<Complaint> complaints;
 
 }

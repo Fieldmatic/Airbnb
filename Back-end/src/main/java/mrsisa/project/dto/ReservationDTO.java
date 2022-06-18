@@ -33,6 +33,8 @@ public class ReservationDTO {
         this.reported = reservation.getReported();
         this.ownerReviewed = reservation.getOwnerReviewed();
         this.bookableReviewed = reservation.getBookableReviewed();
+        this.bookableComplained = reservation.getBookableComplained();
+        this.ownerComplained = reservation.getOwnerComplained();
         try {
             this.reportId = reservation.getReport().getId();
         }catch (NullPointerException ne){
@@ -60,6 +62,8 @@ public class ReservationDTO {
     private Boolean reported;
     private Boolean ownerReviewed;
     private Boolean bookableReviewed;
+    private Boolean ownerComplained;
+    private Boolean bookableComplained;
     private final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     private List<String> getStringAdditionalServices(List<Tag> services) {

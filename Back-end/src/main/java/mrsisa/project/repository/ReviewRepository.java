@@ -1,9 +1,8 @@
 package mrsisa.project.repository;
 
-import mrsisa.project.model.Bookable;
 import mrsisa.project.model.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+
 
 import java.util.Optional;
 

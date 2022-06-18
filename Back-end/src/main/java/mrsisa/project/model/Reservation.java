@@ -30,6 +30,10 @@ public class Reservation {
     private Boolean ownerReviewed = false;
     @Column(columnDefinition = "boolean default false", nullable = false)
     private Boolean bookableReviewed = false;
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean ownerComplained = false;
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean bookableComplained = false;
     @ManyToOne
     private Client client;
     @ManyToOne
@@ -38,4 +42,6 @@ public class Reservation {
     private Report report;
     @OneToOne
     private Review review;
+    @OneToOne
+    private Complaint complaint;
 }

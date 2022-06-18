@@ -43,6 +43,7 @@ public class PeriodService {
     public String add(PeriodDTO periodDTO) {
         Period period = dtoToPeriod(periodDTO);
         Bookable bookable = bookableRepository.getById(periodDTO.getBookableId());
+        if (reservationExistsInPeriod(bookable.getReservations(), period)) return "Reservation exists in given period!";
         String answer = checkPeriodMatching(period.getStartDateTime(), period.getEndDateTime(), bookable);
         if (answer.equals("available")) {
             period.setBookable(bookable);
@@ -53,22 +54,34 @@ public class PeriodService {
         return answer;
     }
 
-    public void splitPeriodAfterReservation(Reservation reservation)  {
-        Period firstPeriod = periodRepository.findPeriodByStartDateTimeIsLessThanEqualAndEndDateTimeIsGreaterThanEqualAndBookable_Id(reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getBookable().getId());
-        Bookable bookable = bookableRepository.getByIdWithPeriods(reservation.getBookable().getId());
-        if (diffBetweenDatesMoreThanHour(firstPeriod.getStartDateTime(), reservation.getStartDateTime())) {
-            if (diffBetweenDatesMoreThanHour(reservation.getEndDateTime(), firstPeriod.getEndDateTime())) {
-                Period secondPeriod = new Period();
-                secondPeriod.setStartDateTime(reservation.getEndDateTime());
-                secondPeriod.setEndDateTime(firstPeriod.getEndDateTime());
-                secondPeriod.setBookable(firstPeriod.getBookable());
-                bookable.getPeriods().add(secondPeriod);
-                extendPeriod(secondPeriod, reservation.getEndDateTime(), firstPeriod.getEndDateTime());
-            }
-            extendPeriod(firstPeriod, firstPeriod.getStartDateTime(), reservation.getStartDateTime());
+    private boolean reservationExistsInPeriod(List<Reservation> reservations, Period period){
+        for (Reservation reservation: reservations){
+            if (reservation.getStartDateTime().isAfter(period.getStartDateTime()) && reservation.getEndDateTime().isBefore(period.getEndDateTime())) return true;
+            if (reservation.getStartDateTime().equals(period.getStartDateTime()) || reservation.getEndDateTime().equals(period.getEndDateTime())) return true;
+            if (reservation.getStartDateTime().isBefore(period.getStartDateTime()) && reservation.getEndDateTime().isAfter(period.getEndDateTime())) return true;
         }
-        else
-            periodRepository.delete(firstPeriod);
+        return false;
+    }
+
+    public void splitPeriodAfterReservation(Period period, Reservation reservation, Bookable bookable)  {
+        if (reservation.getStartDateTime().isAfter(period.getStartDateTime()) && reservation.getEndDateTime().isBefore(period.getEndDateTime())){
+            Period newPeriod = new Period();
+            newPeriod.setStartDateTime(reservation.getEndDateTime());
+            newPeriod.setEndDateTime(period.getEndDateTime());
+            newPeriod.setBookable(bookable);
+            period.setEndDateTime(reservation.getStartDateTime());
+            bookable.getPeriods().add(newPeriod);
+        }
+        else if (reservation.getStartDateTime().isEqual(period.getStartDateTime()) && reservation.getEndDateTime().isEqual(period.getEndDateTime())){
+            periodRepository.delete(period);
+        }
+        else if (reservation.getStartDateTime().isEqual(period.getStartDateTime()) && reservation.getEndDateTime().isBefore(period.getEndDateTime())){
+            period.setStartDateTime(reservation.getEndDateTime());
+        }
+        else if (reservation.getStartDateTime().isAfter(period.getStartDateTime()) && reservation.getEndDateTime().isEqual(period.getEndDateTime())){
+            period.setEndDateTime(reservation.getStartDateTime());
+        }
+        bookableRepository.save(bookable);
     }
 
     private boolean diffBetweenDatesMoreThanHour(LocalDateTime startDateTime, LocalDateTime endDateTime) {

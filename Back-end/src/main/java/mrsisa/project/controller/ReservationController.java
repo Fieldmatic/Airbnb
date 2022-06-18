@@ -34,24 +34,24 @@ public class ReservationController {
     @PostMapping(value = "/addQuick")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> addQuickReservation(@RequestBody String actionId, Principal userP) throws IOException {
-        reservationService.addQuick(Long.parseLong(actionId.replace("=","")), userP);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        if (reservationService.addQuick(Long.parseLong(actionId.replace("=","")), userP)) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Failed");
     }
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> addReservation(@RequestBody ReservationDTO dto, Principal userP) throws IOException {
         Client client = clientService.findClientByUsername(userP.getName());
-        reservationService.add(dto, client);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        if (reservationService.add(dto, client)) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("That period is unavailable!");
     }
 
     @PostMapping(value = "/reserveForClient/{email}")
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR')")
     public ResponseEntity<String> reserveForClient(@RequestBody ReservationDTO dto, @PathVariable("email") String email) throws IOException {
         Client client = clientService.findClientByEmail(email);
-        reservationService.add(dto, client);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        if (reservationService.add(dto, client)) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("That period is unavailable!");
     }
 
     @GetMapping(value = "/getReservations")

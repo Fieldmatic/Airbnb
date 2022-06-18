@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -44,33 +45,46 @@ public class ReservationService {
     @Autowired
     TagRepository tagRepository;
 
+    @Autowired
+    PeriodRepository periodRepository;
 
     @Transactional
-    public void addQuick(Long actionId, Principal userP) throws IOException {
-        Action action = actionRepository.getById(actionId);
-        Reservation reservation = createReservationFromAction(action);
-        Client client = clientRepository.findByUsername(userP.getName());
-        reservation.setClient(client);
-        client.getReservations().add(reservation);
-        action.getBookable().getReservations().add(reservation);
-        action.setUsed(true);
+    public boolean addQuick(Long actionId, Principal userP) throws IOException {
+        try {
+            Action action = actionRepository.getById(actionId);
+            Reservation reservation = createReservationFromAction(action);
+            Client client = clientRepository.findByUsername(userP.getName());
+            reservation.setClient(client);
+            client.getReservations().add(reservation);
+            action.getBookable().getReservations().add(reservation);
+            action.setUsed(true);
+            return true;
+        }
+        catch (ObjectOptimisticLockingFailureException e) {
+            return  false;
+        }
     }
 
     @Transactional
-    public void add(ReservationDTO dto, Client client) throws IOException {
+    public boolean add(ReservationDTO dto, Client client) throws IOException {
         Bookable bookable = bookableRepository.getById(dto.getBookableId());
         Reservation reservation = dtoToReservation(dto, bookable);
-        reservation.setClient(client);
-        reservationRepository.save(reservation);
-        client.getReservations().add(reservation);
-        clientRepository.save(client);
-        bookable.getReservations().add(reservation);
-        bookableRepository.save(bookable);
-        periodService.splitPeriodAfterReservation(reservation);
-        try{
-            emailService.sendReservationMail(client, reservation);
-        } catch(MailException ignored) {
+        Optional<Period> period = periodRepository.findPeriodByBookableIdAndStartBeforeOrEqualAndEndAfterOrEqual(reservation.getBookable().getId(),reservation.getStartDateTime(), reservation.getEndDateTime());
+        if (period.isPresent()){
+            reservation.setClient(client);
+            reservationRepository.save(reservation);
+            client.getReservations().add(reservation);
+            clientRepository.save(client);
+            bookable.getReservations().add(reservation);
+            bookableRepository.save(bookable);
+            periodService.splitPeriodAfterReservation(period.get(),reservation, bookable);
+            try{
+                emailService.sendReservationMail(client, reservation);
+            } catch(MailException ignored) {
+            }
+            return true;
         }
+        else return false;
     }
 
     @Transactional

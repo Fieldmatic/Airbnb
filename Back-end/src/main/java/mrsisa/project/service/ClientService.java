@@ -45,6 +45,9 @@ public class ClientService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserCategoryService userCategoryService;
+
     public List<Client> findAll() {
         return clientRepository.findAll();
     }
@@ -142,6 +145,7 @@ public class ClientService {
         client.setPenalties(0);
         List<Role> roles = roleService.findByName("ROLE_CLIENT");
         client.setRoles(roles);
+        client.setCategory(userCategoryService.getRegularCategory());
         return client;
     }
 }

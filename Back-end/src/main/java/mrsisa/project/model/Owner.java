@@ -15,6 +15,6 @@ public class Owner extends Person {
     private Boolean approvedAccount;
     private String registrationExplanation;
     @ManyToOne
-    private OwnerCategory category;
+    private UserCategory category;
 
 }

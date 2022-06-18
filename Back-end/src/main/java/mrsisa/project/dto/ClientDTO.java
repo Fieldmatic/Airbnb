@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Client;
+import mrsisa.project.model.UserCategory;
 
 @Setter
 @Getter
@@ -20,12 +21,16 @@ public class ClientDTO {
     private String profilePhoto;
     private String phoneNumber;
     private Address address;
+    private UserCategory category;
+    private int points;
 
     public ClientDTO(Client client) {
-        this(client.getId(), client.getUsername(), client.getPassword(), client.getName(), client.getSurname(), client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress());
+        this(client.getId(), client.getUsername(), client.getPassword(), client.getName(), client.getSurname(),
+                client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress(), client.getCategory(), client.getPoints());
     }
 
-    public ClientDTO(Long id, String username, String password, String name, String surname, String email, String profilePhoto, String phoneNumber, Address address) {
+    public ClientDTO(Long id, String username, String password, String name, String surname, String email,
+                     String profilePhoto, String phoneNumber, Address address, UserCategory category, int points) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -35,5 +40,7 @@ public class ClientDTO {
         this.profilePhoto = profilePhoto;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.category = category;
+        this.points = points;
     }
 }

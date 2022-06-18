@@ -54,6 +54,9 @@ public class AdminService {
     @Autowired
     private LoyaltyProgramService loyaltyProgramService;
 
+    @Autowired
+    private UserCategoryService userCategoryService;
+
 
     public Administrator update(AdminDTO dto) {
         Administrator admin = findAdminByUsername(dto.getUsername());
@@ -143,7 +146,7 @@ public class AdminService {
 
     /**
      * @apiNote Use this method only one time to initialize default admin and system.
-     * */
+     */
     public void createFirstAdmin() {
         Payment payment = new Payment();
         payment.setMoneyPercentage(0.03);
@@ -157,11 +160,10 @@ public class AdminService {
         loyaltyProgram.setClientPoints(5);
         loyaltyProgram.setOwnerPoints(3);
         loyaltyProgramService.save(loyaltyProgram);
-        this.createOwnerCategories(loyaltyProgram);
-        this.createClientCategories(loyaltyProgram);
+        this.createUserCategories(loyaltyProgram);
 
         if (findAdminByUsername("admin") != null) return;
-        //roleService.createRoles();
+
         Address address = new Address();
         address.setZipCode("123123");
         address.setStreet("Arse Teodorovica 2");
@@ -200,9 +202,11 @@ public class AdminService {
         instructor.setPhoneNumber("065432234");
         instructor.setSurname("Ganz");
         instructor.setUsername("bane");
+        instructor.setProfilePhoto("src/main/resources/static/pictures/client/4/ocean-3605547_1920.jpg");
+        instructor.setPoints(260);
+        instructor.setCategory(userCategoryService.getSilverCategory());
 //        instructor.setBiography("Ja sam jedan jako dobar instruktor pecanja i obozavam da pecam ribe.");
         instructor.setPassword(passwordEncoder.encode("bane"));
-        instructor.setProfilePhoto(null);
         List<Role> roles2 = roleService.findByName("ROLE_COTTAGE_OWNER");
         instructor.setRoles(roles2);
         personRepository.save(instructor);
@@ -217,58 +221,43 @@ public class AdminService {
         client.setActive(true);
         client.setAddress(address3);
         client.setPenalties(0);
+        client.setPoints(0);
         client.setName("Klinjo");
         client.setSurname("Klinjasti");
         client.setUsername("c");
+        client.setPhoneNumber("091999345");
+        client.setProfilePhoto("src/main/resources/static/pictures/client/4/ocean-3605547_1920.jpg");
         client.setPassword(passwordEncoder.encode("c"));
         List<Role> roles3 = roleService.findByName("ROLE_CLIENT");
         client.setRoles(roles3);
+        client.setCategory(userCategoryService.getRegularCategory());
         personRepository.save(client);
     }
 
-    private void createClientCategories(LoyaltyProgram loyaltyProgram) {
-        ClientCategory category1 = new ClientCategory();
+    private void createUserCategories(LoyaltyProgram loyaltyProgram) {
+        UserCategory category1 = new UserCategory();
         category1.setName(CategoryName.REGULAR);
         category1.setPoints(0);
         category1.setDiscount(0.0);
+        this.userCategoryService.save(category1);
 
-        OwnerCategory ownerCategory2 = new OwnerCategory();
-        ownerCategory2.setName(CategoryName.BRONZE);
-        ownerCategory2.setPoints(loyaltyProgram.getBronzePoints());
-        ownerCategory2.setDiscount(0.05);
+        UserCategory category2 = new UserCategory();
+        category2.setName(CategoryName.BRONZE);
+        category2.setPoints(loyaltyProgram.getBronzePoints());
+        category2.setDiscount(0.05);
+        this.userCategoryService.save(category2);
 
-        OwnerCategory ownerCategory3 = new OwnerCategory();
-        ownerCategory3.setName(CategoryName.SILVER);
-        ownerCategory3.setPoints(loyaltyProgram.getSilverPoints());
-        ownerCategory3.setDiscount(0.10);
+        UserCategory category3 = new UserCategory();
+        category3.setName(CategoryName.SILVER);
+        category3.setPoints(loyaltyProgram.getSilverPoints());
+        category3.setDiscount(0.10);
+        this.userCategoryService.save(category3);
 
-        OwnerCategory ownerCategory4 = new OwnerCategory();
-        ownerCategory4.setName(CategoryName.GOLD);
-        ownerCategory4.setPoints(loyaltyProgram.getGoldPoints());
-        ownerCategory4.setDiscount(0.15);
-    }
-
-    private void createOwnerCategories(LoyaltyProgram loyaltyProgram) {
-        OwnerCategory ownerCategory1 = new OwnerCategory();
-        ownerCategory1.setName(CategoryName.REGULAR);
-        ownerCategory1.setPoints(0);
-        ownerCategory1.setDiscount(0.0);
-
-        OwnerCategory ownerCategory2 = new OwnerCategory();
-        ownerCategory2.setName(CategoryName.BRONZE);
-        ownerCategory2.setPoints(loyaltyProgram.getBronzePoints());
-        ownerCategory2.setDiscount(0.05);
-
-        OwnerCategory ownerCategory3 = new OwnerCategory();
-        ownerCategory3.setName(CategoryName.SILVER);
-        ownerCategory3.setPoints(loyaltyProgram.getSilverPoints());
-        ownerCategory3.setDiscount(0.10);
-
-        OwnerCategory ownerCategory4 = new OwnerCategory();
-        ownerCategory4.setName(CategoryName.GOLD);
-        ownerCategory4.setPoints(loyaltyProgram.getGoldPoints());
-        ownerCategory4.setDiscount(0.15);
-
+        UserCategory category4 = new UserCategory();
+        category4.setName(CategoryName.GOLD);
+        category4.setPoints(loyaltyProgram.getGoldPoints());
+        category4.setDiscount(0.15);
+        this.userCategoryService.save(category4);
     }
 
     public Administrator findAdminByUsername(String username) {

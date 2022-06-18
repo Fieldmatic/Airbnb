@@ -49,7 +49,9 @@ export default function EditProfile() {
                 state: "",
                 zipCode: ""
             },
-            biography: ""
+            biography: "",
+            points: "",
+            category: ""
         }
     )
 
@@ -190,7 +192,7 @@ export default function EditProfile() {
             <div className="userProfile">    
                 <form className={`userProfileForm ${opacityClass}`}>
                 <h1 className='editProfile-header'>Edit your profile</h1>
-                {profileImage && <ProfilePicture profileImage = {profileImage} />}
+                {profileImage && <ProfilePicture profileImage = {profileImage} category={user.category.name}/>}
                 <div className='user-form-data'>
                     <label className="userLabel"> First Name </label>
                     {editClicked.nameButton ? 
@@ -291,6 +293,15 @@ export default function EditProfile() {
                     <button className="updateBtn" id="biographyButton" onClick={toggleShown}> {editClicked.biographyButton? "Save" : "Edit"}</button>
                     </div>
                 }
+                <div className='user-form-data-category'>
+                <label className="userLabel"> Points </label>
+                <label className='userLabel'> {user.points}</label>
+                </div>
+
+                <div className='user-form-data-category'>
+                <label className="userLabel"> Category </label>
+                <label className={'userLabel ' + user.category.name}> {user.category.name}</label>
+                </div>
                 
                 <div className='delete--reset'>
                     <Button 

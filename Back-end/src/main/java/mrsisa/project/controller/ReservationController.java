@@ -59,4 +59,18 @@ public class ReservationController {
     public ResponseEntity<List<ReservationDTO>> getReservations(Principal userP) throws IOException {
         return ResponseEntity.status(HttpStatus.OK).body(reservationService.getReservations(userP));
     }
+
+    @GetMapping(value = "/getFutureReservations")
+    @PreAuthorize("hasAnyRole('CLIENT')")
+    public ResponseEntity<List<ReservationDTO>> getFutureReservations(Principal userP) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(reservationService.getClientFutureReservations(userP));
+    }
+
+    @PostMapping(value = "/cancelReservation/{id}")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<String> cancelReservation(@PathVariable(name = "id") Long id) {
+        boolean response = reservationService.cancelReservation(id);
+        if (response) return ResponseEntity.ok().body("Success");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("You can cancel the reservation just 3 days before it starts.");
+    }
 }

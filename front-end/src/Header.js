@@ -173,7 +173,7 @@ export default function Header(){
             <Divider sx={{ my: 0.5 }} />
             <MenuItem onClick={handleClose} disableRipple>
             <CalendarMonthIcon />
-            <Link to={'/reservationHistory/Future'} style={{textDecoration: 'none', color:'black'}}>Future reservations</Link>
+            <Link to={'/futureReservations'} style={{textDecoration: 'none', color:'black'}}>Future reservations</Link>
             </MenuItem>
         </StyledMenu>
         </div>
@@ -227,6 +227,10 @@ export default function Header(){
         
     }
 
+    function refreshPage(){
+        window.location.reload();
+    }
+
     function handleSearch() {
         navigate('/showEntities',{state: {
             startDateTime:toISODate(new Date(searchData.startDate.getFullYear(),searchData.startDate.getMonth(), searchData.startDate.getDate(), searchData.startTime.getHours(), searchData.startTime.getMinutes(),searchData.startTime.getSeconds())),
@@ -234,6 +238,7 @@ export default function Header(){
             guestsNumber : searchData.guestsNumber,
             city :  searchData.city, entityType: entityType, 
             showAll: false}});
+        refreshPage()
         setPopupState(false)
 
     }

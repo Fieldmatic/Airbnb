@@ -25,6 +25,8 @@ public class Reservation {
     private Double price;
     private Boolean active;
     @Column(columnDefinition = "boolean default false", nullable = false)
+    private Boolean canceled = false;
+    @Column(columnDefinition = "boolean default false", nullable = false)
     private Boolean reported = false;
     @Column(columnDefinition = "boolean default false", nullable = false)
     private Boolean ownerReviewed = false;

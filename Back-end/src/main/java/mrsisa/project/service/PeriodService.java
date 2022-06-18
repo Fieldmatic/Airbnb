@@ -141,4 +141,16 @@ public class PeriodService {
         period.setEndDateTime(LocalDateTime.ofInstant(Instant.parse(periodDTO.getEndDateTime()), ZoneOffset.UTC));
         return period;
     }
+
+    public void addPeriodOnReservationCancelling(LocalDateTime start, LocalDateTime end, Bookable bookable) {
+        Period period = new Period();
+        period.setStartDateTime(start);
+        period.setEndDateTime(end);
+        String answer = checkPeriodMatching(period.getStartDateTime(), period.getEndDateTime(), bookable);
+        if (answer.equals("available")) {
+            period.setBookable(bookable);
+            bookable.getPeriods().add(period);
+            bookableRepository.save(bookable);
+        }
+    }
 }

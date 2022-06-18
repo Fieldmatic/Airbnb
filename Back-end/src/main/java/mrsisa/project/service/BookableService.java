@@ -62,8 +62,10 @@ public class BookableService {
 
     private List<BookableCalendarDTO> getBookableReserved(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {
         for (Reservation reservation : bookable.getReservations()) {
-            calendarDTOS.add(new BookableCalendarDTO(
-                    "RESERVED", reservation.getStartDateTime().toString(), reservation.getEndDateTime().toString(), "#870000"));
+            if (!reservation.getCanceled()) {
+                calendarDTOS.add(new BookableCalendarDTO(
+                        "RESERVED", reservation.getStartDateTime().toString(), reservation.getEndDateTime().toString(), "#870000"));
+            }
         }
         return calendarDTOS;
     }

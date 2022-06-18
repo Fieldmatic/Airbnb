@@ -19,7 +19,8 @@ import { useTheme } from '@mui/material/styles';
 import ReservationPopup from './ReservationPopup';
 import ClientService from '../../services/ClientService';
 import BookableService from '../../services/BookableService';
-
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
 
 
 function entity(props) {
@@ -32,6 +33,14 @@ function entity(props) {
     const [reservePopup, setReservePopup] = React.useState(false);
     const [heartColor, setHeartColor] = React.useState("#A8A8A8")
     const navigate = useNavigate()
+
+    const alertText = {
+        accept: "Reservation is successfull!",
+        deny: "You are not allowed to reserve after cancellation!"
+    }
+
+    const [accept, setAccept] = React.useState(true);
+    const [showAlert, setShowAlert] = React.useState(false);
 
     React.useEffect(() => {
         if (props.user === "client") {
@@ -54,6 +63,16 @@ function entity(props) {
     setOpen(false);
     setReservePopup(false)
     };
+
+    function handleCloseAfterReservation(result) {
+        console.log(result)
+        setAccept(result);
+            setShowAlert(true)
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 2500)
+        setReservePopup(false)
+        };
 
     React.useEffect(() => {
         if (props.entity === "cottage") {
@@ -150,6 +169,10 @@ function entity(props) {
     }
 
     return (
+        <div>
+            <Collapse in={showAlert}>
+                            <Alert variant="filled" severity="info">{accept ? alertText.accept : alertText.deny}</Alert>
+                </Collapse>
         <div className="entities">
             {profileImage && <img src={URL.createObjectURL(profileImage)}  alt=""/>}
             {props.user === "client" && <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColor,
@@ -278,10 +301,11 @@ function entity(props) {
                                     }} variant='outlined'  onClick={openReservePopup}> Reserve</Button>}
         
                         </div>
-                        {props.user === "client" && <ReservationPopup handleClose={handleClose} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>}
+                        {props.user === "client" && <ReservationPopup handleClose={handleClose} handleCloseAfterReservation={handleCloseAfterReservation} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>}
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     )
 }

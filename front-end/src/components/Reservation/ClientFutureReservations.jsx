@@ -2,42 +2,41 @@ import "./ReservationsTable.css"
 import {useParams} from 'react-router-dom';
 import React,{useEffect,useState} from 'react';
 import ReservationService from "../../services/ReservationService"
-import ClientService from "../../services/ClientService";
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
-import ReportService from "../../services/ReportService"
-import ReservationReport from "./ReservationReport";
-import {useNavigate} from 'react-router-dom';
 import Header from '../../Header';
 import BookableService from "../../services/BookableService";
 import { gridNumberComparator } from "@mui/x-data-grid/hooks";
 import { useLocation } from "react-router-dom";
-import ReviewsReport from "./ReviewsReport";
-import ComplaintsReport from "./ComplaintsReport";
-import ReviewService from "../../services/ReviewService";
-import ComplaintService from "../../services/ComplaintService";
 import CheckIcon from '@mui/icons-material/Check';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import Alert from 'react-bootstrap/Alert'
+
+
 
 
 export default function ClientReservationHistory() {
   let location = useLocation();
-  let {entityType} = useParams();
 
     const [rows, setRows] = useState([])
     const [dataLoaded, setDataLoaded] = useState(false);
     const [reservations, setReservations] = useState([])
-    const [showReportDialog, setShowReportDialog] = useState(false)
-    const [showComplaintDialog, setShowComplaintDialog] = useState(false)
-    const [bookableId, setBookableId] = useState("")
-    const [ownerId, setOwnerId] = useState("")
+    const [showCancellationDialog, setShowCancellationDialog] = useState(false)
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [reservationId, setReservationId] = useState("")
-    const [ownerReviewed, setOwnerReviewed] = useState(false)
-    const [bookableReviewed, setBookableReviewed] = useState(false)
-    const [ownerComplained, setOwnerComplained] = useState(false)
-    const [bookableComplained, setBookableComplained] = useState(false)
+
+    const [showSuccess, setShowSuccess] = React.useState(false);
+    const [showError, setShowError] = React.useState(false);
 
     useEffect(() => {
-        ReservationService.getReservations().then(response => 
+        ReservationService.getFutureReservations().then(response => 
             {
                 setReservations(response.data)
                 setRowData()
@@ -55,16 +54,13 @@ export default function ClientReservationHistory() {
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
         reservations.map ((item) => {
           //DODAAAJ !
-            if ((entityType === "Future" && item.active) || (!item.active && entityType !== "Future" && item.bookableType === entityType)) {
                 var row = {}
-                row.id = item.id
-                    row.active = item.active
+                BookableService.getProfilePicture(item.bookableId).then(response => {
+                    row.img = response.data
+                    row.id = item.id
                     row.name = item.bookableName
                     row.price = item.price + " €"
-                    row.ownerReviewed = item.ownerReviewed
-                    row.bookableReviewed = item.bookableReviewed
-                    row.ownerComplained = item.ownerComplained
-                    row.bookableComplained = item.bookableComplained
+                    row.canceled = item.canceled
                     row.startDateTime = new Date(item.startDateTime).toLocaleDateString("en-US",options)
                     row.endDateTime = new Date(item.endDateTime).toLocaleDateString("en-US",options)
                     row.address = item.bookableAddress.street + ", " + item.bookableAddress.city + ", " + item.bookableAddress.state
@@ -73,64 +69,56 @@ export default function ClientReservationHistory() {
                     row.duration = getPeriodBetweenDates(item.startDateTime, item.endDateTime)
                     row.bookableId = item.bookableId
                     row.ownerId = item.ownerId
-                    row.handleReviewsClicked = handleReviewsClicked
-                    row.handleComplaintsClicked = handleComplaintsClicked
-                BookableService.getProfilePicture(item.bookableId).then(response => {
-                    row.img = response.data
+                    row.handleCancellationClicked = handleCancellationClicked
                   })
                   .then(() => {
                     setRows(prevRows => [...prevRows, row])
                 })
-        }});
+        });
         setDataLoaded(true)
     }
 
-    function handleReviewsClicked(id1, id2, id3, ownerRated, bookableRated){
-      setBookableId(id1)
-      setOwnerId(id2)
-      setReservationId(id3)
-      setOwnerReviewed(ownerRated)
-      setBookableReviewed(bookableRated)
-      setShowReportDialog(true)
+    function handleCancellationClicked(id){
+      setReservationId(id)
+      setShowCancellationDialog(true)
   }
 
-  function handleComplaintsClicked(id1, id2, id3, ownerCompl, bookableCompl){
-    setBookableId(id1)
-    setOwnerId(id2)
-    setReservationId(id3)
-    setOwnerComplained(ownerCompl)
-    setBookableComplained(bookableCompl)
-    setShowComplaintDialog(true)
+
+  function handleClose(){
+    setShowCancellationDialog(false)
   }
 
-  function handleReportClose(){
-      setShowReportDialog(false)
-      setShowComplaintDialog(false)
+  function handleDelete() {
+    ReservationService.cancelReservation(reservationId).then(response => {
+        console.log(response.status)
+        if (response.status === 200) {
+            setShowSuccess(true)
+            refreshPage()
+        }
+    }).catch(error => {
+        setShowError(true)
+    });
+    setShowCancellationDialog(false)
   }
-
-  function handleReportSubmit(data) {
-    ReviewService.addReview(data).then(response => {
-      alert(response.data)
-      refreshPage()
-  })}
-
-  function handleComplaintSubmit(data) {
-    ComplaintService.addComplaint(data).then(response => {
-      alert(response.data)
-      refreshPage()
-  })}
 
     return (
         <div>
             <Header />
         <div>
+        {showSuccess &&
+            <Alert style={{width:"100%", height:"80px"}} variant='success' onClose = {() => setShowSuccess(false)} dismissible>
+                <Alert.Heading>Success!</Alert.Heading>
+                <p>You have successfully canceled the reservation!</p>
+            </Alert>
+            }
+            {showError &&
+            <Alert style={{width:"100%", height:"80px"}} variant='danger' onClose = {() => setShowError(false)} dismissible>
+                <Alert.Heading>Error!</Alert.Heading>
+                <p>You can cancel the reservation no later than 3 days before it starts!</p>
+            </Alert>
+            }
             <div className="reservations--table" style={{ display: 'flex', height: '80vh' }}>
             {dataLoaded && <DataGrid 
-            initialState={{
-              sorting: {
-                sortModel: [{ field: 'id', sort: 'asc' }],
-              },
-            }}
             rows={rows}
             columns={columns}
             pageSize={10}
@@ -139,8 +127,19 @@ export default function ClientReservationHistory() {
             checkboxSelection
              />}
             </div>
-            {showReportDialog && <ReviewsReport ownerReviewed={ownerReviewed} entityReviewed={bookableReviewed} handleReportSubmit = {handleReportSubmit} id = {reservationId.toString()} bookableId = {bookableId.toString()} ownerId = {ownerId.toString()} handleOpen = {handleReviewsClicked} handleClose = {handleReportClose}/>}
-            {showComplaintDialog && <ComplaintsReport ownerComplained={ownerComplained} bookableComplained={bookableComplained} handleReportSubmit = {handleComplaintSubmit} id = {reservationId.toString()} bookableId = {bookableId.toString()} ownerId = {ownerId.toString()} handleOpen = {handleReviewsClicked} handleClose = {handleReportClose}/>}
+            {showCancellationDialog && <Dialog
+                        fullScreen={fullScreen}
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="responsive-dialog-title"
+                    >
+                    <DialogTitle id="responsive-dialog-title">{"Are you sure you want to cancel the reservation?"}</DialogTitle>
+                    <DialogContent><DialogContentText>This action cannot be undone.</DialogContentText></DialogContent>
+                    <DialogActions>
+                        <Button autoFocus onClick={handleClose}>Disagree</Button>
+                        <Button onClick={handleDelete} autoFocus>Agree</Button>
+                    </DialogActions>
+            </Dialog>}
             </div>
         </div>
 
@@ -194,7 +193,7 @@ function getPeriodBetweenDates(date1, date2) {
 
 
 const columns = [
-    { field: 'id', headerName: 'ID', width: 60, sortable: true, sortComparator: gridNumberComparator},
+    { field: 'id', headerName: 'ID', width: 30 },
     { field: 'name', headerName: 'Name', width: 230, sortable: true,
       renderCell:(params) => {
           return (
@@ -212,9 +211,9 @@ const columns = [
     { field: 'duration', headerName: 'Duration', width: 170, sortable: true, sortComparator: durationCustomComparator },
     { field: 'startDateTime', headerName: 'Start', width: 260, sortComparator: dateCustomComparator},
     { field: 'endDateTime', headerName: 'End', width: 260, sortComparator: dateCustomComparator},
-    { field : 'reviews', headerName : 'Reviews', width : 190,
+    { field : 'cancel', headerName : 'Cancellation', width : 190,
     renderCell:(params) => {
-      if (!params.row.active && ((!params.row.ownerReviewed) || (!params.row.bookableReviewed)))
+      if (!params.row.canceled) {
           return ( <Button 
                     sx = {{ 
                     backgroundColor : "#FF5A5F", 
@@ -224,33 +223,14 @@ const columns = [
                         color: '#FF5A5F',
                             },
                           }}                       
-                    onClick = { () => {params.row.handleReviewsClicked(params.row.bookableId, params.row.ownerId, params.row.id, params.row.ownerReviewed, params.row.bookableReviewed)}}                                    
-                    variant='outlined'>Leave a review
+                    onClick = { () => {params.row.handleCancellationClicked(params.row.id)}}                                    
+                    variant='outlined'>Cancel reservation
                 </Button>)
-         else {
+         } else {
           return (<div className='checkIcon'><CheckIcon style={{ fontSize: 35, color: '#FF5A5F' }} /> </div>)
         }
   }},
-  { field : 'complaints', headerName : 'Complaints', width : 190,
-    renderCell:(params) => {
-
-      if (!params.row.active && ((!params.row.ownerComplained) || (!params.row.bookableComplained)))
-          return ( <Button 
-                    sx = {{ 
-                      backgroundColor : "#34568B", 
-                      color:"white", 
-                      '&:hover': {
-                      backgroundColor: 'white',
-                      color: '#34568B',
-                          },
-                          }}                       
-                    onClick = { () => {params.row.handleComplaintsClicked(params.row.bookableId, params.row.ownerId, params.row.id, params.row.ownerComplained, params.row.bookableComplained)}}                                    
-                    variant='outlined'>Leave a complaint
-                </Button>)
-      else {
-        return (<div className='checkIcon'><CheckIcon style={{ fontSize: 35, color: '#34568B' }} /> </div>)
-      }
-  }}
+  
   ];
 
 

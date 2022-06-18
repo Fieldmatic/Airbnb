@@ -80,8 +80,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 								.antMatchers("/api/boat/get/{id}").permitAll()
 								.antMatchers("/api/adventure/get/{id}").permitAll()
 								.antMatchers("/api/action/getActions/{id}").permitAll()
-				.antMatchers("/api/cottage/allAvailableByCity/{startDate}/{endDate}/{city}").permitAll()
-				.antMatchers("/api/cottage/allAvailable/{startDate}/{endDate}").permitAll()
+				.antMatchers("/api/cottage/allAvailableByCity/{startDate}/{endDate}/{city}/{capacity}").permitAll()
+				.antMatchers("/api/cottage/allAvailable/{startDate}/{endDate}/{capacity}").permitAll()
 
 				.antMatchers("/api/boat/allAvailableByCityAndCapacity/{startDate}/{endDate}/{city}/{capacity}").permitAll()
 				.antMatchers("/api/boat/allAvailable/{startDate}/{endDate}/{capacity}").permitAll()

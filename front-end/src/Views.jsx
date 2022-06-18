@@ -30,6 +30,7 @@ import ShowWishList from "./components/ViewEntities/ShowWishList";
 import Statistics from "./components/Owner/Statistics";
 import ClientReservationHistory from "./components/Reservation/ClientReservationHistory"
 import BookableStatistics from "./components/Owner/BookableStatistics";
+import ClientFutureReservations from "./components/Reservation/ClientFutureReservations"
 
 
 const Views = () => {
@@ -61,6 +62,7 @@ const Views = () => {
       <Route path = "/reserveAgain/:bookableId&:email" element = {<ReserveForClient/>} />
       <Route path = "/bookableDetails/:id&:entityType&:user&:heartColor" element = {<BookableDetails />} />
       <Route path = "/reservationHistory/:entityType" element = {<ClientReservationHistory/>} />
+      <Route path = "/futureReservations" element = {<ClientFutureReservations/>} />
 
 
       <Route path = "/admin">

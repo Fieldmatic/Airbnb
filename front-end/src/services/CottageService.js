@@ -35,10 +35,11 @@ class CottageService {
         let city = searchData.city
         let startDate = searchData.startDate
         let endDate = searchData.endDate
+        let capacity = searchData.capacity
         if (city === "") {
-            return axios.get(COTTAGE_BASED_REST_API_URL + "/allAvailable/" + startDate + "/" + endDate)
+            return axios.get(COTTAGE_BASED_REST_API_URL + "/allAvailable/" + startDate + "/" + endDate + "/" + capacity)
         }
-        else return axios.get(COTTAGE_BASED_REST_API_URL + "/allAvailableByCity/" + startDate + "/" + endDate + "/" + city)
+        else return axios.get(COTTAGE_BASED_REST_API_URL + "/allAvailableByCity/" + startDate + "/" + endDate + "/" + city + "/" + capacity)
     }
 
     getOwnerCottages(){

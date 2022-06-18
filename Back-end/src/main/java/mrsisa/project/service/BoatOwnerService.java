@@ -18,9 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,43 +46,26 @@ public class BoatOwnerService {
     @Autowired
     BookableService bookableService;
 
+    @Autowired
+    PictureService pictureService;
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/boatOwner/";
 
     public void add(PersonDTO dto, MultipartFile[] multipartFiles) throws IOException {
         BoatOwner owner = dtoToBoatOwner(dto);
         boatOwnerRepository.save(owner);
-        List<String> paths = addPictures(owner, multipartFiles);
+        List<String> paths = pictureService.addPictures(owner.getId(), PICTURES_PATH, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
         boatOwnerRepository.save(owner);
         adminService.createRegistrationRequest(owner);
     }
 
-    public List<String> addPictures(BoatOwner owner, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + owner.getId());
-        savePicturesOnPath(owner, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
-    private void savePicturesOnPath(BoatOwner owner, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + owner.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
+    public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
+        BoatOwner boatOwner = boatOwnerRepository.findByUsername(username);
+        List<String> paths = pictureService.addPictures(boatOwner.getId(),PICTURES_PATH, files);
+        boatOwner.setProfilePhoto(paths.get(0));
+        boatOwnerRepository.save(boatOwner);
+        return boatOwner.getProfilePhoto();
     }
 
     public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){

@@ -246,7 +246,7 @@ export default function OwnerRegistration() {
                     maxFiles={1}
                     string = "drop"
                     label='Drop your profile picture here'
-                    accept = {".jpg, .png"}
+                    accept = {".jpg, .png, .jpeg"}
                     header={true}
                     maxFileSize={5000000}
                 >

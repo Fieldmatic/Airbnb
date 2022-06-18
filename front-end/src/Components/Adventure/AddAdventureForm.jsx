@@ -213,7 +213,7 @@ export default function AddAdventureForm() {
                         maxFiles={10}
                         header={true}
                         label='Drop your adventure pictures here'
-                        accept = {".jpg, .png"}
+                        accept = {".jpg, .png, .jpeg"}
                         maxFileSize={5000000}
                         >
                         {files.map((file) => (

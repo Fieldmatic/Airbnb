@@ -261,7 +261,7 @@ export default function Cottage() {
                 onClean={handleClean}
                 value={files}
                 label='Drop your interior & exterior pictures here'
-                accept = {".jpg, .png"}
+                accept = {".jpg, .png, .jpeg"}
                 maxFiles={10}
                 header={true}
                 maxFileSize={5000000}

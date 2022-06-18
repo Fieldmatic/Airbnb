@@ -7,21 +7,12 @@ import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class CottageOwnerService {
@@ -47,12 +38,15 @@ public class CottageOwnerService {
     @Autowired
     BookableService bookableService;
 
+    @Autowired
+    PictureService pictureService;
+
     final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
 
     public Person add(PersonDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
         CottageOwner owner = dtoToCottageOwner(dto);
         if (multipartFiles.isPresent()) {
-            List<String> paths = addPictures(owner, multipartFiles.get());
+            List<String> paths = pictureService.addPictures(owner.getId(), PICTURES_PATH, multipartFiles.get());
             owner.setProfilePhoto(paths.get(0));
         }
         cottageOwnerRepository.save(owner);
@@ -60,29 +54,12 @@ public class CottageOwnerService {
         return owner;
     }
 
-    public List<String> addPictures(CottageOwner owner, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-        if(multipartFiles == null) return paths;
-        Path path = Paths.get(PICTURES_PATH + owner.getId());
-        savePicturesOnPath(owner, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
-    private void savePicturesOnPath(CottageOwner owner, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + owner.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
+    public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
+        CottageOwner cottageOwner = cottageOwnerRepository.findByUsername(username);
+        List<String> paths = pictureService.addPictures(cottageOwner.getId(),PICTURES_PATH, files);
+        cottageOwner.setProfilePhoto(paths.get(0));
+        cottageOwnerRepository.save(cottageOwner);
+        return cottageOwner.getProfilePhoto();
     }
 
     private CottageOwner dtoToCottageOwner(PersonDTO dto) {

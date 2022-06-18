@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +42,9 @@ public class ClientService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PictureService pictureService;
 
     public List<Client> findAll() {
         return clientRepository.findAll();
@@ -68,35 +70,17 @@ public class ClientService {
 
     public void add(ClientDTO dto, MultipartFile[] multipartFiles) throws IOException {
         Client client = dtoToClient(dto);
-        List<String> paths = addPictures(client, multipartFiles);
+        List<String> paths = pictureService.addPictures(client.getId(), PICTURES_PATH, multipartFiles);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);
     }
 
-    public List<String> addPictures(Client client, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + client.getId());
-        savePicturesOnPath(client, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
-    private void savePicturesOnPath(Client client, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + client.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
+    public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
+        Client client = clientRepository.findByUsername(username);
+        List<String> paths = pictureService.addPictures(client.getId(),PICTURES_PATH, files);
+        client.setProfilePhoto(paths.get(0));
+        clientRepository.save(client);
+        return client.getProfilePhoto();
     }
 
     public void addSubscription(Client client, Long bookableId) {

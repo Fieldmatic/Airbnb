@@ -31,7 +31,7 @@ public class ReportService {
         report.setReservation(reservationRepository.getById(reportDTO.getReservationId()));
         reservation.setReport(report);
         client.getReports().add(report);
-        if (!report.isShowedUp()) client.setPenalties(client.getPenalties() - 1);
+        if (!report.isShowedUp()) client.setPenalties(client.getPenalties() + 1);
         reportRepository.save(report);
         clientRepository.save(client);
         reservationRepository.save(reservation);

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -55,9 +57,12 @@ public class OwnerController {
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
     public ResponseEntity<InputStreamResource> getProfilePicture(Principal userP) throws IOException {
         Person owner = userService.getByUsername(userP.getName());
-        File file = new File(owner.getProfilePhoto());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return new ResponseEntity<>(resource, HttpStatus.OK);
+        try {
+            File file = new File(owner.getProfilePhoto());
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(file.toPath())), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(Paths.get("src/main/resources/static/pictures/defaults/default-profile-picture.jpg"))),HttpStatus.OK);
+        }
     }
 
     @GetMapping(value = "/averageRating")

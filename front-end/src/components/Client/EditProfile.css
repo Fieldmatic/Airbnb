@@ -29,7 +29,7 @@
     border-radius: 10px;
     box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
     box-sizing: border-box;
-    margin: 3% 0% 0% 0%;
+    margin: 1.5% 0% 0% 0%;
 }
 
 .formOpacity {
@@ -72,7 +72,7 @@
 }
 
 .clientProfilePicture {
-    width: 20vw;
+    width: 12vw;
     height: auto;
     border-radius: 10px;
     border: 1px solid black;

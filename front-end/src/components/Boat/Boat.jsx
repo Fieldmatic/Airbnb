@@ -157,7 +157,6 @@ export default function Boat () {
                     sx={muiStyles.style} 
                     label = "Name"
                     variant='outlined'
-                    id="standard-basic"
                     className="form--input"
                     type = "text"           
                     onChange = {handleChange}
@@ -168,7 +167,6 @@ export default function Boat () {
                     sx={muiStyles.style} 
                     label = "Cancellation conditions"
                     variant='outlined'
-                    id="standard-basic"
                     className="form--input"
                     placeholder = "Cancellation conditions"
                     onChange = {handleChange}
@@ -181,7 +179,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Country"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -192,7 +189,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Zip"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -205,7 +201,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "City"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -216,7 +211,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Street"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
@@ -229,7 +223,6 @@ export default function Boat () {
                     sx={muiStyles.style} 
                     label = "Daily rate"
                     variant='outlined'
-                    id="standard-basic" 
                     className="form--input"
                     type = "text"
                     onChange = {handleChange}
@@ -240,7 +233,6 @@ export default function Boat () {
                     sx={muiStyles.style} 
                     label = "Hourly rate"
                     variant='outlined'
-                    id="standard-basic"
                     className="form--input"
                     type = "text"
                     onChange = {handleChange}
@@ -268,7 +260,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Capacity"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleChange}
@@ -281,7 +272,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Length"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleChange}
@@ -292,7 +282,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Number of engines"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleChange}
@@ -305,7 +294,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Engine power"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleChange}
@@ -316,7 +304,6 @@ export default function Boat () {
                         sx={muiStyles.style} 
                         label = "Max speed"
                         variant='outlined'
-                        id="standard-basic"
                         className="form--input"
                         type = "text"
                         onChange = {handleChange}

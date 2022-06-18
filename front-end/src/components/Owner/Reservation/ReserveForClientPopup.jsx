@@ -90,7 +90,6 @@ export default function ReserveForClientPopup(props) {
                                         sx={muiStyles.style} 
                                         label = "Price"
                                         variant='outlined'
-                                        id="standard-basic" 
                                         className="form--input"
                                         type = "text"
                                         onChange = {handlePriceChange}

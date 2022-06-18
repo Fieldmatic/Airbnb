@@ -359,7 +359,7 @@ export default function Header(){
                                             );
                                         }}
                                         ampm={false}
-                                        minutesStep={30}
+                                        minutesStep={60}
                                         color="#FF5A5F"
                                         label="Start time"
                                         value={searchData.startTime}
@@ -385,7 +385,7 @@ export default function Header(){
                                             );
                                         }}
                                         ampm={false}
-                                        minutesStep={30}
+                                        minutesStep={60}
                                         color="#FF5A5F"
                                         label="End time"
                                         value={searchData.endTime}

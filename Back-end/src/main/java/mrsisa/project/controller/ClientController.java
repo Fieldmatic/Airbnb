@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.rmi.server.ExportException;
 import java.security.Principal;
 import java.util.List;
 
@@ -97,9 +100,12 @@ public class ClientController {
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<InputStreamResource> getProfilePicture(Principal userP) throws IOException {
         Client client = clientService.findClientByUsername(userP.getName());
-        File file = new File(client.getProfilePhoto());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return new ResponseEntity<>(resource, HttpStatus.OK);
+        try {
+            File file = new File(client.getProfilePhoto());
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(file.toPath())), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(Paths.get("src/main/resources/static/pictures/defaults/default-profile-picture.jpg"))),HttpStatus.OK);
+        }
     }
 
     @GetMapping(value="/getClientProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
@@ -107,9 +113,12 @@ public class ClientController {
     @Transactional
     public ResponseEntity<InputStreamResource> getClientProfilePicture(@PathVariable("id") Long id) throws IOException {
         Client client = clientService.findClientById(id);
-        File file = new File(client.getProfilePhoto());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return new ResponseEntity<>(resource, HttpStatus.OK);
+        try {
+            File file = new File(client.getProfilePhoto());
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(file.toPath())), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(Paths.get("src/main/resources/static/pictures/defaults/default-profile-picture.jpg"))),HttpStatus.OK);
+        }
     }
 
     @GetMapping("/getClientBasicInfo/{id}")

@@ -15,6 +15,7 @@ import muiStyles from '../../utils/muiStyles'
 import CottageService from '../../../services/CottageService';
 import BoatService from '../../../services/BoatService';
 import ReserveForClientPopup from './ReserveForClientPopup';
+import AdventureService from '../../../services/AdventureService'
 
 
 function ReservationDateTimePanel (props) {
@@ -46,8 +47,11 @@ function ReservationDateTimePanel (props) {
                 setEntity(response.data)
             })
         }
-        else{
-             //adventure
+        else if (props.role ==="INSTRUCTOR"){
+            AdventureService.getAdventure(props.bookableId).then(response => {
+                setEntity(response.data)
+            })
+            
         }
 
 

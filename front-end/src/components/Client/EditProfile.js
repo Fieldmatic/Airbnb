@@ -55,7 +55,7 @@ export default function EditProfile() {
             },
             biography: "",
             points: 0,
-            category: ""
+            category: "",
             penalties: 0
         }
     )

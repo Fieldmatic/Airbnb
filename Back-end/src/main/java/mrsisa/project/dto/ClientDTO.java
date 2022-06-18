@@ -20,12 +20,14 @@ public class ClientDTO {
     private String profilePhoto;
     private String phoneNumber;
     private Address address;
+    private Integer penalties;
+
 
     public ClientDTO(Client client) {
-        this(client.getId(), client.getUsername(), client.getPassword(), client.getName(), client.getSurname(), client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress());
+        this(client.getId(), client.getUsername(), client.getPassword(), client.getName(), client.getSurname(), client.getEmail(), client.getProfilePhoto(), client.getPhoneNumber(), client.getAddress(), client.getPenalties());
     }
 
-    public ClientDTO(Long id, String username, String password, String name, String surname, String email, String profilePhoto, String phoneNumber, Address address) {
+    public ClientDTO(Long id, String username, String password, String name, String surname, String email, String profilePhoto, String phoneNumber, Address address, Integer penalties) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -35,5 +37,6 @@ public class ClientDTO {
         this.profilePhoto = profilePhoto;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.penalties = penalties;
     }
 }

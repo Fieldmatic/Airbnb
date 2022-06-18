@@ -181,14 +181,21 @@ export default function EditProfile() {
             <div className="userProfile">    
                 <form className={`userProfileForm ${opacityClass}`}>
                 <h1 className='editProfile-header'>Edit your profile</h1>
-                <div className='profileImageAndPenalites'>
+                {userRole === "CLIENT" ? (
+                    <div className='profileImageAndPenalites'>
                     {profileImage && <ProfilePicture profileImage = {profileImage} />}
-                    
+                    <div className='penalitesAndWorning'>
+                        {user.penalties >= 3 && <label> <WarningIcon sx={{color:"red"}}/> You can't make a reservation this month because you have three penalties. </label>}
                         <div className='penalties'>
                                 <label>The number of your penalties: </label>
                                 <label className='penaltiesNum'> {user.penalties} </label>
                         </div>
+                    </div>
                 </div>
+                ) : (
+                    profileImage && <ProfilePicture profileImage = {profileImage} />
+                )
+                }
                 <div className='user-form-data'>
                     <label className="userLabel"> First Name </label>
                     {editClicked.nameButton ? 

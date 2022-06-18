@@ -17,6 +17,7 @@
     align-items: center;
     height: 120vh;
     width: 100%;
+    font-size: large;
 }
 
 .userProfileForm {
@@ -38,7 +39,6 @@
 .userLabel {
     width: 35%;
     padding: 20px;
-    font-size: medium;
 }
 
 .user-form-data{
@@ -72,7 +72,7 @@
 }
 
 .clientProfilePicture {
-    width: 15vw;
+    width: 20vw;
     height: auto;
     border-radius: 10px;
     border: 1px solid black;
@@ -101,4 +101,37 @@
 
 .textAreaReason{
     outline-color: #FF5A5F;
+}
+
+.profileImageAndPenalites {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+}
+
+.penalitesAndWorning {
+    display: flex;
+    flex-direction: column;
+    margin: 2.5% 0 5% 2%;
+    font-weight: 500;
+}
+
+.penalties {
+    background-color: white;
+    color: #FF5A5F;
+    padding: 10px;
+    width: 20vw;
+    height: fit-content;
+    align-self: right;
+    border-radius: 10px;
+    border: 1px solid #FF5A5F;
+    margin: 2.5% 0% 5% 0;
+    font-weight: 500;
+
+}
+
+.penaltiesNum {
+    margin-left: 5px;
+    font-weight: 800;
 }

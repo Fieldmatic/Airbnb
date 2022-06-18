@@ -15,6 +15,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import muiStyles from "../utils/muiStyles"
 import UserService from '../../services/UserService';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import { ThemeProvider} from '@mui/material/styles';
+import WarningIcon from '@mui/icons-material/Warning';
 
 export default function EditProfile() {
     const [reasonForDeletion, setReasonForDeletion] = useState("")
@@ -45,7 +49,8 @@ export default function EditProfile() {
                 city: "",
                 state: "",
                 zipCode: ""
-            }
+            },
+            penalties: 0
         }
     )
 
@@ -176,7 +181,14 @@ export default function EditProfile() {
             <div className="userProfile">    
                 <form className={`userProfileForm ${opacityClass}`}>
                 <h1 className='editProfile-header'>Edit your profile</h1>
-                {profileImage && <ProfilePicture profileImage = {profileImage} />}
+                <div className='profileImageAndPenalites'>
+                    {profileImage && <ProfilePicture profileImage = {profileImage} />}
+                    
+                        <div className='penalties'>
+                                <label>The number of your penalties: </label>
+                                <label className='penaltiesNum'> {user.penalties} </label>
+                        </div>
+                </div>
                 <div className='user-form-data'>
                     <label className="userLabel"> First Name </label>
                     {editClicked.nameButton ? 

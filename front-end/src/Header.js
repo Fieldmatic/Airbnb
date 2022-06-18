@@ -173,7 +173,7 @@ export default function Header(){
             <Divider sx={{ my: 0.5 }} />
             <MenuItem onClick={handleClose} disableRipple>
             <CalendarMonthIcon />
-            <Link to={'/reservationHistory/Future'} style={{textDecoration: 'none', color:'black'}}>Future reservations</Link>
+            <Link to={'/futureReservations'} style={{textDecoration: 'none', color:'black'}}>Future reservations</Link>
             </MenuItem>
         </StyledMenu>
         </div>

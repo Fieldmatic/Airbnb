@@ -10,4 +10,3 @@ INSERT INTO user_role(user_id, role_id) VALUES ('ici', 2);
 INSERT INTO price_list(cancellation_conditions, daily_rate, end_date_time, hourly_rate, start_date_time, bookable_id) VALUES ('Mozete uvek otkazati', 1500, null, 500, null, null);
 
 INSERT INTO cottage(id, name, profile_picture, promotional_description, rating, rules, address_id, price_list_id, cottage_owner_id) VALUES (99, 'Suncana reka', 'src/main/resources/static/pictures/cottage/null/vikendica.jpg', 'Uzivajte u zelenoj oazi u miru i tisini', 6.7, 'Sve je dozvoljeno', 1, 1, 99);
-INSERT INTO pzcottage_owner_cottages(cottage_owner_id, cottages_id)VALUES (99, 99);

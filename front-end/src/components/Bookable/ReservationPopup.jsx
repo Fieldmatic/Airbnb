@@ -15,7 +15,7 @@ import { Button } from '@mui/material';
 import ReservationService from '../../services/ReservationService';
 
 
-export default function ReservationPopup(props) {
+export default function  ReservationPopup(props) {
     const [state, setState] = React.useState({});
 
     useEffect(() => {
@@ -52,10 +52,12 @@ export default function ReservationPopup(props) {
             bookableId: props.bookableId
         }
         ReservationService.addReservation(reservation).then(response => {
-            alert("Success");
-            props.handleClose()
-        })
-             
+            if (response.status === 201) {
+                props.handleCloseAfterReservation(true)
+            }
+        }).catch(error => {
+            props.handleCloseAfterReservation(false)
+        });  
     }
         
     return (

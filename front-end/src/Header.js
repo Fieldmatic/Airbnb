@@ -226,6 +226,10 @@ export default function Header(){
         
     }
 
+    function refreshPage(){
+        window.location.reload();
+    }
+
     function handleSearch() {
         navigate('/showEntities',{state: {
             startDateTime:toISODate(new Date(searchData.startDate.getFullYear(),searchData.startDate.getMonth(), searchData.startDate.getDate(), searchData.startTime.getHours(), searchData.startTime.getMinutes(),searchData.startTime.getSeconds())),
@@ -233,6 +237,7 @@ export default function Header(){
             guestsNumber : searchData.guestsNumber,
             city :  searchData.city, entityType: entityType, 
             showAll: false}});
+        refreshPage()
         setPopupState(false)
 
     }

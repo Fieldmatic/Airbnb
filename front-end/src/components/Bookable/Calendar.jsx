@@ -44,6 +44,7 @@ export default function Calendar({ bookableId, updateType }) {
                 eventTimeFormat={{
                     hour: '2-digit',
                     minute: '2-digit',
+                    hour12:false,
                     meridiem: false
                 }}
             />

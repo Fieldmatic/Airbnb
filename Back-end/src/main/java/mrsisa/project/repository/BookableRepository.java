@@ -1,10 +1,12 @@
 package mrsisa.project.repository;
 
 import mrsisa.project.model.Bookable;
+import mrsisa.project.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.awt.print.Book;
+import java.util.List;
 
 public interface BookableRepository extends JpaRepository<Bookable,Long> {
 

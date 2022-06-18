@@ -3,7 +3,6 @@ package mrsisa.project.service;
 import mrsisa.project.dto.ReservationDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -52,6 +51,12 @@ public class ReservationService {
     @Autowired
     PeriodRepository periodRepository;
 
+    @Autowired
+    LoyaltyProgramService loyaltyProgramService;
+
+    @Autowired
+    UserCategoryService userCategoryService;
+
     @Transactional
     public boolean addQuick(Long actionId, Principal userP) throws IOException {
         try {
@@ -86,6 +91,8 @@ public class ReservationService {
             bookable.getReservations().add(reservation);
             bookableRepository.save(bookable);
             periodService.splitPeriodAfterReservation(period.get(),reservation, bookable);
+            client.setPoints(client.getPoints() + loyaltyProgramService.getLoyaltyProgram().getClientPoints());
+            this.tryChangeClientCategory(client, loyaltyProgramService.getLoyaltyProgram());
             try{
                 emailService.sendReservationMail(client, reservation);
             } catch(MailException ignored) {
@@ -93,6 +100,19 @@ public class ReservationService {
             return true;
         }
         else return false;
+    }
+
+    private void tryChangeClientCategory(Client client, LoyaltyProgram loyaltyProgram) {
+        if (client.getPoints() < loyaltyProgram.getBronzePoints()) {
+            client.setCategory(userCategoryService.getRegularCategory());
+        } else if (client.getPoints() >= loyaltyProgram.getBronzePoints() && client.getPoints() < loyaltyProgram.getSilverPoints()) {
+            client.setCategory(userCategoryService.getBronzeCategory());
+        } else if (client.getPoints() >= loyaltyProgram.getSilverPoints() && client.getPoints() < loyaltyProgram.getGoldPoints()) {
+            client.setCategory(userCategoryService.getSilverCategory());
+        } else if (client.getPoints() >= loyaltyProgram.getGoldPoints()) {
+            client.setCategory(userCategoryService.getGoldCategory());
+        }
+        personRepository.save(client);
     }
 
     private boolean checkIfClientAlreadyCanceledReservation(Client client, LocalDateTime start, LocalDateTime end, Long bookableId) {
@@ -209,6 +229,9 @@ public class ReservationService {
                 reservation.setCanceled(true);
                 reservationRepository.save(reservation);
                 periodService.addPeriodOnReservationCancelling(reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getBookable());
+                Client client = reservation.getClient();
+                client.setPoints(client.getPoints() - loyaltyProgramService.getLoyaltyProgram().getClientPoints());
+                this.tryChangeClientCategory(client, loyaltyProgramService.getLoyaltyProgram());
                 return true;
             }
         }

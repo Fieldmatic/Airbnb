@@ -226,6 +226,7 @@ public class AdminService {
         client.setSurname("Klinjasti");
         client.setUsername("c");
         client.setPhoneNumber("091999345");
+        client.setEmail("bane-gg@hotmail.com");
         client.setProfilePhoto("src/main/resources/static/pictures/client/4/ocean-3605547_1920.jpg");
         client.setPassword(passwordEncoder.encode("c"));
         List<Role> roles3 = roleService.findByName("ROLE_CLIENT");

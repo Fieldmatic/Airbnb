@@ -283,8 +283,10 @@ const AdminProfile = () => {
                   <Button onClick={handleConfirm}>Confirm</Button>
                 </DialogActions>
               </Dialog>
-              <button type="button" onClick={openPasswordDialog}>Change Password</button>
-              <button onClick={handleSubmit}>Update</button>
+              <div className="buttons">
+                <button type="button" onClick={openPasswordDialog}>Change Password</button>
+                <button onClick={handleSubmit}>Update</button>
+              </div>
             </form>
           </div>
         </div>

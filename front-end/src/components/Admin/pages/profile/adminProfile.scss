@@ -59,17 +59,25 @@
                 border-bottom: 1px solid gray;
               }
             }
-  
-            button {
-              width: 150px;
-              padding: 10px;
-              border: none;
-              background-color: teal;
-              color: white;
-              font-weight: bold;
-              cursor: pointer;
-              margin-top: 10px;
+
+            .buttons {
+              display: flex;
+              justify-content: space-around;
+              width: 100%;
+              // padding: 30px;
+
+              button {
+                width: 150px;
+                padding: 10px;
+                border: none;
+                background-color: teal;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 10px;
+              }
             }
+  
           }
         }
       }

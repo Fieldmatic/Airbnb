@@ -2,8 +2,8 @@
   "name": "front-end",
   "version": "0.1.0",
   "engines": {
-     "node": "16.x"
-   },
+    "node": "16.x"
+  },
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^2.14.0",
@@ -70,6 +70,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.2.0",
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "eslint-plugin-react": "^7.29.4"
   }
 }

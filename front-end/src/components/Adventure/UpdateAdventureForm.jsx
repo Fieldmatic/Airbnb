@@ -13,7 +13,7 @@ import { TextField } from '@mui/material';
 import moment from 'moment'
 
 
-export default function UpdateAdventureForm(props) {
+export default function UpdateAdventureForm() {
     const [formData, setFormData] = React.useState({
         name: "",
         address: {

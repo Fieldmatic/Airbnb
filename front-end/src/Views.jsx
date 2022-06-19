@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "./NotFound";
 import Home from "./Home";
 import AddAdventureForm from "./components/Adventure/AddAdventureForm";
-import UpdateAdventureForm from "./components/Adventure/UpdateAdventureFrom"
+import UpdateAdventureForm from "./components/Adventure/UpdateAdventureForm"
 import EditProfile from "./components/Client/EditProfile";
 import Cottage from "./components/cottage/Cottage";
 import AllEntities from "./components/ViewEntities/AllEntities";

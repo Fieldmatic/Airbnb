@@ -1,8 +1,6 @@
 package mrsisa.project.repository;
 
 import mrsisa.project.model.Adventure;
-import mrsisa.project.model.Boat;
-import mrsisa.project.model.Cottage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

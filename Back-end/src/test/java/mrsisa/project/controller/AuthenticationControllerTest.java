@@ -1,6 +1,5 @@
 package mrsisa.project.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import mrsisa.project.dto.JwtAuthenticationRequest;
 import mrsisa.project.util.TestUtil;
 import org.junit.Before;
@@ -14,12 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.security.Principal;
-
-import static mrsisa.project.util.TestUtil.json;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

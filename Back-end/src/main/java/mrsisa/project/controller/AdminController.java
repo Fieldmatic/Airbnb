@@ -1,11 +1,9 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.AdminDTO;
-import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.model.Administrator;
-import mrsisa.project.model.Instructor;
 import mrsisa.project.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,14 +1,12 @@
 package mrsisa.project.service;
 
 import mrsisa.project.model.Cottage;
-import mrsisa.project.model.Period;
 import mrsisa.project.model.Review;
 import mrsisa.project.repository.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 

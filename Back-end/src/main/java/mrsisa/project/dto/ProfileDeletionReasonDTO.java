@@ -3,7 +3,6 @@ package mrsisa.project.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import mrsisa.project.model.Person;
 import mrsisa.project.model.ProfileDeletionReason;
 
 @Setter

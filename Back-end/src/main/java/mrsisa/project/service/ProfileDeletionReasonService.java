@@ -1,6 +1,5 @@
 package mrsisa.project.service;
 
-import mrsisa.project.model.Address;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.ProfileDeletionReason;
 import mrsisa.project.repository.ProfileDeletionReasonRepository;

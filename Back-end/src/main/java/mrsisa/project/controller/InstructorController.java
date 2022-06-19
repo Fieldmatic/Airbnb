@@ -4,7 +4,6 @@ package mrsisa.project.controller;
 import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.model.Instructor;
-import mrsisa.project.service.AddressService;
 import mrsisa.project.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -15,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

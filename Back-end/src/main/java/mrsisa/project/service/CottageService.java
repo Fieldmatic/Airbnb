@@ -9,17 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -49,7 +46,7 @@ public class CottageService {
     @Autowired
     PictureService pictureService;
 
-    private final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
+    private final String picturesPath = "src/main/resources/static/pictures/cottage/";
 
 
     public void add(CottageDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
@@ -57,7 +54,7 @@ public class CottageService {
         cottageRepository.save(cottage);
         List<String> paths = new ArrayList<>();
         if (photoFiles.isPresent()){
-            paths = pictureService.addPictures(cottage.getId(),PICTURES_PATH, photoFiles.get());
+            paths = pictureService.addPictures(cottage.getId(), picturesPath, photoFiles.get());
             cottage.setProfilePicture(paths.get(0));
         }
         cottage.setPictures(paths);
@@ -170,7 +167,7 @@ public class CottageService {
         pictureService.handleDeletedPictures(cottage, dto.getPhotos());
         if (newPhotos.isPresent())
         {
-            List<String> paths = pictureService.addPictures(cottage.getId(),PICTURES_PATH, newPhotos.get());
+            List<String> paths = pictureService.addPictures(cottage.getId(), picturesPath, newPhotos.get());
             cottage.getPictures().addAll(paths);
             if (cottage.getProfilePicture() == null) cottage.setProfilePicture(paths.get(0));
         }

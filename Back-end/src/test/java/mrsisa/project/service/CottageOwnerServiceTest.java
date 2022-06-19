@@ -3,18 +3,12 @@ package mrsisa.project.service;
 import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.CottageOwner;
-import mrsisa.project.model.Person;
-import mrsisa.project.model.Role;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.CottageOwnerRepository;
-import mrsisa.project.repository.RoleRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;

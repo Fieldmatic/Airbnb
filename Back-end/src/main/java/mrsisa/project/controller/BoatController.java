@@ -1,25 +1,16 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.BoatDTO;
-import mrsisa.project.dto.CottageDTO;
-import mrsisa.project.dto.SearchDTO;
 import mrsisa.project.model.Boat;
-import mrsisa.project.model.Cottage;
 import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.service.BoatService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;

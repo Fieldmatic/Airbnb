@@ -1,7 +1,8 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.*;
-import mrsisa.project.model.*;
+import mrsisa.project.model.Address;
+import mrsisa.project.model.Client;
 import mrsisa.project.service.AddressService;
 import mrsisa.project.service.ClientService;
 import mrsisa.project.service.ValidationService;
@@ -15,11 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.rmi.server.ExportException;
 import java.security.Principal;
 import java.util.List;
 

@@ -2,12 +2,8 @@ package mrsisa.project.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mrsisa.project.model.Client;
 import mrsisa.project.model.Report;
 import mrsisa.project.model.ReportType;
-import mrsisa.project.model.Reservation;
-
-import javax.persistence.*;
 
 @Data
 @NoArgsConstructor

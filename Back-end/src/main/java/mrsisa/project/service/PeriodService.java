@@ -1,22 +1,20 @@
 package mrsisa.project.service;
+
 import mrsisa.project.dto.PeriodDTO;
-import mrsisa.project.model.*;
+import mrsisa.project.model.Bookable;
+import mrsisa.project.model.Cottage;
+import mrsisa.project.model.Period;
+import mrsisa.project.model.Reservation;
 import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.PeriodRepository;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PeriodService {

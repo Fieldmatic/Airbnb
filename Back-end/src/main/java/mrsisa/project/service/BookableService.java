@@ -3,18 +3,19 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.BookableCalendarDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
-import mrsisa.project.model.*;
+import mrsisa.project.model.Action;
+import mrsisa.project.model.Bookable;
+import mrsisa.project.model.Period;
+import mrsisa.project.model.Reservation;
 import mrsisa.project.repository.BookableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

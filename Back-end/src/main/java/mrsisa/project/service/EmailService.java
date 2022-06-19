@@ -1,16 +1,15 @@
 package mrsisa.project.service;
 
 import mrsisa.project.model.Client;
-import mrsisa.project.model.Bookable;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

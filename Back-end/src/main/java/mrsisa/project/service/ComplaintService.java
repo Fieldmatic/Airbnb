@@ -1,8 +1,14 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.ComplaintDTO;
-import mrsisa.project.model.*;
-import mrsisa.project.repository.*;
+import mrsisa.project.model.Bookable;
+import mrsisa.project.model.Complaint;
+import mrsisa.project.model.Owner;
+import mrsisa.project.model.Reservation;
+import mrsisa.project.repository.BookableRepository;
+import mrsisa.project.repository.ComplaintRepository;
+import mrsisa.project.repository.OwnerRepository;
+import mrsisa.project.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

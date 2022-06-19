@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Administrator;
-import mrsisa.project.model.Instructor;
 
 @Data
 @NoArgsConstructor

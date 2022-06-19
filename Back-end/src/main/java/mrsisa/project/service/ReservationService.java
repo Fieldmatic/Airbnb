@@ -3,7 +3,6 @@ package mrsisa.project.service;
 import mrsisa.project.dto.ReservationDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;

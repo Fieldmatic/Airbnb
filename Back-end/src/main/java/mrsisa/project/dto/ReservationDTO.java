@@ -4,9 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.*;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import java.awt.print.Book;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

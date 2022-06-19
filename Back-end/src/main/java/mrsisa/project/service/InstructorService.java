@@ -5,7 +5,10 @@ import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.model.*;
-import mrsisa.project.repository.*;
+import mrsisa.project.repository.AddressRepository;
+import mrsisa.project.repository.InstructorRepository;
+import mrsisa.project.repository.PersonRepository;
+import mrsisa.project.repository.ProfileDeletionReasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class InstructorService {

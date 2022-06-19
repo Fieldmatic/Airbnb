@@ -1,8 +1,8 @@
 package mrsisa.project.service;
 
 
-import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.dto.PasswordChangeDTO;
+import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.model.Person;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;

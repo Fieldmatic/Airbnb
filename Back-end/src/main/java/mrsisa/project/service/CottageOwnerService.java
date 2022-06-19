@@ -2,8 +2,13 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
-import mrsisa.project.model.*;
-import mrsisa.project.repository.*;
+import mrsisa.project.model.Cottage;
+import mrsisa.project.model.CottageOwner;
+import mrsisa.project.model.Person;
+import mrsisa.project.model.Role;
+import mrsisa.project.repository.AddressRepository;
+import mrsisa.project.repository.CottageOwnerRepository;
+import mrsisa.project.repository.CottageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CottageOwnerService {

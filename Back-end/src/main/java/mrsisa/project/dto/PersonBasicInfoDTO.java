@@ -3,7 +3,6 @@ package mrsisa.project.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
-import mrsisa.project.model.Client;
 import mrsisa.project.model.Person;
 
 @Data

@@ -1,6 +1,5 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Bookable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

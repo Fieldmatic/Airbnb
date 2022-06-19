@@ -1,6 +1,5 @@
 package mrsisa.project.service;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
 import mrsisa.project.dto.AdminDTO;
 import mrsisa.project.dto.PersonBasicInfoDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;

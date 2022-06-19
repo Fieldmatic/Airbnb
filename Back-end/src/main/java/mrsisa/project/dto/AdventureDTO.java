@@ -4,10 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Adventure;
-import mrsisa.project.model.Period;
 import mrsisa.project.model.Tag;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

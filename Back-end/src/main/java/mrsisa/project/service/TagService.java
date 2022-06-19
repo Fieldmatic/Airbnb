@@ -1,7 +1,6 @@
 package mrsisa.project.service;
 
 import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Cottage;
 import mrsisa.project.model.Tag;
 import mrsisa.project.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;

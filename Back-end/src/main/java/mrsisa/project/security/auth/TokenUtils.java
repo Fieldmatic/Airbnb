@@ -16,40 +16,40 @@ import java.util.Date;
 public class TokenUtils {
 
 	@Value("spring-security-example")
-	private String APP_NAME;
+	private String appName;
 
 	@Value("somesecret")
-	public String SECRET;
+	public String secret;
 
 
 	@Value("7200000")
-	private int EXPIRES_IN;
+	private int expiresIn;
 
 	@Value("Authorization")
-	private String AUTH_HEADER;
-	private static final String AUDIENCE_WEB = "web";
+	private String authHeader;
+	private static final String audienceWeb = "web";
 
 	// Algoritam za potpisivanje JWT
-	private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+	private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 	public String generateToken(String username) {
 		return Jwts.builder()
-				.setIssuer(APP_NAME)
+				.setIssuer(appName)
 				.setSubject(username)
 				.setAudience(generateAudience())
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
-				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+				.signWith(signatureAlgorithm, secret).compact();
 
 	}
 	
 
 	private String generateAudience() {
 		
-		return AUDIENCE_WEB;
+		return audienceWeb;
 	}
 
 	private Date generateExpirationDate() {
-		return new Date(new Date().getTime() + EXPIRES_IN);
+		return new Date(new Date().getTime() + expiresIn);
 	}
 	public String getToken(HttpServletRequest request) {
 		String authHeader = getAuthHeaderFromHeader(request);
@@ -116,7 +116,7 @@ public class TokenUtils {
 		Claims claims;
 		try {
 			claims = Jwts.parser()
-					.setSigningKey(SECRET)
+					.setSigningKey(secret)
 					.parseClaimsJws(token)
 					.getBody();
 		} catch (ExpiredJwtException ex) {
@@ -145,11 +145,11 @@ public class TokenUtils {
 	}
 
 	public int getExpiredIn() {
-		return EXPIRES_IN;
+		return expiresIn;
 	}
 
 	public String getAuthHeaderFromHeader(HttpServletRequest request) {
-		return request.getHeader(AUTH_HEADER);
+		return request.getHeader(authHeader);
 	}
 	
 }

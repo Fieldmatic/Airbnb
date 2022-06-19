@@ -1,6 +1,9 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.*;
+import mrsisa.project.dto.AdventureDTO;
+import mrsisa.project.dto.BoatDTO;
+import mrsisa.project.dto.ClientDTO;
+import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.BookableRepository;
@@ -13,14 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -48,14 +45,14 @@ public class ClientService {
 
     private PictureService pictureService;
 
+    final static String picturesPath = "src/main/resources/static/pictures/client/";
+
 
     public List<Client> findAll() {
         return clientRepository.findAll();
     }
 
-    public Client findOne(Long id) {
-        return clientRepository.findById(id).orElseGet(null);
-    }
+    public Client findOne(Long id) {return clientRepository.getById(id);}
 
     public Client save(Client client) {return clientRepository.save(client);}
 
@@ -69,19 +66,18 @@ public class ClientService {
         return clientRepository.findClientByUsernameWithSubscriptions(username);
     }
 
-    final static String PICTURES_PATH = "src/main/resources/static/pictures/client/";
 
     public void add(ClientDTO dto, MultipartFile[] multipartFiles) throws IOException {
         Client client = dtoToClient(dto);
         clientRepository.save(client);
-        List<String> paths = pictureService.addPictures(client.getId(), PICTURES_PATH, multipartFiles);
+        List<String> paths = pictureService.addPictures(client.getId(), picturesPath, multipartFiles);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         Client client = clientRepository.findByUsername(username);
-        List<String> paths = pictureService.addPictures(client.getId(),PICTURES_PATH, files);
+        List<String> paths = pictureService.addPictures(client.getId(), picturesPath, files);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);
         return client.getProfilePhoto();

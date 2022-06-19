@@ -14,9 +14,8 @@
 }
 
 .card > img {
-    height: 100%;
     width: 100%;
-    object-fit: contain;
+    aspect-ratio:4/3;
 }
 
 .card__info {

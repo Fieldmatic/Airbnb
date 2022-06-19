@@ -2,21 +2,25 @@
 .banner__info {
     display: flex;
     flex-direction: row;
-    height: 80vh;
+    width: 100%;
+    height: auto;
+    background-color: black;
+    color: #fff;
+    font-size: 5px;
 }
 .banner_image{
-    height: 80vh;
-    width: fit-content;
+    width: 100%;
+    aspect-ratio: 16/9;
+}
+
+.banner__info {
+    height: 100%;
 }
 
 .explore--nearby{
-    background-color: black;
-    color: #fff;
-    padding-top: 28vh;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-bottom: 40px;
-    width: 28vw;
+
+    max-width: 30%;
+    margin: 45em 0 0em 10em;
 }
 
 .banner__info button {
@@ -24,7 +28,8 @@
     color: #fff;
     text-transform: inherit;
     margin-top: 20px;
-    width: 8vw;
+    font-size: 1.1vw;
+    width: 11vw;
     font-weight: 600;
 }
 
@@ -35,14 +40,22 @@
 
 .banner__info h5 {
     margin-top: 10px;
+    font-size: 1.2vw;
+}
+
+.banner__info h1 {
+    font-size: 2.3vw;
 }
 
 
 @media only screen and (max-width: 812px) {
     .banner__info {
-        padding-top: 10vh;        
-        padding-left: 30px;
-        padding-bottom: 40px;
+        padding: 0;
+        flex-direction: column;
+    }
+    .explore--nearby{
+        max-width: 25%;
+        margin: 15em 15em 15em 10em;
     }
 }
 

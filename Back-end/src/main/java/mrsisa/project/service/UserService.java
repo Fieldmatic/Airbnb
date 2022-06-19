@@ -3,6 +3,7 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.dto.PasswordChangeDTO;
+import mrsisa.project.model.Instructor;
 import mrsisa.project.model.Person;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,10 @@ public class UserService implements UserDetailsService {
         user.getAddress().setStreet(userDetails.getAddress().getStreet());
         user.getAddress().setCity(userDetails.getAddress().getCity());
         user.getAddress().setState(userDetails.getAddress().getState());
+        if (userDetails.getBiography() != null && !userDetails.getBiography().equals("")){
+            Instructor instructor = (Instructor) user;
+            instructor.setBiography(userDetails.getBiography());
+        }
         personRepository.save(user);
         return true;
     }

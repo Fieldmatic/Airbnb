@@ -11,7 +11,6 @@ import Boat from "./components/Boat/Boat";
 import OwnerRegistration from "./components/Owner/OwnerRegistration";
 import ClientRegistration from "./components/Client/ClientRegistration";
 import InstructorRegistration from "./components/Instructor/InstructorRegistration";
-import InstructorUpdate from "./components/Instructor/InstructorUpdate";
 import ViewHostEntities from "./components/Bookable/ViewHostEntities";
 import BookableDetails from "./components/ViewEntities/BookableDetails";
 import Login from "./components/Login/Login";
@@ -57,7 +56,6 @@ const Views = () => {
       <Route path = "/addAvailabilityPeriods/:id" element = {< Periods />}/>
       <Route path = "/hostReservations" element = {<ReservationHistory/>}/>
       <Route path = "/instructorRegistration" element = {<InstructorRegistration />} />
-      <Route path = "/editInstructor" element = {<InstructorUpdate />} />
       <Route path = "/reserveAgain/:bookableId&:email" element = {<ReserveForClient/>} />
       <Route path = "/bookableDetails/:id&:entityType&:user&:heartColor" element = {<BookableDetails />} />
       <Route path = "/reservationHistory/:entityType" element = {<ClientReservationHistory/>} />

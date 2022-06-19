@@ -15,7 +15,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import muiStyles from "../utils/muiStyles"
 import UserService from '../../services/UserService';
-import InstructorService from "../../services/InstructorService";
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import { ThemeProvider} from '@mui/material/styles';
@@ -298,7 +297,7 @@ export default function EditProfile() {
                         <input className="textBox"
                         type="text"
                         onChange={updateUser}
-                        name="state"
+                        name="biography"
                         value={user?.biography}
                     />
                     : 

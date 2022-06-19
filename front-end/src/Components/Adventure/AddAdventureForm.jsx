@@ -4,6 +4,8 @@ import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 import { Navigate } from "react-router-dom";
 import Header from '../../Header';
 import Tags from '../utils/Tags'
+import { TextField } from '@mui/material';
+import muiStyles from '../utils/muiStyles';
 
 export default function AddAdventureForm() {
     const [formData, setFormData] = React.useState({
@@ -112,95 +114,131 @@ export default function AddAdventureForm() {
             <Header />
             <div className="form-container">
                 <form className="form" onSubmit={handleSubmit}>
-                    <h2 className="form--header">Create adventure</h2>
-                    <input 
-                        type="text"
-                        placeholder="Name"
+                    <h1 className="form--header">Adventure</h1>
+                    <div className='form--pair'>
+                        <TextField
+                        sx={muiStyles.style} 
+                        label = "Name"
+                        variant='outlined'
                         className="form--input"
-                        name="name"
-                        onChange={handleChange}
-                        value={formData.name}
-                    />
-                    {/* {renderErrorMessage(errorMessages.nameError)} */}
-                    <input 
+                        type = "text"           
+                        onChange = {handleChange}
+                        name = "name"
+                        value = {formData.name}   
+                        />
+                        <TextField
+                        sx={muiStyles.style} 
+                        label = "Cancellation conditions"
+                        variant='outlined'
                         className="form--input"
-                        type = "text"
-                        placeholder = "State"
-                        onChange = {handleAddressChange}
-                        name = "state"
-                        value = {formData.address.state}          
-                    />
-                    <input 
-                        className="form--input"
-                        type = "text"
-                        placeholder = "City"
-                        onChange = {handleAddressChange}
-                        name = "city"
-                        value = {formData.address.city}          
-                    />
-                    <input 
-                        className="form--input"
-                        type = "text"
-                        placeholder = "Zip"
-                        onChange = {handleAddressChange}
-                        name = "zipCode"
-                        value = {formData.address.zipCode}          
-                    />
-                    <input 
-                        className="form--input"
-                        type = "text"
-                        placeholder = "Street"
-                        onChange = {handleAddressChange}
-                        name = "street"
-                        value = {formData.address.street}          
-                    />
-                    {/* {renderErrorMessage(errorMessages.addressError)} */}
-                    <input 
-                        type="text" 
-                        placeholder="Capacity"
-                        className="form--input"
-                        name="capacity"
-                        onChange={handleChange}
-                        value={formData.capacity}
-                    />
-                    {/* {renderErrorMessage(errorMessages.capacityError)} */}
-                    <input 
-                        type="text" 
-                        placeholder="Hourly rate"
-                        className="form--input"
-                        name="hourlyRate"
-                        onChange={handleChange}
-                        value={formData.hourlyRate}
-                    />
-                    {/* {renderErrorMessage(errorMessages.hourlyRateError)} */}
-                    <textarea 
-                        placeholder="Promo description"
-                        className="form--input-area"
-                        name="promotionalDescription"
-                        onChange={handleChange}
-                        value={formData.promotionalDescription}
-                    />
-                    <textarea 
-                        placeholder="Behaviour rules"
-                        className="form--input-area"
-                        name="rules"
-                        onChange={handleChange}
-                        value={formData.rules}
-                    />
-                    <textarea 
-                        placeholder="Equipment(separate with ',')"
-                        className="form--input-area"
-                        name="equipment"
-                        onChange={handleChange}
-                        value={formData.equipment}
-                    />
-                    <textarea 
-                        placeholder="Cancellation conditions"
-                        className="form--input-area"
-                        name="cancellationConditions"
-                        onChange={handleChange}
-                        value={formData.cancellationConditions}
-                    />
+                        onChange = {handleChange}
+                        value = {formData.cancellationConditions}
+                        name = "cancellationConditions"
+                        />
+                    </div>
+                    <div className='form--pair'>
+                        <TextField
+                            sx={muiStyles.style} 
+                            label = "Country"
+                            variant='outlined'
+                            className="form--input"
+                            type = "text"
+                            onChange = {handleAddressChange}
+                            name = "state"
+                            value = {formData.address.state}          
+                        />
+                        <TextField
+                            sx={muiStyles.style} 
+                            label = "Zip"
+                            variant='outlined'
+                            className="form--input"
+                            type = "text"
+                            onChange = {handleAddressChange}
+                            name = "zipCode"
+                            value = {formData.address.zipCode}          
+                        />
+                    </div>
+                    <div className='form--pair'>
+                        <TextField
+                            sx={muiStyles.style} 
+                            label = "City"
+                            variant='outlined'
+                            className="form--input"
+                            type = "text"
+                            onChange = {handleAddressChange}
+                            name = "city"
+                            value = {formData.address.city}          
+                        />
+                        <TextField
+                            sx={muiStyles.style} 
+                            label = "Street"
+                            variant='outlined'
+                            className="form--input"
+                            type = "text"
+                            onChange = {handleAddressChange}
+                            name = "street"
+                            value = {formData.address.street}          
+                        />
+                    </div>
+                    <div className='form--pair'>
+                        <TextField
+                            sx={muiStyles.style} 
+                            label = "Capacity"
+                            variant='outlined'
+                            className="form--input"
+                            type = "text"
+                            onChange = {handleChange}
+                            name = "capacity"
+                            value = {formData.capacity}          
+                        />
+                        <TextField
+                            sx={muiStyles.style} 
+                            label = "Hourly rate"
+                            variant='outlined'
+                            className="form--input"
+                            type = "text"
+                            onChange = {handleChange}
+                            name = "hourlyRate"
+                            value = {formData.hourlyRate}          
+                        />
+                    </div>
+                    <div className='form--pair'>
+                        <TextField
+                            label="Promotional description"
+                            className="form--input-area"
+                            sx = {muiStyles.style}
+                            multiline
+                            maxRows={6}
+                            name = "promotionalDescription"
+                            value={formData.promotionalDescription}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className='form--pair'>
+                        <TextField
+                            label="Rules"
+                            className="form--input-area"
+                            sx = {muiStyles.style}
+                            multiline
+                            maxRows={6}
+                            name = "rules"
+                            value={formData.rules}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className='form--pair'>
+                        <TextField
+                            label="Equipment"
+                            className="form--input-area"
+                            sx = {muiStyles.style}
+                            multiline
+                            maxRows={6}
+                            name = "equipment"
+                            value={formData.equipment}
+                            onChange={handleChange}
+                            placeholder="Equipment(separate with ',')"
+                        />
+                    </div>
                      <div className='form--pair'>
                         <Tags tags = {tags} setTags ={setTags}/>
                     </div>

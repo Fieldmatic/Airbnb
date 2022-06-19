@@ -219,6 +219,9 @@ export default function Boat () {
                     />
                 </div>
                 <div className='form--pair'>
+                <iframe style={{width: "100%", height:"250px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>    
+                </div>
+                <div className='form--pair'>
                     <TextField
                     sx={muiStyles.style} 
                     label = "Daily rate"
@@ -405,7 +408,11 @@ export default function Boat () {
             </div>
         </div>
     )
-    
+    function createAddressUrl(){
+        let addressQuery = formData.address.street + ", " + formData.address.city + ", " + formData.address.state
+        addressQuery = addressQuery.replace(/ /g,"%20")
+        return addressQuery
+    }
 
     function getBoatJson() {
         let formDataCopy = { ...formData };

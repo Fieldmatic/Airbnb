@@ -377,6 +377,7 @@ export default function EditCottage() {
                     <ArrowForwardIosIcon className="arrow" onClick={() => handleMove("r")}></ArrowForwardIosIcon> 
                 </div>}
           </div>
+          <div className='form--pair'>
           <div className="editEntityImages">
                             {cottage.photos.map((photo, i) =>(
                                 <div className="hotelImgWrapper" key={i}>
@@ -384,6 +385,7 @@ export default function EditCottage() {
                                 </div>
                             ))}
                         </div>
+          </div>
           <div className='form--pair'>
             <button className="edit-cottage-form--save" onClick={handleSubmit}>Save</button>
           </div>

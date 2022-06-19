@@ -48,14 +48,17 @@
     "react-time-picker": "^4.5.0",
     "react-widgets": "^5.8.4",
     "sass": "^1.52.1",
+    "serve": "^13.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+      "dev": "react-scripts start",
+      "start": "serve -s build",
+      "build": "react-scripts build",
+      "test": "react-scripts test --env=jsdom",
+      "eject": "react-scripts eject",
+      "heroku-postbuild": "npm run build"
+   },
   "browserslist": {
     "production": [
       ">0.2%",

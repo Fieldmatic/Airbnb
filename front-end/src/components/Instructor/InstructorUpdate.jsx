@@ -96,7 +96,6 @@ export default function InstructorUpdate() {
     function handleNewPhotoChange(event) {
         const {value} = event.target;
         setFiles(value)
-        console.log(event.target)
     }
 
     function instructorToJson() {

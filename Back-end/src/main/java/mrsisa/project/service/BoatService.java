@@ -55,6 +55,7 @@ public class BoatService {
 
     public void add(BoatDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
         Boat boat = dtoToBoat(dto);
+        boatRepository.save(boat);
         List<String> photoPaths = new ArrayList<>();
         if (photoFiles.isPresent()){
             photoPaths = pictureService.addPictures(boat.getId(),PICTURES_PATH, photoFiles.get());
@@ -63,7 +64,6 @@ public class BoatService {
         boat.setPictures(photoPaths);
         BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
         boat.setBoatOwner(owner);
-        boatRepository.save(boat);
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
         boat.setAdditionalServices(additionalServices);
         boatRepository.save(boat);
@@ -137,12 +137,12 @@ public class BoatService {
 
     @Transactional
     public boolean edit(BoatDTO dto, Long id, Optional<MultipartFile[]> newPhotos) throws IOException {
-        Boat boat = boatRepository.findById(id).orElse(null);
+        Boat boat = boatRepository.findByIdWithReservations(id);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
+        pictureService.handleDeletedPictures(boat, dto.getPhotos());
         if (newPhotos.isPresent())
         {
             List<String> paths = pictureService.addPictures(boat.getId(),PICTURES_PATH, newPhotos.get());
-            assert boat != null;
             boat.getPictures().addAll(paths);
             if (boat.getProfilePicture() == null) boat.setProfilePicture(paths.get(0));
         }

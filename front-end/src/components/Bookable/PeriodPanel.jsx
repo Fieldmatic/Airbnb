@@ -77,7 +77,6 @@ function PeriodPanel (props) {
             ...prevFormData,
             endTime: event
         }));
-        console.log(formData)
     }
     
     return (

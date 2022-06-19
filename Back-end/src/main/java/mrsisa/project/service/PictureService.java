@@ -1,5 +1,7 @@
 package mrsisa.project.service;
 
+import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.model.Bookable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,18 @@ public class PictureService {
                 paths.add(PICTURES_PATH + id + "/" + fileName);
             } catch (IOException ioe) {
                 throw new IOException("Could not save image file: " + fileName, ioe);
+            }
+        }
+    }
+
+    public void handleDeletedPictures(Bookable bookable, List<String> newPicturesList) throws IOException {
+        for(int i = bookable.getPictures().size() - 1; i >= 0; --i) {
+            Path path = Paths.get(bookable.getPictures().get(i));
+            byte[] bytes = Files.readAllBytes(path);
+            String photoData = Base64.getEncoder().encodeToString(bytes);
+            if (!newPicturesList.contains(photoData)) {
+                bookable.getPictures().remove(bookable.getPictures().get(i));
+                Files.delete(path);
             }
         }
     }

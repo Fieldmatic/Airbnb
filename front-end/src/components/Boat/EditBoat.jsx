@@ -12,6 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import MenuItem from '@mui/material/MenuItem';
 import Tags from '../utils/Tags';
 import BoatService from '../../services/BoatService';
+import { Button } from '@mui/material';
 
 export default function EditBoat() {
   let {id} = useParams();
@@ -48,7 +49,6 @@ export default function EditBoat() {
     React.useEffect(() => {
       BoatService.getBoat(id).then((response) => {
           let boat = response.data;
-          console.log(boat)
           setBoat({
               name : boat.name, 
               address : boat.address,
@@ -77,7 +77,6 @@ export default function EditBoat() {
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
     const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
         setFiles(incommingFiles);
     };
 
@@ -136,7 +135,6 @@ export default function EditBoat() {
 
   function handleChange(event) {
     const {name, value} = event.target
-    console.log(tags)
     setBoat(prevboat => {
       return {
         ...prevboat,
@@ -158,6 +156,24 @@ export default function EditBoat() {
   function handleOpenSlider(i) {
     setSlideNumber(i)
     setSlideOpened(true)
+  }
+
+  React.useEffect(() => {
+    if(boat.photos.length == 0) setSlideOpened(false);
+  },[boat.photos])
+
+  function handlePhotoDelete(event){
+    event.preventDefault()
+    if (slideNumber != 0) handleMove("l")
+    else handleMove("r")
+    setBoat(prevFormData => {
+      let newPhotos = prevFormData.photos.map((item) =>item);
+      newPhotos.splice(slideNumber,1)
+      return {
+          ...prevFormData,
+          photos:newPhotos
+      }
+  })
   }
 
 
@@ -470,24 +486,37 @@ export default function EditBoat() {
             </div>
           <div className='form--pair'>
           {slideOpened && 
-                    <div className="slider">
+                    <div className="pictureSlider">
                     <CloseIcon className="close" onClick={() => setSlideOpened(false)}></CloseIcon>
                     <ArrowBackIosIcon className="arrow" onClick={() => handleMove("l")}></ArrowBackIosIcon>
                         <div className="sliderWrapper">
                             <div className="sliderImg">
                                 <img src={"data:image/jpg;base64," + boat.photos[slideNumber]} alt="" className="sliderImg" />
+                                <Button sx = {{ 
+                                    backgroundColor : "red", 
+                                    color:"white", 
+                                    '&:hover': {
+                                            backgroundColor: 'black',
+                                            color: 'white',
+                                                },
+                                    }} 
+                                    onClick={handlePhotoDelete}
+                                    variant='outlined'>Delete photo
+                            </Button>
                             </div>
                         </div>
                     <ArrowForwardIosIcon className="arrow" onClick={() => handleMove("r")}></ArrowForwardIosIcon> 
                 </div>}
           </div>
-          <div className="hotelImages">
+          <div className='form--pair'>
+          <div className="editEntityImages">
                             {boat.photos.map((photo, i) =>(
                                 <div className="hotelImgWrapper" key={i}>
                                     <img src={"data:image/jpg;base64," + photo} onClick={() => handleOpenSlider(i)} alt = "" className="hotelImg"></img>
                                 </div>
                             ))}
                         </div>
+          </div>
           <div className='form--pair'>
             <button className="edit-cottage-form--save">Save</button>
           </div>

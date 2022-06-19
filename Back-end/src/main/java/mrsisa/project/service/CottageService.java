@@ -54,6 +54,7 @@ public class CottageService {
 
     public void add(CottageDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
+        cottageRepository.save(cottage);
         List<String> paths = new ArrayList<>();
         if (photoFiles.isPresent()){
             paths = pictureService.addPictures(cottage.getId(),PICTURES_PATH, photoFiles.get());
@@ -62,7 +63,6 @@ public class CottageService {
         cottage.setPictures(paths);
         CottageOwner owner = cottageOwnerRepository.findByUsername(userP.getName());
         cottage.setCottageOwner(owner);
-        cottageRepository.save(cottage);
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), cottage);
         cottage.setAdditionalServices(additionalServices);
         cottageRepository.save(cottage);
@@ -164,12 +164,12 @@ public class CottageService {
     }
     @Transactional
     public boolean edit(CottageDTO dto, Long id, Optional<MultipartFile[]> newPhotos) throws IOException {
-        Cottage cottage = cottageRepository.findById(id).orElse(null);
+        Cottage cottage = cottageRepository.findByIdWithReservations(id);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
+        pictureService.handleDeletedPictures(cottage, dto.getPhotos());
         if (newPhotos.isPresent())
         {
             List<String> paths = pictureService.addPictures(cottage.getId(),PICTURES_PATH, newPhotos.get());
-            assert cottage != null;
             cottage.getPictures().addAll(paths);
             if (cottage.getProfilePicture() == null) cottage.setProfilePicture(paths.get(0));
         }

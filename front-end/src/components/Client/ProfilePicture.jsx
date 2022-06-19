@@ -11,11 +11,9 @@ export default function ProfilePicture(props) {
     })
 
     function selectFile(event) {
-        console.log(event.target.files[0])
         let data = new FormData()
         data.append("files", event.target.files[0])
         UserService.changeProfilePicture(data).then((response) => {
-            console.log(response.data)
             setProfilePhoto((prevProfilePhoto) =>{
                 return {
                     ...prevProfilePhoto,

@@ -43,8 +43,6 @@ export default function ReserveForClientPopup(props) {
             active: true,
             bookableId: props.bookableId
         }
-        console.log(reservation)
-        console.log(props.email)
         ReservationService.reserveForClient(reservation, props.email).then(response => {
             alert("Success");
             props.handleClose()

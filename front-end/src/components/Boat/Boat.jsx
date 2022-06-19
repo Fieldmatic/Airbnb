@@ -44,7 +44,6 @@ export default function Boat () {
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
     const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
         setFiles(incommingFiles);
     };
 

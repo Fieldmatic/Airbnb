@@ -32,11 +32,6 @@ export default function ReservationReport(props) {
     };
 
     function handleSend(){
-        console.log(rateClientValue)
-        console.log(clientShowedUp)
-        console.log(comment)
-        console.log(props.id)
-        console.log(props.email)
         const data = {
             reservationId : props.id,
             comment : comment,

@@ -38,7 +38,6 @@ export default function UpdateAdventureForm(props) {
     React.useEffect(() => {
         AdventureService.getAdventure(id).then((result) => {
             let adventure = result.data;
-            console.log(adventure)
             setFormData({
                 name: adventure.name || "", 
                 address: adventure.address || "",
@@ -121,8 +120,6 @@ export default function UpdateAdventureForm(props) {
         formDataCopy.equipment = formDataCopy.equipment.trim().split(",");
         formDataCopy.startDateTime = startDateTemp.toISOString().split('T')[0] + "T" + startTime.toString().split(" ")[4];
         formDataCopy.endDateTime = endDateTemp.toISOString().split('T')[0] + "T" + endTime.toString().split(" ")[4];
-        
-        console.log(formDataCopy);
         const json = JSON.stringify(formDataCopy);
         const adventureJson = new Blob([json], {
             type: 'application/json'

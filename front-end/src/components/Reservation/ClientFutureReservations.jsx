@@ -90,7 +90,6 @@ export default function ClientReservationHistory() {
 
   function handleDelete() {
     ReservationService.cancelReservation(reservationId).then(response => {
-        console.log(response.status)
         if (response.status === 200) {
             setShowSuccess(true)
             refreshPage()

@@ -81,7 +81,6 @@ export default function InstructorRegistration() {
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
     const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
         setFiles(incommingFiles);
     };
 
@@ -105,7 +104,6 @@ export default function InstructorRegistration() {
             [name]: value
         }
         })
-        console.log(formData)
     }
 
     function handleAddressChange(event) {

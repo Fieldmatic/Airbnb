@@ -6,7 +6,16 @@ const OWNER_BASED_REST_API_URL  = "http://localhost:8081/api/owner";
 
 class OwnerService {
     getOwner(){
-        return axios.get(OWNER_BASED_REST_API_URL + "/get",
+        return axios.get(OWNER_BASED_REST_API_URL + "/getOwner",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
+
+    getInstructor(){
+        return axios.get(OWNER_BASED_REST_API_URL + "/getInstructor",
         {
             headers: {
                 'Authorization':`Bearer ${inMemoryJwt.getToken()}`

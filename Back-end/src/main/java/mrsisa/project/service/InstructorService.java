@@ -51,6 +51,9 @@ public class InstructorService {
     @Autowired
     private ProfileDeletionReasonRepository profileDeletionReasonRepository;
 
+    @Autowired
+    private UserCategoryService userCategoryService;
+
 
     final String PICTURES_PATH = "src/main/resources/static/pictures/instructor/";
     final String DEFAULT_PICTURE_PATH = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
@@ -110,6 +113,7 @@ public class InstructorService {
         instructor.setPassword(passwordEncoder.encode(dto.getPassword()));
         instructor.setPhoneNumber(dto.getPhoneNumber());
         instructor.setPoints(0);
+        instructor.setCategory(userCategoryService.getRegularCategory());
         instructor.setRegistrationExplanation(dto.getRegistrationExplanation());
         instructor.setUsername(dto.getUsername());
         List<Role> roles = roleService.findByName("ROLE_INSTRUCTOR");

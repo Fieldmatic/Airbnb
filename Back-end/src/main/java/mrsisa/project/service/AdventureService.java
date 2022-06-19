@@ -248,7 +248,7 @@ public class AdventureService {
 
     public List<AdventureDTO> getInstructorAdventures(Long id) {
         List<AdventureDTO> adventureDTOS = new ArrayList<>();
-        for (Adventure adventure : adventureRepository.findInstructorAdventures(id)) {
+        for (Adventure adventure : adventureRepository.findAdventuresByInstructor_Id(id)) {
             adventureDTOS.add(new AdventureDTO(adventure));
         }
         return adventureDTOS;

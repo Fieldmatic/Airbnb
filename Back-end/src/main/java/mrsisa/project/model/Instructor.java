@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Instructor extends Owner {
     private String biography;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Adventure> adventures;
 }

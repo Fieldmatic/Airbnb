@@ -153,7 +153,7 @@ export default function EditProfile() {
             })
         }
         else if (userRole === "INSTRUCTOR") {
-            InstructorService.getInstructor().then(response => {
+            OwnerService.getInstructor().then(response => {
                 setUser(response.data)
             })
         }
@@ -165,13 +165,8 @@ export default function EditProfile() {
                 setProfileImage(response.data)
             })
         }
-        else if (userRole === "OWNER") {
+        else if (userRole === "OWNER" || userRole === "INSTRUCTOR") {
             OwnerService.getProfilePicture().then((response)=> {
-                setProfileImage(response.data)
-            })
-        }
-        else if (userRole === "INSTRUCTOR") {
-            InstructorService.getProfilePicture().then((response)=> {
                 setProfileImage(response.data)
             })
         }

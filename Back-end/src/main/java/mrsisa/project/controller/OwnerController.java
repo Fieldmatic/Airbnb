@@ -1,4 +1,5 @@
 package mrsisa.project.controller;
+import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.dto.OwnerDetailsDTO;
 import mrsisa.project.model.*;
@@ -43,15 +44,22 @@ public class OwnerController {
     InstructorService instructorService;
 
 
-    @GetMapping("/get")
+    @GetMapping("/getOwner")
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
     public ResponseEntity<OwnerDetailsDTO> getOwner(Principal userP) {
         Owner owner = (Owner) this.userService.getByUsername(userP.getName());
         return new ResponseEntity<>(new OwnerDetailsDTO(owner), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/getInstructor")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<InstructorDTO> getInstructor(Principal userP){
+        Instructor instructor = instructorService.findInstructorByUsername(userP.getName());
+        return new ResponseEntity<>(new InstructorDTO(instructor), HttpStatus.OK);
+    }
+
     @GetMapping(value="/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<InputStreamResource> getProfilePicture(Principal userP) throws IOException {
         Person owner = userService.getByUsername(userP.getName());
         try {
@@ -63,7 +71,7 @@ public class OwnerController {
     }
 
     @GetMapping(value = "/averageRating")
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'ROLE_INSTRUCTOR')")
     public ResponseEntity<Double> getAverageRating(Principal userP) {
         Role role = userService.getByUsername(userP.getName()).getRoles().get(0);
         Double rating = 0.0;
@@ -77,6 +85,12 @@ public class OwnerController {
                 BoatOwner boatOwner = boatOwnerService.findBoatOwnerByUsername(userP.getName());
                 for(Boat boat : boatOwner.getBoats()) rating += boat.getRating();
                 return new ResponseEntity<>(rating / boatOwner.getBoats().size(), HttpStatus.OK);
+
+            case "ROLE_INSTRUCTOR":
+                Instructor instructor = instructorService.findInstructorByUsername(userP.getName());
+                for(Adventure adventure : instructor.getAdventures()) rating += adventure.getRating();
+                return new ResponseEntity<>(rating / instructor.getAdventures().size(), HttpStatus.OK);
+
             default: return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 

@@ -11,8 +11,7 @@ import java.util.Optional;
 
 public interface AdventureRepository extends JpaRepository<Adventure, Long> {
 
-    @Query(value = "SELECT * FROM adventure c left join instructor_adventures b on c.id = b.adventures_id where b.instructor_id = ?1", nativeQuery = true)
-    List<Adventure> findInstructorAdventures(Long id);
+    List<Adventure> findAdventuresByInstructor_Id(Long id);
 
     @Query(value = "SELECT a FROM Adventure a LEFT JOIN FETCH a.reviews where a.id=?1")
     Adventure findByIdWithReviews(Long id);

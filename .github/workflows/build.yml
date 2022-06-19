@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - dev
+      - deploy
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:

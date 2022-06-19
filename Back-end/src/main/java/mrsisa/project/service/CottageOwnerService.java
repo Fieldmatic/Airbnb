@@ -41,13 +41,13 @@ public class CottageOwnerService {
     @Autowired
     PictureService pictureService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/cottageOwner/";
+    final static String picturesPath = "src/main/resources/static/pictures/cottageOwner/";
 
     public Person add(PersonDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
         CottageOwner owner = dtoToCottageOwner(dto);
         cottageOwnerRepository.save(owner);
         if (multipartFiles.isPresent()) {
-            List<String> paths = pictureService.addPictures(owner.getId(), PICTURES_PATH, multipartFiles.get());
+            List<String> paths = pictureService.addPictures(owner.getId(), picturesPath, multipartFiles.get());
             owner.setProfilePhoto(paths.get(0));
         }
         cottageOwnerRepository.save(owner);
@@ -57,7 +57,7 @@ public class CottageOwnerService {
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         CottageOwner cottageOwner = cottageOwnerRepository.findByUsername(username);
-        List<String> paths = pictureService.addPictures(cottageOwner.getId(),PICTURES_PATH, files);
+        List<String> paths = pictureService.addPictures(cottageOwner.getId(), picturesPath, files);
         cottageOwner.setProfilePhoto(paths.get(0));
         cottageOwnerRepository.save(cottageOwner);
         return cottageOwner.getProfilePhoto();

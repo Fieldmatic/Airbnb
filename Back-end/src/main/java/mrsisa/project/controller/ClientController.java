@@ -24,7 +24,6 @@ import java.security.Principal;
 import java.util.List;
 
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/clients")
 public class ClientController {

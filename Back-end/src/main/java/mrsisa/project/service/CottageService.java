@@ -49,7 +49,7 @@ public class CottageService {
     @Autowired
     PictureService pictureService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
+    private final String PICTURES_PATH = "src/main/resources/static/pictures/cottage/";
 
 
     public void add(CottageDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
@@ -111,6 +111,7 @@ public class CottageService {
         return cottagesDTO;
     }
 
+    @Transactional
     public List<CottageDTO> getAvailableCottagesByCity(String city, String startDate, String endDate) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (CottageDTO cottage: getAvailableCottages(startDate, endDate))
@@ -136,7 +137,7 @@ public class CottageService {
             cottagesDTO.add(new CottageDTO(cottage));
         }
         return cottagesDTO;
-    };
+    }
 
     public CottageDTO getCottage(Long id) throws IOException {
         Cottage cottage = cottageRepository.findById(id).orElse(null);

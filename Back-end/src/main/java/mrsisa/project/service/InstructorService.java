@@ -12,15 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class InstructorService {
@@ -54,8 +48,8 @@ public class InstructorService {
     @Autowired
     private PictureService pictureService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/instructor/";
-    final String DEFAULT_PICTURE_PATH = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
+    final static String picturesPath = "src/main/resources/static/pictures/instructor/";
+    final static String defaultPicturePath = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
 
     public Person add(InstructorDTO instructorDTO, MultipartFile[] multipartFiles) throws IOException {
         Instructor instructor = this.dtoToInstructor(instructorDTO);
@@ -63,9 +57,9 @@ public class InstructorService {
             return null;
         }
         instructorRepository.save(instructor);
-        List<String> paths = pictureService.addPictures(instructor.getId(),PICTURES_PATH, multipartFiles);
+        List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, multipartFiles);
         if (paths.size() == 0)
-            instructor.setProfilePhoto(DEFAULT_PICTURE_PATH);
+            instructor.setProfilePhoto(defaultPicturePath);
         else
             instructor.setProfilePhoto(paths.get(0));
         instructorRepository.save(instructor);
@@ -75,7 +69,7 @@ public class InstructorService {
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         Instructor instructor = instructorRepository.findByUsername(username);
-        List<String> paths = pictureService.addPictures(instructor.getId(),PICTURES_PATH, files);
+        List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, files);
         instructor.setProfilePhoto(paths.get(0));
         instructorRepository.save(instructor);
         return instructor.getProfilePhoto();

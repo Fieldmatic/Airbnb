@@ -23,7 +23,6 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("api/instructor")
-@CrossOrigin("*")
 public class InstructorController {
 
     @Autowired

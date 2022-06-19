@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("api/bookable")
 public class BookableController {

@@ -50,7 +50,7 @@ public class BoatService {
     @Autowired
     PictureService pictureService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
+    final static String picturesPath = "src/main/resources/static/pictures/boat/";
 
 
     public void add(BoatDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
@@ -58,7 +58,7 @@ public class BoatService {
         boatRepository.save(boat);
         List<String> photoPaths = new ArrayList<>();
         if (photoFiles.isPresent()){
-            photoPaths = pictureService.addPictures(boat.getId(),PICTURES_PATH, photoFiles.get());
+            photoPaths = pictureService.addPictures(boat.getId(),picturesPath, photoFiles.get());
             boat.setProfilePicture(photoPaths.get(0));
         }
         boat.setPictures(photoPaths);
@@ -95,7 +95,7 @@ public class BoatService {
             boatsDTO.add(new BoatDTO(boat));
         }
         return boatsDTO;
-    };
+    }
 
     @Transactional
     public List<BoatDTO> getAvailableBoats(String startDate, String endDate, Integer capacity) {
@@ -116,6 +116,7 @@ public class BoatService {
         return boatsDTO;
     }
 
+    @Transactional
     public List<BoatDTO> getAvailableBoatsByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
         List<BoatDTO> boatsDTO = new ArrayList<>();
         for (BoatDTO boat: getAvailableBoats(startDate, endDate, capacity))
@@ -142,7 +143,7 @@ public class BoatService {
         pictureService.handleDeletedPictures(boat, dto.getPhotos());
         if (newPhotos.isPresent())
         {
-            List<String> paths = pictureService.addPictures(boat.getId(),PICTURES_PATH, newPhotos.get());
+            List<String> paths = pictureService.addPictures(boat.getId(),picturesPath, newPhotos.get());
             boat.getPictures().addAll(paths);
             if (boat.getProfilePicture() == null) boat.setProfilePicture(paths.get(0));
         }

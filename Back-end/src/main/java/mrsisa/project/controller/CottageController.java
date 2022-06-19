@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("api/cottage")
 public class CottageController {

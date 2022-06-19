@@ -26,7 +26,6 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping(value = "api/auth")
-@CrossOrigin("*")
 public class AuthenticationController {
 
 	@Autowired

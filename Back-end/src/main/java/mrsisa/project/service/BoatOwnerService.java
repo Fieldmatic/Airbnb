@@ -49,12 +49,12 @@ public class BoatOwnerService {
     @Autowired
     PictureService pictureService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/boatOwner/";
+    final static String picturesPath = "src/main/resources/static/pictures/boatOwner/";
 
     public void add(PersonDTO dto, MultipartFile[] multipartFiles) throws IOException {
         BoatOwner owner = dtoToBoatOwner(dto);
         boatOwnerRepository.save(owner);
-        List<String> paths = pictureService.addPictures(owner.getId(), PICTURES_PATH, multipartFiles);
+        List<String> paths = pictureService.addPictures(owner.getId(), picturesPath, multipartFiles);
         owner.setProfilePhoto(paths.get(0));
         boatOwnerRepository.save(owner);
         adminService.createRegistrationRequest(owner);
@@ -62,7 +62,7 @@ public class BoatOwnerService {
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         BoatOwner boatOwner = boatOwnerRepository.findByUsername(username);
-        List<String> paths = pictureService.addPictures(boatOwner.getId(),PICTURES_PATH, files);
+        List<String> paths = pictureService.addPictures(boatOwner.getId(),picturesPath, files);
         boatOwner.setProfilePhoto(paths.get(0));
         boatOwnerRepository.save(boatOwner);
         return boatOwner.getProfilePhoto();

@@ -28,7 +28,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/adventure")
-@CrossOrigin("*")
 public class AdventureController {
 
     @Autowired

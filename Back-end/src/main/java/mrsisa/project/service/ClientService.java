@@ -66,19 +66,19 @@ public class ClientService {
         return clientRepository.findClientByUsernameWithSubscriptions(username);
     }
 
-    final static String picturesPath = "src/main/resources/static/pictures/client/";
+    final static String PICTURES_PATH = "src/main/resources/static/pictures/client/";
 
     public void add(ClientDTO dto, MultipartFile[] multipartFiles) throws IOException {
         Client client = dtoToClient(dto);
         clientRepository.save(client);
-        List<String> paths = pictureService.addPictures(client.getId(), picturesPath, multipartFiles);
+        List<String> paths = pictureService.addPictures(client.getId(), PICTURES_PATH, multipartFiles);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         Client client = clientRepository.findByUsername(username);
-        List<String> paths = pictureService.addPictures(client.getId(),picturesPath, files);
+        List<String> paths = pictureService.addPictures(client.getId(),PICTURES_PATH, files);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);
         return client.getProfilePhoto();

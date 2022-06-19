@@ -33,9 +33,6 @@ public class AdventureService {
     private AddressRepository addressRepository;
 
     @Autowired
-    private PeriodRepository periodRepository;
-
-    @Autowired
     private PersonRepository personRepository;
 
     @Autowired
@@ -87,15 +84,12 @@ public class AdventureService {
             priceListRepository.save(adventure.getPriceList());
             adventure.setCapacity(dto.getCapacity());
             adventure.setFishingEquipment(dto.getEquipment());
-            LocalDateTime start = LocalDateTime.parse(dto.getStartDateTime());
-            LocalDateTime end = LocalDateTime.parse(dto.getEndDateTime());
             adventureRepository.save(adventure);
         }
     }
 
     public Adventure findOne(Long id) {
-        return adventureRepository.findById(id).orElseGet(null);
-    }
+        return adventureRepository.getById(id);}
 
     public Integer getNumberOfReviews(Long id) {
         return adventureRepository.findByIdWithReviews(id).getReviews().size();
@@ -135,6 +129,7 @@ public class AdventureService {
         return photos;
     }
 
+    @Transactional
     public List<AdventureDTO> getAvailableAdventuresByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
         List<AdventureDTO> adventuresDTO = new ArrayList<>();
         for (AdventureDTO adventure: getAvailableAdventures(startDate, endDate, capacity))

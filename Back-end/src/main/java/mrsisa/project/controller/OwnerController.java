@@ -23,7 +23,6 @@ import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("api/owner")
 public class OwnerController {

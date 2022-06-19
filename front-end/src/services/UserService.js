@@ -32,6 +32,16 @@ class UserService {
          })
     }
 
+    changeProfilePicture(formData){
+        return axios.put(USER_BASED_REST_API_URL + "/changeProfilePicture",formData,
+        {
+            responseType: 'blob',
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
+
 }
 
 export default new UserService()

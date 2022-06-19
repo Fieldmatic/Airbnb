@@ -22,7 +22,7 @@ export default function Cottage() {
         promotionalDescription : "",
         rules : "",
         hourlyRate : "",
-        dailyRate : "",
+        dailyRate : "", 
         cancellationConditions: "",
         singleRooms : 0,
         doubleRooms : 0,
@@ -185,6 +185,9 @@ export default function Cottage() {
               />
           </div>
           <div className='form--pair'>
+          <iframe style={{width: "100%", height:"250px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>    
+          </div>
+          <div className='form--pair'>
             <TextField
               sx={muiStyles.style} 
               label = "Daily rate"
@@ -261,7 +264,7 @@ export default function Cottage() {
                 onClean={handleClean}
                 value={files}
                 label='Drop your interior & exterior pictures here'
-                accept = {".jpg, .png"}
+                accept = {".jpg, .png, .jpeg"}
                 maxFiles={10}
                 header={true}
                 maxFileSize={5000000}
@@ -292,4 +295,9 @@ export default function Cottage() {
       </div>
     </div>
   )
+    function createAddressUrl(){
+        let addressQuery = formData.address.street + ", " + formData.address.city + ", " + formData.address.state
+        addressQuery = addressQuery.replace(/ /g,"%20")
+        return addressQuery
+    }
 }

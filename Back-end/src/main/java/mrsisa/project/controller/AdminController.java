@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/admin")
-@CrossOrigin("*")
 public class AdminController {
 
     @Autowired

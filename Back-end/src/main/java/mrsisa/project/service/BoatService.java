@@ -47,20 +47,23 @@ public class BoatService {
     @Autowired
     TagService tagService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/boat/";
+    @Autowired
+    PictureService pictureService;
+
+    final static String picturesPath = "src/main/resources/static/pictures/boat/";
 
 
     public void add(BoatDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
         Boat boat = dtoToBoat(dto);
+        boatRepository.save(boat);
         List<String> photoPaths = new ArrayList<>();
         if (photoFiles.isPresent()){
-            photoPaths = addPictures(boat, photoFiles.get());
+            photoPaths = pictureService.addPictures(boat.getId(),picturesPath, photoFiles.get());
             boat.setProfilePicture(photoPaths.get(0));
         }
         boat.setPictures(photoPaths);
         BoatOwner owner = boatOwnerRepository.findByUsername(userP.getName());
         boat.setBoatOwner(owner);
-        boatRepository.save(boat);
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(dto.getAdditionalServices(), boat);
         boat.setAdditionalServices(additionalServices);
         boatRepository.save(boat);
@@ -92,7 +95,7 @@ public class BoatService {
             boatsDTO.add(new BoatDTO(boat));
         }
         return boatsDTO;
-    };
+    }
 
     @Transactional
     public List<BoatDTO> getAvailableBoats(String startDate, String endDate, Integer capacity) {
@@ -113,24 +116,13 @@ public class BoatService {
         return boatsDTO;
     }
 
+    @Transactional
     public List<BoatDTO> getAvailableBoatsByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
         List<BoatDTO> boatsDTO = new ArrayList<>();
         for (BoatDTO boat: getAvailableBoats(startDate, endDate, capacity))
             if (boat.getAddress().getCity().equals(city))
                 boatsDTO.add(boat);
         return boatsDTO;
-    }
-
-
-    public List<String> addPictures(Boat boat, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + boat.getId());
-        savePicturesOnPath(boat, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
     }
 
     public List<String> getPhotos(Boat boat) throws IOException {
@@ -144,32 +136,14 @@ public class BoatService {
         return photos;
     }
 
-    private void savePicturesOnPath(Boat boat, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + boat.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
-    }
-
-
     @Transactional
     public boolean edit(BoatDTO dto, Long id, Optional<MultipartFile[]> newPhotos) throws IOException {
-        Boat boat = boatRepository.findById(id).orElse(null);
+        Boat boat = boatRepository.findByIdWithReservations(id);
         if ((reservationRepository.getActiveReservations(id).size())!= 0) return false;
+        pictureService.handleDeletedPictures(boat, dto.getPhotos());
         if (newPhotos.isPresent())
         {
-            List<String> paths = addPictures(boat, newPhotos.get());
-            assert boat != null;
+            List<String> paths = pictureService.addPictures(boat.getId(),picturesPath, newPhotos.get());
             boat.getPictures().addAll(paths);
             if (boat.getProfilePicture() == null) boat.setProfilePicture(paths.get(0));
         }

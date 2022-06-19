@@ -37,7 +37,6 @@ function ActionPanel (props) {
     const [showError, setShowError] = React.useState(false);
 
     function handleChange(event) {
-        console.log(formData)
         const {name, value} = event.target;
         setFormData(prevFormData => ({
             ...prevFormData,
@@ -71,7 +70,6 @@ function ActionPanel (props) {
         }
         ActionService.addAction(data)
             .then(response => {
-                console.log(response.status)
                 if (response.status === 201) {
                     setShowSuccess(true)
                     props.func()

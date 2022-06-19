@@ -10,6 +10,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
 import Tags from '../utils/Tags';
+import { Button } from '@mui/material'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
 
 export default function EditCottage() {
@@ -67,7 +68,6 @@ export default function EditCottage() {
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
     const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
         setFiles(incommingFiles);
     };
 
@@ -124,6 +124,26 @@ export default function EditCottage() {
     })
   }
 
+  React.useEffect(() => {
+    if(cottage.photos.length == 0) setSlideOpened(false);
+  },[cottage.photos])
+
+  function handlePhotoDelete(event){
+    event.preventDefault()
+    console.log(slideNumber)
+    if (slideNumber != 0) handleMove("l")
+    else handleMove("r")
+    setCottage(prevFormData => {
+      let newPhotos = prevFormData.photos.map((item) =>item);
+      newPhotos.splice(slideNumber,1)
+      console.log(newPhotos)
+      return {
+          ...prevFormData,
+          photos:newPhotos
+      }
+  })
+  }
+
   function handleRoomChange(name, value) {
     setCottage(prevFormData => {
       return {
@@ -159,7 +179,7 @@ export default function EditCottage() {
       <Header />
       <div className='edit-cottage-container'>
         <div className="edit-cottage-form-container">
-          <form className="edit-cottage-form" onSubmit={handleSubmit}>
+          <form className="edit-cottage-form">
             <h1 className='edit-cottage-form--header'> {cottage.name}</h1>
             <div className='form--pair'>
                 <TextField
@@ -226,6 +246,9 @@ export default function EditCottage() {
                   name = "street"
                   value = {cottage.address.street}          
               />
+          </div>
+          <div className='form--pair'>
+          <iframe style={{width: "100%", height:"250px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>    
           </div>
           <div className='form--pair'>
             <TextField
@@ -305,7 +328,7 @@ export default function EditCottage() {
                 onClean={handleClean}
                 value={files}
                 label='Drop your interior & exterior pictures here'
-                accept = {".jpg, .png"}
+                accept = {".jpg, .png, .jpeg"}
                 maxFiles={10}
                 header={true}
                 maxFileSize={5000000}
@@ -332,18 +355,29 @@ export default function EditCottage() {
           <div className='form--pair'></div>
           <div className='form--pair'>
           {slideOpened && 
-                    <div className="slider">
+                    <div className="pictureSlider">
                     <CloseIcon className="close" onClick={() => setSlideOpened(false)}></CloseIcon>
                     <ArrowBackIosIcon className="arrow" onClick={() => handleMove("l")}></ArrowBackIosIcon>
                         <div className="sliderWrapper">
                             <div className="sliderImg">
                                 <img src={"data:image/jpg;base64," + cottage.photos[slideNumber]} alt="" className="sliderImg" />
+                                <Button sx = {{ 
+                                    backgroundColor : "red", 
+                                    color:"white", 
+                                    '&:hover': {
+                                            backgroundColor: 'black',
+                                            color: 'white',
+                                                },
+                                    }} 
+                                    onClick={handlePhotoDelete}
+                                    variant='outlined'>Delete photo
+                            </Button>
                             </div>
                         </div>
                     <ArrowForwardIosIcon className="arrow" onClick={() => handleMove("r")}></ArrowForwardIosIcon> 
                 </div>}
           </div>
-          <div className="hotelImages">
+          <div className="editEntityImages">
                             {cottage.photos.map((photo, i) =>(
                                 <div className="hotelImgWrapper" key={i}>
                                     <img src={"data:image/jpg;base64," + photo} onClick={() => handleOpenSlider(i)} alt = "" className="hotelImg"></img>
@@ -351,11 +385,16 @@ export default function EditCottage() {
                             ))}
                         </div>
           <div className='form--pair'>
-            <button className="edit-cottage-form--save">Save</button>
+            <button className="edit-cottage-form--save" onClick={handleSubmit}>Save</button>
           </div>
           </form>
-        </div>      
+        </div>  
       </div>
     </div>
   )
+    function createAddressUrl(){
+        let addressQuery = cottage.address.street + ", " + cottage.address.city + ", " + cottage.address.state
+        addressQuery = addressQuery.replace(/ /g,"%20")
+        return addressQuery
+    }
 }

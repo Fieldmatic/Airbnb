@@ -10,7 +10,6 @@ class LoginRegisterService {
     }
 
     login(loginData){
-        console.log(loginData)
         return axios.post(LOGIN_REGISTER_BASED_REST_API_URL + "/login", loginData)
     }
     getUserRole(){

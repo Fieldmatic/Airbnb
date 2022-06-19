@@ -77,7 +77,6 @@ export default function AddAdventureForm() {
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
     const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
         setFiles(incommingFiles);
     };
 
@@ -251,7 +250,7 @@ export default function AddAdventureForm() {
                         maxFiles={10}
                         header={true}
                         label='Drop your adventure pictures here'
-                        accept = {".jpg, .png"}
+                        accept = {".jpg, .png, .jpeg"}
                         maxFileSize={5000000}
                         >
                         {files.map((file) => (

@@ -12,15 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class InstructorService {
@@ -54,9 +48,11 @@ public class InstructorService {
     @Autowired
     private UserCategoryService userCategoryService;
 
+    private PictureService pictureService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/instructor/";
-    final String DEFAULT_PICTURE_PATH = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
+
+    final static String picturesPath = "src/main/resources/static/pictures/instructor/";
+    final static String defaultPicturePath = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
 
     public Person add(InstructorDTO instructorDTO, MultipartFile[] multipartFiles) throws IOException {
         Instructor instructor = this.dtoToInstructor(instructorDTO);
@@ -64,14 +60,22 @@ public class InstructorService {
             return null;
         }
         instructorRepository.save(instructor);
-        List<String> paths = addPictures(instructor, multipartFiles);
+        List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, multipartFiles);
         if (paths.size() == 0)
-            instructor.setProfilePhoto(DEFAULT_PICTURE_PATH);
+            instructor.setProfilePhoto(defaultPicturePath);
         else
             instructor.setProfilePhoto(paths.get(0));
         instructorRepository.save(instructor);
         adminService.createRegistrationRequest(instructor);
         return instructor;
+    }
+
+    public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
+        Instructor instructor = instructorRepository.findByUsername(username);
+        List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, files);
+        instructor.setProfilePhoto(paths.get(0));
+        instructorRepository.save(instructor);
+        return instructor.getProfilePhoto();
     }
 
     public Instructor update(InstructorDTO dto) {
@@ -119,33 +123,6 @@ public class InstructorService {
         List<Role> roles = roleService.findByName("ROLE_INSTRUCTOR");
         instructor.setRoles(roles);
         return instructor;
-    }
-
-    public List<String> addPictures(Instructor instructor, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + instructor.getId());
-        savePicturesOnPath(instructor, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
-    private void savePicturesOnPath(Instructor instructor, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + instructor.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
     }
 
     public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){

@@ -62,10 +62,14 @@ public class ReservationService {
         try {
             Action action = actionRepository.getById(actionId);
             Reservation reservation = createReservationFromAction(action);
+            Bookable bookable = reservation.getBookable();
             Client client = clientRepository.findByUsername(userP.getName());
             reservation.setClient(client);
+            reservationRepository.save(reservation);
             client.getReservations().add(reservation);
-            action.getBookable().getReservations().add(reservation);
+            clientRepository.save(client);
+            bookable.getReservations().add(reservation);
+            bookableRepository.save(bookable);
             action.setUsed(true);
             return true;
         }
@@ -81,7 +85,6 @@ public class ReservationService {
         if (checkIfClientAlreadyCanceledReservation(client, reservation.getStartDateTime(), reservation.getEndDateTime(), dto.getBookableId())) {
             return false;
         }
-
         Optional<Period> period = periodRepository.findPeriodByBookableIdAndStartBeforeOrEqualAndEndAfterOrEqual(reservation.getBookable().getId(),reservation.getStartDateTime(), reservation.getEndDateTime());
         if (period.isPresent()){
             reservation.setClient(client);

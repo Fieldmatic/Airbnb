@@ -100,11 +100,9 @@ function ReservationDateTimePanel (props) {
             ...prevFormData,
             endTime: event
         }));
-        console.log(reservationDates)
     }
 
     function handleReservationPopupClicked() {
-        console.log(entity)
         setData({
                 bookableId:props.bookableId,
                 email : props.email,
@@ -114,7 +112,6 @@ function ReservationDateTimePanel (props) {
                 startDateTime:toISODate(new Date(reservationDates.startDate.getFullYear(),reservationDates.startDate.getMonth(), reservationDates.startDate.getDate(), reservationDates.startTime.getHours(), reservationDates.startTime.getMinutes(), reservationDates.startTime.getSeconds())),
                 endDateTime: toISODate(new Date(reservationDates.endDate.getFullYear(),reservationDates.endDate.getMonth(), reservationDates.endDate.getDate(), reservationDates.endTime.getHours(), reservationDates.endTime.getMinutes(), reservationDates.endTime.getSeconds()))               
             });
-        console.log(data)
         setReservePopup(true);
     }
     const handleClose = () => {

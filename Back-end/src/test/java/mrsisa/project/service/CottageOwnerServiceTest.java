@@ -81,7 +81,7 @@ public class CottageOwnerServiceTest {
         assertThat(owners).hasSize(ownersSizeBeforeAdd + 1);
 
         verify(cottageOwnerRepository,times(2)).findAll();
-        verify(cottageOwnerRepository,times(1)).save(cottageOwner);
+        verify(cottageOwnerRepository,times(2)).save(cottageOwner);
         verify(cottageOwnerRepository,times(1)).findByUsername("vlasnik");
         verifyNoMoreInteractions(cottageOwnerRepository);
 

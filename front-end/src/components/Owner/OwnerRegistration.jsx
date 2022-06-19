@@ -50,7 +50,6 @@ export default function OwnerRegistration() {
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
     const updateFiles = (incommingFiles) => {
-        console.log("incomming files", incommingFiles);
         setFiles(incommingFiles);
     };
 
@@ -281,7 +280,7 @@ export default function OwnerRegistration() {
                     onClean={handleClean}
                     value={files}
                     label='Drop your profile picture here'
-                    accept = {".jpg, .png"}
+                    accept = {".jpg, .png, .jpeg"}
                     maxFiles={1}
                     header={true}
                     maxFileSize={5000000}

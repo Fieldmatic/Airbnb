@@ -1,7 +1,6 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.AdventureDTO;
-import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -22,7 +19,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AdventureService {
@@ -37,9 +33,6 @@ public class AdventureService {
     private AddressRepository addressRepository;
 
     @Autowired
-    private PeriodRepository periodRepository;
-
-    @Autowired
     private PersonRepository personRepository;
 
     @Autowired
@@ -51,7 +44,10 @@ public class AdventureService {
     @Autowired
     private TagService tagService;
 
-    final String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
+    @Autowired
+    private PictureService pictureService;
+
+    final static String picturesPath = "src/main/resources/static/pictures/adventure/";
 
     public Adventure save(Adventure adventure) {
         return adventureRepository.save(adventure);
@@ -63,7 +59,7 @@ public class AdventureService {
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(adventureDTO.getAdditionalServices(), adventure);
         adventure.setAdditionalServices(additionalServices);
         adventureRepository.save(adventure);
-        List<String> paths = addPictures(adventure, multipartFiles);
+        List<String> paths = pictureService.addPictures(adventure.getId(), picturesPath, multipartFiles);
         adventure.setPictures(paths);
         adventure.setProfilePicture(paths.get(0));
         Instructor instructor = (Instructor) personRepository.findByUsername(userP.getName());
@@ -88,48 +84,12 @@ public class AdventureService {
             priceListRepository.save(adventure.getPriceList());
             adventure.setCapacity(dto.getCapacity());
             adventure.setFishingEquipment(dto.getEquipment());
-            LocalDateTime start = LocalDateTime.parse(dto.getStartDateTime());
-            LocalDateTime end = LocalDateTime.parse(dto.getEndDateTime());
-            boolean periodMatchOthers = this.checkPeriodMatching(start, end, adventure);
             adventureRepository.save(adventure);
         }
     }
 
-    private boolean checkPeriodMatching(LocalDateTime start, LocalDateTime end, Adventure adventure) {
-        for (Period period : adventure.getPeriods()) {
-            if (start.isAfter(period.getStartDateTime()) && end.isBefore(period.getEndDateTime()))
-                return true;
-            if (start.isBefore(period.getStartDateTime()) && end.isAfter(period.getEndDateTime())) {
-                period.setStartDateTime(start);
-                period.setEndDateTime(end);
-                periodRepository.save(period);
-                return true;
-            }
-            if (start.isBefore(period.getStartDateTime()) && end.isBefore(period.getEndDateTime())) {
-                period.setStartDateTime(start);
-                periodRepository.save(period);
-                return true;
-            }
-            if (start.isAfter(period.getStartDateTime()) && end.isAfter(period.getEndDateTime())) {
-                period.setEndDateTime(end);
-                periodRepository.save(period);
-                return true;
-            }
-            if (start.isEqual(period.getEndDateTime())) {
-                period.setEndDateTime(end);
-                periodRepository.save(period);
-            }
-            if (end.isEqual(period.getStartDateTime())) {
-                period.setStartDateTime(start);
-                periodRepository.save(period);
-            }
-        }
-        return false;
-    }
-
     public Adventure findOne(Long id) {
-        return adventureRepository.findById(id).orElseGet(null);
-    }
+        return adventureRepository.getById(id);}
 
     public Integer getNumberOfReviews(Long id) {
         return adventureRepository.findByIdWithReviews(id).getReviews().size();
@@ -137,10 +97,6 @@ public class AdventureService {
 
     public List<Adventure> findAll() {
         return adventureRepository.findAll();
-    }
-
-    public void remove(Long id) {
-        adventureRepository.deleteById(id);
     }
 
     @Transactional
@@ -162,6 +118,18 @@ public class AdventureService {
         return adventuresDTO;
     }
 
+    public List<String> getPhotos(Adventure adventure) throws IOException {
+        List<String> photos = new ArrayList<>();
+        for (String photo : adventure.getPictures()) {
+            Path path = Paths.get(photo);
+            byte[] bytes = Files.readAllBytes(path);
+            String photoData = Base64.getEncoder().encodeToString(bytes);
+            photos.add(photoData);
+        }
+        return photos;
+    }
+
+    @Transactional
     public List<AdventureDTO> getAvailableAdventuresByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
         List<AdventureDTO> adventuresDTO = new ArrayList<>();
         for (AdventureDTO adventure: getAvailableAdventures(startDate, endDate, capacity))
@@ -188,45 +156,6 @@ public class AdventureService {
         adventure.setFishingEquipment(dto.getEquipment());
         // Po potrebi dodati kreiranje perioda zauzetosti
         return adventure;
-    }
-
-    public List<String> addPictures(Adventure adventure, MultipartFile[] multipartFiles) throws IOException {
-        List<String> paths = new ArrayList<>();
-
-        if(multipartFiles == null) {
-            return paths;
-        }
-        Path path = Paths.get(PICTURES_PATH + adventure.getId());
-        savePicturesOnPath(adventure, multipartFiles, paths, path);
-        return paths.stream().distinct().collect(Collectors.toList());
-    }
-
-    public List<String> getPhotos(Adventure adventure) throws IOException {
-        List<String> photos = new ArrayList<>();
-        for (String photo : adventure.getPictures()) {
-            Path path = Paths.get(photo);
-            byte[] bytes = Files.readAllBytes(path);
-            String photoData = Base64.getEncoder().encodeToString(bytes);
-            photos.add(photoData);
-        }
-        return photos;
-    }
-
-    private void savePicturesOnPath(Adventure adventure, MultipartFile[] multipartFiles, List<String> paths, Path path) throws IOException {
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-
-        for (MultipartFile mpf : multipartFiles) {
-            String fileName = mpf.getOriginalFilename();
-            try (InputStream inputStream = mpf.getInputStream()) {
-                Path filePath = path.resolve(fileName);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                paths.add(PICTURES_PATH + adventure.getId() + "/" + fileName);
-            } catch (IOException ioe) {
-                throw new IOException("Could not save image file: " + fileName, ioe);
-            }
-        }
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package mrsisa.project.service;
 import mrsisa.project.dto.PeriodDTO;
 import mrsisa.project.model.Cottage;
 import mrsisa.project.model.Period;
+import mrsisa.project.model.Reservation;
 import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.PeriodRepository;
 import org.assertj.core.api.Assertions;
@@ -42,7 +43,9 @@ public class PeriodServiceTest {
     public void testAddPeriodService(){
         Cottage cottage = new Cottage();
         List<Period> periods = new ArrayList<Period>();
+        List<Reservation> reservations = new ArrayList<>();
         cottage.setPeriods(periods);
+        cottage.setReservations(reservations);
         when(bookableRepository.getById(1L)).thenReturn(cottage);
 
         PeriodDTO periodDto = new PeriodDTO();

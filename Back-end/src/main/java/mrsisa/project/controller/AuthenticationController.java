@@ -27,7 +27,6 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping(value = "api/auth")
-@CrossOrigin("*")
 public class AuthenticationController {
 
 	@Autowired
@@ -56,6 +55,9 @@ public class AuthenticationController {
 
 	@Autowired
 	private AdminService adminService;
+
+	final static String usernameTakenResponse = "Username already exists!";
+
 
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(
@@ -88,7 +90,7 @@ public class AuthenticationController {
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 
 		if (existUser != null) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(usernameTakenResponse);
 		}
 
 		if (dto.getRole().equals("ROLE_COTTAGE_OWNER")) this.cottageOwnerService.add(dto, java.util.Optional.ofNullable(multiPartFiles));
@@ -110,7 +112,7 @@ public class AuthenticationController {
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 
 		if (existUser != null) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(usernameTakenResponse);
 		}
 
 		if (userService.emailTaken(dto.getEmail())) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Email is taken!");
@@ -124,7 +126,7 @@ public class AuthenticationController {
 	public ResponseEntity<String> addInstructor(@RequestPart("instructor") InstructorDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 		if (existUser != null) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Username already exists!");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(usernameTakenResponse);
 		}
 		this.instructorService.add(dto, multiPartFiles);
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");

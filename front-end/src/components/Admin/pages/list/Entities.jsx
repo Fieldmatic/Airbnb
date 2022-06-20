@@ -7,9 +7,9 @@ import EntityTable from "../../components/entityTable/EntityTable"
 const Entities = (props) => {
 
     let title = "";
-    if (props.type === 1) 
+    if (props.entity === "adventure") 
         title = "Adventures"
-    else if(props.type === 2)
+    else if(props.entity === "cottage")
         title = "Cottages"
     else
         title = "Boats"
@@ -19,7 +19,7 @@ const Entities = (props) => {
             <AdminSidebar/>
             <div className="requestListContainer">
                 <AdminNavbar/>
-                <EntityTable type={props.type} title={title}/>
+                <EntityTable entity={props.entity} title={title}/>
             </div>
         </div>
     )

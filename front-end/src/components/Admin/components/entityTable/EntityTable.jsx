@@ -8,6 +8,7 @@ import AdventureService from "../../../../services/AdventureService"
 import BoatService from "../../../../services/BoatService"
 import CottageService from "../../../../services/CottageService"
 import Collapse from '@mui/material/Collapse';
+import {useNavigate, Navigate} from "react-router-dom";
 
 
 const columns = [
@@ -52,6 +53,8 @@ const EntityTable = (props) => {
     text: ""
   })
 
+  const [redirect, setRedirect] = useState("");
+
   const showMessage = (returnMessage) => {
     setShowAlert(true);
     setMessage(() => {
@@ -66,14 +69,14 @@ const EntityTable = (props) => {
   }
 
   useEffect(() => {
-      if (props.type === 1) {
+      if (props.entity === "adventure") {
           AdventureService.getAllAdventuresAdmin().then((response) => {
               setRows(response.data);
           }).catch(err => {
             if (err.response.status == 403)
               showMessage(["You must change your password first and then login again!", false])
           })
-      }else if(props.type === 2) {
+      }else if(props.entity === "cottage") {
           CottageService.getAllCottagesAdmin().then((response) => {
               setRows(response.data);
           }).catch(err => {
@@ -88,10 +91,10 @@ const EntityTable = (props) => {
               showMessage(["You must change your password first and then login again!", false])
           })
       }
-  }, [props.type])
+  }, [props.entity])
 
   const handleDelete = (id) => {
-    if (props.type === 1) {
+    if (props.entity === "adventure") {
       AdventureService.deleteAdventure(id)
       .then(() => {
         setRows(rows.filter((item) => item.id !== id));
@@ -100,7 +103,7 @@ const EntityTable = (props) => {
       .catch(() => {
         setOpenError(true);
       })
-    }else if(props.type === 2) {
+    }else if(props.entity === "cottage") {
       CottageService.deleteCottage(id)
       .then(() => {
         setRows(rows.filter((item) => item.id !== id));
@@ -129,6 +132,18 @@ const EntityTable = (props) => {
     setOpenError(false);
   }
 
+  function redirectToEntityDetails(id) {
+    let heart = "#A8A8A8"
+    heart = heart.replace("#", "")
+    setRedirect(`/bookableDetails/${id}&${props.entity}&${"admin"}&${heart}`)
+  }
+
+  if (redirect) {
+    return (
+        <Navigate to={redirect}/>
+    )
+  }
+
   const actionColumn = [
     {
         field: "action",
@@ -137,9 +152,12 @@ const EntityTable = (props) => {
         renderCell: (params) => {
             return (
             <div className="cellActions">
-                <Link to="/users/test" style={{ textDecoration: "none" }}>
-                    <div className="viewButton">View</div>
-                </Link>
+                <div 
+                className="viewButton"
+                onClick={() => redirectToEntityDetails(params.row.id)}
+                >
+                  View
+                </div>
                 <div
                 className="deleteBtn"
                 onClick={() => handleDelete(params.row.id)}

@@ -17,4 +17,7 @@ public interface AdventureRepository extends JpaRepository<Adventure, Long> {
     Adventure findByIdWithReviews(Long id);
     @Query(value = "SELECT a FROM Adventure a LEFT JOIN FETCH a.additionalServices where a.id=?1")
     Optional<Adventure> findById(Long id);
+
+    @Query(value = "SELECT a FROM Adventure a LEFT JOIN FETCH a.reservations where a.id=?1")
+    Adventure findByIdWithReservations(Long id);
 }

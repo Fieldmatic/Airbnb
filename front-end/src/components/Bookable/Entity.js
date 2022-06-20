@@ -133,11 +133,13 @@ function entity(props) {
 
     function handleEdit(){
         if (props.entity === "cottage") {
-            navigate("/editCottage/"+props.id)
-            
+            navigate("/editCottage/"+props.id)           
         }
         else if (props.entity === "boat") {
             navigate("/editBoat/"+props.id)
+        }
+        else if (props.entity === "adventure") {
+            navigate("/editAdventure/"+props.id)
         }
         
     }

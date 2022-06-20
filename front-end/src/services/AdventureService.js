@@ -42,7 +42,12 @@ class AdventureService {
     }
 
     updateAdventure(adventure, id){
-        return axios.put(ADVENTURE_BASED_REST_API_URL + "/edit/" + id, adventure)
+        return axios.put(ADVENTURE_BASED_REST_API_URL + "/edit/" + id, adventure,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
     }
 
     getNumberOfAdventureReviews(id) {

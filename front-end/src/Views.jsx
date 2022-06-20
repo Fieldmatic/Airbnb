@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "./NotFound";
 import Home from "./Home";
 import AddAdventureForm from "./components/Adventure/AddAdventureForm";
-import UpdateAdventureForm from "./components/Adventure/UpdateAdventureFrom"
+import EditAdventure from "./components/Adventure/EditAdventure"
 import EditProfile from "./components/Client/EditProfile";
 import Cottage from "./components/cottage/Cottage";
 import AllEntities from "./components/ViewEntities/AllEntities";
@@ -39,7 +39,7 @@ const Views = () => {
       <Route index element = {<Home/>}/>
       <Route path = "/login" element =  {<Login/>}/>
       <Route path = "/addAdventure" element = {<AddAdventureForm />}/>
-      <Route path = "/editAdventure/:id" element = {<UpdateAdventureForm />}/>
+      <Route path = "/editAdventure/:id" element = {<EditAdventure />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>
       <Route path = "/statistics" element = {<Statistics/>}/>
       <Route path = "/statistics/:id" element = {<BookableStatistics/>}/>
@@ -69,9 +69,9 @@ const Views = () => {
           <Route path="deletionRequests" element={<Requests registration={false} />} />
         </Route>
         <Route path="entities">
-          <Route path="adventures" element={<AdminEntities type={1} />}/>
-          <Route path="cottages" element={<AdminEntities type={2} />}/>
-          <Route path="boats" element={<AdminEntities type={3} />}/>
+          <Route path="adventures" element={<AdminEntities entity="adventure" />}/>
+          <Route path="cottages" element={<AdminEntities entity="cottage" />}/>
+          <Route path="boats" element={<AdminEntities entity="boat" />}/>
         </Route>
         <Route path="reviews">
           <Route path="complaints" element={<Reviews refresh={true}/>}/>

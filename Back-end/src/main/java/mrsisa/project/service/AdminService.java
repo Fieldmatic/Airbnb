@@ -205,7 +205,7 @@ public class AdminService {
         instructor.setProfilePhoto("src/main/resources/static/pictures/client/4/ocean-3605547_1920.jpg");
         instructor.setPoints(260);
         instructor.setCategory(userCategoryService.getSilverCategory());
-//        instructor.setBiography("Ja sam jedan jako dobar instruktor pecanja i obozavam da pecam ribe.");
+        instructor.setBiography("Ja sam jedan jako dobar instruktor pecanja i obozavam da pecam ribe.");
         instructor.setPassword(passwordEncoder.encode("bane"));
         List<Role> roles2 = roleService.findByName("ROLE_INSTRUCTOR");
         instructor.setRoles(roles2);

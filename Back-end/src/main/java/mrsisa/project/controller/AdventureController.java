@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/adventure")
@@ -75,20 +76,20 @@ public class AdventureController {
     
     @PutMapping(value = "/edit/{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<String> editAdventure(@RequestPart("adventure") AdventureDTO dto, @PathVariable("id") Long id)
+    public ResponseEntity<String> editAdventure(@RequestPart("adventure") AdventureDTO dto,
+                                                @RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles,
+                                                @PathVariable("id") Long id) throws IOException
     {
-        adventureService.edit(dto, id);
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        if (adventureService.edit(dto, id, Optional.ofNullable(multiPartFiles)))
+            return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Adventure has pending reservations!");
     }
 
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id) throws IOException {
-        Adventure adventure = adventureService.findOne(id);
-        if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<String> adventurePhotos = adventureService.getPhotos(adventure);
-        AdventureDTO dto = new AdventureDTO(adventure);
-        dto.setPhotos(adventurePhotos);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        AdventureDTO adventureDTO = adventureService.getAdventure(id);
+        if (adventureDTO == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(adventureDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reviewsNumber/{id}")

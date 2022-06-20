@@ -13,10 +13,10 @@ import {useNavigate, Navigate} from "react-router-dom";
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 130 },
+    { field: 'name', headerName: 'Name', width: 230 },
     { field: 'address', 
       headerName: 'Address', 
-      width: 180,
+      width: 300,
       valueGetter: (params) =>
       `${params.row.address.state || ''}, ${params.row.address.city || ''}, ${params.row.address.street || ''}`
     },
@@ -24,20 +24,20 @@ const columns = [
       field: 'capacity',
       headerName: 'Capacity',
       type: 'number',
-      width: 90,
+      width: 100,
     },
     {
       field: 'rating',
       headerName: 'Rating',
       type: 'number',
-      width: 90,
+      width: 100,
     },
     {
       field: 'promotionalDescription',
       headerName: 'Promo description',
       description: 'This column is not sortable.',
       sortable: false,
-      width: 250,
+      width: 580,
     },
   ];
   

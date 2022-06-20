@@ -46,10 +46,6 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // test
-    @Autowired
-    private InstructorRepository instructorRepository;
-
     @Autowired
     private PaymentService paymentService;
 
@@ -61,6 +57,9 @@ public class AdminService {
 
     @Autowired
     private PictureService pictureService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     final static String PICTURES_PATH = "src/main/resources/static/pictures/admin/";
 
@@ -334,6 +333,12 @@ public class AdminService {
 
     public void updateLoyaltyProgram(LoyaltyProgram newProgram) {
         loyaltyProgramService.save(newProgram);
+        for (Person person : personRepository.findAll()) {
+            if (person instanceof Client)
+                reservationService.tryChangeClientCategory((Client) person, newProgram);
+            if (person instanceof Owner)
+                reservationService.tryChangeOwnerCategory((Owner) person, newProgram);
+        }
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {

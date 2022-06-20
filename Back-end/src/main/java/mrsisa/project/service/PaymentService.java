@@ -1,6 +1,5 @@
 package mrsisa.project.service;
 
-import mrsisa.project.model.Adventure;
 import mrsisa.project.model.Payment;
 import mrsisa.project.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,16 @@ public class PaymentService {
     public double getTotalMoney() {
         Payment payment = paymentRepository.findAll().get(0);
         return payment.getTotal();
+    }
+
+    public void increaseTotalMoney(double money) {
+        Payment payment = paymentRepository.findAll().get(0);
+        payment.setTotal(payment.getTotal() + money);
+    }
+
+    public void decreaseTotalMoney(double money) {
+        Payment payment = paymentRepository.findAll().get(0);
+        payment.setTotal(payment.getTotal() - money);
     }
 
     public Payment save(Payment payment) {

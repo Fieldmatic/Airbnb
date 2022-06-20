@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -56,6 +58,11 @@ public class AdminService {
 
     @Autowired
     private UserCategoryService userCategoryService;
+
+    @Autowired
+    private PictureService pictureService;
+
+    final static String PICTURES_PATH = "src/main/resources/static/pictures/admin/";
 
 
     public Administrator update(AdminDTO dto) {
@@ -329,4 +336,11 @@ public class AdminService {
         loyaltyProgramService.save(newProgram);
     }
 
+    public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
+        Administrator admin = findAdminByUsername(username);
+        List<String> paths = pictureService.addPictures(admin.getId(), PICTURES_PATH, files);
+        admin.setProfilePhoto(paths.get(0));
+        adminRepository.save(admin);
+        return admin.getProfilePhoto();
+    }
 }

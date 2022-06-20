@@ -41,6 +41,9 @@ public class UserController {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private AdminService adminService;
+
 
     @PostMapping(value = "/saveDeletionReason", consumes = MediaType.ALL_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_INSTRUCTOR','ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_CLIENT')")
@@ -66,7 +69,7 @@ public class UserController {
     }
 
     @PutMapping("/changeProfilePicture")
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_CLIENT', 'ROLE_INSTRUCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_CLIENT', 'ROLE_INSTRUCTOR', 'ROLE_ADMIN')")
     public ResponseEntity<InputStreamResource> changeProfilePicture(@RequestPart("files") MultipartFile[] multiPartFiles, Principal userP) throws IOException {
         Role role = userService.getByUsername(userP.getName()).getRoles().get(0);
         String profilePicturePath = "";
@@ -82,6 +85,9 @@ public class UserController {
                 break;
             case "ROLE_INSTRUCTOR":
                 profilePicturePath = instructorService.changeProfilePhoto(multiPartFiles,userP.getName());
+                break;
+            case "ROLE_ADMIN":
+                profilePicturePath = adminService.changeProfilePhoto(multiPartFiles,userP.getName());
                 break;
         }
         File file = new File(profilePicturePath);

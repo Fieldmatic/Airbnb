@@ -53,7 +53,7 @@ public class OwnerController {
     @GetMapping(value = "/getInstructor")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<InstructorDTO> getInstructor(Principal userP){
-        Instructor instructor = instructorService.findInstructorByUsername(userP.getName());
+        Instructor instructor = (Instructor) this.userService.getByUsername(userP.getName());
         return new ResponseEntity<>(new InstructorDTO(instructor), HttpStatus.OK);
     }
 

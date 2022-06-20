@@ -1,9 +1,18 @@
 import React from "react"
 import "./adminNavbar.scss"
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import AdminService from "../../../../services/AdminService";
 
 
 export default function AdminNavbar() {
+
+    const [profileImage, setProfileImage] = React.useState(undefined)
+
+    React.useEffect(() => {
+        AdminService.getProfilePicture().then((response) => {
+            setProfileImage(response.data);
+        })
+      },[])
 
     return (
         <div className="adminNavbar">
@@ -15,7 +24,11 @@ export default function AdminNavbar() {
                 <div className="items">
                     <div className="item">
                         <img
-                        src="https://images.pexels.com/photos/941693/pexels-photo-941693.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                        src={
+                            profileImage
+                              ? URL.createObjectURL(profileImage)
+                              : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                          }
                         alt=""
                         className="avatar"
                         />

@@ -78,26 +78,6 @@ public class InstructorService {
         return instructor.getProfilePhoto();
     }
 
-    public Instructor update(InstructorDTO dto) {
-        Instructor instructor = instructorRepository.findById(dto.getId()).orElse(null);
-        if (instructor != null) {
-            instructor.setName(dto.getName());
-            instructor.getAddress().setCity(dto.getAddress().getCity());
-            instructor.getAddress().setState(dto.getAddress().getState());
-            instructor.getAddress().setStreet(dto.getAddress().getStreet());
-            instructor.getAddress().setZipCode(dto.getAddress().getZipCode());
-            addressRepository.save(instructor.getAddress());
-            instructor.setBiography(dto.getBiography());
-            instructor.setSurname(dto.getSurname());
-            instructor.setEmail(dto.getEmail());
-            instructor.setPassword(dto.getPassword());
-            instructor.setPhoneNumber(dto.getPhoneNumber());
-            instructorRepository.save(instructor);
-            return instructor;
-        }
-        return null;
-    }
-
     public Instructor findOne(Long id) {
         return instructorRepository.findById(id).orElse(null);
     }
@@ -148,7 +128,7 @@ public class InstructorService {
     }
 
     public Instructor findInstructorByUsername(String username) {
-        return (Instructor) personRepository.findByUsername(username);
+        return instructorRepository.findByUsername(username);
     }
 
     public Instructor save(Instructor instructor) {

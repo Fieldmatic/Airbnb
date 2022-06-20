@@ -32,8 +32,14 @@ class AdminService {
         });
     }
 
-    getUserProfilePicture(id) {
-        return axios.get(ADMIN_BASED_REST_API_URL + "/getUserProfilePicture/" + id, {responseType: 'blob'})
+    getProfilePicture() {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getProfilePicture",
+        {
+            responseType: 'blob',
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
     }
 
     async deleteProfile(userId, pdrId, confirmation, message) {

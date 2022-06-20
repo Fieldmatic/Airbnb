@@ -9,10 +9,21 @@ export default function EntityDetails(props) {
         persons.push(<PersonIcon />)
     }
 
+    var equipmentStr = ""
+    for (let i = 0; i < props.equipment.length; i++) {
+        equipmentStr += props.equipment[i] + "  "
+    }
+
     return(
-        <div className="adventureCapacity">
-            <span> Number of guests</span>
-            {persons}
-        </div>
+        <>
+            <div className="adventureCapacity">
+                <span> Number of guests</span>
+                {persons}
+            </div>
+            <div className="paragraphs">
+                <h3>Fishing equipment</h3>
+                <p>{equipmentStr}</p>
+            </div>
+        </>
     )
 }

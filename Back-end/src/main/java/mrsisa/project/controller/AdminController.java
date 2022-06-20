@@ -6,11 +6,17 @@ import mrsisa.project.model.LoyaltyProgram;
 import mrsisa.project.model.Payment;
 import mrsisa.project.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 
@@ -24,14 +30,13 @@ public class AdminController {
 
     @GetMapping(value = "/get")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AdminDTO> getAdmin(Principal userP){
+    public ResponseEntity<AdminDTO> getAdmin(Principal userP) {
         return new ResponseEntity<>(new AdminDTO(adminService.findAdminByUsername(userP.getName())), HttpStatus.OK);
     }
 
     @PutMapping(value = "/update")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AdminDTO> updateAdmin(@RequestBody AdminDTO dto)
-    {
+    public ResponseEntity<AdminDTO> updateAdmin(@RequestBody AdminDTO dto) {
         Administrator admin = adminService.update(dto);
         if (admin == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -41,8 +46,7 @@ public class AdminController {
 
     @GetMapping(path = "/getProfileDeletionRequests")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ProfileDeletionReasonDTO>> getProfileDeletionRequests(Principal userP)
-    {
+    public ResponseEntity<List<ProfileDeletionReasonDTO>> getProfileDeletionRequests(Principal userP) {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -56,8 +60,7 @@ public class AdminController {
                                                   @PathVariable("pdrId") Long pdrId,
                                                   @PathVariable("confirmation") String confirmation,
                                                   @RequestPart("message") String message,
-                                                  Principal userP)
-    {
+                                                  Principal userP) {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -72,8 +75,7 @@ public class AdminController {
 
     @GetMapping(path = "/getUserRegistrationRequests")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<RegistrationRequestDTO>> getUserRegistrationRequests(Principal userP)
-    {
+    public ResponseEntity<List<RegistrationRequestDTO>> getUserRegistrationRequests(Principal userP) {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -87,8 +89,7 @@ public class AdminController {
                                                @PathVariable("regId") Long regId,
                                                @PathVariable("confirmation") String confirmation,
                                                @RequestPart("message") String message,
-                                               Principal userP)
-    {
+                                               Principal userP) {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -105,8 +106,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ChartDataDTO>> getChartData(@PathVariable String startDate,
                                                            @PathVariable String endDate,
-                                                           Principal userP)
-    {
+                                                           Principal userP) {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -157,13 +157,17 @@ public class AdminController {
     }
 
 
-//    @GetMapping(path = "/getUserProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-//    public ResponseEntity getAdventureProfilePicture(@PathVariable Long id) throws IOException {
-//        Person person = adminService.findPersonById(id);
-//        File file = new File(adventure.getProfilePicture());
-//        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-//        return ResponseEntity.ok().body(resource);
-//    }
+    @GetMapping(value = "/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<InputStreamResource> getProfilePicture(Principal userP) throws IOException {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        try {
+            File file = new File(admin.getProfilePhoto());
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(file.toPath())), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(Paths.get("src/main/resources/static/pictures/defaults/default-profile-picture.jpg"))), HttpStatus.OK);
+        }
+    }
 
 
 }

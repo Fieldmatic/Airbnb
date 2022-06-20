@@ -1,7 +1,7 @@
 import axios from "axios";
 import inMemoryJwt from "./inMemoryJwtService";
 
-const PERIOD_BASED_REST_API_URL = "http://localhost:8081/api/period";
+const PERIOD_BASED_REST_API_URL = "https://airbnbexperiences-springboot.herokuapp.com/api/period";
 
 
 class PeriodService {

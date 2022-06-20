@@ -1,7 +1,7 @@
 import axios from "axios";
 import inMemoryJwt from "./inMemoryJwtService";
 
-const LOGIN_REGISTER_BASED_REST_API_URL = "http://localhost:8081/api/auth";
+const LOGIN_REGISTER_BASED_REST_API_URL = "https://airbnbexperiences-springboot.herokuapp.com/api/auth";
 
 
 class LoginRegisterService {

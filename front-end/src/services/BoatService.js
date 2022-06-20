@@ -1,5 +1,5 @@
 import axios from "axios";
-const BOAT_BASED_REST_API_URL = "http://localhost:8081/api/boat";
+const BOAT_BASED_REST_API_URL = "https://airbnbexperiences-springboot.herokuapp.com/api/boat";
 import inMemoryJwt from "./inMemoryJwtService";
 
 

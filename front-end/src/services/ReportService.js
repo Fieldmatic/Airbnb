@@ -1,7 +1,7 @@
 import axios from "axios";
 import inMemoryJwt from "./inMemoryJwtService";
 
-const REPORT_BASED_REST_API_URL = "http://localhost:8081/api/report";
+const REPORT_BASED_REST_API_URL = "https://airbnbexperiences-springboot.herokuapp.com/api/report";
 
 
 class ReportService {

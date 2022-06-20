@@ -5,6 +5,7 @@ import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -183,7 +184,7 @@ public class BoatService {
         }
 
     }
-
+    @Cacheable(value = "bookableId", key = "#id",unless="#result == null")
     public Boat findOne(Long id) {
         return boatRepository.findById(id).orElse(null);
     }

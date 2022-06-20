@@ -74,7 +74,7 @@ public class InstructorService {
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
-        Instructor instructor = instructorRepository.findByUsername(username);
+        Instructor instructor = instructorRepository.findByUsernameWithReservations(username);
         List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, files);
         instructor.setProfilePhoto(paths.get(0));
         instructorRepository.save(instructor);
@@ -128,7 +128,7 @@ public class InstructorService {
     }
 
     public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){
-        Instructor instructor = instructorRepository.findByUsername(userP.getName());
+        Instructor instructor = instructorRepository.findByUsernameWithReservations(userP.getName());
         ReservationStatisticsDTO statistics = new ReservationStatisticsDTO();
         if (bookableId.isPresent()) bookableService.fillBookableReservationStatistics(bookableId.get(), statistics);
         else {
@@ -138,7 +138,7 @@ public class InstructorService {
     }
 
     public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP, Optional<Long> bookableId) {
-        Instructor instructor = instructorRepository.findByUsername(userP.getName());
+        Instructor instructor = instructorRepository.findByUsernameWithReservations(userP.getName());
         Map<String, Double> incomeByAdventure = new HashMap<>();
         if (bookableId.isPresent()){
             bookableService.fillBookableIncomeStatistics(start,end,incomeByAdventure,bookableId.get());
@@ -150,7 +150,7 @@ public class InstructorService {
     }
 
     public Instructor findInstructorByUsername(String username) {
-        return (Instructor) personRepository.findByUsername(username);
+        return instructorRepository.findInstructorByUsername(username);
     }
 
     public Instructor save(Instructor instructor) {

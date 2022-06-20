@@ -88,7 +88,6 @@ public class BoatOwnerService {
         }
         return incomeByBoat;
     }
-
     public BoatOwner findBoatOwnerByUsername(String username){return boatOwnerRepository.findByUsername(username);}
 
     private BoatOwner dtoToBoatOwner(PersonDTO dto) {

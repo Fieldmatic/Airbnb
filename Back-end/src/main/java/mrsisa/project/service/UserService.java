@@ -6,6 +6,7 @@ import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.model.Person;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,6 +40,7 @@ public class UserService implements UserDetailsService {
         return person == null;
     }
 
+    @Cacheable(value = "personUsernameEmail", key = "#username",unless="#result == null")
     public Person getByUsername(String username) {
         return personRepository.findByUsername(username);
     }

@@ -106,17 +106,17 @@ export default function AdminSidebar() {
                             <span>Boats</span>
                         </li>
                     </Link>
-                    <p className="title">REVIEWS</p>
-                    <Link to="/admin/reviews/complaints" style={{ textDecoration: "none" }}>
+                    <p className="title">REVISIONS</p>
+                    <Link to="/admin/revisions/complaints" style={{ textDecoration: "none" }}>
                         <li>
                             <ReceiptLongOutlinedIcon className="icon" />
                             <span>Complaints</span>
                         </li>
                     </Link>
-                    <Link to="#" style={{ textDecoration: "none" }}>
+                    <Link to="/admin/revisions/reviews" style={{ textDecoration: "none" }}>
                         <li>
                             <DocumentScannerOutlinedIcon className="icon" />
-                            <span>Revisions</span>
+                            <span>Reviews</span>
                         </li>
                     </Link>
                     <p className="title">USER</p>

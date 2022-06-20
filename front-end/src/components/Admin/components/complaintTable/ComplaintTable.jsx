@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ReportService from "../../../../services/ReportService"
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -14,22 +15,47 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import "./reviewTable.scss"
-import ReviewService from '../../../../services/ReviewService';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Checkbox from '@mui/material/Checkbox';
+import "./complaintTable.scss"
 
 
 function Row(props) {
     const { row, func } = props;
     const [open, setOpen] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [message, setMessage] = React.useState("");
+    const [penalty, setPenalty] = React.useState(false);
 
-    const handleApprove = () => {
-        ReviewService.approveReview(row.id);
-        func([row.id, "Review successfully approved."]);
+    const handleMessageChange = (event) => {
+        const {value} = event.target;
+        setMessage(value);
     }
 
-    const handleDeny = () => {
-        ReviewService.denyReview(row.id);
-        func([row.id, "Review successfully denied."]);
+    const handlePenaltyChange = (event) => {
+        setPenalty(current => !current);
+    }
+
+    const handleAcceptMessage = () => {
+        if(message === "") {
+            return;
+        }
+        ReportService.reviewReport(row.id, penalty, message);
+        setOpenDialog(false);
+        func(row.id);
+    }
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    const handleReply = () => {
+        setOpenDialog(true);
     }
   
     return (
@@ -48,10 +74,14 @@ function Row(props) {
             {row.id}
           </TableCell>
           <TableCell>{row.ownerUsername}</TableCell>
-          <TableCell>{row.bookableName}</TableCell>  
+          <TableCell>{row.clientUsername}</TableCell>
+          <TableCell>
+              <div className={"cellWithStatus " + (row.showedUp ? "active" : "passive")}>
+                {row.showedUp ? "YES" : "NO"}
+              </div>
+          </TableCell>    
           <TableCell className='cellAction'>
-              <Button variant="outlined" color="error" onClick={handleDeny}>Deny</Button>
-              <Button variant="contained" color="success" onClick={handleApprove}>Approve</Button>
+              <Button variant="contained" color="success" onClick={handleReply}>Reply</Button>
           </TableCell>
         </TableRow>
         <TableRow>
@@ -59,33 +89,65 @@ function Row(props) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Comment for owner/instructor
+                  Comment
                 </Typography>
-                <div>{'"' + row.ownerComment + '"'}</div>
-                <br /><br />
-                <Typography variant="h6" gutterBottom component="div">
-                  Comment for {row.bookableName}
-                </Typography>
-                <div>{'"' + row.bookableComment + '"'}</div>
+                <div>{'"' + row.comment + '"'}</div>
+                <div> Give penalty
+                    <Checkbox
+                        defaultChecked={!row.showedUp}
+                        onChange={handlePenaltyChange}
+                        value={penalty}
+                        sx={{
+                            color: '#FF5A5F',
+                            '&.Mui-checked': {
+                            color: '#FF5A5F',
+                            },
+                        }}
+                    />
+                </div>
               </Box>
             </Collapse>
           </TableCell>
         </TableRow>
+        <Dialog open={openDialog} onClose={handleClose}>
+            <DialogTitle>Answer</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Enter your answer
+                </DialogContentText>
+            <TextField
+                autoFocus
+                margin="dense"
+                id="message"
+                label="Answer"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={message}
+                name="reason"
+                onChange={handleMessageChange}
+            />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleAcceptMessage}>Send</Button>
+            </DialogActions>
+        </Dialog>
       </React.Fragment>
     );
 }
 
-export default function ReviewTable() {
+export default function ComplaintTable(props) {
 
-    const [alertText, setAlertText] = React.useState("");
+    const alertText = "Email with your message successfully sent.";
     const [showAlert, setShowAlert] = React.useState(false);
 
-    const [rows, setRows] = React.useState([
-        {id: 1, bookableName: "pero", bookableComment: "Zahtevam da\
-        se korisnku da penal jer je bezobrazannnn!", ownerUsername: "banz", ownerComment: "doabr mali"},
-        {id: 2, bookableName: "djuro", bookableComment: "Svaka caastt!",
-        ownerUsername: "banz", ownerComment: "doabr mali jastoe"},
-    ]);
+    const [rows, setRows] = React.useState([]);
+
+    //{id: 1, clientUsername: "pero", showedUp: false, comment: "Zahtevam da\
+    // se korisnku da penal jer je bezobrazannnn!", ownerUsername: "banz"},
+    // {id: 2, clientUsername: "djuro", showedUp: true, comment: "Svaka caastt!",
+    //  ownerUsername: "banz"},
 
     const [showMessageAlert, setShowMessageAlert] = React.useState(false);
     const [message, setMessage] = React.useState({
@@ -107,7 +169,7 @@ export default function ReviewTable() {
     }
 
     React.useEffect(() => {
-        ReviewService.getAllReviews().then((response) => {
+        ReportService.getAllReports().then((response) => {
             setRows(response.data)
         }).catch(err => {
             if (err.response.status == 403) {
@@ -118,8 +180,7 @@ export default function ReviewTable() {
 
     const getStateFromRow = (data) => {
       setShowAlert(true);
-      setAlertText(data[1]);
-      setRows(rows.filter((item) => item.id !== data[0]));
+      setRows(rows.filter((item) => item.id !== data));
       setTimeout(() => {
           setShowAlert(false);
       }, 2500)
@@ -145,8 +206,9 @@ export default function ReviewTable() {
                         <TableCell />
                         <TableCell className="datatableHeader">ID</TableCell>
                         <TableCell className="datatableHeader">Owner</TableCell>
-                        <TableCell className="datatableHeader">Entity</TableCell>
-                        <TableCell className="datatableHeader">Options</TableCell>
+                        <TableCell className="datatableHeader">Client</TableCell>
+                        <TableCell className="datatableHeader">Client showed up</TableCell>
+                        <TableCell className="datatableHeader">Option</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>

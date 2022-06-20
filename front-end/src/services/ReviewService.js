@@ -11,7 +11,34 @@ class ReviewService {
             headers: {
                 'Authorization':`Bearer ${inMemoryJwt.getToken()}`
             } 
-         })
+        })
+    }
+
+    async approveReview(id) {
+        return await axios.post(REVIEW_BASED_REST_API_URL + "/approveReview/" + id,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
+    }
+
+    async denyReview(id) {
+        return await axios.post(REVIEW_BASED_REST_API_URL + "/denyReview/" + id,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
+    }
+
+    getAllReviews() {
+        return axios.get(REVIEW_BASED_REST_API_URL + "/getAllReviews",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
     }
 }
 

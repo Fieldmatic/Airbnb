@@ -74,6 +74,7 @@ public class ReportService {
             client.setPenalties(client.getPenalties() + 1);
             clientRepository.save(client);
         }
+        reportRepository.save(report);
         Owner owner = ownerRepository.findByUsername(report.getOwnerUsername());
         emailService.sendReportMail(client, owner, message, penalty);
     }

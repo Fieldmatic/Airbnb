@@ -101,4 +101,12 @@ public class EmailService {
         }
         javaMailSender.send(mail1, mail2);
     }
+
+    @Async
+    public void sendReviewMail(Owner owner, String ownerMessage, String bookableMessage) {
+        SimpleMailMessage mail = getMailMessage(owner, "New review for you");
+        mail.setText("Hello " + owner.getName() + ", \n\n\nYou got a new review. Here is what client had to say" +
+                "about you: " + ownerMessage + "\n\nAlso, this is his experience: " + bookableMessage);
+        javaMailSender.send(mail);
+    }
 }

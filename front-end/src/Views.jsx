@@ -29,6 +29,7 @@ import Statistics from "./components/Owner/Statistics";
 import ClientReservationHistory from "./components/Reservation/ClientReservationHistory"
 import BookableStatistics from "./components/Owner/BookableStatistics";
 import ClientFutureReservations from "./components/Reservation/ClientFutureReservations"
+import Complaints from "./components/Admin/pages/list/Complaints";
 
 
 const Views = () => {
@@ -73,8 +74,9 @@ const Views = () => {
           <Route path="cottages" element={<AdminEntities entity="cottage" />}/>
           <Route path="boats" element={<AdminEntities entity="boat" />}/>
         </Route>
-        <Route path="reviews">
-          <Route path="complaints" element={<Reviews refresh={true}/>}/>
+        <Route path="revisions">
+          <Route path="complaints" element={<Complaints refresh={true}/>}/>
+          <Route path="reviews" element={<Reviews />}/>
         </Route>
         <Route path="profile" element={<AdminProfile />} />
       </Route>

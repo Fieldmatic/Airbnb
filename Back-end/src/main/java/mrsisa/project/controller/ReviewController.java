@@ -1,9 +1,10 @@
 package mrsisa.project.controller;
 
 
-import mrsisa.project.dto.ReportDTO;
 import mrsisa.project.dto.ReviewDTO;
-import mrsisa.project.model.Client;
+import mrsisa.project.model.Administrator;
+import mrsisa.project.model.Review;
+import mrsisa.project.service.AdminService;
 import mrsisa.project.service.ClientService;
 import mrsisa.project.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/review")
@@ -23,11 +25,52 @@ public class ReviewController {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private AdminService adminService;
+
     @PostMapping(value = "/addReview")
     @PreAuthorize("hasAnyRole('CLIENT')")
     public ResponseEntity<String> addReview(@RequestBody ReviewDTO reviewDTO) {
         if (reviewService.add(reviewDTO)) return ResponseEntity.status(HttpStatus.CREATED).body("Success");
         else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Error");
+    }
+
+    @GetMapping(value = "/getAllReviews")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ReviewDTO>> getAllReviews(Principal userP) {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        List<ReviewDTO> list = reviewService.getAllReviews();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/approveReview/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> approveReview(@PathVariable Long id, Principal userP)
+    {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        Review review = reviewService.findById(id);
+        if (review == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error! Review not found.");
+        reviewService.acceptReview(review);
+        return ResponseEntity.status(HttpStatus.OK).body("Email sent!");
+    }
+
+    @PostMapping(value = "/denyReview/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> denyReview(@PathVariable Long id, Principal userP)
+    {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        Review review = reviewService.findById(id);
+        if (review == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error! Review not found.");
+        reviewService.denyReview(review);
+        return ResponseEntity.status(HttpStatus.OK).body("Review denied!");
     }
 
 }

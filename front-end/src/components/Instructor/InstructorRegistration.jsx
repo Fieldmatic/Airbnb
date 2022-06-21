@@ -103,9 +103,6 @@ export default function InstructorRegistration() {
         setErrors(true);
         if (anyFieldEmpty())
             return;
-
-        if (formData.password !== formData.confirmPassword)
-            return;
         
         let data = new FormData()
         const instructorJson = getInstructorJson();

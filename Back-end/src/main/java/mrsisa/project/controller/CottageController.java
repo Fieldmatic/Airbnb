@@ -1,7 +1,13 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.dto.SearchDTO;
+import mrsisa.project.model.Administrator;
+import mrsisa.project.model.Boat;
+import mrsisa.project.model.Cottage;
+import mrsisa.project.model.CottageOwner;
 import mrsisa.project.repository.PersonRepository;
+import mrsisa.project.service.AdminService;
 import mrsisa.project.service.CottageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +29,9 @@ public class CottageController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private AdminService adminService;
 
 
     @PostMapping(value = "/add")
@@ -84,6 +93,20 @@ public class CottageController {
     public ResponseEntity<String> deleteCottage(@PathVariable Long id, Principal userP) {
         if (cottageService.deleteCottage(id, userP)) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Cottage has active reservations!");
+    }
+
+    /**
+     * @apiNote This method is only for admin to limit new admin not to get cottages until he
+     * changes password
+     */
+    @GetMapping(value="/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CottageDTO>> getAll(Principal userP) {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        List<CottageDTO> cottagesDTO = cottageService.findAll();
+        return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
 
 }

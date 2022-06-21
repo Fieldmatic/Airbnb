@@ -3,6 +3,7 @@ package mrsisa.project.service;
 import mrsisa.project.model.Client;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.Reservation;
+import mrsisa.project.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -82,6 +83,33 @@ public class EmailService {
                     "\nNumber of guests: " + reservation.getPersonLimit() +
                     "\n\n\nWe wish you a good time!, \n\n\nBest regards, \nAirBnb team");
 
+        javaMailSender.send(mail);
+    }
+
+    @Async
+    public void sendReportMail(Client client, Owner owner, String message, boolean penalty) {
+        SimpleMailMessage mail1 = getMailMessage(client, "Complaint");
+        SimpleMailMessage mail2 = getMailMessage(owner, "Complaint");
+        if (penalty) {
+            mail1.setText("Hello " + client.getName() + ", \n\n\nYour behavior has been appealed and you have got" +
+                    " a penalty.\nHere is what admin said: " + message);
+            mail2.setText("Hello " + owner.getName() + ", \n\n\nWe appreciate your complaint and client has got" +
+                    "a penalty.\nHere is what admin said: " + message);
+        }
+        else {
+            mail1.setText("Hello " + client.getName() + ", \n\n\nYour behavior has been appealed but you have not got" +
+                    " a penalty.\nHere is what admin said: " + message);
+            mail2.setText("Hello " + owner.getName() + ", \n\n\nWe appreciate your complaint but client has not got" +
+                    "a penalty.\nHere is what admin said: " + message);
+        }
+        javaMailSender.send(mail1, mail2);
+    }
+
+    @Async
+    public void sendReviewMail(Owner owner, String ownerMessage, String bookableMessage) {
+        SimpleMailMessage mail = getMailMessage(owner, "New review for you");
+        mail.setText("Hello " + owner.getName() + ", \n\n\nYou got a new review. Here is what client had to say" +
+                "about you: " + ownerMessage + "\n\nAlso, this is his experience: " + bookableMessage);
         javaMailSender.send(mail);
     }
 }

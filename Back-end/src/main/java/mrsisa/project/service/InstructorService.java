@@ -52,7 +52,10 @@ public class InstructorService {
     private ProfileDeletionReasonRepository profileDeletionReasonRepository;
 
     @Autowired
+    private UserCategoryService userCategoryService;
+
     private PictureService pictureService;
+
 
     final static String picturesPath = "src/main/resources/static/pictures/instructor/";
     final static String defaultPicturePath = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
@@ -81,26 +84,6 @@ public class InstructorService {
         return instructor.getProfilePhoto();
     }
 
-    public Instructor update(InstructorDTO dto) {
-        Instructor instructor = instructorRepository.findById(dto.getId()).orElse(null);
-        if (instructor != null) {
-            instructor.setName(dto.getName());
-            instructor.getAddress().setCity(dto.getAddress().getCity());
-            instructor.getAddress().setState(dto.getAddress().getState());
-            instructor.getAddress().setStreet(dto.getAddress().getStreet());
-            instructor.getAddress().setZipCode(dto.getAddress().getZipCode());
-            addressRepository.save(instructor.getAddress());
-            instructor.setBiography(dto.getBiography());
-            instructor.setSurname(dto.getSurname());
-            instructor.setEmail(dto.getEmail());
-            instructor.setPassword(dto.getPassword());
-            instructor.setPhoneNumber(dto.getPhone());
-            instructorRepository.save(instructor);
-            return instructor;
-        }
-        return null;
-    }
-
     public Instructor findOne(Long id) {
         return instructorRepository.findById(id).orElse(null);
     }
@@ -118,8 +101,9 @@ public class InstructorService {
         instructor.setSurname(dto.getSurname());
         instructor.setEmail(dto.getEmail());
         instructor.setPassword(passwordEncoder.encode(dto.getPassword()));
-        instructor.setPhoneNumber(dto.getPhone());
+        instructor.setPhoneNumber(dto.getPhoneNumber());
         instructor.setPoints(0);
+        instructor.setCategory(userCategoryService.getRegularCategory());
         instructor.setRegistrationExplanation(dto.getRegistrationExplanation());
         instructor.setUsername(dto.getUsername());
         List<Role> roles = roleService.findByName("ROLE_INSTRUCTOR");
@@ -150,7 +134,7 @@ public class InstructorService {
     }
 
     public Instructor findInstructorByUsername(String username) {
-        return (Instructor) personRepository.findByUsername(username);
+        return instructorRepository.findByUsername(username);
     }
 
     public Instructor save(Instructor instructor) {

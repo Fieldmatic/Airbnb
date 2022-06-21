@@ -13,12 +13,16 @@ public class ReportDTO {
     private boolean showedUp;
     private ReportType type;
     private String clientEmail;
+    private String clientUsername;
 
-    public ReportDTO(Report report){
-        this.reservationId =report.getReservation().getId();
-        this.comment =report.getComment();
+    private String ownerUsername;
+
+    public ReportDTO(Report report) {
+        this.reservationId = report.getReservation().getId();
+        this.comment = report.getComment();
         this.showedUp = report.isShowedUp();
-        this.type= report.getType();
+        this.type = report.getType();
         this.clientEmail = report.getClient().getEmail();
+        this.clientUsername = report.getClient().getUsername();
     }
 }

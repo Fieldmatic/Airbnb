@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,9 @@ public class ReviewService {
 
     @Autowired
     private OwnerRepository ownerRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 
     public boolean checkIfReviewed(String review, int rate) {
@@ -82,5 +87,30 @@ public class ReviewService {
         review.setOwnerComment(reviewDTO.getOwnerComment());
         review.setOwnerRating(reviewDTO.getOwnerRating());
         return review;
+    }
+
+    public List<ReviewDTO> getAllReviews() {
+        List<ReviewDTO> reportDTOS = new ArrayList<>();
+        for(Review review : reviewRepository.findAll()) {
+            if (!review.isAnswered())
+                reportDTOS.add(new ReviewDTO(review));
+        }
+        return reportDTOS;
+    }
+
+    public Review findById(Long id) {
+        return reviewRepository.getById(id);
+    }
+
+    public void acceptReview(Review review) {
+        review.setAnswered(true);
+        reviewRepository.save(review);
+        Owner owner = ownerRepository.findByUsername(review.getOwner().getUsername());
+        emailService.sendReviewMail(owner, review.getOwnerComment(), review.getBookableComment());
+    }
+
+    public void denyReview(Review review) {
+        review.setAnswered(true);
+        reviewRepository.save(review);
     }
 }

@@ -14,5 +14,6 @@ public class BookableCalendarDTO {
     private String start;
     private String end;
     private String color;
+    private String client;
 
 }

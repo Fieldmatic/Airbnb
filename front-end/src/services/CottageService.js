@@ -31,6 +31,15 @@ class CottageService {
         return axios.get(COTTAGE_BASED_REST_API_URL + "/all");
     }
 
+    getAllCottagesAdmin() {
+        return axios.get(COTTAGE_BASED_REST_API_URL + "/getAll",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        });
+    }
+
     getAvailableCottages(searchData) {
         let city = searchData.city
         let startDate = searchData.startDate

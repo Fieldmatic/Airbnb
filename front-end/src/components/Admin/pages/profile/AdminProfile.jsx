@@ -13,10 +13,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import UserService from '../../../../services/UserService'
 
 
 const AdminProfile = () => {
-  const [file, setFile] = React.useState("");
 
   const [formData, setFormData] = React.useState({
     name: "",
@@ -34,6 +34,8 @@ const AdminProfile = () => {
     phone: ""
   });
 
+  const [profileImage, setProfileImage] = React.useState(undefined)
+
   React.useEffect(() => {
     AdminService.getAdmin().then((result) => {
         let admin = result.data;
@@ -48,9 +50,9 @@ const AdminProfile = () => {
             phone: admin.phone,
         })
     })
-    // InstructorService.getProfilePicture().then((response) => {
-    //     setProfilePhoto(response.data);
-    // })
+    AdminService.getProfilePicture().then((response) => {
+        setProfileImage(response.data);
+    })
   },[])
 
   const inputs = [
@@ -197,6 +199,14 @@ const AdminProfile = () => {
     })
   }
 
+  function selectFile(event) {
+    let data = new FormData()
+    data.append("files", event.target.files[0])
+    UserService.changeProfilePicture(data).then((response) => {
+        setProfileImage(response.data)
+    })
+  }
+
   return (
     <div className="new">
       <AdminSidebar />
@@ -217,8 +227,8 @@ const AdminProfile = () => {
           <div className="left">
             <img
               src={
-                file
-                  ? URL.createObjectURL(file)
+                profileImage
+                  ? URL.createObjectURL(profileImage)
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=""
@@ -233,7 +243,7 @@ const AdminProfile = () => {
                 <input
                   type="file"
                   id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={selectFile}
                   style={{ display: "none" }}
                 />
               </div>
@@ -283,8 +293,10 @@ const AdminProfile = () => {
                   <Button onClick={handleConfirm}>Confirm</Button>
                 </DialogActions>
               </Dialog>
-              <button type="button" onClick={openPasswordDialog}>Change Password</button>
-              <button onClick={handleSubmit}>Update</button>
+              <div className="buttons">
+                <button type="button" onClick={openPasswordDialog}>Change Password</button>
+                <button onClick={handleSubmit}>Update</button>
+              </div>
             </form>
           </div>
         </div>

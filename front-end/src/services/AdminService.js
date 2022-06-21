@@ -3,7 +3,7 @@ import inMemoryJwt from './inMemoryJwtService';
 
 const ADMIN_BASED_REST_API_URL = "http://localhost:8081/api/admin";
 
-class InstructorService {
+class AdminService {
 
     getAdmin() {
         return axios.get(ADMIN_BASED_REST_API_URL + "/get", 
@@ -32,8 +32,14 @@ class InstructorService {
         });
     }
 
-    getUserProfilePicture(id) {
-        return axios.get(ADMIN_BASED_REST_API_URL + "/getUserProfilePicture/" + id, {responseType: 'blob'})
+    getProfilePicture() {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getProfilePicture",
+        {
+            responseType: 'blob',
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            },
+         })
     }
 
     async deleteProfile(userId, pdrId, confirmation, message) {
@@ -63,7 +69,51 @@ class InstructorService {
         });
     }
 
+    getChartData(startDate, endDate) {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getChartData/" + startDate + "&" + endDate,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
+
+    getPaymentConfig() {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getPaymentConfig",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
+
+    updatePaymentConfig(paymentConfig) {
+        return axios.put(ADMIN_BASED_REST_API_URL + "/updatePaymentConfig", paymentConfig,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
+
+    getLoyaltyProgram() {
+        return axios.get(ADMIN_BASED_REST_API_URL + "/getLoyaltyProgram",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
+
+    updateLoyaltyProgram(loyaltyProgram) {
+        return axios.put(ADMIN_BASED_REST_API_URL + "/updateLoyaltyProgram", loyaltyProgram,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            }
+        });
+    }
     
 }
 
-export default new InstructorService()
+export default new AdminService()

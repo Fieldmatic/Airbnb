@@ -19,4 +19,5 @@ public class PersonDTO {
     private Address address;
     private String registrationExplanation;
     private String role;
+    private String biography;
 }

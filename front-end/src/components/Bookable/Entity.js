@@ -119,6 +119,11 @@ function entity(props) {
                 props.setEntitiesEdited(true)
             })
         }
+        else if(props.entity === "adventure") {
+            AdventureService.deleteAdventure(props.id).then(() => {
+                props.setEntitiesEdited(true)
+            })
+        }
         handleClose()
     }
 
@@ -128,11 +133,13 @@ function entity(props) {
 
     function handleEdit(){
         if (props.entity === "cottage") {
-            navigate("/editCottage/"+props.id)
-            
+            navigate("/editCottage/"+props.id)           
         }
         else if (props.entity === "boat") {
             navigate("/editBoat/"+props.id)
+        }
+        else if (props.entity === "adventure") {
+            navigate("/editAdventure/"+props.id)
         }
         
     }
@@ -267,8 +274,8 @@ function entity(props) {
                         onClose={handleClose}
                         aria-labelledby="responsive-dialog-title"
                     >
-                    <DialogTitle id="responsive-dialog-title">{"Delete this cottage?"}</DialogTitle>
-                    <DialogContent><DialogContentText>This action Cannot be undone.</DialogContentText></DialogContent>
+                    <DialogTitle id="responsive-dialog-title">Delete this {props.entity}?</DialogTitle>
+                    <DialogContent><DialogContentText>This action CANNOT be undone.</DialogContentText></DialogContent>
                     <DialogActions>
                         <Button autoFocus onClick={handleClose}>Disagree</Button>
                         <Button onClick={handleDelete} autoFocus>Agree</Button>

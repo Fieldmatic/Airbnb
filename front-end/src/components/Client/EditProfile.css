@@ -47,7 +47,38 @@
     align-items: center;
     justify-content: space-between;
     height: 4vh;
-    margin-bottom: 0.4vh;
+    margin-bottom: 1.5vh;
+}
+
+.user-form-data-bio{
+    margin-top: 6vh;
+    margin-bottom: 6vh;
+}
+
+.user-form-data-category{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 4vh;
+    margin-bottom: 1.5vh;
+    width: 62%;
+}
+
+.REGULAR {
+    color: rgb(17, 147, 203);
+}
+
+.BRONZE {
+    color: #cd853f;;
+}
+
+.SILVER {
+    color: silver;
+}
+
+.GOLD {
+    color: gold;
 }
 
 .updateBtn {
@@ -75,7 +106,23 @@
     width: 12vw;
     height: auto;
     border-radius: 10px;
-    border: 1px solid black;
+    
+}
+
+.img-REGULAR {
+    border: 15px solid rgb(17, 147, 203);
+}
+
+.img-BRONZE {
+    border: 15px solid #cd853f;;
+}
+
+.img-SILVER {
+    border: 15px solid silver;
+}
+
+.img-GOLD {
+    border: 15px solid gold;
 }
 
 .changeProfilePictureBtn {

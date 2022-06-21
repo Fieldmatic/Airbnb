@@ -61,7 +61,7 @@ const StyledMenu = styled((props) => (
 
 
 
-export default function Header(){
+export default function Header(props){
     const [isUserLogged, setIsUserLogged] = useState(false);
     const [role, setRole] = useState(null);
     const [entityType, setEntityType] = useState("cottage")
@@ -220,6 +220,14 @@ export default function Header(){
         )
     }
 
+    function getAdminOptions() {
+        return (
+            <div className='header__links'>
+                <Link to={'/admin'} style={{textDecoration: 'none', color:'black'}}>Admin page</Link>
+            </div>
+        )
+    }
+
     function handleEntityTypeChanged(event) {
         const {name, value, type, checked} = event.target
         //setEntityType(type === "checkbox" ? checked : value)
@@ -289,7 +297,7 @@ export default function Header(){
                 {role==="COTTAGE_OWNER" && getCottageOwnerOptions()}
                 {role==="BOAT_OWNER" && getBoatOwnerOptions()}
                 {role==="INSTRUCTOR" && getInstructorOptions()}
-                {role ==="ADMIN" && navigate("/admin")}
+                {role ==="ADMIN" && getAdminOptions()}
                     
                 <div className='header__right'>
                     {

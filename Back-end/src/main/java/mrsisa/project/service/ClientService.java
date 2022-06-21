@@ -41,9 +41,12 @@ public class ClientService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private UserCategoryService userCategoryService;
+
     private PictureService pictureService;
 
     final static String picturesPath = "src/main/resources/static/pictures/client/";
+
 
     public List<Client> findAll() {
         return clientRepository.findAll();
@@ -149,6 +152,7 @@ public class ClientService {
         client.setPenalties(0);
         List<Role> roles = roleService.findByName("ROLE_CLIENT");
         client.setRoles(roles);
+        client.setCategory(userCategoryService.getRegularCategory());
         return client;
     }
 }

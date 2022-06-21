@@ -1,6 +1,7 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.AdventureDTO;
+import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdventureService {
@@ -47,7 +49,7 @@ public class AdventureService {
     @Autowired
     private PictureService pictureService;
 
-    final static String picturesPath = "src/main/resources/static/pictures/adventure/";
+    final static String PICTURES_PATH = "src/main/resources/static/pictures/adventure/";
 
     public Adventure save(Adventure adventure) {
         return adventureRepository.save(adventure);
@@ -59,7 +61,7 @@ public class AdventureService {
         List<Tag> additionalServices = tagService.getAdditionalServicesFromDTO(adventureDTO.getAdditionalServices(), adventure);
         adventure.setAdditionalServices(additionalServices);
         adventureRepository.save(adventure);
-        List<String> paths = pictureService.addPictures(adventure.getId(), picturesPath, multipartFiles);
+        List<String> paths = pictureService.addPictures(adventure.getId(), PICTURES_PATH, multipartFiles);
         adventure.setPictures(paths);
         adventure.setProfilePicture(paths.get(0));
         Instructor instructor = (Instructor) personRepository.findByUsername(userP.getName());
@@ -68,28 +70,9 @@ public class AdventureService {
         instructorRepository.save(instructor);
     }
 
-    public void edit(AdventureDTO dto, Long id) {
-        Adventure adventure = adventureRepository.findById(id).orElse(null);
-        if (adventure != null) {
-            adventure.setName(dto.getName());
-            adventure.getAddress().setCity(dto.getAddress().getCity());
-            adventure.getAddress().setState(dto.getAddress().getState());
-            adventure.getAddress().setStreet(dto.getAddress().getStreet());
-            adventure.getAddress().setZipCode(dto.getAddress().getZipCode());
-            addressRepository.save(adventure.getAddress());
-            adventure.setPromotionalDescription(dto.getPromotionalDescription());
-            adventure.setRules(dto.getRules());
-            adventure.getPriceList().setHourlyRate(dto.getHourlyRate());
-            adventure.getPriceList().setCancellationConditions(dto.getCancellationConditions());
-            priceListRepository.save(adventure.getPriceList());
-            adventure.setCapacity(dto.getCapacity());
-            adventure.setFishingEquipment(dto.getEquipment());
-            adventureRepository.save(adventure);
-        }
-    }
-
     public Adventure findOne(Long id) {
-        return adventureRepository.getById(id);}
+        return adventureRepository.getById(id);
+    }
 
     public Integer getNumberOfReviews(Long id) {
         return adventureRepository.findByIdWithReviews(id).getReviews().size();
@@ -105,7 +88,7 @@ public class AdventureService {
         LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);
 
         List<AdventureDTO> adventuresDTO = new ArrayList<>();
-        for (Adventure adventure: adventureRepository.findAll()) {
+        for (Adventure adventure : adventureRepository.findAll()) {
             if (adventure.getCapacity() >= capacity) {
                 for (Period period : adventure.getPeriods()) {
                     if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
@@ -132,7 +115,7 @@ public class AdventureService {
     @Transactional
     public List<AdventureDTO> getAvailableAdventuresByCityAndCapacity(String city, Integer capacity, String startDate, String endDate) {
         List<AdventureDTO> adventuresDTO = new ArrayList<>();
-        for (AdventureDTO adventure: getAvailableAdventures(startDate, endDate, capacity))
+        for (AdventureDTO adventure : getAvailableAdventures(startDate, endDate, capacity))
             if (adventure.getAddress().getCity().equals(city))
                 adventuresDTO.add(adventure);
         return adventuresDTO;
@@ -177,9 +160,59 @@ public class AdventureService {
 
     public List<AdventureDTO> getInstructorAdventures(Long id) {
         List<AdventureDTO> adventureDTOS = new ArrayList<>();
-        for (Adventure adventure : adventureRepository.findInstructorAdventures(id)) {
+        for (Adventure adventure : adventureRepository.findAdventuresByInstructor_Id(id)) {
             adventureDTOS.add(new AdventureDTO(adventure));
         }
         return adventureDTOS;
     }
+
+    @Transactional
+    public boolean edit(AdventureDTO dto, Long id, Optional<MultipartFile[]> newPhotos) throws IOException {
+        Adventure adventure = adventureRepository.findByIdWithReservations(id);
+        if ((reservationRepository.getActiveReservations(id).size()) != 0) return false;
+        pictureService.handleDeletedPictures(adventure, dto.getPhotos());
+        if (newPhotos.isPresent()) {
+            List<String> paths = pictureService.addPictures(adventure.getId(), PICTURES_PATH, newPhotos.get());
+            adventure.getPictures().addAll(paths);
+            if (adventure.getProfilePicture() == null) adventure.setProfilePicture(paths.get(0));
+        }
+        adventure.setName(dto.getName());
+        adventure.getAddress().setState(dto.getAddress().getState());
+        adventure.getAddress().setCity(dto.getAddress().getCity());
+        adventure.getAddress().setStreet(dto.getAddress().getStreet());
+        adventure.getAddress().setZipCode(dto.getAddress().getZipCode());
+        addressRepository.save(adventure.getAddress());
+        adventure.setPromotionalDescription(dto.getPromotionalDescription());
+        adventure.setRules(dto.getRules());
+        adventure.setCapacity(dto.getCapacity());
+        adventure.getPriceList().setHourlyRate(dto.getHourlyRate());
+        adventure.setFishingEquipment(dto.getEquipment());
+        adventure.getPriceList().setCancellationConditions(dto.getCancellationConditions());
+        priceListRepository.save(adventure.getPriceList());
+
+        tagService.setNewAdditionalServices(dto.getAdditionalServices(), adventure);
+        handleDeletedTags(adventure, dto.getAdditionalServices());
+        adventureRepository.save(adventure);
+        return true;
+
+    }
+
+    private void handleDeletedTags(Adventure adventure, List<String> additionalServices) {
+        for (int i = adventure.getAdditionalServices().size() - 1; i >= 0; --i) {
+            if (!(additionalServices.contains(adventure.getAdditionalServices().get(i).getName()))) {
+                tagService.removeRelationship(adventure, adventure.getAdditionalServices().get(i));
+                adventure.getAdditionalServices().remove(adventure.getAdditionalServices().get(i));
+            }
+        }
+
+    }
+
+    public AdventureDTO getAdventure(Long id) throws IOException {
+        Adventure adventure = adventureRepository.findById(id).orElse(null);
+        if (adventure == null) return null;
+        List<String> adventurePhotos = getPhotos(adventure);
+        adventure.setPictures(adventurePhotos);
+        return new AdventureDTO(adventure);
+    }
+
 }

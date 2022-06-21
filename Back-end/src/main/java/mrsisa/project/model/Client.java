@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 public class Client extends Person {
     @ManyToOne
-    private ClientCategory category;
+    private UserCategory category;
     private Integer penalties;
     private Integer points;
     @OneToMany(cascade=CascadeType.ALL)

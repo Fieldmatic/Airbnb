@@ -4,14 +4,20 @@ import mrsisa.project.dto.AdminDTO;
 import mrsisa.project.dto.PersonBasicInfoDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
+import mrsisa.project.dto.*;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,6 +39,9 @@ public class AdminService {
     RegistrationRequestRepository registrationRequestRepository;
 
     @Autowired
+    ReservationRepository reservationRepository;
+
+    @Autowired
     EmailService emailService;
 
     @Autowired
@@ -41,9 +50,22 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // test
     @Autowired
-    private InstructorRepository instructorRepository;
+    private PaymentService paymentService;
+
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
+
+    @Autowired
+    private UserCategoryService userCategoryService;
+
+    @Autowired
+    private PictureService pictureService;
+
+    @Autowired
+    private ReservationService reservationService;
+
+    final static String PICTURES_PATH = "src/main/resources/static/pictures/admin/";
 
 
     public Administrator update(AdminDTO dto) {
@@ -53,6 +75,7 @@ public class AdminService {
                 if(!passwordEncoder.matches(dto.getPassword(), admin.getPassword()))
                     return null;
                 admin.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+                admin.setLastPasswordResetDate(new Date());
             }
             admin.setName(dto.getName());
             admin.setAddress(dto.getAddress());
@@ -132,11 +155,25 @@ public class AdminService {
     }
 
     /**
-     * @apiNote Use this method only one time to initialize default admin i system.
-     * */
+     * @apiNote Use this method only one time to initialize default admin and system.
+     */
     public void createFirstAdmin() {
+        Payment payment = new Payment();
+        payment.setMoneyPercentage(0.03);
+        payment.setTotal(0);
+        paymentService.save(payment);
+
+        LoyaltyProgram loyaltyProgram = new LoyaltyProgram();
+        loyaltyProgram.setBronzePoints(100);
+        loyaltyProgram.setSilverPoints(250);
+        loyaltyProgram.setGoldPoints(500);
+        loyaltyProgram.setClientPoints(5);
+        loyaltyProgram.setOwnerPoints(3);
+        loyaltyProgramService.save(loyaltyProgram);
+        this.createUserCategories(loyaltyProgram);
+
         if (findAdminByUsername("admin") != null) return;
-        //roleService.createRoles();
+
         Address address = new Address();
         address.setZipCode("123123");
         address.setStreet("Arse Teodorovica 2");
@@ -147,7 +184,7 @@ public class AdminService {
         admin.setActive(true);
         admin.setAddress(address);
         admin.setEmail("bane-gg@hotmail.com");
-        admin.setLastPasswordResetDate(null);
+        admin.setLastPasswordResetDate(new Date());
         admin.setName("Banz");
         admin.setPhoneNumber("065432234");
         admin.setSurname("Ganz");
@@ -167,6 +204,7 @@ public class AdminService {
 
         Instructor instructor = new Instructor();
         instructor.setActive(true);
+        instructor.setApprovedAccount(true);
         instructor.setAddress(address2);
         instructor.setEmail("bane-gg@hotmail.com");
         instructor.setLastPasswordResetDate(null);
@@ -174,15 +212,144 @@ public class AdminService {
         instructor.setPhoneNumber("065432234");
         instructor.setSurname("Ganz");
         instructor.setUsername("bane");
+        instructor.setProfilePhoto("src/main/resources/static/pictures/client/4/ocean-3605547_1920.jpg");
+        instructor.setPoints(260);
+        instructor.setCategory(userCategoryService.getSilverCategory());
+        instructor.setBiography("Ja sam jedan jako dobar instruktor pecanja i obozavam da pecam ribe.");
         instructor.setPassword(passwordEncoder.encode("bane"));
-        instructor.setProfilePhoto(null);
         List<Role> roles2 = roleService.findByName("ROLE_INSTRUCTOR");
         instructor.setRoles(roles2);
-        instructorRepository.save(instructor);
+        personRepository.save(instructor);
+
+        Address address3 = new Address();
+        address3.setZipCode("123123");
+        address3.setStreet("Arse Teodorovica 2");
+        address3.setState("Serbia");
+        address3.setCity("Novi Sad");
+
+        Client client = new Client();
+        client.setActive(true);
+        client.setAddress(address3);
+        client.setPenalties(0);
+        client.setPoints(0);
+        client.setName("Klinjo");
+        client.setSurname("Klinjasti");
+        client.setUsername("c");
+        client.setPhoneNumber("091999345");
+        client.setEmail("bane-gg@hotmail.com");
+        client.setProfilePhoto("src/main/resources/static/pictures/client/4/ocean-3605547_1920.jpg");
+        client.setPassword(passwordEncoder.encode("c"));
+        List<Role> roles3 = roleService.findByName("ROLE_CLIENT");
+        client.setRoles(roles3);
+        client.setCategory(userCategoryService.getRegularCategory());
+        personRepository.save(client);
     }
 
+    private void createUserCategories(LoyaltyProgram loyaltyProgram) {
+        UserCategory category1 = new UserCategory();
+        category1.setName(CategoryName.REGULAR);
+        category1.setPoints(0);
+        category1.setDiscount(0.0);
+        this.userCategoryService.save(category1);
+
+        UserCategory category2 = new UserCategory();
+        category2.setName(CategoryName.BRONZE);
+        category2.setPoints(loyaltyProgram.getBronzePoints());
+        category2.setDiscount(0.05);
+        this.userCategoryService.save(category2);
+
+        UserCategory category3 = new UserCategory();
+        category3.setName(CategoryName.SILVER);
+        category3.setPoints(loyaltyProgram.getSilverPoints());
+        category3.setDiscount(0.10);
+        this.userCategoryService.save(category3);
+
+        UserCategory category4 = new UserCategory();
+        category4.setName(CategoryName.GOLD);
+        category4.setPoints(loyaltyProgram.getGoldPoints());
+        category4.setDiscount(0.15);
+        this.userCategoryService.save(category4);
+    }
 
     public Administrator findAdminByUsername(String username) {
         return (Administrator) personRepository.findByUsername(username);
+    }
+
+    public void add(AdminDTO dto) {
+        Administrator admin = new Administrator();
+        admin.setActive(true);
+        admin.setEmail(dto.getEmail());
+        admin.setAddress(dto.getAddress());
+        admin.setPassword(passwordEncoder.encode(dto.getPassword()));
+        admin.setName(dto.getName());
+        admin.setSurname(dto.getSurname());
+        admin.setProfilePhoto(null);
+        admin.setLastPasswordResetDate(null);
+        admin.setPhoneNumber(dto.getPhone());
+        admin.setUsername(dto.getUsername());
+        List<Role> roles = roleService.findByName("ROLE_ADMIN");
+        admin.setRoles(roles);
+        adminRepository.save(admin);
+    }
+
+    public List<ChartDataDTO> getChartData(String startDate, String endDate) {
+        LocalDateTime start = LocalDateTime.parse(startDate);
+        LocalDateTime end = LocalDateTime.parse(endDate);
+        List<ChartDataDTO> chartData = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        double percentage = paymentService.getMoneyPercentage();
+
+        for (Reservation r : reservationRepository.findAll()) {
+            if(start.isBefore(r.getEndDateTime()) && end.isAfter(r.getEndDateTime()) && !r.getActive()){
+                String date = r.getEndDateTime().format(formatter);
+                if (!this.dateInChartData(date, chartData)) {
+                    chartData.add(new ChartDataDTO(date, r.getPrice() * percentage));
+                } else {
+                    for (ChartDataDTO dto : chartData) {
+                        if (date.equals(dto.getDate()))
+                            dto.setTotal(dto.getTotal() + r.getPrice() * percentage);
+                    }
+                }
+            }
+        }
+        return chartData;
+    }
+
+    private boolean dateInChartData(String date, List<ChartDataDTO> chartData) {
+        for (ChartDataDTO dto : chartData) {
+            if (dto.getDate().equals(date))
+                return true;
+        }
+        return false;
+    }
+
+    public Payment getPaymentConfig() {
+        return paymentService.getPaymentConfig();
+    }
+
+    public void updatePaymentConfig(Payment newPayment) {
+        paymentService.save(newPayment);
+    }
+
+    public LoyaltyProgram getLoyaltyProgram() {
+        return loyaltyProgramService.getLoyaltyProgram();
+    }
+
+    public void updateLoyaltyProgram(LoyaltyProgram newProgram) {
+        loyaltyProgramService.save(newProgram);
+        for (Person person : personRepository.findAll()) {
+            if (person instanceof Client)
+                reservationService.tryChangeClientCategory((Client) person, newProgram);
+            if (person instanceof Owner)
+                reservationService.tryChangeOwnerCategory((Owner) person, newProgram);
+        }
+    }
+
+    public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
+        Administrator admin = findAdminByUsername(username);
+        List<String> paths = pictureService.addPictures(admin.getId(), PICTURES_PATH, files);
+        admin.setProfilePhoto(paths.get(0));
+        adminRepository.save(admin);
+        return admin.getProfilePhoto();
     }
 }

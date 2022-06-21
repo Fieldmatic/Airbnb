@@ -197,7 +197,6 @@ export default function EditCottage() {
                   label = "Cancellation conditions"
                   variant='outlined'
                   className="form--input"
-                  placeholder = "Cancellation conditions"
                   onChange = {handleChange}
                   value = {cottage.cancellationConditions}
                   name = "cancellationConditions"

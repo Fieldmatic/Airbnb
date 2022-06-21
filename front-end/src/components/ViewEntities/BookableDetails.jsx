@@ -86,7 +86,8 @@ export default function EntityDetails() {
                 createEntity(entityDetails)
                 setEntity(prevState => ({
                     ...prevState,
-                    capacity: entityDetails.capacity
+                    capacity: entityDetails.capacity,
+                    equipment: entityDetails.equipment
                 }))
             }) 
             AdventureService.getNumberOfAdventureReviews(id).then((response) => {
@@ -238,7 +239,7 @@ export default function EntityDetails() {
                             ))}
                         </div>
                         {entityType === "cottage" && <CottageDetails key={id} bedsNum={getNumberOfBeds()} roomsNum={getNumberOfBedrooms()}/>}
-                        {entityType === "adventure" && <AdventureDetails key={id} capacity={entity.capacity}/>}
+                        {entityType === "adventure" && <AdventureDetails key={id} capacity={entity.capacity} equipment={entity.equipment}/>}
                         {entityType === "boat" && <BoatDetails key={id} capacity={entity.capacity} enginesNumber={entity.enginesNumber} enginePower={entity.enginePower} maxSpeed={entity.maxSpeed}/>}
                         <div className="paragraphs">
                             <h3>Description</h3>

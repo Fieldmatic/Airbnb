@@ -52,28 +52,6 @@ export default function InstructorRegistration() {
         })
       }
     
-    function handleSubmit(event) {
-        event.preventDefault();
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords doesn't match!")
-            return;
-        }
-        let data = new FormData()
-        const instructorJson = instructorToJson();
-        data.append("instructor", instructorJson)
-        files.map((file) => {
-            data.append("files", file.file)
-        })
-        LoginRegisterService.addInstructor(data)
-        .then(response => {
-            if (response.data === "NC"){    // TODO: izmijeni da hvata eror a ne ovako nc
-                alert("Username already exist!")
-            } else {
-                alert("Success!")
-                setRedirect("/")
-            }
-        });
-    }
     let navigate = useNavigate();
 
     const [files, setFiles] = React.useState([]);
@@ -122,7 +100,7 @@ export default function InstructorRegistration() {
     
     function handleSubmit(event){
         event.preventDefault()
-        if (formData.password !== formData.passwordRetype) {
+        if (formData.password !== formData.confirmPassword) {
             alert("Passwords aren't matching")
             return
         }
@@ -259,8 +237,8 @@ export default function InstructorRegistration() {
                         className="form--input"
                         type = "password"
                         onChange = {handleChange}
-                        name = "passwordRetype"
-                        value = {formData.passwordRetype}   
+                        name = "confirmPassword"
+                        value = {formData.confirmPassword}   
                     />
                 </div>
                 <div className='form--pair'>
@@ -281,7 +259,6 @@ export default function InstructorRegistration() {
                 </div>
                 <div className='form--pair'>
                 <TextField
-                    id="outlined-multiline-flexible"
                     label="Registration explanation"
                     className="form--input-area"
                     sx = {muiStyles.style}
@@ -294,7 +271,6 @@ export default function InstructorRegistration() {
                 </div>
                 <div className="form--pair">
                 <TextField
-                    id="outlined-multiline-flexible"
                     label="Biography"
                     className="form--input-area"
                     sx = {muiStyles.style}

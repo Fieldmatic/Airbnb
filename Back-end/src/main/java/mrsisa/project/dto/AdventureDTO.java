@@ -22,13 +22,6 @@ public class AdventureDTO {
     private String cancellationConditions;
     private Double hourlyRate;
     private Double rating;
-//    private List<Period> busyPeriods;  TODO: Koristice se za front
-    /*
-        sledece 2 promjenljive se koriste za dobavljanje datuma i vremena sa fronta, a u nastavku se koriste
-        promjenjljive iznad
-     */
-    private String startDateTime;
-    private String endDateTime;
     private List<String> photos;
     private List<String> additionalServices;
 

@@ -117,6 +117,8 @@ public class ReviewService {
     public void denyReview(Review review) {
         review.setAnswered(true);
         reviewRepository.save(review);
+    }
+
     public List<Review> findAll() {
         return reviewRepository.findAll();
     }

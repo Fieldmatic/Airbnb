@@ -4,7 +4,6 @@ import mrsisa.project.dto.ClientDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Client;
 import mrsisa.project.model.Cottage;
-import mrsisa.project.model.Review;
 import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.repository.PersonRepository;
@@ -13,23 +12,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -53,6 +44,9 @@ public class ClientServiceTest {
 
     @Mock
     private PictureService pictureService;
+
+    @Mock
+    private UserCategoryService userCategoryService;
 
     @InjectMocks
     private ClientService clientService;

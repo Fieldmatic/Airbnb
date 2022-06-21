@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.awt.print.Book;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,6 +115,7 @@ public class ReviewService {
     public void denyReview(Review review) {
         review.setAnswered(true);
         reviewRepository.save(review);
+    }
     public List<Review> findAll() {
         return reviewRepository.findAll();
     }

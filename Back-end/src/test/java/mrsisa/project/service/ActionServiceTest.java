@@ -1,34 +1,26 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.ActionDTO;
-import mrsisa.project.dto.ClientDTO;
-import mrsisa.project.dto.PeriodDTO;
-import mrsisa.project.model.*;
-import mrsisa.project.repository.*;
-import org.apache.tomcat.jni.Local;
+import mrsisa.project.model.Cottage;
+import mrsisa.project.model.Period;
+import mrsisa.project.repository.ActionRepository;
+import mrsisa.project.repository.BookableRepository;
+import mrsisa.project.repository.PeriodRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
-import static com.sun.xml.internal.ws.policy.sourcemodel.wspolicy.XmlToken.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

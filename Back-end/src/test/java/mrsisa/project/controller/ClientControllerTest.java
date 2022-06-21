@@ -3,7 +3,6 @@ package mrsisa.project.controller;
 
 import mrsisa.project.dto.ClientDTO;
 import mrsisa.project.model.Address;
-import mrsisa.project.model.Client;
 import mrsisa.project.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +24,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -87,7 +85,7 @@ public class ClientControllerTest {
     public void testGetClientCottageSubscriptions() throws Exception {
         mockMvc.perform(get(URL_PREFIX + "/getClientCottageSubscriptions").principal(principal)).andExpect(status().isOk())
                 .andExpect(content().contentType(contentType)).andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(4)))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(5)))
                 .andExpect(jsonPath("$.[*].name").value(hasItem("Suncana obala")));
 
     }

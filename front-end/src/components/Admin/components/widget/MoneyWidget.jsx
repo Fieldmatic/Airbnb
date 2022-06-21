@@ -1,11 +1,7 @@
 import React from 'react';
 import "./widget.scss";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { Link } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -16,6 +12,7 @@ import Button from '@mui/material/Button';
 import muiStyles from '../../../utils/muiStyles';
 import PercentOutlinedIcon from '@mui/icons-material/PercentOutlined';
 import AdminService from '../../../../services/AdminService';
+import { anyFieldEmpty } from '../../../utils/formValidation';
 
 
 const MoneyWidget = ({ type, showMessage }) => {
@@ -26,7 +23,7 @@ const MoneyWidget = ({ type, showMessage }) => {
 
   const [moneyConfig, setMoneyConfig] = React.useState({
         moneyPercentage: "",
-        total: ""
+        total: 0
     });
 
     function handleChange(event) {
@@ -43,6 +40,10 @@ const MoneyWidget = ({ type, showMessage }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setErrors(true);
+    if (anyFieldEmpty(moneyConfig))
+      return;
+      
     AdminService.updatePaymentConfig(moneyConfig).then(() => {
       showMessage(["Money percentage successfully updated.", true]);
       setMoneyPercentageFloat(moneyConfig.moneyPercentage);
@@ -120,6 +121,8 @@ const MoneyWidget = ({ type, showMessage }) => {
       break;
   }
 
+  const [errors, setErrors] = React.useState(false)
+
   const dialog = () => {
       return (
         <Dialog open={openMoneyPercentDialog} onClose={handleClose}>
@@ -135,7 +138,12 @@ const MoneyWidget = ({ type, showMessage }) => {
                     type = "text"           
                     onChange = {handleChange}
                     name = "moneyPercentage"
-                    value = {moneyConfig.moneyPercentage}   
+                    value = {moneyConfig.moneyPercentage} 
+                    error={moneyConfig.moneyPercentage === "" && errors || isNaN(moneyConfig.moneyPercentage) && errors}
+                    helperText={(moneyConfig.moneyPercentage === "" && errors) ? "This field cannot be empty!" : "" ||
+                                (isNaN(moneyConfig.moneyPercentage) && errors) ? "Money percentage must be a number!" : ""
+                               }
+                    required={errors}  
                 />
             </div>
             </DialogContent>

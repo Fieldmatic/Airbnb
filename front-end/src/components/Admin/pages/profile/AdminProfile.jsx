@@ -14,6 +14,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import UserService from '../../../../services/UserService'
+import { anyFieldEmpty, isEmail } from "../../../utils/formValidation";
 
 
 const AdminProfile = () => {
@@ -62,7 +63,8 @@ const AdminProfile = () => {
       type: "text",
       value: formData.username,
       name: "username",
-      onChange: handleChange
+      onChange: handleChange,
+      errorMessage: "Username cannot be empty!",
     },
     {
       id: 2,
@@ -70,7 +72,8 @@ const AdminProfile = () => {
       type: "text",
       value: formData.name,
       name: "name",
-      onChange: handleChange
+      onChange: handleChange,
+      errorMessage: "Name cannot be empty!",
     },
     {
       id: 3,
@@ -78,7 +81,8 @@ const AdminProfile = () => {
       type: "text",
       value: formData.surname,
       name: "surname",
-      onChange: handleChange
+      onChange: handleChange,
+      errorMessage: "Surname cannot be empty!",
     },
     {
       id: 4,
@@ -86,7 +90,8 @@ const AdminProfile = () => {
       type: "email",
       value: formData.email,
       name: "email",
-      onChange: handleChange
+      onChange: handleChange,
+      errorMessage: "Email cannot be empty and must be in correct format!",
     },
     {
       id: 5,
@@ -94,7 +99,9 @@ const AdminProfile = () => {
       type: "text",
       value: formData.phone,
       name: "phone",
-      onChange: handleChange
+      onChange: handleChange,
+      errorMessage: "Phone number cannot be empty and must contain only numbers!",
+      pattern: '^[0-9]+$'
     },
     {
       id: 6,
@@ -102,7 +109,8 @@ const AdminProfile = () => {
       type: "text",
       value: formData.address.city,
       name: "city",
-      onChange: handleAddressChange
+      onChange: handleAddressChange,
+      errorMessage: "City cannot be empty!",
     },
     {
       id: 7,
@@ -110,7 +118,8 @@ const AdminProfile = () => {
       type: "text",
       value: formData.address.state,
       name: "state",
-      onChange: handleAddressChange
+      onChange: handleAddressChange,
+      errorMessage: "State cannot be empty!",
     },
     {
       id: 8,
@@ -118,7 +127,8 @@ const AdminProfile = () => {
       type: "text",
       value: formData.address.street,
       name: "street",
-      onChange: handleAddressChange
+      onChange: handleAddressChange,
+      errorMessage: "Street cannot be empty!",
     },
     {
       id: 9,
@@ -126,7 +136,9 @@ const AdminProfile = () => {
       type: "text",
       value: formData.address.zipCode,
       name: "zipCode",
-      onChange: handleAddressChange
+      onChange: handleAddressChange,
+      errorMessage: "ZIP cannot be empty and must be a number!",
+      pattern: '^[0-9]+$'
     }
   ];
 
@@ -183,6 +195,10 @@ const AdminProfile = () => {
   };
 
   const handleConfirm = () => {
+    setErrors(true);
+    if (anyFieldEmpty(formData))
+      return;
+
     setOpenDialog(false);
     AdminService.updateAdmin(formData)
     .then(() => {
@@ -206,6 +222,8 @@ const AdminProfile = () => {
         setProfileImage(response.data)
     })
   }
+
+  const [errors, setErrors] = React.useState(false)
 
   return (
     <div className="new">
@@ -235,7 +253,7 @@ const AdminProfile = () => {
             />
           </div>
           <div className="right">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="formInput">
                 <label htmlFor="file">
                   Image: <DriveFolderUploadOutlinedIcon className="icon" />
@@ -255,7 +273,11 @@ const AdminProfile = () => {
                     type={input.type} 
                     value={input.value}
                     name={input.name}
-                    onChange={input.onChange} />
+                    onChange={input.onChange} 
+                    pattern={input?.pattern}
+                    required
+                    />
+                  <span>{input.errorMessage}</span>
                 </div>
               ))}
               <Dialog open={openDialog} onClose={handleClose}>
@@ -286,6 +308,10 @@ const AdminProfile = () => {
                     value={formData.newPassword}
                     name="newPassword"
                     onChange={handleChange}
+                    error={formData.newPassword === "" && errors || formData.newPassword.length < 6 && errors}
+                    helperText={(formData.newPassword === "" && errors) ? "New password is required!" : "" ||
+                                (formData.newPassword.length < 6 && errors) ? "New password must contain at least 6 characters!" : ""}
+                    required={errors}
                   />
                 </DialogContent>
                 <DialogActions>
@@ -295,7 +321,7 @@ const AdminProfile = () => {
               </Dialog>
               <div className="buttons">
                 <button type="button" onClick={openPasswordDialog}>Change Password</button>
-                <button onClick={handleSubmit}>Update</button>
+                <button type="submit">Update</button>
               </div>
             </form>
           </div>

@@ -58,6 +58,21 @@
                 border: none;
                 border-bottom: 1px solid gray;
               }
+
+              span {
+                font-size: 12px;
+                padding: 3px;
+                color: red;
+                display: none;
+              }
+
+              input:invalid ~ span {
+                display: block;
+              }
+
+              input:invalid {
+                border-bottom: 1px solid red;
+              }
             }
 
             .buttons {

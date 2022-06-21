@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.AdminDTO;
+import mrsisa.project.dto.ChartDataDTO;
 import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.model.Administrator;

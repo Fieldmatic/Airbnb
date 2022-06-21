@@ -10,6 +10,7 @@ import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,15 +52,14 @@ public class ClientService {
     public List<Client> findAll() {
         return clientRepository.findAll();
     }
-
+    @Cacheable(value = "personId", key = "#id",unless="#result == null")
     public Client findOne(Long id) {return clientRepository.getById(id);}
 
     public Client save(Client client) {return clientRepository.save(client);}
 
     public Client findClientByUsername(String username) {return clientRepository.findByUsername(username);}
-
     public Client findClientByEmail(String email) {return clientRepository.findByEmail(email);}
-
+    @Cacheable(value = "personId", key = "#id",unless="#result == null")
     public Client findClientById(Long id) {return clientRepository.getById(id);}
 
     public Client findClientByUsernameWithSubscriptions(String username) {

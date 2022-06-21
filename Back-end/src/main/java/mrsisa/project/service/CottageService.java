@@ -4,6 +4,7 @@ import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +49,7 @@ public class CottageService {
 
     private final String picturesPath = "src/main/resources/static/pictures/cottage/";
 
-
+    @Transactional
     public void add(CottageDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
         cottageRepository.save(cottage);
@@ -205,7 +206,7 @@ public class CottageService {
         }
 
     }
-
+    @Cacheable(value = "bookableId", key = "#id",unless="#result == null")
     public Cottage findOne(Long id) {
         return cottageRepository.findById(id).orElse(null);
     }

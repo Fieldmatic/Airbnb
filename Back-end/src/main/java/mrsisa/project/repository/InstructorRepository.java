@@ -12,5 +12,7 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
     Optional<Instructor> findById(Long id);
 
     @Query(value = "SELECT i FROM Instructor i LEFT JOIN FETCH i.adventures where i.username=?1")
-    Instructor findByUsername(String username);
+    Instructor findByUsernameWithReservations(String username);
+
+    Instructor findInstructorByUsername(String username);
 }

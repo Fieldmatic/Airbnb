@@ -5,6 +5,7 @@ import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,6 +71,8 @@ public class AdventureService {
         instructorRepository.save(instructor);
     }
 
+
+    @Cacheable(value = "bookableId", key = "#id",unless="#result == null")
     public Adventure findOne(Long id) {
         return adventureRepository.getById(id);
     }

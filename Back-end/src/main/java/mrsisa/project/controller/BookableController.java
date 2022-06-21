@@ -59,7 +59,7 @@ public class BookableController {
     @GetMapping(value = "/rating/{bookable_id}")
     @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER','ROLE_INSTRUCTOR')")
     public ResponseEntity<Double> getRating(@PathVariable Long bookable_id) {
-         Bookable bookable = bookableService.findById(bookable_id);
+         Bookable bookable = bookableService.findOne(bookable_id);
          return new ResponseEntity<>(bookable.getRating(), HttpStatus.OK);
     }
 }

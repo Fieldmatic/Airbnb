@@ -9,6 +9,7 @@ import mrsisa.project.model.Period;
 import mrsisa.project.model.Reservation;
 import mrsisa.project.repository.BookableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ public class BookableService {
     public Bookable findById(Long id) {
         return bookableRepository.findById(id).orElse(null);
     }
-
+    @Cacheable(value = "bookableId", key = "#id",unless="#result == null")
     public Bookable findOne(Long id) {
         return bookableRepository.findById(id).orElse(null);
     }

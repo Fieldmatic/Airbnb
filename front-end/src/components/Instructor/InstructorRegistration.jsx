@@ -142,7 +142,13 @@ export default function InstructorRegistration() {
         return false;
     }
 
-    const mailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    function isEmail(val) {
+        let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!regEmail.test(val)){
+          return false;
+        }
+        return true;
+    }
 
     return (
         <div>
@@ -259,9 +265,9 @@ export default function InstructorRegistration() {
                         onChange = {handleChange}
                         name = "email"
                         value = {formData.email}   
-                        error={(formData.email === "" && errors) || (mailRegex.test(formData.email) && errors)}
+                        error={(formData.email === "" && errors) || (!isEmail(formData.email) && errors)}
                         helperText={((formData.email === "" && errors) ? "Email is required!" : "") || 
-                                    ((mailRegex.test(formData.email) && errors) ? "Wrong format for email!" : "")}
+                                    ((!isEmail(formData.email) && errors) ? "Wrong format for email!" : "")}
                         required={errors}
                     />
                 </div>
@@ -275,9 +281,9 @@ export default function InstructorRegistration() {
                         onChange = {handleChange}
                         name = "password"
                         value = {formData.password}   
-                        error={formData.password === "" && errors || formData.password.length < 8 && errors}
+                        error={formData.password === "" && errors || formData.password.length < 6 && errors}
                         helperText={(formData.password === "" && errors) ? "Password is required!" : "" ||
-                                    (formData.password.length < 8 && errors) ? "Password must contain at least 8 characters!" : ""}
+                                    (formData.password.length < 6 && errors) ? "Password must contain at least 6 characters!" : ""}
                         required={errors}
                     />
                     <TextField

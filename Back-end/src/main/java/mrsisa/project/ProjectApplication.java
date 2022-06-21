@@ -1,14 +1,27 @@
 package mrsisa.project;
 
+import mrsisa.project.model.Client;
+import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.service.AdminService;
 import mrsisa.project.service.CottageService;
 import mrsisa.project.service.PeriodService;
+import mrsisa.project.model.Address;
+import mrsisa.project.model.Cottage;
+import mrsisa.project.model.Tag;
+import mrsisa.project.repository.CottageRepository;
+import mrsisa.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 @EnableAsync
@@ -22,14 +35,21 @@ public class ProjectApplication implements CommandLineRunner {
 	private CottageService cottageService;
 
 	@Autowired
+	private ClientRepository clientRepository;
+
+	@Autowired
 	private PeriodService periodService;
 
-	@Override
-	public void run(String... args) {
-		this.adminService.createFirstAdmin();
+	@Autowired
+	private MockupService mockupService;
 
-		//Cottage cottage = this.cottageService.createFirstCottage();
-		//this.periodService.createPeriodForCottage(cottage);
+	@Override
+	public void run(String... args) throws IOException {
+		adminService.createFirstAdmin();
+		Client client1 = mockupService.createClient1();
+		Cottage cottage1 = mockupService.createCottage1();
+		mockupService.subscribeClientOnCottage(clientRepository.findClientByUsernameWithSubscriptions(client1.getUsername()), cottage1);
+
 
 	}
 

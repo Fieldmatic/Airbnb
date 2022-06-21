@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -67,12 +69,38 @@ public class ClientService {
     }
 
 
-    public void add(ClientDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    public Client add(ClientDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
         Client client = dtoToClient(dto);
         clientRepository.save(client);
-        List<String> paths = pictureService.addPictures(client.getId(), picturesPath, multipartFiles);
-        client.setProfilePhoto(paths.get(0));
+        if (multipartFiles.isPresent()) {
+            List<String> paths = pictureService.addPictures(client.getId(), picturesPath, multipartFiles.get());
+            client.setProfilePhoto(paths.get(0));
+        }
         clientRepository.save(client);
+        return client;
+    }
+
+
+    @Transactional
+    public Client update(Client client, ClientDTO clientDetails) {
+        Address address = addressRepository.findById(clientDetails.getAddress().getId()).get();
+
+        //update adrese odradi
+
+        client.setUsername(clientDetails.getUsername());
+        client.setPassword(clientDetails.getPassword());
+        client.setName(clientDetails.getName());
+        client.setSurname(clientDetails.getSurname());
+        client.setAddress(clientDetails.getAddress());
+        client.setEmail(clientDetails.getEmail());
+        client.setPhoneNumber(clientDetails.getPhoneNumber());
+        address.setStreet(clientDetails.getAddress().getStreet());
+        address.setCity(clientDetails.getAddress().getCity());
+        address.setState(clientDetails.getAddress().getState());
+        addressRepository.save(address);
+
+        client = clientRepository.save(client);
+        return client;
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {

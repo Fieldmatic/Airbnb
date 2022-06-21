@@ -117,7 +117,7 @@ public class AuthenticationController {
 
 		if (userService.emailTaken(dto.getEmail())) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Email is taken!");
 
-		this.clientService.add(dto,multiPartFiles);
+		this.clientService.add(dto, java.util.Optional.ofNullable(multiPartFiles));
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");
 	}

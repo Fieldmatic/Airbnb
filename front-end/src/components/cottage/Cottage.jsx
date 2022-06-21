@@ -8,6 +8,8 @@ import Header from "../../Header";
 import { Navigate } from "react-router-dom";
 import { TextField } from '@mui/material';
 import muiStyles from '../utils/muiStyles';
+import { anyFieldEmpty } from '../utils/formValidation';
+
 
 export default function Cottage() {
   const [formData, setFormData] = React.useState (
@@ -90,6 +92,10 @@ export default function Cottage() {
 
   function handleSubmit(event){
     event.preventDefault()
+    setErrors(true);
+    if (anyFieldEmpty(formData))
+      return;
+
     formData.additionalServices = tags;
     let data = new FormData()
     const json = JSON.stringify(formData)
@@ -112,6 +118,8 @@ export default function Cottage() {
     )
   }
 
+  const [errors, setErrors] = React.useState(false);
+
   return (
     <div>
       <Header />
@@ -127,7 +135,10 @@ export default function Cottage() {
                   type = "text"           
                   onChange = {handleChange}
                   name = "name"
-                  value = {formData.name}   
+                  value = {formData.name}
+                  error={formData.name === "" && errors}
+                  helperText={(formData.name === "" && errors) ? "Name is required!" : ""}
+                  required={errors}   
                 />
                <TextField
                   sx={muiStyles.style} 
@@ -138,8 +149,12 @@ export default function Cottage() {
                   onChange = {handleChange}
                   value = {formData.cancellationConditions}
                   name = "cancellationConditions"
+                  error={formData.cancellationConditions === "" && errors}
+                  helperText={(formData.cancellationConditions === "" && errors) ? "Cancellation conditions are required!" : ""}
+                  required={errors}
                 />
           </div>
+          <br />
           <div className='form--pair'>
               <TextField
                   sx={muiStyles.style} 
@@ -149,7 +164,10 @@ export default function Cottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "state"
-                  value = {formData.address.state}          
+                  value = {formData.address.state}   
+                  error={formData.address.state === "" && errors}
+                  helperText={(formData.address.state === "" && errors) ? "County is required!" : ""}
+                  required={errors}       
               />
               <TextField
                   sx={muiStyles.style} 
@@ -159,9 +177,14 @@ export default function Cottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "zipCode"
-                  value = {formData.address.zipCode}          
+                  value = {formData.address.zipCode} 
+                  error={(formData.address.zipCode === "" && errors) || (isNaN(formData.address.zipCode) && errors)}
+                  helperText={(formData.address.zipCode === "" && errors) ? "ZIP is required!" : "" ||
+                              (isNaN(formData.address.zipCode) && errors) ? "ZIP must be a number!" : ""}
+                  required={errors}          
               />
           </div>
+          <br />
           <div className='form--pair'>
               <TextField
                   sx={muiStyles.style} 
@@ -171,7 +194,10 @@ export default function Cottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "city"
-                  value = {formData.address.city}          
+                  value = {formData.address.city}
+                  error={formData.address.city === "" && errors}
+                  helperText={(formData.address.city === "" && errors) ? "City is required!" : ""}
+                  required={errors}          
               />
               <TextField
                   sx={muiStyles.style} 
@@ -181,12 +207,17 @@ export default function Cottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "street"
-                  value = {formData.address.street}          
+                  value = {formData.address.street}
+                  error={formData.address.street === "" && errors}
+                  helperText={(formData.address.street === "" && errors) ? "Street is required!" : ""}
+                  required={errors}          
               />
           </div>
+          <br />
           <div className='form--pair'>
           <iframe style={{width: "100%", height:"250px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>    
           </div>
+          <br />
           <div className='form--pair'>
             <TextField
               sx={muiStyles.style} 
@@ -196,7 +227,11 @@ export default function Cottage() {
               type = "text"
               onChange = {handleChange}
               name = "dailyRate"
-              value = {formData.dailyRate}          
+              value = {formData.dailyRate}  
+              error={(formData.dailyRate === "" && errors) || (isNaN(formData.dailyRate) && errors)}
+              helperText={(formData.dailyRate === "" && errors) ? "Daily rate is required!" : "" ||
+                          (isNaN(formData.dailyRate) && errors) ? "Daily must be a number!" : ""}
+              required={errors}        
             />
             <TextField
               sx={muiStyles.style} 
@@ -206,9 +241,14 @@ export default function Cottage() {
               type = "text"
               onChange = {handleChange}
               name = "hourlyRate"
-              value = {formData.hourlyRate}          
+              value = {formData.hourlyRate} 
+              error={(formData.hourlyRate === "" && errors) || (isNaN(formData.hourlyRate) && errors)}
+              helperText={(formData.hourlyRate === "" && errors) ? "Hourly rate is required!" : "" ||
+                          (isNaN(formData.hourlyRate) && errors) ? "Hourly must be a number!" : ""}
+              required={errors}         
             />
           </div>
+          <br />
           <div className='form--pair'>
               <TextField
                   id="outlined-multiline-flexible"
@@ -220,6 +260,9 @@ export default function Cottage() {
                   name = "promotionalDescription"
                   value={formData.promotionalDescription}
                   onChange={handleChange}
+                  error={formData.promotionalDescription === "" && errors}
+                  helperText={(formData.promotionalDescription === "" && errors) ? "Promotional description is required!" : ""}
+                  required={errors}
               />
           </div>
           <div className='form--pair'>
@@ -233,6 +276,9 @@ export default function Cottage() {
                   name = "rules"
                   value={formData.rules}
                   onChange={handleChange}
+                  error={formData.rules === "" && errors}
+                  helperText={(formData.rules === "" && errors) ? "Rules are required!" : ""}
+                  required={errors}
               />
           </div>
           <div className='form--bedrooms'>

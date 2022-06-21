@@ -19,6 +19,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import { ThemeProvider} from '@mui/material/styles';
 import WarningIcon from '@mui/icons-material/Warning';
+import { anyFieldEmpty } from '../utils/formValidation';
 
 
 export default function EditProfile() {
@@ -81,6 +82,10 @@ export default function EditProfile() {
     };
 
     function submitPasswordChange(){
+        setPasswordErrors(true);
+        if (anyFieldEmpty(passwordChangeData))
+            return;
+
         UserService.updatePassword(passwordChangeData).then(response =>{
             alert(response.data)
             handleClose()
@@ -125,6 +130,9 @@ export default function EditProfile() {
 
     function toggleShown(event){
         event.preventDefault()
+        if (anyFieldEmpty(user))
+            return;
+
         const {id} = event.target
         setEditClicked(prevShown => {
             return {
@@ -185,6 +193,8 @@ export default function EditProfile() {
         });
     }
 
+    const [passwordErrors, setPasswordErrors] = useState(false);
+
     return (
         <div>
             <Header />
@@ -209,26 +219,34 @@ export default function EditProfile() {
                 <div className='user-form-data'>
                     <label className="userLabel"> First Name </label>
                     {editClicked.nameButton ? 
-                        <input className="textBox"
-                        type="text"
-                        onChange={updateUser}
-                        name="name"
-                        value={user.name}
-                    />
+                        <div className='input-validation'>
+                            <input className="textBox"
+                            type="text"
+                            onChange={updateUser}
+                            name="name"
+                            value={user.name}
+                            required
+                            />
+                            <span>*Name cannot be empty!</span>
+                        </div>
                     : 
                         <label className='userLabel'> {user.name}</label>
                     }
-                    <button className="updateBtn" id="nameButton" onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
+                    <button className="updateBtn" id="nameButton" type='submit' onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> Last Name </label>
                 {editClicked.surnameButton ? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="surname"
-                    value={user.surname}
-                />
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="surname"
+                        value={user.surname}
+                        required
+                        />
+                        <span>*Surname cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.surname}</label>
                 }
@@ -236,13 +254,18 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> Phone Number </label>
-                {editClicked.phoneNumberButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="phoneNumber"
-                    value={user.phoneNumber}
-                />
+                {editClicked.phoneNumberButton ? 
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="phoneNumber"
+                        value={user.phoneNumber}
+                        required
+                        pattern='^[0-9]+$'
+                        />
+                        <span>*Phone number cannot be empty and must a number!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.phoneNumber}</label>
                 }
@@ -250,13 +273,17 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> Street </label>
-                {editClicked.streetButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="street"
-                    value={user.address.street}
-                />
+                {editClicked.streetButton ? 
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="street"
+                        value={user.address.street}
+                        required
+                        />
+                        <span>*Street cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.address.street}</label>
                 }
@@ -264,13 +291,17 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> City </label>
-                {editClicked.cityButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="city"
-                    value={user.address.city}
-                />
+                {editClicked.cityButton ?
+                    <div className='input-validation'> 
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="city"
+                        value={user.address.city}
+                        required
+                        />
+                        <span>*City cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.address.city}</label>
                 }
@@ -278,13 +309,17 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>                 
                 <label className="userLabel"> State </label>
-                {editClicked.stateButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="state"
-                    value={user.address.state}
-                />
+                {editClicked.stateButton ? 
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="state"
+                        value={user.address.state}
+                        required
+                        />
+                        <span>*State cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.address.state}</label>
                 }
@@ -293,13 +328,17 @@ export default function EditProfile() {
                 {user.biography && 
                     <div className='user-form-data user-form-data-bio'>                 
                     <label className="userLabel"> Biography </label>
-                    {editClicked.biographyButton? 
-                        <input className="textBox"
-                        type="text"
-                        onChange={updateUser}
-                        name="biography"
-                        value={user?.biography}
-                    />
+                    {editClicked.biographyButton ?
+                        <div className='input-validation'> 
+                            <input className="textBox"
+                            type="text"
+                            onChange={updateUser}
+                            name="biography"
+                            value={user?.biography}
+                            required
+                            />
+                            <span>*Biography cannot be empty!</span>
+                        </div>
                     : 
                         <label className='userLabel'> {user?.biography}</label>
                     }
@@ -350,6 +389,9 @@ export default function EditProfile() {
                             value={passwordChangeData.oldPassword}
                             name = "oldPassword"
                             onChange={handlePasswordChange}
+                            error={passwordChangeData.oldPassword === "" && passwordErrors}
+                            helperText={(passwordChangeData.oldPassword === "" && passwordErrors) ? "Old password is required!" : ""}
+                            required={passwordErrors}
                         />
                         <TextField
                             sx = {muiStyles.style}
@@ -362,6 +404,9 @@ export default function EditProfile() {
                             value={passwordChangeData.newPassword}
                             name = "newPassword"
                             onChange={handlePasswordChange}
+                            error={passwordChangeData.newPassword === "" && passwordErrors}
+                            helperText={(passwordChangeData.newPassword === "" && passwordErrors) ? "New password is required!" : ""}
+                            required={passwordErrors}
                         />
                         </DialogContent>
                         <DialogActions>

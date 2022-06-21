@@ -116,6 +116,7 @@ public class ReviewService {
         review.setAnswered(true);
         reviewRepository.save(review);
     }
+
     public List<Review> findAll() {
         return reviewRepository.findAll();
     }

@@ -13,6 +13,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Tags from '../utils/Tags';
 import BoatService from '../../services/BoatService';
 import { Button } from '@mui/material';
+import { anyFieldEmpty } from '../utils/formValidation';
+
 
 export default function EditBoat() {
   let {id} = useParams();
@@ -193,6 +195,10 @@ export default function EditBoat() {
 
   function handleSubmit(event){
     event.preventDefault()
+    setErrors(true);
+    if (anyFieldEmpty(boat))
+        return;
+
     boat.additionalServices = tags;
     prepareEquipment(boat);
     let data = new FormData()
@@ -221,6 +227,8 @@ export default function EditBoat() {
     }
   }
 
+  const [errors, setErrors] = React.useState(false);
+
   return (
     <div>
       <Header />
@@ -237,7 +245,10 @@ export default function EditBoat() {
                     type = "text"           
                     onChange = {handleChange}
                     name = "name"
-                    value = {boat.name}   
+                    value = {boat.name} 
+                    error={boat.name === "" && errors}
+                    helperText={(boat.name === "" && errors) ? "Name is required!" : ""}
+                    required={errors}  
                     />
                 <TextField
                     sx={muiStyles.style} 
@@ -248,8 +259,12 @@ export default function EditBoat() {
                     onChange = {handleChange}
                     value = {boat.cancellationConditions}
                     name = "cancellationConditions"
+                    error={boat.cancellationConditions === "" && errors}
+                    helperText={(boat.cancellationConditions === "" && errors) ? "Cancellation conditions are required!" : ""}
+                    required={errors}
                     />
                  </div>
+                 <br />
                 <div className='form--pair'>
                     <TextField
                         sx={muiStyles.style} 
@@ -259,7 +274,10 @@ export default function EditBoat() {
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "state"
-                        value = {boat.address.state}          
+                        value = {boat.address.state}  
+                        error={boat.address.state === "" && errors}
+                        helperText={(boat.address.state === "" && errors) ? "County is required!" : ""}
+                        required={errors}        
                     />
                     <TextField
                         sx={muiStyles.style} 
@@ -269,9 +287,14 @@ export default function EditBoat() {
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "zipCode"
-                        value = {boat.address.zipCode}          
+                        value = {boat.address.zipCode}
+                        error={(boat.address.zipCode === "" && errors) || (isNaN(boat.address.zipCode) && errors)}
+                        helperText={(boat.address.zipCode === "" && errors) ? "ZIP is required!" : "" ||
+                                    (isNaN(boat.address.zipCode) && errors) ? "ZIP must be a number!" : ""}
+                        required={errors}          
                     />
                 </div>
+                <br />
                 <div className='form--pair'>
                     <TextField
                         sx={muiStyles.style} 
@@ -281,23 +304,30 @@ export default function EditBoat() {
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "city"
-                        value = {boat.address.city}          
+                        value = {boat.address.city}
+                        error={boat.address.city === "" && errors}
+                        helperText={(boat.address.city === "" && errors) ? "City is required!" : ""}
+                        required={errors}          
                     />
                     <TextField
                         sx={muiStyles.style} 
                         label = "Street"
-                        variant='outlined'
-      
+                        variant='outlined'     
                         className="form--input"
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "street"
-                        value = {boat.address.street}          
+                        value = {boat.address.street} 
+                        error={boat.address.street === "" && errors}
+                        helperText={(boat.address.street === "" && errors) ? "Street is required!" : ""}
+                        required={errors}         
                     />
                 </div>
+                <br />
                 <div className='form--pair'>
                 <iframe style={{width: "100%", height:"250px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>    
                 </div>
+                <br />
                 <div className='form--pair'>
                     <TextField
                     sx={muiStyles.style} 
@@ -307,7 +337,11 @@ export default function EditBoat() {
                     type = "text"
                     onChange = {handleChange}
                     name = "dailyRate"
-                    value = {boat.dailyRate}          
+                    value = {boat.dailyRate} 
+                    error={(boat.dailyRate === "" && errors) || (isNaN(boat.dailyRate) && errors)}
+                    helperText={(boat.dailyRate === "" && errors) ? "Daily rate is required!" : "" ||
+                                (isNaN(boat.dailyRate) && errors) ? "Daily rate must be a number!" : ""}
+                    required={errors}         
                     />
                     <TextField
                     sx={muiStyles.style} 
@@ -317,9 +351,14 @@ export default function EditBoat() {
                     type = "text"
                     onChange = {handleChange}
                     name = "hourlyRate"
-                    value = {boat.hourlyRate}          
+                    value = {boat.hourlyRate}
+                    error={(boat.hourlyRate === "" && errors) || (isNaN(boat.hourlyRate) && errors)}
+                    helperText={(boat.hourlyRate === "" && errors) ? "Hourly rate is required!" : "" ||
+                                (isNaN(boat.hourlyRate) && errors) ? "Hourly rate must be a number!" : ""}
+                    required={errors}          
                     />
                 </div>
+                <br />
                 <div className='form--pair'>
                     <TextField
                         id="outlined-select"
@@ -329,6 +368,9 @@ export default function EditBoat() {
                         className='form--input'
                         sx = {muiStyles.style}
                         value={boat.type}
+                        error={boat.type === "" && errors}
+                        helperText={(boat.type === "" && errors) ? "Boat type is required!" : ""}
+                        required={errors}
                         onChange={handleChange}>
                         {boat_types.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
@@ -346,8 +388,13 @@ export default function EditBoat() {
                         onChange = {handleChange}
                         name = "capacity"
                         value = {boat.capacity}
+                        error={(boat.capacity === "" && errors) || (isNaN(boat.capacity) && errors)}
+                        helperText={(boat.capacity === "" && errors) ? "Capacity is required!" : "" ||
+                                    (isNaN(boat.capacity) && errors) ? "Capacity must be a number!" : ""}
+                        required={errors}
                     />
                 </div>
+                <br />
                 <div className='form--pair'>
                     <TextField
                         sx={muiStyles.style} 
@@ -358,7 +405,11 @@ export default function EditBoat() {
                         type = "text"
                         onChange = {handleChange}
                         name = "length"
-                        value = {boat.length}          
+                        value = {boat.length} 
+                        error={(boat.length === "" && errors) || (isNaN(boat.length) && errors)}
+                        helperText={(boat.length === "" && errors) ? "Length is required!" : "" ||
+                                    (isNaN(boat.length) && errors) ? "Length must be a number!" : ""}
+                        required={errors}         
                     />
                     <TextField
                         sx={muiStyles.style} 
@@ -369,9 +420,14 @@ export default function EditBoat() {
                         type = "text"
                         onChange = {handleChange}
                         name = "enginesNumber"
-                        value = {boat.enginesNumber}          
+                        value = {boat.enginesNumber}
+                        error={(boat.enginesNumber === "" && errors) || (isNaN(boat.enginesNumber) && errors)}
+                        helperText={(boat.enginesNumber === "" && errors) ? "Number of engines is required!" : "" ||
+                                    (isNaN(boat.enginesNumber) && errors) ? "Number of engines must be a number!" : ""}
+                        required={errors}          
                     />
                 </div>
+                <br />
                 <div className='form--pair'>
                     <TextField
                         sx={muiStyles.style} 
@@ -382,7 +438,11 @@ export default function EditBoat() {
                         type = "text"
                         onChange = {handleChange}
                         name = "enginePower"
-                        value = {boat.enginePower}          
+                        value = {boat.enginePower}
+                        error={(boat.enginePower === "" && errors) || (isNaN(boat.enginePower) && errors)}
+                        helperText={(boat.enginePower === "" && errors) ? "Engine power is required!" : "" ||
+                                    (isNaN(boat.enginePower) && errors) ? "Engine power must be a number!" : ""}
+                        required={errors}          
                     />
                     <TextField
                         sx={muiStyles.style} 
@@ -393,9 +453,14 @@ export default function EditBoat() {
                         type = "text"
                         onChange = {handleChange}
                         name = "maxSpeed"
-                        value = {boat.maxSpeed}          
+                        value = {boat.maxSpeed}
+                        error={(boat.maxSpeed === "" && errors) || (isNaN(boat.maxSpeed) && errors)}
+                        helperText={(boat.maxSpeed === "" && errors) ? "Max speed is required!" : "" ||
+                                    (isNaN(boat.maxSpeed) && errors) ? "Max speed must be a number!" : ""}
+                        required={errors}          
                     />
                 </div>
+                <br />
                 <div className='form--pair'>
                     <TextField
                         id="outlined-multiline-flexible"
@@ -407,6 +472,9 @@ export default function EditBoat() {
                         name = "promotionalDescription"
                         value={boat.promotionalDescription}
                         onChange={handleChange}
+                        error={boat.promotionalDescription === "" && errors}
+                        helperText={(boat.promotionalDescription === "" && errors) ? "Promotional description is required!" : ""}
+                        required={errors}
                     />
                 </div>
                <div className='form--pair'>
@@ -420,6 +488,9 @@ export default function EditBoat() {
                         name = "rules"
                         value={boat.rules}
                         onChange={handleChange}
+                        error={boat.rules === "" && errors}
+                        helperText={(boat.rules === "" && errors) ? "Rules are required!" : ""}
+                        required={errors}
                     />
                 </div>
                 <div className='form--pair'>
@@ -433,6 +504,9 @@ export default function EditBoat() {
                         onChange = {handleChange}
                         value = {boat.navigationEquipment}
                         name = "navigationEquipment"
+                        error={boat.navigationEquipment === "" && errors}
+                        helperText={(boat.navigationEquipment === "" && errors) ? "Navigation equipment is required!" : ""}
+                        required={errors}
                     />
                 </div>
                 <div className='form--pair'>
@@ -446,6 +520,9 @@ export default function EditBoat() {
                         onChange = {handleChange}
                         value = {boat.fishingEquipment}
                         name = "fishingEquipment"
+                        error={boat.fishingEquipment === "" && errors}
+                        helperText={(boat.fishingEquipment === "" && errors) ? "Fishing equipment is required!" : ""}
+                        required={errors}
                     />           
                 </div>
                 <div className='form--pair'>

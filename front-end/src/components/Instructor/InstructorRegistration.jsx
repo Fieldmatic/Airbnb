@@ -8,6 +8,7 @@ import { TextField } from '@mui/material';
 import muiStyles from '../utils/muiStyles';
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
+import { anyFieldEmpty, isEmail } from '../utils/formValidation';
 
 
 export default function InstructorRegistration() {
@@ -101,7 +102,7 @@ export default function InstructorRegistration() {
     function handleSubmit(event){
         event.preventDefault()
         setErrors(true);
-        if (anyFieldEmpty())
+        if (anyFieldEmpty(formData))
             return;
         
         let data = new FormData()
@@ -125,27 +126,6 @@ export default function InstructorRegistration() {
     }
 
     const [errors, setErrors] = React.useState(false)
-
-    function anyFieldEmpty() {
-        for (const [key, value] of Object.entries(formData)) {
-            if (key == "address") {
-                for (const [key1, addressValue] of Object.entries(key)) {
-                    if (addressValue === "") return true;
-                }
-            }
-            if (value === "")
-                return true;
-        }
-        return false;
-    }
-
-    function isEmail(val) {
-        let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(!regEmail.test(val)){
-          return false;
-        }
-        return true;
-    }
 
     return (
         <div>

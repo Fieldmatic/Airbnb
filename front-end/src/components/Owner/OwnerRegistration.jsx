@@ -8,6 +8,8 @@ import muiStyles from '../utils/muiStyles';
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import MenuItem from '@mui/material/MenuItem';
+import { anyFieldEmpty, isEmail } from '../utils/formValidation';
+
 
 export default function OwnerRegistration() {
     const [formData, setFormData] = React.useState (
@@ -91,10 +93,10 @@ export default function OwnerRegistration() {
     
     function handleSubmit(event){
         event.preventDefault()
-        if (formData.password !== formData.passwordRetype) {
-            alert("Passwords aren't matching")
-            return
-        }
+        setErrors(true);
+        if (anyFieldEmpty(formData))
+            return;
+
         let data = new FormData()
         const ownerJson = getOwnerJson();
         data.append("owner", ownerJson)
@@ -106,6 +108,8 @@ export default function OwnerRegistration() {
             navigate("/");
         });
     }
+
+    const [errors, setErrors] = React.useState(false)
     
     return (
         <div>
@@ -122,7 +126,10 @@ export default function OwnerRegistration() {
                     type = "text"           
                     onChange = {handleChange}
                     name = "name"
-                    value = {formData.name}   
+                    value = {formData.name} 
+                    error={formData.name === "" && errors}
+                    helperText={(formData.name === "" && errors) ? "Name is required!" : ""}
+                    required={errors}  
                 />
                 <TextField
                     sx={muiStyles.style} 
@@ -132,7 +139,10 @@ export default function OwnerRegistration() {
                     label = "Surname"
                     onChange = {handleChange}
                     name = "surname"
-                    value = {formData.surname}   
+                    value = {formData.surname} 
+                    error={formData.surname === "" && errors}
+                    helperText={(formData.surname === "" && errors) ? "Surname is required!" : ""}
+                    required={errors}  
                 />
                 </div>
                 <div className='form--pair'>
@@ -144,7 +154,10 @@ export default function OwnerRegistration() {
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "state"
-                        value = {formData.address.state}          
+                        value = {formData.address.state}   
+                        error={formData.address.state === "" && errors}
+                        helperText={(formData.address.state === "" && errors) ? "State is required!" : ""}
+                        required={errors}       
                     />
                     <TextField
                         sx={muiStyles.style} 
@@ -154,7 +167,11 @@ export default function OwnerRegistration() {
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "zipCode"
-                        value = {formData.address.zipCode}          
+                        value = {formData.address.zipCode} 
+                        error={(formData.address.zipCode === "" && errors) || (isNaN(formData.address.zipCode) && errors)}
+                        helperText={(formData.address.zipCode === "" && errors) ? "ZIP is required!" : "" ||
+                                    (isNaN(formData.address.zipCode) && errors) ? "ZIP must be a number!" : ""}
+                        required={errors}         
                     />
                 </div>
                 <div className='form--pair'>
@@ -166,7 +183,10 @@ export default function OwnerRegistration() {
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "city"
-                        value = {formData.address.city}          
+                        value = {formData.address.city} 
+                        error={formData.address.city === "" && errors}
+                        helperText={(formData.address.city === "" && errors) ? "City is required!" : ""}
+                        required={errors}         
                     />
                     <TextField
                         sx={muiStyles.style} 
@@ -176,7 +196,10 @@ export default function OwnerRegistration() {
                         type = "text"
                         onChange = {handleAddressChange}
                         name = "street"
-                        value = {formData.address.street}          
+                        value = {formData.address.street}  
+                        error={formData.address.street === "" && errors}
+                        helperText={(formData.address.street === "" && errors) ? "Street is required!" : ""}
+                        required={errors}        
                     />
                 </div>
                 <div className='form--pair'>
@@ -190,6 +213,9 @@ export default function OwnerRegistration() {
                         onChange = {handleChange}
                         name = "username"
                         value = {formData.username}   
+                        error={formData.username === "" && errors}
+                        helperText={(formData.username === "" && errors) ? "Username is required!" : ""}
+                        required={errors}
                     />
                     <TextField
                         sx={muiStyles.style} 
@@ -199,7 +225,11 @@ export default function OwnerRegistration() {
                         type = "text"
                         onChange = {handleChange}
                         name = "email"
-                        value = {formData.email}   
+                        value = {formData.email} 
+                        error={(formData.email === "" && errors) || (!isEmail(formData.email) && errors)}
+                        helperText={((formData.email === "" && errors) ? "Email is required!" : "") || 
+                                    ((!isEmail(formData.email) && errors) ? "Wrong format for email!" : "")}
+                        required={errors}  
                     />
                 </div>
                 <div className='form--pair'>
@@ -211,7 +241,11 @@ export default function OwnerRegistration() {
                         type = "password"
                         onChange = {handleChange}
                         name = "password"
-                        value = {formData.password}   
+                        value = {formData.password} 
+                        error={formData.password === "" && errors || formData.password.length < 6 && errors}
+                        helperText={(formData.password === "" && errors) ? "Password is required!" : "" ||
+                                    (formData.password.length < 6 && errors) ? "Password must contain at least 6 characters!" : ""}
+                        required={errors}  
                     />
                     <TextField
                         sx={muiStyles.style} 
@@ -222,8 +256,13 @@ export default function OwnerRegistration() {
                         onChange = {handleChange}
                         name = "passwordRetype"
                         value = {formData.passwordRetype}   
+                        error={(formData.passwordRetype !== formData.password && errors) || (formData.passwordRetype === "" && errors)}
+                        helperText={(((formData.password !== formData.passwordRetype) && errors) ? "Passwords do not match!" : "") || 
+                                    (((formData.passwordRetype === "") && errors) ? "You must confirm password!" : "")}
+                        required={errors}
                     />
                 </div>
+                <br />
                 <div className='form--pair'>
                 <PhoneInput
                     className="form--phoneInput"
@@ -234,11 +273,11 @@ export default function OwnerRegistration() {
                             phoneNumber:value
                         }
                         });
-                }}
-                    
-                    placeholder = "Phone number"
+                    }}
+                    placeholder = {errors ? "Phone number *" : "Phone number"}
                     name = "phoneNumber"
                     value = {formData.phoneNumber}   
+                    required={errors}
                 />
                 <TextField
                     id="outlined-select-currency"
@@ -269,6 +308,9 @@ export default function OwnerRegistration() {
                     name = "registrationExplanation"
                     value={formData.registrationExplanation}
                     onChange={handleChange}
+                    error={formData.registrationExplanation === "" && errors}
+                    helperText={(formData.registrationExplanation === "" && errors) ? "Registration explanation is required!" : ""}
+                    required={errors}
                 />
                 </div>
 

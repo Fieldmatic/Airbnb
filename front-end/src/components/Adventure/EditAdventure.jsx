@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Tags from '../utils/Tags';
 import { Button } from '@mui/material'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
+import { anyFieldEmpty } from '../utils/formValidation';
 
 
 export default function EditAdventure() {
@@ -122,6 +123,10 @@ export default function EditAdventure() {
 
     function handleSubmit(event){
         event.preventDefault()
+        setErrors(true);
+        if (anyFieldEmpty(formData))
+            return;
+
         adventure.additionalServices = tags;
         prepareEquipment(adventure)
         let data = new FormData()
@@ -169,6 +174,8 @@ export default function EditAdventure() {
         addressQuery = addressQuery.replace(/ /g,"%20")
         return addressQuery
     }
+
+    const [errors, setErrors] = React.useState(false);
     
     return (
         <div>
@@ -185,7 +192,10 @@ export default function EditAdventure() {
                             type = "text"           
                             onChange = {handleChange}
                             name = "name"
-                            value = {adventure.name}   
+                            value = {adventure.name}
+                            error={adventure.name === "" && errors}
+                            helperText={(adventure.name === "" && errors) ? "Name is required!" : ""}
+                            required={errors}   
                         />
                         <TextField
                             sx={muiStyles.style} 
@@ -195,8 +205,12 @@ export default function EditAdventure() {
                             onChange = {handleChange}
                             value = {adventure.cancellationConditions}
                             name = "cancellationConditions"
+                            error={adventure.cancellationConditions === "" && errors}
+                            helperText={(adventure.cancellationConditions === "" && errors) ? "Cancellation conditions are required!" : ""}
+                            required={errors}
                         />
                     </div>
+                    <br />
                     <div className='form--pair'>
                         <TextField
                             sx={muiStyles.style} 
@@ -206,7 +220,10 @@ export default function EditAdventure() {
                             type = "text"
                             onChange = {handleAddressChange}
                             name = "state"
-                            value = {adventure.address.state}          
+                            value = {adventure.address.state} 
+                            error={adventure.address.state === "" && errors}
+                            helperText={(adventure.address.state === "" && errors) ? "Country is required!" : ""}
+                            required={errors}         
                         />
                         <TextField
                             sx={muiStyles.style} 
@@ -216,9 +233,14 @@ export default function EditAdventure() {
                             type = "text"
                             onChange = {handleAddressChange}
                             name = "zipCode"
-                            value = {adventure.address.zipCode}          
+                            value = {adventure.address.zipCode} 
+                            error={(adventure.address.zipCode === "" && errors) || (isNaN(adventure.address.zipCode) && errors)}
+                            helperText={(adventure.address.zipCode === "" && errors) ? "ZIP is required!" : "" ||
+                                        (isNaN(adventure.address.zipCode) && errors) ? "ZIP must be a number!" : ""}
+                            required={errors}         
                         />
                     </div>
+                    <br />
                     <div className='form--pair'>
                         <TextField
                             sx={muiStyles.style} 
@@ -228,7 +250,10 @@ export default function EditAdventure() {
                             type = "text"
                             onChange = {handleAddressChange}
                             name = "city"
-                            value = {adventure.address.city}          
+                            value = {adventure.address.city} 
+                            error={adventure.address.city === "" && errors}
+                            helperText={(adventure.address.city === "" && errors) ? "City is required!" : ""}
+                            required={errors}         
                         />
                         <TextField
                             sx={muiStyles.style} 
@@ -238,12 +263,17 @@ export default function EditAdventure() {
                             type = "text"
                             onChange = {handleAddressChange}
                             name = "street"
-                            value = {adventure.address.street}          
+                            value = {adventure.address.street}
+                            error={adventure.address.street === "" && errors}
+                            helperText={(adventure.address.street === "" && errors) ? "Street is required!" : ""}
+                            required={errors}           
                         />
                     </div>
+                    <br />
                     <div className='form--pair'>
                         <iframe style={{width: "100%", height:"250px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>    
                     </div>
+                    <br />
                     <div className='form--pair'>
                         <TextField
                             sx={muiStyles.style} 
@@ -253,7 +283,11 @@ export default function EditAdventure() {
                             type = "text"
                             onChange = {handleChange}
                             name = "capacity"
-                            value = {adventure.capacity}          
+                            value = {adventure.capacity}
+                            error={(adventure.capacity === "" && errors) || (isNaN(adventure.capacity) && errors)}
+                            helperText={(adventure.capacity === "" && errors) ? "Capacity is required!" : "" ||
+                                        (isNaN(adventure.capacity) && errors) ? "Capacity must be a number!" : ""}
+                            required={errors}          
                         />
                         <TextField
                             sx={muiStyles.style} 
@@ -263,9 +297,14 @@ export default function EditAdventure() {
                             type = "text"
                             onChange = {handleChange}
                             name = "hourlyRate"
-                            value = {adventure.hourlyRate}          
+                            value = {adventure.hourlyRate}
+                            error={(adventure.hourlyRate === "" && errors) || (isNaN(adventure.hourlyRate) && errors)}
+                            helperText={(adventure.hourlyRate === "" && errors) ? "Hourly rate is required!" : "" ||
+                                        (isNaN(adventure.hourlyRate) && errors) ? "Hourly rate must be a number!" : ""}
+                            required={errors}          
                         />
                     </div>
+                    <br />
                     <div className='form--pair'>
                         <TextField
                             label="Promotional description"
@@ -276,6 +315,9 @@ export default function EditAdventure() {
                             name = "promotionalDescription"
                             value={adventure.promotionalDescription}
                             onChange={handleChange}
+                            error={adventure.promotionalDescription === "" && errors}
+                            helperText={(adventure.promotionalDescription === "" && errors) ? "Promotional description is required!" : ""}
+                            required={errors}
                         />
                     </div>
                     <div className='form--pair'>
@@ -288,6 +330,9 @@ export default function EditAdventure() {
                             name = "rules"
                             value={adventure.rules}
                             onChange={handleChange}
+                            error={adventure.rules === "" && errors}
+                            helperText={(adventure.rules === "" && errors) ? "Rules are required!" : ""}
+                            required={errors}
                         />
                     </div>
                     <div className='form--pair'>
@@ -301,6 +346,9 @@ export default function EditAdventure() {
                             value={adventure.equipment}
                             onChange={handleChange}
                             placeholder="Equipment(separate with ',')"
+                            error={adventure.equipment === "" && errors}
+                            helperText={(adventure.equipment === "" && errors) ? "Equipment is required!" : ""}
+                            required={errors}
                         />
                     </div>
                     <div className='form--pair'>

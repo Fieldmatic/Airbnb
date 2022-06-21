@@ -244,7 +244,7 @@ export default function AddAdventureForm() {
                             value = {formData.hourlyRate}  
                             error={(formData.hourlyRate === "" && errors) || (isNaN(formData.hourlyRate) && errors)}
                             helperText={(formData.hourlyRate === "" && errors) ? "Hourly rate is required!" : "" ||
-                                        (isNaN(formData.hourlyRate) && errors) ? "Hourly must be a number!" : ""}
+                                        (isNaN(formData.hourlyRate) && errors) ? "Hourly rate must be a number!" : ""}
                             required={errors}   
                         />
                     </div>

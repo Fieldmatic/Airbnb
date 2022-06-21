@@ -230,7 +230,7 @@ export default function Cottage() {
               value = {formData.dailyRate}  
               error={(formData.dailyRate === "" && errors) || (isNaN(formData.dailyRate) && errors)}
               helperText={(formData.dailyRate === "" && errors) ? "Daily rate is required!" : "" ||
-                          (isNaN(formData.dailyRate) && errors) ? "Daily must be a number!" : ""}
+                          (isNaN(formData.dailyRate) && errors) ? "Daily rate must be a number!" : ""}
               required={errors}        
             />
             <TextField
@@ -244,7 +244,7 @@ export default function Cottage() {
               value = {formData.hourlyRate} 
               error={(formData.hourlyRate === "" && errors) || (isNaN(formData.hourlyRate) && errors)}
               helperText={(formData.hourlyRate === "" && errors) ? "Hourly rate is required!" : "" ||
-                          (isNaN(formData.hourlyRate) && errors) ? "Hourly must be a number!" : ""}
+                          (isNaN(formData.hourlyRate) && errors) ? "Hourly rate must be a number!" : ""}
               required={errors}         
             />
           </div>

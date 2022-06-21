@@ -12,6 +12,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Tags from '../utils/Tags';
 import { Button } from '@mui/material'
 import { Dropzone, FileItem, FullScreenPreview } from "@dropzone-ui/react";
+import { anyFieldEmpty } from '../utils/formValidation';
+
 
 export default function EditCottage() {
   let {id} = useParams();
@@ -155,6 +157,9 @@ export default function EditCottage() {
 
   function handleSubmit(event){
     event.preventDefault()
+    setErrors(true);
+    if (anyFieldEmpty(cottage))
+        return;
     cottage.additionalServices = tags;
     let data = new FormData()
     const json = JSON.stringify(cottage)
@@ -174,6 +179,8 @@ export default function EditCottage() {
     });
   }
 
+  const [errors, setErrors] = React.useState(false);
+
   return (
     <div>
       <Header />
@@ -190,7 +197,10 @@ export default function EditCottage() {
                   type = "text"           
                   onChange = {handleChange}
                   name = "name"
-                  value = {cottage.name}   
+                  value = {cottage.name}  
+                  error={cottage.name === "" && errors}
+                  helperText={(cottage.name === "" && errors) ? "Name is required!" : ""}
+                  required={errors}  
                 />
                <TextField
                   sx={muiStyles.style} 
@@ -200,8 +210,12 @@ export default function EditCottage() {
                   onChange = {handleChange}
                   value = {cottage.cancellationConditions}
                   name = "cancellationConditions"
+                  error={cottage.cancellationConditions === "" && errors}
+                  helperText={(cottage.cancellationConditions === "" && errors) ? "Cancellation conditions are required!" : ""}
+                  required={errors}
                 />
             </div>
+            <br />
             <div className='form--pair'>
               <TextField
                   sx={muiStyles.style} 
@@ -211,7 +225,10 @@ export default function EditCottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "state"
-                  value = {cottage.address.state}          
+                  value = {cottage.address.state} 
+                  error={cottage.address.state === "" && errors}
+                  helperText={(cottage.address.state === "" && errors) ? "County is required!" : ""}
+                  required={errors}          
               />
               <TextField
                   sx={muiStyles.style} 
@@ -221,9 +238,14 @@ export default function EditCottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "zipCode"
-                  value = {cottage.address.zipCode}          
+                  value = {cottage.address.zipCode}
+                  error={(cottage.address.zipCode === "" && errors) || (isNaN(cottage.address.zipCode) && errors)}
+                  helperText={(cottage.address.zipCode === "" && errors) ? "ZIP is required!" : "" ||
+                              (isNaN(cottage.address.zipCode) && errors) ? "ZIP must be a number!" : ""}
+                  required={errors}          
               />
           </div>
+          <br />
           <div className='form--pair'>
               <TextField
                   sx={muiStyles.style} 
@@ -233,7 +255,10 @@ export default function EditCottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "city"
-                  value = {cottage.address.city}          
+                  value = {cottage.address.city}
+                  error={cottage.address.city === "" && errors}
+                  helperText={(cottage.address.city === "" && errors) ? "City is required!" : ""}
+                  required={errors}          
               />
               <TextField
                   sx={muiStyles.style} 
@@ -243,12 +268,17 @@ export default function EditCottage() {
                   type = "text"
                   onChange = {handleAddressChange}
                   name = "street"
-                  value = {cottage.address.street}          
+                  value = {cottage.address.street}
+                  error={cottage.address.street === "" && errors}
+                  helperText={(cottage.address.street === "" && errors) ? "Street is required!" : ""}
+                  required={errors}          
               />
           </div>
+          <br />
           <div className='form--pair'>
           <iframe style={{width: "100%", height:"250px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>    
           </div>
+          <br />
           <div className='form--pair'>
             <TextField
               sx={muiStyles.style} 
@@ -258,7 +288,11 @@ export default function EditCottage() {
               type = "text"
               onChange = {handleChange}
               name = "dailyRate"
-              value = {cottage.dailyRate}          
+              value = {cottage.dailyRate} 
+              error={(cottage.dailyRate === "" && errors) || (isNaN(cottage.dailyRate) && errors)}
+              helperText={(cottage.dailyRate === "" && errors) ? "Daily rate is required!" : "" ||
+                          (isNaN(cottage.dailyRate) && errors) ? "Daily rate must be a number!" : ""}
+              required={errors}         
             />
             <TextField
               sx={muiStyles.style} 
@@ -268,9 +302,14 @@ export default function EditCottage() {
               type = "text"
               onChange = {handleChange}
               name = "hourlyRate"
-              value = {cottage.hourlyRate}          
+              value = {cottage.hourlyRate}
+              error={(cottage.hourlyRate === "" && errors) || (isNaN(cottage.hourlyRate) && errors)}
+              helperText={(cottage.hourlyRate === "" && errors) ? "Hourly rate is required!" : "" ||
+                          (isNaN(cottage.hourlyRate) && errors) ? "Hourly rate must be a number!" : ""}
+              required={errors}          
             />
           </div>
+          <br />
           <div className='form--pair'>
               <TextField
                   id="outlined-multiline-flexible"
@@ -282,6 +321,9 @@ export default function EditCottage() {
                   name = "promotionalDescription"
                   value={cottage.promotionalDescription}
                   onChange={handleChange}
+                  error={cottage.promotionalDescription === "" && errors}
+                  helperText={(cottage.promotionalDescription === "" && errors) ? "Promotional description is required!" : ""}
+                  required={errors}
               />
           </div>
           <div className='form--pair'>
@@ -295,6 +337,9 @@ export default function EditCottage() {
                   name = "rules"
                   value={cottage.rules}
                   onChange={handleChange}
+                  error={cottage.rules === "" && errors}
+                  helperText={(cottage.rules === "" && errors) ? "Rules are required!" : ""}
+                  required={errors}
               />
           </div>
           <div className='form--pair'>

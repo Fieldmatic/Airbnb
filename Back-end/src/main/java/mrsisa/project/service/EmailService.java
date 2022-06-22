@@ -1,6 +1,5 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.ClientDTO;
 import mrsisa.project.model.Client;
 import mrsisa.project.model.Owner;
 import mrsisa.project.model.Person;
@@ -121,7 +120,7 @@ public class EmailService {
         SimpleMailMessage mail1 = getMailMessage(client, "Registration");
         mail1.setText("Dear,\n"+client.getName()+"\n\n\"You have successfully created a profile on AirBnb. Your account is connected with this mail, but still not verified. You will not be able " +
                 "to login until you verify your account. To verify your account, please follow this link: \n" +
-                "http://localhost:3000/verification/"+client.getUsername()+" \n\n\nThank you for using AirBnb service");
+                "https://airbnbexperiences.herokuapp.com/verification/"+client.getUsername()+" \n\n\nThank you for using AirBnb service");
         javaMailSender.send(mail1);
     }
 

@@ -104,6 +104,7 @@
 
 .clientProfilePicture {
     height: auto;
+    width: 10vw;
     border-radius: 10px;
 }
 
@@ -123,17 +124,19 @@
     border: 0.5vh  solid gold;
 }
 
-.changeProfilePictureBtn {
+.changeProfilePictureDiv {
     margin-top: 5%;
     color: white;
     background-color: #FF5A5F;
     font-size: medium;
     width: 15vw;
-    height: 3.5vh;
+    height: 3.3vh;
     border-radius: 5px;
     border: none;
     cursor: pointer; 
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .delete--reset{

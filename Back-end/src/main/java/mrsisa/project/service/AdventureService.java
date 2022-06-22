@@ -78,7 +78,12 @@ public class AdventureService {
     }
 
     public Integer getNumberOfReviews(Long id) {
-        return adventureRepository.findByIdWithReviews(id).getReviews().size();
+        Adventure adventure = adventureRepository.findByIdWithReviews(id);
+        int i = 0;
+        for (Review review : adventure.getReviews()) {
+            if (review.isAnswered()) i++;
+        }
+        return i;
     }
 
     public List<Adventure> findAll() {

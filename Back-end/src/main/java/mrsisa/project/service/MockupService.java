@@ -86,7 +86,7 @@ public class MockupService {
 
         cottageRepository.save(cottage);
         List<Tag> additionalServices = new ArrayList<>();
-        Tag tag1 = new Tag("wiFi", cottage);
+        Tag tag1 = new Tag("wifi", cottage);
         Tag tag2 = new Tag("mini bar", cottage);
         Tag tag3 = new Tag("jacuzzi", cottage);
         Tag tag4 = new Tag("tv", cottage);
@@ -150,8 +150,8 @@ public class MockupService {
 
         boatRepository.save(boat);
         List<Tag> additionalServices = new ArrayList<>();
-        Tag tag2 = new Tag("mini bar", boat);
-        Tag tag3 = new Tag("jacuzzi", boat);
+        Tag tag2 = new Tag("jetski", boat);
+        Tag tag3 = new Tag("cocktails", boat);
         tagRepository.save(tag2);
         tagRepository.save(tag3);
         additionalServices.add(tag2);
@@ -182,7 +182,7 @@ public class MockupService {
         adventure.setName("Pecanje sa miletom");
         adventure.setAddress(address);
         adventure.setPromotionalDescription("Opis je ovaj");
-        adventure.setProfilePicture("src/main/resources/static/pictures/cottage/5/drinskaRuza.jpg");
+        adventure.setProfilePicture(null);
         adventure.setRules("Nema");
         adventure.setRating(2.3);
         adventure.setCapacity(10);
@@ -196,8 +196,8 @@ public class MockupService {
 
         adventureRepository.save(adventure);
         List<Tag> additionalServices = new ArrayList<>();
-        Tag tag2 = new Tag("mini bar", adventure);
-        Tag tag3 = new Tag("jacuzzi", adventure);
+        Tag tag2 = new Tag("professional fishing rod", adventure);
+        Tag tag3 = new Tag("hooks", adventure);
         tagRepository.save(tag2);
         tagRepository.save(tag3);
         additionalServices.add(tag2);

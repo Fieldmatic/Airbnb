@@ -203,7 +203,7 @@ function entity(props) {
                         <StarIcon className="entity__star" />
                         <div>
                         <span className='entity_rating_value'>{props.rating}</span>
-                        <span>/10 ({reviewsNumber} reviews)</span>
+                        <span>/5 ({reviewsNumber} reviews)</span>
                         </div>
                         </div>
                     </div>
@@ -290,7 +290,7 @@ function entity(props) {
                             <span className='entity_price_value'>{props.entity === "adventure"? "" :"€" + props.hourlyRate} </span>
                             <span className='entity_price_per'>{props.entity === "adventure" ? '' : '/hour'}</span>
                         </div>
-                        {!props.showAll && 
+                        {(!props.showAll && props.user ==="client") &&
                          <div className="reservation__price">
                             <span className='entity_price_value'> Price: {getPrice()} €</span>
                      </div>

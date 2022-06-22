@@ -80,7 +80,11 @@ public class CottageService {
 
     public Integer getNumberOfReviews(Long id) {
         Cottage cottage = cottageRepository.findByIdWithReviews(id);
-        return cottage.getReviews().size();
+        int i = 0;
+        for (Review review : cottage.getReviews()) {
+            if (review.isAnswered()) i++;
+        }
+        return i;
     }
 
     public List<CottageDTO> findAll() {

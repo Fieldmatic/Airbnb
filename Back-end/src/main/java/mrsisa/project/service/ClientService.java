@@ -83,7 +83,7 @@ public class ClientService {
 
     @Transactional
     public Client update(Client client, ClientDTO clientDetails) {
-        Address address = addressRepository.findById(clientDetails.getAddress().getId()).get();
+        Address address = addressRepository.getById(clientDetails.getAddress().getId());
 
         //update adrese odradi
 

@@ -227,7 +227,7 @@ export default function EditProfile() {
                             value={user.name}
                             required
                             />
-                            <span>*Name cannot be empty!</span>
+                            <span className='errMessage'>*Name cannot be empty!</span>
                         </div>
                     : 
                         <label className='userLabel'> {user.name}</label>
@@ -245,7 +245,7 @@ export default function EditProfile() {
                         value={user.surname}
                         required
                         />
-                        <span>*Surname cannot be empty!</span>
+                        <span className='errMessage'>*Surname cannot be empty!</span>
                     </div>
                 : 
                     <label className='userLabel'> {user.surname}</label>
@@ -264,7 +264,7 @@ export default function EditProfile() {
                         required
                         pattern='^[0-9]+$'
                         />
-                        <span>*Phone number cannot be empty and must a number!</span>
+                        <span className='errMessage'>*Phone number cannot be empty and must a number!</span>
                     </div>
                 : 
                     <label className='userLabel'> {user.phoneNumber}</label>
@@ -282,7 +282,7 @@ export default function EditProfile() {
                         value={user.address.street}
                         required
                         />
-                        <span>*Street cannot be empty!</span>
+                        <span className='errMessage'>*Street cannot be empty!</span>
                     </div>
                 : 
                     <label className='userLabel'> {user.address.street}</label>
@@ -300,7 +300,7 @@ export default function EditProfile() {
                         value={user.address.city}
                         required
                         />
-                        <span>*City cannot be empty!</span>
+                        <span className='errMessage'>*City cannot be empty!</span>
                     </div>
                 : 
                     <label className='userLabel'> {user.address.city}</label>
@@ -318,7 +318,7 @@ export default function EditProfile() {
                         value={user.address.state}
                         required
                         />
-                        <span>*State cannot be empty!</span>
+                        <span className='errMessage'>*State cannot be empty!</span>
                     </div>
                 : 
                     <label className='userLabel'> {user.address.state}</label>
@@ -337,7 +337,7 @@ export default function EditProfile() {
                             value={user?.biography}
                             required
                             />
-                            <span>*Biography cannot be empty!</span>
+                            <span className='errMessage'>*Biography cannot be empty!</span>
                         </div>
                     : 
                         <label className='userLabel'> {user?.biography}</label>

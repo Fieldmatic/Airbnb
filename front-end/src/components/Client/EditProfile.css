@@ -184,14 +184,14 @@
     font-weight: 800;
 }
 
-span {
+.errMessage {
     font-size: 12px;
     padding: 3px;
     color: red;
     display: none;
 }
 
-input:invalid ~ span {
+input:invalid ~ .errMessage {
     display: block;
 }
 
@@ -201,7 +201,6 @@ input:invalid {
 
 input {
     display: block;
-    margin: 0;
 }
 
 .input-validation {

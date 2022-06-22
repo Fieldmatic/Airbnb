@@ -25,10 +25,8 @@ export default function InstructorRegistration() {
         confirmPassword: "",
         surname: "",
         email: "",
-        phone: "",
         registrationExplanation: "",
         biography: "",
-        profilePhoto: ""
     });
     
     function handleChange(event) {
@@ -101,7 +99,7 @@ export default function InstructorRegistration() {
     
     function handleSubmit(event){
         event.preventDefault()
-        setErrors(true);
+        console.log(formData);
         if (anyFieldEmpty(formData))
             return;
         

@@ -99,14 +99,15 @@ public class AdminService {
     }
 
     public boolean deleteAccount(Long userId, Long profileDeletionId, boolean delete, String message) {
-        Owner user = ownerRepository.findById(userId).orElse(null);
+        Person user = personRepository.findById(userId).orElse(null);
         ProfileDeletionReason pdr = profileDeletionReasonRepository.findById(profileDeletionId).orElse(null);
         if (user == null || pdr == null) return false;
-        if (delete)
+        if (delete) {
             user.setActive(false);
+            personRepository.save(user);
+        }
         pdr.setViewed(true);
-        pdr.setApproved(delete);
-        ownerRepository.save(user);
+        pdr.setApproved(delete);    // ovaj atribut je nepotreban
         profileDeletionReasonRepository.save(pdr);
         try {
             String title = "AirBnb account deletion notification";

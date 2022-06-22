@@ -127,4 +127,17 @@ public class ClientController {
         List<AdventureDTO> adventuresDTO = clientService.getClientAdventureSubscriptions(clientService.findClientByUsername(userP.getName()));
         return new ResponseEntity<>(adventuresDTO, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/verify/{username}")
+    public ResponseEntity<Boolean> verifyAccount(@PathVariable("username") String username){
+        //long id=(customId-105)/41;
+        Client user = clientService.findClientByUsername(username);
+        if(user == null)
+            return new ResponseEntity<>(false,HttpStatus.NOT_FOUND);
+        user.setVerified(true);
+        Client userSaved = clientService.save(user);
+        if(userSaved==null)
+            return new ResponseEntity<>(false,HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(true,HttpStatus.OK);
+    }
 }

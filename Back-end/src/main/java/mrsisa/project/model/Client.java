@@ -25,4 +25,5 @@ public class Client extends Person {
     @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Bookable> subscriptions;
+    private boolean verified;
 }

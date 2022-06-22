@@ -1,6 +1,5 @@
 package mrsisa.project;
 
-import mrsisa.project.model.*;
 import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.repository.CottageRepository;
 import mrsisa.project.service.AdminService;
@@ -42,7 +41,7 @@ public class ProjectApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws IOException {
 		adminService.createFirstAdmin();
-		Client client1 = mockupService.createClient1();
+/*		Client client1 = mockupService.createClient1();
 		Cottage cottage1 = mockupService.createCottage1();
 		mockupService.subscribeClientOnCottage(clientRepository.findClientByUsernameWithSubscriptions(client1.getUsername()), cottage1);
 		CottageOwner cottageOwner = mockupService.createCottageOwner1();
@@ -55,7 +54,7 @@ public class ProjectApplication implements CommandLineRunner {
 		Boat boat1 = mockupService.createBoat1();
 		Adventure adventure1 = mockupService.createAdventure1();
 		mockupService.addPeriodToBookable(boat1.getId());
-		mockupService.addPeriodToBookable(adventure1.getId());
+		mockupService.addPeriodToBookable(adventure1.getId());*/
 
 	}
 

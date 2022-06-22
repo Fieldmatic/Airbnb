@@ -105,15 +105,4 @@ public class ActionServiceTest {
 
     }
 
-
-    private void test(){
-        int array[] = {1,2,3,4,5};
-        for (int i = 1; i < array.length; i++){
-           if (!array.contains(i)) return i;
-
-        }
-
-    }
-
-
 }

@@ -128,7 +128,7 @@ public class BoatService {
                 boatsDTO.add(boat);
         return boatsDTO;
     }
-    
+
     public List<String> getPhotos(Boat boat) throws IOException {
         List<String> photos = new ArrayList<>();
         for (String photo : boat.getPictures()) {

@@ -49,6 +49,9 @@ public class CottageOwnerService {
     @Autowired
     PictureService pictureService;
 
+    @Autowired
+    UserCategoryService userCategoryService;
+
     final static String picturesPath = "src/main/resources/static/pictures/cottageOwner/";
 
     public Person add(PersonDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
@@ -83,6 +86,7 @@ public class CottageOwnerService {
         owner.setPhoneNumber(dto.getPhoneNumber());
         owner.setRegistrationExplanation(dto.getRegistrationExplanation());
         owner.setApprovedAccount(false);
+        owner.setCategory(userCategoryService.getRegularCategory());
         owner.setPoints(0);
         List<Role> roles = roleService.findByName(dto.getRole());
         owner.setRoles(roles);

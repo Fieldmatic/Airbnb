@@ -1,9 +1,5 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.AdminDTO;
-import mrsisa.project.dto.PersonBasicInfoDTO;
-import mrsisa.project.dto.ProfileDeletionReasonDTO;
-import mrsisa.project.dto.RegistrationRequestDTO;
 import mrsisa.project.dto.*;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
@@ -330,22 +326,40 @@ public class AdminService {
         return paymentService.getPaymentConfig();
     }
 
-    public void updatePaymentConfig(Payment newPayment) {
-        paymentService.save(newPayment);
+    public void updatePaymentConfig(PaymentDTO newPayment) {
+        paymentService.save(dtoToPayment(newPayment));
+    }
+
+    private Payment dtoToPayment(PaymentDTO dto) {
+        Payment payment = new Payment();
+        payment.setTotal(dto.getTotal());
+        payment.setMoneyPercentage(dto.getMoneyPercentage());
+        return payment;
     }
 
     public LoyaltyProgram getLoyaltyProgram() {
         return loyaltyProgramService.getLoyaltyProgram();
     }
 
-    public void updateLoyaltyProgram(LoyaltyProgram newProgram) {
-        loyaltyProgramService.save(newProgram);
+    public void updateLoyaltyProgram(LoyaltyProgramDTO newProgramDTO) {
+        LoyaltyProgram loyaltyProgram = dtoToLoyaltyProgram(newProgramDTO);
+        loyaltyProgramService.save(loyaltyProgram);
         for (Person person : personRepository.findAll()) {
             if (person instanceof Client)
-                reservationService.tryChangeClientCategory((Client) person, newProgram);
+                reservationService.tryChangeClientCategory((Client) person, loyaltyProgram);
             if (person instanceof Owner)
-                reservationService.tryChangeOwnerCategory((Owner) person, newProgram);
+                reservationService.tryChangeOwnerCategory((Owner) person, loyaltyProgram);
         }
+    }
+
+    private LoyaltyProgram dtoToLoyaltyProgram(LoyaltyProgramDTO dto) {
+        LoyaltyProgram loyaltyProgram = new LoyaltyProgram();
+        loyaltyProgram.setBronzePoints(dto.getBronzePoints());
+        loyaltyProgram.setSilverPoints(dto.getSilverPoints());
+        loyaltyProgram.setGoldPoints(dto.getGoldPoints());
+        loyaltyProgram.setClientPoints(dto.getClientPoints());
+        loyaltyProgram.setOwnerPoints(dto.getOwnerPoints());
+        return loyaltyProgram;
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {

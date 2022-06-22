@@ -1,9 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.*;
-import mrsisa.project.model.Address;
 import mrsisa.project.model.Client;
-import mrsisa.project.service.AddressService;
 import mrsisa.project.service.ClientService;
 import mrsisa.project.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;

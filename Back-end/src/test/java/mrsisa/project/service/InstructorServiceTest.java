@@ -2,9 +2,7 @@ package mrsisa.project.service;
 
 
 import mrsisa.project.dto.InstructorDTO;
-import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.model.Address;
-import mrsisa.project.model.CottageOwner;
 import mrsisa.project.model.Instructor;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.InstructorRepository;
@@ -12,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
@@ -25,7 +22,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

@@ -1,6 +1,5 @@
 package mrsisa.project.controller;
 
-import mrsisa.project.dto.ProfileDeletionReasonDTO;
 import mrsisa.project.dto.ReportDTO;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Report;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController

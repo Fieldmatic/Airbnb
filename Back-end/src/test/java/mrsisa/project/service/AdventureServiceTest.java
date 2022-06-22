@@ -2,7 +2,6 @@ package mrsisa.project.service;
 
 
 import mrsisa.project.model.Adventure;
-import mrsisa.project.model.Cottage;
 import mrsisa.project.model.Review;
 import mrsisa.project.repository.*;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -50,13 +48,20 @@ public class AdventureServiceTest {
     @Test
     public void testFindOne(){
         List<Review> reviews = new ArrayList<Review>();
-        reviews.add(new Review());
-        reviews.add(new Review());
+        Review review1 = new Review();
+        review1.setAnswered(true);
+        Review review2 = new Review();
+        review2.setAnswered(false);
+        Review review3 = new Review();
+        review3.setAnswered(true);
+        reviews.add(review1);
+        reviews.add(review2);
+        reviews.add(review3);
         Adventure adventure = new Adventure();
         adventure.setReviews(reviews);
         when(adventureRepository.findByIdWithReviews(1L)).thenReturn(adventure);
 
-        assertEquals((int) adventureService.getNumberOfReviews(1L),adventure.getReviews().size());
+        assertEquals((int) adventureService.getNumberOfReviews(1L),2);
 
         verify(adventureRepository,times(1)).findByIdWithReviews(1L);
         verifyNoMoreInteractions(adventureRepository);

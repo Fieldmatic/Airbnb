@@ -46,13 +46,20 @@ public class CottageServiceTest {
     @Test
     public void testFindOne(){
         List<Review> reviews = new ArrayList<Review>();
-        reviews.add(new Review());
-        reviews.add(new Review());
+        Review review1 = new Review();
+        review1.setAnswered(true);
+        Review review2 = new Review();
+        review2.setAnswered(false);
+        Review review3 = new Review();
+        review3.setAnswered(true);
+        reviews.add(review1);
+        reviews.add(review2);
+        reviews.add(review3);
         Cottage cottage = new Cottage();
         cottage.setReviews(reviews);
         when(cottageRepository.findByIdWithReviews(1L)).thenReturn(cottage);
 
-        assertEquals((int) cottageService.getNumberOfReviews(1L),cottage.getReviews().size());
+        assertEquals((int) cottageService.getNumberOfReviews(1L),2);
 
         verify(cottageRepository,times(1)).findByIdWithReviews(1L);
         verifyNoMoreInteractions(cottageRepository);

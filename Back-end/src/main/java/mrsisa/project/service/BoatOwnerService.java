@@ -48,13 +48,18 @@ public class BoatOwnerService {
     @Autowired
     PictureService pictureService;
 
+    @Autowired
+    private UserCategoryService userCategoryService;
+
     final static String picturesPath = "src/main/resources/static/pictures/boatOwner/";
 
-    public void add(PersonDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    public void add(PersonDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
         BoatOwner owner = dtoToBoatOwner(dto);
         boatOwnerRepository.save(owner);
-        List<String> paths = pictureService.addPictures(owner.getId(), picturesPath, multipartFiles);
-        owner.setProfilePhoto(paths.get(0));
+        if (multipartFiles.isPresent()) {
+            List<String> paths = pictureService.addPictures(owner.getId(), picturesPath, multipartFiles.get());
+            owner.setProfilePhoto(paths.get(0));
+        }
         boatOwnerRepository.save(owner);
         adminService.createRegistrationRequest(owner);
     }
@@ -102,6 +107,7 @@ public class BoatOwnerService {
         owner.setPhoneNumber(dto.getPhoneNumber());
         owner.setRegistrationExplanation(dto.getRegistrationExplanation());
         owner.setApprovedAccount(false);
+        owner.setCategory(userCategoryService.getRegularCategory());
         owner.setPoints(0);
         List<Role> roles = roleService.findByName(dto.getRole());
         owner.setRoles(roles);

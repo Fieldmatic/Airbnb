@@ -41,6 +41,12 @@ public class BookableController {
         return new ResponseEntity<>(calendarDTOS, HttpStatus.OK);
     }
 
+    @GetMapping(value="/getServices/{id}")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR', 'BOAT_OWNER', 'COTTAGE_OWNER')")
+    public ResponseEntity<List<String>> getBookableServices(@PathVariable("id") Long id){
+        return new ResponseEntity<>(bookableService.getBookableAdditionalServices(id),HttpStatus.OK);
+    }
+
     @GetMapping(value="/getBookableActions/{id}")
     @PreAuthorize("hasAnyRole('INSTRUCTOR', 'BOAT_OWNER', 'COTTAGE_OWNER')")
     public ResponseEntity<List<BookableCalendarDTO>> getBookableActions(@PathVariable("id") Long id) {

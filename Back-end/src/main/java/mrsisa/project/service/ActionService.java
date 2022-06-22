@@ -35,6 +35,9 @@ public class ActionService {
     @Autowired
     private PeriodRepository periodRepository;
 
+    @Autowired
+    private TagService tagService;
+
     private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Transactional
@@ -98,6 +101,7 @@ public class ActionService {
         action.setUsed(false);
         action.setExpirationDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDateTime()), ZoneOffset.UTC));
         action.setExpirationDateTime(LocalDateTime.ofInstant(Instant.parse(actionDTO.getExpirationDateTime()), ZoneOffset.UTC));
+        action.setAdditionalServices(tagService.getExistingAdditionalServices(actionDTO.getAdditionalServices()));
         return action;
     }
 }

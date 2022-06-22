@@ -3,8 +3,10 @@ package mrsisa.project.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Action;
+import mrsisa.project.model.Tag;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,10 +29,18 @@ public class ActionDTO {
         this.startDateTime = FORMATTER.format(action.getStartDateTime());
         this.endDateTime = FORMATTER.format(action.getEndDateTime());
         this.personLimit = action.getPersonLimit();
-        //this.additionalServices = action.getAdditionalServices();
+        this.additionalServices =getStringAdditionalServices(action.getAdditionalServices());
         this.price = action.getPrice();
         this.expirationDateTime = FORMATTER.format(action.getExpirationDateTime());
         this.bookableId = action.getBookable().getId();
         this.used = action.getUsed();
+    }
+
+    private List<String> getStringAdditionalServices(List<Tag> services) {
+        List<String> stringServices = new ArrayList<>();
+        for (Tag tag: services) {
+            stringServices.add(tag.getName());
+        }
+        return stringServices;
     }
 }

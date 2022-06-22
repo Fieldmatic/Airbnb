@@ -157,7 +157,6 @@ export default function EditProfile() {
             })
         }
     }, [userRole])
-
     useEffect(() => {
         if (userRole === "CLIENT") {
             ClientService.getProfilePicture().then((response) => {

@@ -3,10 +3,7 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.BookableCalendarDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
-import mrsisa.project.model.Action;
-import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Period;
-import mrsisa.project.model.Reservation;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.BookableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -50,6 +47,16 @@ public class BookableService {
         } else {
             return getBookableActions(calendarDTOS, bookable);
         }
+    }
+
+
+    public List<String> getBookableAdditionalServices(Long bookableId){
+        Bookable bookable = bookableRepository.getById(bookableId);
+        List<String> tags = new ArrayList<>();
+        for (Tag tag : bookable.getAdditionalServices()){
+            tags.add(tag.getName());
+        }
+        return tags;
     }
 
     private List<BookableCalendarDTO> getBookableActions(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {

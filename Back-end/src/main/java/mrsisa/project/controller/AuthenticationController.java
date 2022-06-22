@@ -94,7 +94,7 @@ public class AuthenticationController {
 		}
 
 		if (dto.getRole().equals("ROLE_COTTAGE_OWNER")) this.cottageOwnerService.add(dto, java.util.Optional.ofNullable(multiPartFiles));
-		else this.boatOwnerService.add(dto, multiPartFiles);
+		else this.boatOwnerService.add(dto, java.util.Optional.ofNullable(multiPartFiles));
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");
 	}
@@ -108,7 +108,7 @@ public class AuthenticationController {
 
 	
 	@PostMapping(value = "/clientRegistration")
-	public ResponseEntity<String> addClient(@RequestPart("client") ClientDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+	public ResponseEntity<String> addClient(@RequestPart("client") ClientDTO dto, @RequestPart(value="files", required = false) MultipartFile[] multiPartFiles) throws IOException {
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 
 		if (existUser != null) {
@@ -123,12 +123,12 @@ public class AuthenticationController {
 	}
 
 	@PostMapping(value = "/instructorRegistration")
-	public ResponseEntity<String> addInstructor(@RequestPart("instructor") InstructorDTO dto, @RequestPart("files") MultipartFile[] multiPartFiles) throws IOException {
+	public ResponseEntity<String> addInstructor(@RequestPart("instructor") InstructorDTO dto, @RequestPart(value="files", required = false) MultipartFile[] multiPartFiles) throws IOException {
 		Person existUser = (Person) this.userService.loadUserByUsername(dto.getUsername());
 		if (existUser != null) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(usernameTakenResponse);
 		}
-		this.instructorService.add(dto, multiPartFiles);
+		this.instructorService.add(dto, java.util.Optional.ofNullable(multiPartFiles));;
 		return ResponseEntity.status(HttpStatus.CREATED).body("Success");
 	}
 

@@ -93,16 +93,18 @@ public class CottageService {
 
 
     @Transactional
-    public List<CottageDTO> getAvailableCottages(String startDate, String endDate) {
+    public List<CottageDTO> getAvailableCottages(String startDate, String endDate, Integer capacity) {
         LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
         LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);
 
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage: cottageRepository.findAll()) {
             for (Period period : cottage.getPeriods()) {
-                if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
-                    cottagesDTO.add(new CottageDTO(cottage));
-                    break;
+                if (cottage.getCapacity() >= capacity) {
+                    if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
+                        cottagesDTO.add(new CottageDTO(cottage));
+                        break;
+                    }
                 }
             }
         }
@@ -110,9 +112,9 @@ public class CottageService {
     }
 
     @Transactional
-    public List<CottageDTO> getAvailableCottagesByCity(String city, String startDate, String endDate) {
+    public List<CottageDTO> getAvailableCottagesByCity(String city, String startDate, String endDate, Integer capacity) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
-        for (CottageDTO cottage: getAvailableCottages(startDate, endDate))
+        for (CottageDTO cottage: getAvailableCottages(startDate, endDate, capacity))
             if (cottage.getAddress().getCity().equals(city))
                 cottagesDTO.add(cottage);
         return cottagesDTO;

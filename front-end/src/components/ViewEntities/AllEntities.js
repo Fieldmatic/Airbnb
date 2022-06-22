@@ -28,7 +28,18 @@ function AllEntities() {
         bedsNum: "anyBeds",
         maxSpeed: "anyMaxSpeed",
         capacity: "anyCapacity",
-        boatType: []
+        boatType: {
+            Any : true,
+            BOWRIDER : false,
+            CRUISER : false, 
+            FISHINGBOAT : false,
+            RUNABOAT : false,
+            SAILBOAT : false,
+            SPEEDBOAT : false,
+            TRAWLER : false,
+            JETSKI : false,
+            YACHT : false
+    }
     })
 
     React.useEffect(() => {
@@ -109,8 +120,6 @@ function AllEntities() {
     
     //sortiranje po rating i number of reviews
     var cards;
-    console.log(chosenParams.boatType)
-    //console.log(chosenParams.boatType[item.boatType])
     if (location.state.entityType === "cottage") {
         cards = allCards.filter(item => chosenParams.priceValue === 0 || item.dailyRate <= chosenParams.priceValue)
                         .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[2]) >= item.rating))

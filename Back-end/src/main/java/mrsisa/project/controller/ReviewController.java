@@ -52,28 +52,28 @@ public class ReviewController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/approveReview/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> approveReview(@PathVariable Long id, Principal userP)
+    @PutMapping(value = "/approveReview/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> approveReview(@PathVariable Long id, @RequestBody String body, Principal userP)
     {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-        Review review = reviewService.findById(id);
+        Review review = reviewService.findReviewById(id);
         if (review == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error! Review not found.");
         reviewService.acceptReview(review);
         return ResponseEntity.status(HttpStatus.OK).body("Email sent!");
     }
 
-    @PostMapping(value = "/denyReview/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> denyReview(@PathVariable Long id, Principal userP)
+    @PutMapping(value = "/denyReview/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> denyReview(@PathVariable Long id, @RequestBody String body, Principal userP)
     {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-        Review review = reviewService.findById(id);
+        Review review = reviewService.findReviewById(id);
         if (review == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error! Review not found.");
         reviewService.denyReview(review);

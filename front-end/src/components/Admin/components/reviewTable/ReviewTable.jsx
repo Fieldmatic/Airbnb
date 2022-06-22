@@ -80,12 +80,7 @@ export default function ReviewTable() {
     const [alertText, setAlertText] = React.useState("");
     const [showAlert, setShowAlert] = React.useState(false);
 
-    const [rows, setRows] = React.useState([
-        {id: 1, bookableName: "pero", bookableComment: "Zahtevam da\
-        se korisnku da penal jer je bezobrazannnn!", ownerUsername: "banz", ownerComment: "doabr mali"},
-        {id: 2, bookableName: "djuro", bookableComment: "Svaka caastt!",
-        ownerUsername: "banz", ownerComment: "doabr mali jastoe"},
-    ]);
+    const [rows, setRows] = React.useState([ ]);
 
     const [showMessageAlert, setShowMessageAlert] = React.useState(false);
     const [message, setMessage] = React.useState({

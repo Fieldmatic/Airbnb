@@ -105,8 +105,12 @@ public class ReviewService {
 
     public void acceptReview(Review review) {
         review.setAnswered(true);
+        Bookable bookable = review.getBookable();
+        bookable.setRating((bookable.getRating() + review.getBookableRating()) / 2);
+        bookableRepository.save(bookable);
         reviewRepository.save(review);
         Owner owner = ownerRepository.findByUsername(review.getOwner().getUsername());
+
         emailService.sendReviewMail(owner, review.getOwnerComment(), review.getBookableComment());
     }
 
@@ -127,5 +131,9 @@ public class ReviewService {
 
     public List<Review> findAll() {
         return reviewRepository.findAll();
+    }
+
+    public Review findReviewById(Long id) {
+        return reviewRepository.findReviewById(id);
     }
 }

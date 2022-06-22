@@ -215,6 +215,7 @@
     flex-direction: column;
     border: 1px solid rgba(0, 0, 0, 0.247);
     box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.247);
+    align-items: space-between;
   }
 
   .showActions > h4 {
@@ -266,7 +267,8 @@
   .rightActionContainer, .leftActionContainer {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    align-content: flex-start;
+    gap: 20px;
   }
 
   .leftActionContainer {
@@ -383,4 +385,19 @@
     font-weight: 500;
     gap: 3px;
     width: 25vw;
+  }
+
+  .middleActionContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: fit-content;
+    color: rgba(12, 174, 12, 0.875);
+  }
+
+  .actionAdditionalServices {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
   }

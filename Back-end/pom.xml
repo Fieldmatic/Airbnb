@@ -17,7 +17,7 @@
 	<description>Project ISA/MRS</description>
 
 	<properties>
-		<java.version>17</java.version>
+		<java.version>1.8</java.version>
 		<sonar.organization>fieldmatic</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>

@@ -30,6 +30,8 @@ export default function OwnerRegistration() {
   
     )
 
+    const [errors, setErrors] = React.useState(false)
+
     const [redirect, setRedirect] = React.useState("");
 
     const [files, setFiles] = React.useState([]);
@@ -111,7 +113,7 @@ export default function OwnerRegistration() {
         )
     }
 
-    const [errors, setErrors] = React.useState(false)
+    
     
     return (
         <div>

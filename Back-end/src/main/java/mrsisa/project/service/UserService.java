@@ -3,9 +3,11 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.PasswordChangeDTO;
 import mrsisa.project.dto.PersonDTO;
+import mrsisa.project.model.Instructor;
 import mrsisa.project.model.Person;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,6 +41,7 @@ public class UserService implements UserDetailsService {
         return person == null;
     }
 
+    @Cacheable(value = "personUsernameEmail", key = "#username",unless="#result == null")
     public Person getByUsername(String username) {
         return personRepository.findByUsername(username);
     }
@@ -55,6 +58,10 @@ public class UserService implements UserDetailsService {
         user.getAddress().setStreet(userDetails.getAddress().getStreet());
         user.getAddress().setCity(userDetails.getAddress().getCity());
         user.getAddress().setState(userDetails.getAddress().getState());
+        if (userDetails.getBiography() != null && !userDetails.getBiography().equals("")){
+            Instructor instructor = (Instructor) user;
+            instructor.setBiography(userDetails.getBiography());
+        }
         personRepository.save(user);
         return true;
     }

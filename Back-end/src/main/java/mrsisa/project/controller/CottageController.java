@@ -1,7 +1,13 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.dto.SearchDTO;
+import mrsisa.project.model.Administrator;
+import mrsisa.project.model.Boat;
+import mrsisa.project.model.Cottage;
+import mrsisa.project.model.CottageOwner;
 import mrsisa.project.repository.PersonRepository;
+import mrsisa.project.service.AdminService;
 import mrsisa.project.service.CottageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +30,9 @@ public class CottageController {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private AdminService adminService;
+
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('COTTAGE_OWNER')")
@@ -39,14 +48,14 @@ public class CottageController {
     }
 
     @GetMapping(value="/allAvailableByCity/{startDate}/{endDate}/{city}/{capacity}")
-    public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city) {
-        List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(city, startDate, endDate);
+    public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city, @PathVariable Integer capacity) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(city, startDate, endDate, capacity);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 
     @GetMapping(value="/allAvailable/{startDate}/{endDate}/{capacity}")
-    public ResponseEntity<List<CottageDTO>> getAvailableCottages(@PathVariable String startDate, @PathVariable String endDate) {
-        List<CottageDTO> availableCottages = cottageService.getAvailableCottages(startDate, endDate);
+    public ResponseEntity<List<CottageDTO>> getAvailableCottages(@PathVariable String startDate, @PathVariable String endDate, @PathVariable Integer capacity) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottages(startDate, endDate, capacity);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 
@@ -84,6 +93,20 @@ public class CottageController {
     public ResponseEntity<String> deleteCottage(@PathVariable Long id, Principal userP) {
         if (cottageService.deleteCottage(id, userP)) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.status(HttpStatus.CONFLICT).body("Cottage has active reservations!");
+    }
+
+    /**
+     * @apiNote This method is only for admin to limit new admin not to get cottages until he
+     * changes password
+     */
+    @GetMapping(value="/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CottageDTO>> getAll(Principal userP) {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        List<CottageDTO> cottagesDTO = cottageService.findAll();
+        return new ResponseEntity<>(cottagesDTO, HttpStatus.OK);
     }
 
 }

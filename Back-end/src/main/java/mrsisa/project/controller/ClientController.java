@@ -30,9 +30,6 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
-    @Autowired
-    private AddressService addressService;
-
 
     @Autowired
     ValidationService validationService;
@@ -46,27 +43,10 @@ public class ClientController {
     @PutMapping("/update")
     public ResponseEntity<ClientDTO> updateClient(@RequestBody ClientDTO clientDetails) {
         Client client = clientService.findOne(clientDetails.getId());
-
         if (client == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Address address = addressService.findOne(clientDetails.getAddress().getId());
-
-        //update adrese odradi
-
-        client.setUsername(clientDetails.getUsername());
-        client.setPassword(clientDetails.getPassword());
-        client.setName(clientDetails.getName());
-        client.setSurname(clientDetails.getSurname());
-        client.setAddress(clientDetails.getAddress());
-        client.setEmail(clientDetails.getEmail());
-        client.setPhoneNumber(clientDetails.getPhoneNumber());
-        address.setStreet(clientDetails.getAddress().getStreet());
-        address.setCity(clientDetails.getAddress().getCity());
-        address.setState(clientDetails.getAddress().getState());
-        addressService.save(address);
-
-        client = clientService.save(client);
+        client = clientService.update(client, clientDetails);
         return new ResponseEntity<>(new ClientDTO(client), HttpStatus.OK);
     }
 

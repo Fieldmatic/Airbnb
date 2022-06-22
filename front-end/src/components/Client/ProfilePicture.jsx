@@ -24,11 +24,13 @@ export default function ProfilePicture(props) {
     }
     return(
         <div className="clientProfilePictureDiv">
-            <img src={URL.createObjectURL(profilePhoto.selectedFiles)} className="clientProfilePicture"/>
-            <label className='changeProfilePictureBtn'>
-            <input type="file" onChange={selectFile} />
-             Change profile picture
-            </label>
+            <img src={URL.createObjectURL(profilePhoto.selectedFiles)} className={"clientProfilePicture img-" + props.category}/>
+            <div className='changeProfilePictureDiv'>
+                <label>
+                <input type="file" onChange={selectFile} />
+                Change profile picture
+                </label>
+            </div>
         </div>
     )
 }

@@ -1,10 +1,8 @@
 package mrsisa.project.service;
 
+import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReviewDTO;
-import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Owner;
-import mrsisa.project.model.Reservation;
-import mrsisa.project.model.Review;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.OwnerRepository;
 import mrsisa.project.repository.ReservationRepository;
@@ -13,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +29,9 @@ public class ReviewService {
 
     @Autowired
     private OwnerRepository ownerRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 
     public boolean checkIfReviewed(String review, int rate) {
@@ -75,6 +78,9 @@ public class ReviewService {
         return true;
     }
 
+
+
+
     Review dtoToReview(ReviewDTO reviewDTO){
         Review review = new Review();
         review.setBookableComment(reviewDTO.getBookableComment());
@@ -82,5 +88,52 @@ public class ReviewService {
         review.setOwnerComment(reviewDTO.getOwnerComment());
         review.setOwnerRating(reviewDTO.getOwnerRating());
         return review;
+    }
+
+    public List<ReviewDTO> getAllReviews() {
+        List<ReviewDTO> reportDTOS = new ArrayList<>();
+        for(Review review : reviewRepository.findAll()) {
+            if (!review.isAnswered())
+                reportDTOS.add(new ReviewDTO(review));
+        }
+        return reportDTOS;
+    }
+
+    public Review findById(Long id) {
+        return reviewRepository.getById(id);
+    }
+
+    public void acceptReview(Review review) {
+        review.setAnswered(true);
+        Bookable bookable = review.getBookable();
+        bookable.setRating((bookable.getRating() + review.getBookableRating()) / 2);
+        bookableRepository.save(bookable);
+        reviewRepository.save(review);
+        Owner owner = ownerRepository.findByUsername(review.getOwner().getUsername());
+
+        emailService.sendReviewMail(owner, review.getOwnerComment(), review.getBookableComment());
+    }
+
+    public void denyReview(Review review) {
+        review.setAnswered(true);
+        reviewRepository.save(review);
+    }
+
+    public List<ReviewDTO> findBookableReviews(Long bookaleId) {
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+        for (Review review : reviewRepository.findReviewsByBookable_Id(bookaleId)) {
+            //stavi na answered
+            if (review.isAnswered())
+                reviewDTOS.add(new ReviewDTO(review));
+        }
+        return reviewDTOS;
+    }
+
+    public List<Review> findAll() {
+        return reviewRepository.findAll();
+    }
+
+    public Review findReviewById(Long id) {
+        return reviewRepository.findReviewById(id);
     }
 }

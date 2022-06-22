@@ -19,6 +19,8 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import { ThemeProvider} from '@mui/material/styles';
 import WarningIcon from '@mui/icons-material/Warning';
+import { anyFieldEmpty } from '../utils/formValidation';
+
 
 export default function EditProfile() {
     const [reasonForDeletion, setReasonForDeletion] = useState("")
@@ -34,7 +36,8 @@ export default function EditProfile() {
             phoneNumberButton: false,
             streetButton: false,
             cityButton: false,
-            stateButton: false
+            stateButton: false,
+            biographyButton: false
         }   
     )
     const [user, setUser] = useState(
@@ -50,6 +53,9 @@ export default function EditProfile() {
                 state: "",
                 zipCode: ""
             },
+            biography: "",
+            points: 0,
+            category: "",
             penalties: 0
         }
     )
@@ -76,6 +82,10 @@ export default function EditProfile() {
     };
 
     function submitPasswordChange(){
+        setPasswordErrors(true);
+        if (anyFieldEmpty(passwordChangeData))
+            return;
+
         UserService.updatePassword(passwordChangeData).then(response =>{
             alert(response.data)
             handleClose()
@@ -120,6 +130,9 @@ export default function EditProfile() {
 
     function toggleShown(event){
         event.preventDefault()
+        if (anyFieldEmpty(user))
+            return;
+
         const {id} = event.target
         setEditClicked(prevShown => {
             return {
@@ -133,6 +146,7 @@ export default function EditProfile() {
     useEffect(() => {
         LoginRegisterService.getUserRole().then(response => {
             if ((response.data === "ROLE_COTTAGE_OWNER") || (response.data ==="ROLE_BOAT_OWNER")) setUserRole("OWNER")
+            else if (response.data === "ROLE_INSTRUCTOR") setUserRole("INSTRUCTOR")
             else if (response.data === "ROLE_CLIENT") setUserRole("CLIENT")
         })
         if (userRole === "CLIENT") {
@@ -144,17 +158,20 @@ export default function EditProfile() {
             OwnerService.getOwner().then(response => {
                 setUser(response.data)
             })
-
+        }
+        else if (userRole === "INSTRUCTOR") {
+            OwnerService.getInstructor().then(response => {
+                setUser(response.data)
+            })
         }
     }, [userRole])
-
     useEffect(() => {
         if (userRole === "CLIENT") {
             ClientService.getProfilePicture().then((response) => {
                 setProfileImage(response.data)
             })
         }
-        else if (userRole === "OWNER") {
+        else if (userRole === "OWNER" || userRole === "INSTRUCTOR") {
             OwnerService.getProfilePicture().then((response)=> {
                 setProfileImage(response.data)
             })
@@ -175,6 +192,8 @@ export default function EditProfile() {
         });
     }
 
+    const [passwordErrors, setPasswordErrors] = useState(false);
+
     return (
         <div>
             <Header />
@@ -183,7 +202,7 @@ export default function EditProfile() {
                 <h1 className='editProfile-header'>Edit your profile</h1>
                 {userRole === "CLIENT" ? (
                     <div className='profileImageAndPenalites'>
-                    {profileImage && <ProfilePicture profileImage = {profileImage} />}
+                    {profileImage && <ProfilePicture profileImage = {profileImage} category={user.category.name} />}
                     <div className='penalitesAndWorning'>
                         {user.penalties >= 3 && <label> <WarningIcon sx={{color:"red"}}/> You can't make a reservation this month because you have three penalties. </label>}
                         <div className='penalties'>
@@ -193,32 +212,40 @@ export default function EditProfile() {
                     </div>
                 </div>
                 ) : (
-                    profileImage && <ProfilePicture profileImage = {profileImage} />
+                    profileImage && <ProfilePicture profileImage = {profileImage} category={user.category.name} />
                 )
                 }
                 <div className='user-form-data'>
                     <label className="userLabel"> First Name </label>
                     {editClicked.nameButton ? 
-                        <input className="textBox"
-                        type="text"
-                        onChange={updateUser}
-                        name="name"
-                        value={user.name}
-                    />
+                        <div className='input-validation'>
+                            <input className="textBox"
+                            type="text"
+                            onChange={updateUser}
+                            name="name"
+                            value={user.name}
+                            required
+                            />
+                            <span className='errMessage'>*Name cannot be empty!</span>
+                        </div>
                     : 
                         <label className='userLabel'> {user.name}</label>
                     }
-                    <button className="updateBtn" id="nameButton" onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
+                    <button className="updateBtn" id="nameButton" type='submit' onClick={toggleShown}> {editClicked.nameButton? "Save" : "Edit"}</button>
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> Last Name </label>
                 {editClicked.surnameButton ? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="surname"
-                    value={user.surname}
-                />
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="surname"
+                        value={user.surname}
+                        required
+                        />
+                        <span className='errMessage'>*Surname cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.surname}</label>
                 }
@@ -226,13 +253,18 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> Phone Number </label>
-                {editClicked.phoneNumberButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="phoneNumber"
-                    value={user.phoneNumber}
-                />
+                {editClicked.phoneNumberButton ? 
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="phoneNumber"
+                        value={user.phoneNumber}
+                        required
+                        pattern='^[0-9]+$'
+                        />
+                        <span className='errMessage'>*Phone number cannot be empty and must a number!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.phoneNumber}</label>
                 }
@@ -240,13 +272,17 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> Street </label>
-                {editClicked.streetButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="street"
-                    value={user.address.street}
-                />
+                {editClicked.streetButton ? 
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="street"
+                        value={user.address.street}
+                        required
+                        />
+                        <span className='errMessage'>*Street cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.address.street}</label>
                 }
@@ -254,13 +290,17 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>
                 <label className="userLabel"> City </label>
-                {editClicked.cityButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="city"
-                    value={user.address.city}
-                />
+                {editClicked.cityButton ?
+                    <div className='input-validation'> 
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="city"
+                        value={user.address.city}
+                        required
+                        />
+                        <span className='errMessage'>*City cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.address.city}</label>
                 }
@@ -268,18 +308,52 @@ export default function EditProfile() {
                 </div>
                 <div className='user-form-data'>                 
                 <label className="userLabel"> State </label>
-                {editClicked.stateButton? 
-                    <input className="textBox"
-                    type="text"
-                    onChange={updateUser}
-                    name="state"
-                    value={user.address.state}
-                />
+                {editClicked.stateButton ? 
+                    <div className='input-validation'>
+                        <input className="textBox"
+                        type="text"
+                        onChange={updateUser}
+                        name="state"
+                        value={user.address.state}
+                        required
+                        />
+                        <span className='errMessage'>*State cannot be empty!</span>
+                    </div>
                 : 
                     <label className='userLabel'> {user.address.state}</label>
                 }
                 <button className="updateBtn" id="stateButton" onClick={toggleShown}> {editClicked.stateButton? "Save" : "Edit"}</button>
                 </div>
+                {user.biography && 
+                    <div className='user-form-data user-form-data-bio'>                 
+                    <label className="userLabel"> Biography </label>
+                    {editClicked.biographyButton ?
+                        <div className='input-validation'> 
+                            <input className="textBox"
+                            type="text"
+                            onChange={updateUser}
+                            name="biography"
+                            value={user?.biography}
+                            required
+                            />
+                            <span className='errMessage'>*Biography cannot be empty!</span>
+                        </div>
+                    : 
+                        <label className='userLabel'> {user?.biography}</label>
+                    }
+                    <button className="updateBtn" id="biographyButton" onClick={toggleShown}> {editClicked.biographyButton? "Save" : "Edit"}</button>
+                    </div>
+                }
+                <div className='user-form-data-category'>
+                <label className="userLabel"> Points </label>
+                <label className='userLabel'> {user.points}</label>
+                </div>
+
+                <div className='user-form-data-category'>
+                <label className="userLabel"> Category </label>
+                <label className={'userLabel ' + user.category.name}> {user.category.name}</label>
+                </div>
+                
                 <div className='delete--reset'>
                     <Button 
                         variant="outlined" 
@@ -306,6 +380,21 @@ export default function EditProfile() {
                             autoFocus
                             sx = {muiStyles.style}
                             margin="dense"
+                            id="passwordConfirm"
+                            label="Old password"
+                            type="password"
+                            fullWidth
+                            variant="standard"
+                            value={passwordChangeData.oldPassword}
+                            name = "oldPassword"
+                            onChange={handlePasswordChange}
+                            error={passwordChangeData.oldPassword === "" && passwordErrors}
+                            helperText={(passwordChangeData.oldPassword === "" && passwordErrors) ? "Old password is required!" : ""}
+                            required={passwordErrors}
+                        />
+                        <TextField
+                            sx = {muiStyles.style}
+                            margin="dense"
                             id="password"
                             label="New password"
                             type="password"
@@ -314,19 +403,9 @@ export default function EditProfile() {
                             value={passwordChangeData.newPassword}
                             name = "newPassword"
                             onChange={handlePasswordChange}
-                        />
-                        <TextField
-                            autoFocus
-                            sx = {muiStyles.style}
-                            margin="dense"
-                            id="passwordConfirm"
-                            label="Confirm password"
-                            type="password"
-                            fullWidth
-                            variant="standard"
-                            value={passwordChangeData.oldPassword}
-                            name = "oldPassword"
-                            onChange={handlePasswordChange}
+                            error={passwordChangeData.newPassword === "" && passwordErrors}
+                            helperText={(passwordChangeData.newPassword === "" && passwordErrors) ? "New password is required!" : ""}
+                            required={passwordErrors}
                         />
                         </DialogContent>
                         <DialogActions>

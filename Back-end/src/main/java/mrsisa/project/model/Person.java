@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class Person implements UserDetails {
+public abstract class Person implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(unique = true)

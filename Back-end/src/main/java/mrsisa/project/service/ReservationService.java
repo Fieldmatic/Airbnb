@@ -51,6 +51,15 @@ public class ReservationService {
     @Autowired
     PeriodRepository periodRepository;
 
+    @Autowired
+    LoyaltyProgramService loyaltyProgramService;
+
+    @Autowired
+    UserCategoryService userCategoryService;
+
+    @Autowired
+    PaymentService paymentService;
+
     @Transactional
     public boolean addQuick(Long actionId, Principal userP) throws IOException {
         try {
@@ -66,9 +75,8 @@ public class ReservationService {
             bookableRepository.save(bookable);
             action.setUsed(true);
             return true;
-        }
-        catch (ObjectOptimisticLockingFailureException e) {
-            return  false;
+        } catch (ObjectOptimisticLockingFailureException e) {
+            return false;
         }
     }
 
@@ -79,29 +87,68 @@ public class ReservationService {
         if (checkIfClientAlreadyCanceledReservation(client, reservation.getStartDateTime(), reservation.getEndDateTime(), dto.getBookableId())) {
             return false;
         }
-        Optional<Period> period = periodRepository.findPeriodByBookableIdAndStartBeforeOrEqualAndEndAfterOrEqual(reservation.getBookable().getId(),reservation.getStartDateTime(), reservation.getEndDateTime());
-        if (period.isPresent()){
+        Optional<Period> period = periodRepository.findPeriodByBookableIdAndStartBeforeOrEqualAndEndAfterOrEqual(reservation.getBookable().getId(), reservation.getStartDateTime(), reservation.getEndDateTime());
+        if (period.isPresent()) {
             reservation.setClient(client);
             reservationRepository.save(reservation);
             client.getReservations().add(reservation);
             clientRepository.save(client);
             bookable.getReservations().add(reservation);
             bookableRepository.save(bookable);
-            periodService.splitPeriodAfterReservation(period.get(),reservation, bookable);
-            try{
+            periodService.splitPeriodAfterReservation(period.get(), reservation, bookable);
+            client.setPoints(client.getPoints() + loyaltyProgramService.getLoyaltyProgram().getClientPoints());
+            this.tryChangeClientCategory(client, loyaltyProgramService.getLoyaltyProgram());
+            Owner owner = (Owner) personRepository.getById(getBookableOwnerId(reservation.getBookable()));
+            owner.setPoints(owner.getPoints() + loyaltyProgramService.getLoyaltyProgram().getOwnerPoints());
+            this.tryChangeOwnerCategory(owner, loyaltyProgramService.getLoyaltyProgram());
+            paymentService.increaseTotalMoney(reservation.getPrice() * paymentService.getMoneyPercentage());
+            try {
                 emailService.sendReservationMail(client, reservation);
-            } catch(MailException ignored) {
+            } catch (MailException ignored) {
             }
             return true;
+        } else return false;
+    }
+
+    public void tryChangeOwnerCategory(Owner owner, LoyaltyProgram loyaltyProgram) {
+        if (owner.getPoints() < loyaltyProgram.getBronzePoints()) {
+            owner.setCategory(userCategoryService.getRegularCategory());
+        } else if (owner.getPoints() >= loyaltyProgram.getBronzePoints() && owner.getPoints() < loyaltyProgram.getSilverPoints()) {
+            owner.setCategory(userCategoryService.getBronzeCategory());
+        } else if (owner.getPoints() >= loyaltyProgram.getSilverPoints() && owner.getPoints() < loyaltyProgram.getGoldPoints()) {
+            owner.setCategory(userCategoryService.getSilverCategory());
+        } else if (owner.getPoints() >= loyaltyProgram.getGoldPoints()) {
+            owner.setCategory(userCategoryService.getGoldCategory());
         }
-        else return false;
+        personRepository.save(owner);
+    }
+
+    private Long getBookableOwnerId(Bookable bookable) {
+        Long id = 0L;
+        if (bookable instanceof Cottage) id = ((Cottage) bookable).getCottageOwner().getId();
+        else if (bookable instanceof Boat) id = ((Boat) bookable).getBoatOwner().getId();
+        else if (bookable instanceof Adventure) id = ((Adventure) bookable).getInstructor().getId();
+        return id;
+    }
+
+    public void tryChangeClientCategory(Client client, LoyaltyProgram loyaltyProgram) {
+        if (client.getPoints() < loyaltyProgram.getBronzePoints()) {
+            client.setCategory(userCategoryService.getRegularCategory());
+        } else if (client.getPoints() >= loyaltyProgram.getBronzePoints() && client.getPoints() < loyaltyProgram.getSilverPoints()) {
+            client.setCategory(userCategoryService.getBronzeCategory());
+        } else if (client.getPoints() >= loyaltyProgram.getSilverPoints() && client.getPoints() < loyaltyProgram.getGoldPoints()) {
+            client.setCategory(userCategoryService.getSilverCategory());
+        } else if (client.getPoints() >= loyaltyProgram.getGoldPoints()) {
+            client.setCategory(userCategoryService.getGoldCategory());
+        }
+        personRepository.save(client);
     }
 
     private boolean checkIfClientAlreadyCanceledReservation(Client client, LocalDateTime start, LocalDateTime end, Long bookableId) {
         //ako je otkazana rezervacija tog dana
         LocalDate startDate = start.toLocalDate();
         LocalDate endDate = end.toLocalDate();
-        for (Reservation reservation: client.getReservations()) {
+        for (Reservation reservation : client.getReservations()) {
             if (reservation.getCanceled() && reservation.getBookable().getId().equals(bookableId) && startDate.isEqual(reservation.getStartDateTime().toLocalDate()) && endDate.isEqual(reservation.getEndDateTime().toLocalDate())) {
                 return true;
             }
@@ -110,28 +157,33 @@ public class ReservationService {
     }
 
     @Transactional
-    public List<ReservationDTO> getReservations(Principal userP){
+    public List<ReservationDTO> getReservations(Principal userP) {
         Person person = personRepository.findByUsername(userP.getName());
         Role role = person.getRoles().get(0);
-        switch (role.getName()){
-            case "ROLE_COTTAGE_OWNER":return getCottageOwnerReservations(person);
-            case "ROLE_BOAT_OWNER":return getBoatOwnerReservations(person);
-            case "ROLE_INSTRUCTOR":return getInstructorReservations(person);
-            default:return getClientReservations(person);
+        switch (role.getName()) {
+            case "ROLE_COTTAGE_OWNER":
+                return getCottageOwnerReservations(person);
+            case "ROLE_BOAT_OWNER":
+                return getBoatOwnerReservations(person);
+            case "ROLE_INSTRUCTOR":
+                return getInstructorReservations(person);
+            default:
+                return getClientReservations(person);
         }
     }
 
-    public List<ReservationDTO> getCottageOwnerReservations(Person person){
+    public List<ReservationDTO> getCottageOwnerReservations(Person person) {
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
         CottageOwner owner = (CottageOwner) person;
         List<Cottage> cottages = owner.getCottages();
         for (Cottage cottage : cottages) {
-            for (Reservation reservation : cottage.getReservations()) reservationsDTO.add(new ReservationDTO(reservation));
+            for (Reservation reservation : cottage.getReservations())
+                reservationsDTO.add(new ReservationDTO(reservation));
         }
         return reservationsDTO;
     }
 
-    public List<ReservationDTO> getBoatOwnerReservations(Person person){
+    public List<ReservationDTO> getBoatOwnerReservations(Person person) {
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
         BoatOwner owner = (BoatOwner) person;
         List<Boat> boats = owner.getBoats();
@@ -141,17 +193,19 @@ public class ReservationService {
         return reservationsDTO;
     }
 
-    public List<ReservationDTO> getInstructorReservations(Person person){
+    public List<ReservationDTO> getInstructorReservations(Person person) {
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
         Instructor instructor = (Instructor) person;
         List<Adventure> adventures = instructor.getAdventures();
         for (Adventure adventure : adventures) {
-            for (Reservation reservation : adventure.getReservations()) reservationsDTO.add(new ReservationDTO(reservation));
+            for (Reservation reservation : adventure.getReservations())
+                reservationsDTO.add(new ReservationDTO(reservation));
         }
         return reservationsDTO;
     }
 
-    public List<ReservationDTO> getClientReservations(Person person){
+
+    public List<ReservationDTO> getClientReservations(Person person) {
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
         Client client = (Client) person;
         List<Reservation> reservations = client.getReservations();
@@ -160,7 +214,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public List<ReservationDTO> getClientFutureReservations(Principal userP){
+    public List<ReservationDTO> getClientFutureReservations(Principal userP) {
         Person person = personRepository.findByUsername(userP.getName());
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
         List<ReservationDTO> reservations = getClientReservations(person);
@@ -192,7 +246,7 @@ public class ReservationService {
         reservation.setActive(dto.getActive());
         reservation.setBookable(bookable);
         List<Tag> additionalServices = new ArrayList<>();
-        for (Tag tag: bookable.getAdditionalServices()) {
+        for (Tag tag : bookable.getAdditionalServices()) {
             if (dto.getAdditionalServices().contains(tag.getName())) {
                 additionalServices.add(tag);
             }
@@ -211,6 +265,13 @@ public class ReservationService {
                 reservation.setCanceled(true);
                 reservationRepository.save(reservation);
                 periodService.addPeriodOnReservationCancelling(reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getBookable());
+                Client client = reservation.getClient();
+                client.setPoints(client.getPoints() - loyaltyProgramService.getLoyaltyProgram().getClientPoints());
+                this.tryChangeClientCategory(client, loyaltyProgramService.getLoyaltyProgram());
+                Owner owner = (Owner) personRepository.getById(getBookableOwnerId(reservation.getBookable()));
+                owner.setPoints(owner.getPoints() - loyaltyProgramService.getLoyaltyProgram().getOwnerPoints());
+                this.tryChangeOwnerCategory(owner, loyaltyProgramService.getLoyaltyProgram());
+                paymentService.decreaseTotalMoney(reservation.getPrice() * paymentService.getMoneyPercentage());
                 return true;
             }
         }

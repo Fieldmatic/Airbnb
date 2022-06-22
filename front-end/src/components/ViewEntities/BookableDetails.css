@@ -4,6 +4,7 @@
     align-items: center;
     margin-top: 20px;
     position: relative;
+    font-weight: 500;
   }
   
   .hotelWrapper {
@@ -67,12 +68,22 @@
     border-bottom: 2px solid rgba(18, 17, 17, 0.148);
   }
 
+  .reviewParagraphs {
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(18, 17, 17, 0.148);
+    margin-top: 25px;
+    border-top: 2px solid rgba(18, 17, 17, 0.148);
+    padding-top: 5px;
+  }
+
   .paragraphs > h3{
     margin: 10px 0 10px 0;
+    font-weight: 600;
   }
 
   .paragraphs > p{
     margin-bottom: 20px;
+    font-weight: 500;
   }
   
   .hotelDetailsPrice {
@@ -108,7 +119,7 @@
   .sliderImg{
     position: relative;
     margin: 0% 5% 0% 8%;
-    width: 80%;
+    width: auto;
     height: 80vh;
     align-items: center;
     display: flex;
@@ -156,14 +167,30 @@
     gap: 10px;
     border: 1px solid rgba(0, 0, 0, 0.236);
     padding: 5px;
+    font-size: large;
+
   }
+
+  .adventureCapacity > span {
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+  }
+  
 
   .boatParam {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     padding: 5px;
+    font-size: large;
+
   }
+
+  .boatParam > span {
+    font-weight: bold;
+  }
+
 
   .boatDetails {
     display: flex;
@@ -188,6 +215,7 @@
     flex-direction: column;
     border: 1px solid rgba(0, 0, 0, 0.247);
     box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.247);
+    align-items: space-between;
   }
 
   .showActions > h4 {
@@ -239,7 +267,8 @@
   .rightActionContainer, .leftActionContainer {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    align-content: flex-start;
+    gap: 20px;
   }
 
   .leftActionContainer {
@@ -267,4 +296,108 @@
   .originalAndDiscountPrice > span {
     font-weight: bold;
     font-size: large;
+  }
+
+  .services {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .service > p {
+    display: flex;
+    background-color: #FF5A5F;
+    border-radius: 8px;
+    width: fit-content;
+    padding: 10px;
+    height: 5vh;
+    font-weight: 500;
+    align-items: center;
+  }
+
+  .reviews {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    gap: 20px;
+    padding: 5px;
+  }
+
+  .review {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    gap: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.247);
+    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.247);
+    position: relative;
+    top: 0;
+    transition: top ease 0.5s;
+  }
+
+  .review:hover{
+    top: -5px;
+  }
+
+  .clientInfo {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .clientNameEmail {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    margin: 0;
+  }
+
+  .clientEmailReview {
+    color: rgba(0, 0, 0, 0.445);
+  }
+
+  .reviewHeader {
+    display: flex;
+    flex-direction: row;
+    color: #FF5A5F;
+    gap: 12px;
+  }
+
+  .reviewInfos {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    
+  }
+
+  .reviewInfo {
+    width: 50%;
+  }
+
+  .ownerMainInfo {
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 500;
+    gap: 3px;
+    width: 25vw;
+  }
+
+  .middleActionContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: fit-content;
+    color: rgba(12, 174, 12, 0.875);
+  }
+
+  .actionAdditionalServices {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
   }

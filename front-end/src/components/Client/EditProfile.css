@@ -15,7 +15,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 120vh;
+    height: 100%;
     width: 100%;
     font-size: large;
 }
@@ -29,7 +29,7 @@
     border-radius: 10px;
     box-shadow: 5px 5px 15px -1px rgba(0,0,0,0.75);
     box-sizing: border-box;
-    margin: 1.5% 0% 0% 0%;
+    margin: 2% 0% 2% 0%;
 }
 
 .formOpacity {
@@ -47,7 +47,38 @@
     align-items: center;
     justify-content: space-between;
     height: 4vh;
-    margin-bottom: 0.4vh;
+    margin-bottom: 1.5vh;
+}
+
+.user-form-data-bio{
+    margin-top: 6vh;
+    margin-bottom: 6vh;
+}
+
+.user-form-data-category{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 4vh;
+    margin-bottom: 1.5vh;
+    width: 62%;
+}
+
+.REGULAR {
+    color: rgb(17, 147, 203);
+}
+
+.BRONZE {
+    color: #cd853f;;
+}
+
+.SILVER {
+    color: silver;
+}
+
+.GOLD {
+    color: gold;
 }
 
 .updateBtn {
@@ -72,23 +103,40 @@
 }
 
 .clientProfilePicture {
-    width: 12vw;
     height: auto;
+    width: 10vw;
     border-radius: 10px;
-    border: 1px solid black;
 }
 
-.changeProfilePictureBtn {
+.img-REGULAR {
+    border: 0.5vh solid rgb(17, 147, 203);
+}
+
+.img-BRONZE {
+    border: 0.5vh  solid #cd853f;;
+}
+
+.img-SILVER {
+    border: 0.5vh  solid silver;
+}
+
+.img-GOLD {
+    border: 0.5vh  solid gold;
+}
+
+.changeProfilePictureDiv {
     margin-top: 5%;
     color: white;
     background-color: #FF5A5F;
     font-size: medium;
     width: 15vw;
-    height: 3.5vh;
+    height: 3.3vh;
     border-radius: 5px;
     border: none;
     cursor: pointer; 
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .delete--reset{
@@ -135,4 +183,32 @@
 .penaltiesNum {
     margin-left: 5px;
     font-weight: 800;
+}
+
+.errMessage {
+    font-size: 12px;
+    padding: 3px;
+    color: red;
+    display: none;
+}
+
+input:invalid ~ .errMessage {
+    display: block;
+}
+
+input:invalid {
+    border: 1px solid red;
+}
+
+input {
+    display: block;
+}
+
+.input-validation {
+    width: 33%;
+}
+
+.input-validation input{
+    width: 100%;
+    height: 100%;
 }

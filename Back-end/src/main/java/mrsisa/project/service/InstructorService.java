@@ -52,53 +52,34 @@ public class InstructorService {
     private ProfileDeletionReasonRepository profileDeletionReasonRepository;
 
     @Autowired
+    private UserCategoryService userCategoryService;
+
+    @Autowired
     private PictureService pictureService;
+
 
     final static String picturesPath = "src/main/resources/static/pictures/instructor/";
     final static String defaultPicturePath = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
 
-    public Person add(InstructorDTO instructorDTO, MultipartFile[] multipartFiles) throws IOException {
+    public Person add(InstructorDTO instructorDTO, Optional<MultipartFile[]> multipartFiles) throws IOException {
         Instructor instructor = this.dtoToInstructor(instructorDTO);
-        if (instructor == null) {
-            return null;
-        }
         instructorRepository.save(instructor);
-        List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, multipartFiles);
-        if (paths.size() == 0)
-            instructor.setProfilePhoto(defaultPicturePath);
-        else
+        if (multipartFiles.isPresent()) {
+            List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, multipartFiles.get());
             instructor.setProfilePhoto(paths.get(0));
+        }
         instructorRepository.save(instructor);
         adminService.createRegistrationRequest(instructor);
         return instructor;
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
-        Instructor instructor = instructorRepository.findByUsername(username);
+        Instructor instructor = instructorRepository.findByUsernameWithReservations(username);
+        pictureService.tryDeletePhoto(instructor.getProfilePhoto());
         List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, files);
         instructor.setProfilePhoto(paths.get(0));
         instructorRepository.save(instructor);
         return instructor.getProfilePhoto();
-    }
-
-    public Instructor update(InstructorDTO dto) {
-        Instructor instructor = instructorRepository.findById(dto.getId()).orElse(null);
-        if (instructor != null) {
-            instructor.setName(dto.getName());
-            instructor.getAddress().setCity(dto.getAddress().getCity());
-            instructor.getAddress().setState(dto.getAddress().getState());
-            instructor.getAddress().setStreet(dto.getAddress().getStreet());
-            instructor.getAddress().setZipCode(dto.getAddress().getZipCode());
-            addressRepository.save(instructor.getAddress());
-            instructor.setBiography(dto.getBiography());
-            instructor.setSurname(dto.getSurname());
-            instructor.setEmail(dto.getEmail());
-            instructor.setPassword(dto.getPassword());
-            instructor.setPhoneNumber(dto.getPhone());
-            instructorRepository.save(instructor);
-            return instructor;
-        }
-        return null;
     }
 
     public Instructor findOne(Long id) {
@@ -106,9 +87,6 @@ public class InstructorService {
     }
 
     private Instructor dtoToInstructor(InstructorDTO dto) {
-        if (dto.getUsername() == null || !userService.usernameAvailable(dto.getUsername())) {
-            return null;
-        }
         Instructor instructor = new Instructor();
         instructor.setName(dto.getName());
         instructor.setAddress(dto.getAddress());
@@ -118,8 +96,9 @@ public class InstructorService {
         instructor.setSurname(dto.getSurname());
         instructor.setEmail(dto.getEmail());
         instructor.setPassword(passwordEncoder.encode(dto.getPassword()));
-        instructor.setPhoneNumber(dto.getPhone());
+        instructor.setPhoneNumber(dto.getPhoneNumber());
         instructor.setPoints(0);
+        instructor.setCategory(userCategoryService.getRegularCategory());
         instructor.setRegistrationExplanation(dto.getRegistrationExplanation());
         instructor.setUsername(dto.getUsername());
         List<Role> roles = roleService.findByName("ROLE_INSTRUCTOR");
@@ -128,7 +107,7 @@ public class InstructorService {
     }
 
     public ReservationStatisticsDTO getReservationStatistics(Principal userP, Optional<Long> bookableId){
-        Instructor instructor = instructorRepository.findByUsername(userP.getName());
+        Instructor instructor = instructorRepository.findByUsernameWithReservations(userP.getName());
         ReservationStatisticsDTO statistics = new ReservationStatisticsDTO();
         if (bookableId.isPresent()) bookableService.fillBookableReservationStatistics(bookableId.get(), statistics);
         else {
@@ -138,7 +117,7 @@ public class InstructorService {
     }
 
     public Map<String, Double> getIncomeStatistics(LocalDateTime start, LocalDateTime end, Principal userP, Optional<Long> bookableId) {
-        Instructor instructor = instructorRepository.findByUsername(userP.getName());
+        Instructor instructor = instructorRepository.findByUsernameWithReservations(userP.getName());
         Map<String, Double> incomeByAdventure = new HashMap<>();
         if (bookableId.isPresent()){
             bookableService.fillBookableIncomeStatistics(start,end,incomeByAdventure,bookableId.get());
@@ -150,7 +129,7 @@ public class InstructorService {
     }
 
     public Instructor findInstructorByUsername(String username) {
-        return (Instructor) personRepository.findByUsername(username);
+        return instructorRepository.findByUsername(username);
     }
 
     public Instructor save(Instructor instructor) {
@@ -175,4 +154,6 @@ public class InstructorService {
         profileDeletionReason.setViewed(false);
         return profileDeletionReason;
     }
+
+    public List<Instructor> findAll(){return instructorRepository.findAll();}
 }

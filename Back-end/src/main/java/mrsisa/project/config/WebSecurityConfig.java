@@ -85,6 +85,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.antMatchers("/api/adventure/allAvailableByCityAndCapacity/{startDate}/{endDate}/{city}/{capacity}").permitAll()
 				.antMatchers("/api/adventure/allAvailable/{startDate}/{endDate}/{capacity}").permitAll()
+				.antMatchers("/api/review/getBookableReviews/{id}").permitAll()
+				.antMatchers("/api/owner/getBookableOwner/{id}").permitAll()
 
 
 								.antMatchers("/api/instructor/get").permitAll()

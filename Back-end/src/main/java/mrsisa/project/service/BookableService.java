@@ -3,12 +3,10 @@ package mrsisa.project.service;
 
 import mrsisa.project.dto.BookableCalendarDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
-import mrsisa.project.model.Action;
-import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Period;
-import mrsisa.project.model.Reservation;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.BookableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +31,7 @@ public class BookableService {
     public Bookable findById(Long id) {
         return bookableRepository.findById(id).orElse(null);
     }
-
+    @Cacheable(value = "bookableId", key = "#id",unless="#result == null")
     public Bookable findOne(Long id) {
         return bookableRepository.findById(id).orElse(null);
     }
@@ -51,11 +49,21 @@ public class BookableService {
         }
     }
 
+
+    public List<String> getBookableAdditionalServices(Long bookableId){
+        Bookable bookable = bookableRepository.getById(bookableId);
+        List<String> tags = new ArrayList<>();
+        for (Tag tag : bookable.getAdditionalServices()){
+            tags.add(tag.getName());
+        }
+        return tags;
+    }
+
     private List<BookableCalendarDTO> getBookableActions(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {
         for (Action action : bookable.getActions()) {
             if (!action.getUsed()) {
                 calendarDTOS.add(new BookableCalendarDTO(
-                        "ACTION", action.getStartDateTime().toString(), action.getEndDateTime().toString(), "#008383"));
+                        "ACTION", action.getStartDateTime().toString(), action.getEndDateTime().toString(), "#008383", null));
             }
         }
         return calendarDTOS;
@@ -63,10 +71,12 @@ public class BookableService {
 
     private List<BookableCalendarDTO> getBookableReserved(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {
         for (Reservation reservation : bookable.getReservations()) {
+            String client = reservation.getClient().getName() + " " + reservation.getClient().getSurname() + " (" +
+                    reservation.getClient().getUsername() + ")";
             if (!reservation.getCanceled()) {
-                calendarDTOS.add(new BookableCalendarDTO(
-                        "RESERVED", reservation.getStartDateTime().toString(), reservation.getEndDateTime().toString(), "#870000"));
-            }
+	            calendarDTOS.add(new BookableCalendarDTO(
+	                    "RESERVED", reservation.getStartDateTime().toString(), reservation.getEndDateTime().toString(), "#870000", client));
+        	}
         }
         return calendarDTOS;
     }
@@ -74,7 +84,7 @@ public class BookableService {
     private List<BookableCalendarDTO> getBookableAvailable(List<BookableCalendarDTO> calendarDTOS, Bookable bookable) {
         for (Period period : bookable.getPeriods()) {
             calendarDTOS.add(new BookableCalendarDTO(
-                    "AVAILABLE", period.getStartDateTime().toString(), period.getEndDateTime().toString(), "#0f5e06"));
+                    "AVAILABLE", period.getStartDateTime().toString(), period.getEndDateTime().toString(), "#0f5e06", null));
         }
         return calendarDTOS;
     }

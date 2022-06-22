@@ -20,6 +20,8 @@ export default function ShowActions(props) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+
+    console.log(props.actions)
     
     function getOriginalPrice(action) {
         let originalPrice;
@@ -40,6 +42,8 @@ export default function ShowActions(props) {
         let endDateTime = new Date(action.endDateTime)
         return Math.abs(endDateTime - startDateTime) / 36e5;
     }
+
+    var maps = ["op", "op", "op", "op","op", "op","op", "op","op", "op"]
 
     function getFormattedMinutes(minutes) {
         let formattedMins = minutes < 10 ? '0' + minutes : minutes
@@ -96,7 +100,19 @@ export default function ShowActions(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <span>Action available until: {new Date(action.expirationDateTime).getDate()}.{new Date(action.expirationDateTime).getMonth()+1}.{new Date(action.expirationDateTime).getFullYear()}. {new Date(action.expirationDateTime).getHours()}:{getFormattedMinutes(new Date(action.expirationDateTime).getMinutes())}</span>
+                                <div>
+                                <span>Additional services: </span>
+                                <div className="actionAdditionalServices">
+                                    {action.additionalServices.map((service, i) =>(
+                                        <div className="service" key={i}>
+                                            <p> {service}</p>
+                                        </div>
+                                    ))}
+                                </div>    
+                                </div>
+                            </div>
+                            <div className='middleActionContainer'>
+                            <span>Action available until: {new Date(action.expirationDateTime).getDate()}.{new Date(action.expirationDateTime).getMonth()+1}.{new Date(action.expirationDateTime).getFullYear()}. {new Date(action.expirationDateTime).getHours()}:{getFormattedMinutes(new Date(action.expirationDateTime).getMinutes())}</span>
                             </div>
                             <div className='rightActionContainer'>
                                     <div className="showActionPrice">

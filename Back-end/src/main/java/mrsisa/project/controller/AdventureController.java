@@ -1,8 +1,12 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.AdventureDTO;
+import mrsisa.project.dto.BoatDTO;
+import mrsisa.project.dto.CottageDTO;
+import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.repository.PersonRepository;
+import mrsisa.project.service.AdminService;
 import mrsisa.project.service.AdventureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/adventure")
@@ -25,6 +30,9 @@ public class AdventureController {
 
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private AdminService adminService;
 
     @PostMapping(path = "/add")
     @PreAuthorize("hasRole('INSTRUCTOR')")
@@ -60,20 +68,20 @@ public class AdventureController {
     
     @PutMapping(value = "/edit/{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<String> editAdventure(@RequestPart("adventure") AdventureDTO dto, @PathVariable("id") Long id)
+    public ResponseEntity<String> editAdventure(@RequestPart("adventure") AdventureDTO dto,
+                                                @RequestPart(value = "files",required = false) MultipartFile[] multiPartFiles,
+                                                @PathVariable("id") Long id) throws IOException
     {
-        adventureService.edit(dto, id);
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        if (adventureService.edit(dto, id, Optional.ofNullable(multiPartFiles)))
+            return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body("Adventure has pending reservations!");
     }
 
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<AdventureDTO> getAdventure(@PathVariable("id") Long id) throws IOException {
-        Adventure adventure = adventureService.findOne(id);
-        if (adventure == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<String> adventurePhotos = adventureService.getPhotos(adventure);
-        AdventureDTO dto = new AdventureDTO(adventure);
-        dto.setPhotos(adventurePhotos);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        AdventureDTO adventureDTO = adventureService.getAdventure(id);
+        if (adventureDTO == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(adventureDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reviewsNumber/{id}")
@@ -93,5 +101,23 @@ public class AdventureController {
     public ResponseEntity<List<AdventureDTO>> getInstructorAdventures(Principal userP) {
         List<AdventureDTO> DTOs = adventureService.getInstructorAdventures(personRepository.findByUsername(userP.getName()).getId());
         return new ResponseEntity<>(DTOs, HttpStatus.OK);
+    }
+
+    /**
+     * @apiNote This method is only for admin to limit new admin not to get adventures until he
+     * changes password
+     */
+    @GetMapping(value="/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AdventureDTO>> getAll(Principal userP) {
+        Administrator admin = adminService.findAdminByUsername(userP.getName());
+        if (admin.getLastPasswordResetDate() == null)
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        List<Adventure> adventures = adventureService.findAll();
+        List<AdventureDTO> adventuresDTO = new ArrayList<>();
+        for (Adventure adventure : adventures) {
+            adventuresDTO.add(new AdventureDTO(adventure));
+        }
+        return new ResponseEntity<>(adventuresDTO, HttpStatus.OK);
     }
 }

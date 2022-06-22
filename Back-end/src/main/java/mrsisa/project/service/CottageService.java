@@ -4,6 +4,7 @@ import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +49,7 @@ public class CottageService {
 
     private final String picturesPath = "src/main/resources/static/pictures/cottage/";
 
-
+    @Transactional
     public void add(CottageDTO dto, Optional<MultipartFile[]> photoFiles, Principal userP) throws IOException {
         Cottage cottage = dtoToCottage(dto);
         cottageRepository.save(cottage);
@@ -79,7 +80,11 @@ public class CottageService {
 
     public Integer getNumberOfReviews(Long id) {
         Cottage cottage = cottageRepository.findByIdWithReviews(id);
-        return cottage.getReviews().size();
+        int i = 0;
+        for (Review review : cottage.getReviews()) {
+            if (review.isAnswered()) i++;
+        }
+        return i;
     }
 
     public List<CottageDTO> findAll() {
@@ -92,16 +97,18 @@ public class CottageService {
 
 
     @Transactional
-    public List<CottageDTO> getAvailableCottages(String startDate, String endDate) {
+    public List<CottageDTO> getAvailableCottages(String startDate, String endDate, Integer capacity) {
         LocalDateTime startDateTime = LocalDateTime.ofInstant(Instant.parse(startDate), ZoneOffset.UTC);
         LocalDateTime endDateTime = LocalDateTime.ofInstant(Instant.parse(endDate), ZoneOffset.UTC);
 
         List<CottageDTO> cottagesDTO = new ArrayList<>();
         for (Cottage cottage: cottageRepository.findAll()) {
             for (Period period : cottage.getPeriods()) {
-                if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
-                    cottagesDTO.add(new CottageDTO(cottage));
-                    break;
+                if (cottage.getCapacity() >= capacity) {
+                    if ((startDateTime.isAfter(period.getStartDateTime()) || startDateTime.isEqual(period.getStartDateTime())) && (endDateTime.isBefore(period.getEndDateTime()) || endDateTime.isEqual(period.getEndDateTime()))) {
+                        cottagesDTO.add(new CottageDTO(cottage));
+                        break;
+                    }
                 }
             }
         }
@@ -109,9 +116,9 @@ public class CottageService {
     }
 
     @Transactional
-    public List<CottageDTO> getAvailableCottagesByCity(String city, String startDate, String endDate) {
+    public List<CottageDTO> getAvailableCottagesByCity(String city, String startDate, String endDate, Integer capacity) {
         List<CottageDTO> cottagesDTO = new ArrayList<>();
-        for (CottageDTO cottage: getAvailableCottages(startDate, endDate))
+        for (CottageDTO cottage: getAvailableCottages(startDate, endDate, capacity))
             if (cottage.getAddress().getCity().equals(city))
                 cottagesDTO.add(cottage);
         return cottagesDTO;
@@ -155,6 +162,7 @@ public class CottageService {
         }
         if (cottage.getCottageOwner() == owner && (reservationRepository.getActiveReservations(id).size()) == 0) {
             owner.getCottages().remove(cottage);
+            tagService.removeRelationships(cottage);
             cottageRepository.delete(cottage);
             return true;
         }
@@ -205,7 +213,7 @@ public class CottageService {
         }
 
     }
-
+    @Cacheable(value = "bookableId", key = "#id",unless="#result == null")
     public Cottage findOne(Long id) {
         return cottageRepository.findById(id).orElse(null);
     }
@@ -232,48 +240,4 @@ public class CottageService {
         if (dto.getQuadRooms() != 0) {cottage.getRooms().put(4,dto.getQuadRooms()); cottage.setCapacity(cottage.getCapacity() + dto.getQuadRooms() *4);}
         return cottage;
     }
-
-    public Cottage createFirstCottage() {
-        Address address = new Address();
-        address.setZipCode("36000");
-        address.setStreet("Nikole Tesle 5");
-        address.setState("BiH");
-        address.setCity("Bijeljina");
-
-        Cottage cottage = new Cottage();
-        cottage.setName("Vikendica na Drini");
-        cottage.setAddress(address);
-        cottage.setPromotionalDescription("Nema");
-        cottage.setProfilePicture(null);
-        cottage.setRules("Nema");
-        cottage.setRating(8.3);
-        cottage.setCapacity(3);
-
-        List<Tag> additionalServices = new ArrayList<>();
-        additionalServices.add(new Tag("wiFi"));
-        additionalServices.add(new Tag("washing machine"));
-        additionalServices.add(new Tag("terrace"));
-        additionalServices.add(new Tag("coffee maker"));
-        additionalServices.add(new Tag("tea maker"));
-        additionalServices.add(new Tag("heating"));
-        additionalServices.add(new Tag("towels"));
-        additionalServices.add(new Tag("hairdryer"));
-        additionalServices.add(new Tag("toilet paper"));
-        additionalServices.add(new Tag("flat-screen TV"));
-
-
-        PriceList priceList = new PriceList();
-        priceList.setHourlyRate(1400.00);
-        priceList.setDailyRate(3000.00);
-        priceList.setCancellationConditions("Nema uslova");
-
-        priceList.setBookable(cottage);
-
-        cottage.setPriceList(priceList);
-        cottage.setAdditionalServices(additionalServices);
-
-        cottageRepository.save(cottage);
-        return cottage;
-    }
-
 }

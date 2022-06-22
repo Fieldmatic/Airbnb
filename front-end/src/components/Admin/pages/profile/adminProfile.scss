@@ -58,18 +58,40 @@
                 border: none;
                 border-bottom: 1px solid gray;
               }
+
+              span {
+                font-size: 12px;
+                padding: 3px;
+                color: red;
+                display: none;
+              }
+
+              input:invalid ~ span {
+                display: block;
+              }
+
+              input:invalid {
+                border-bottom: 1px solid red;
+              }
+            }
+
+            .buttons {
+              display: flex;
+              justify-content: space-around;
+              width: 100%;
+
+              button {
+                width: 150px;
+                padding: 10px;
+                border: none;
+                background-color: teal;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 10px;
+              }
             }
   
-            button {
-              width: 150px;
-              padding: 10px;
-              border: none;
-              background-color: teal;
-              color: white;
-              font-weight: bold;
-              cursor: pointer;
-              margin-top: 10px;
-            }
           }
         }
       }

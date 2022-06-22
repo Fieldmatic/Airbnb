@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
@@ -40,6 +41,9 @@ public class CottageOwnerServiceTest {
     @Mock
     private AdminService adminService;
 
+    @Mock
+    private UserCategoryService userCategoryService;
+
     @InjectMocks
     private CottageOwnerService cottageOwnerService;
 
@@ -47,7 +51,7 @@ public class CottageOwnerServiceTest {
     @Test
     @Transactional
     @Rollback(true)
-    public void contextLoads() throws IOException {
+    public void addTest() throws IOException {
         PersonDTO owner = new PersonDTO();
         owner.setUsername("vlasnik");
         owner.setPassword("vlasnik");
@@ -55,7 +59,7 @@ public class CottageOwnerServiceTest {
         owner.setSurname("Milic");
         owner.setEmail("milic@gmail.com");
         owner.setProfilePhoto(null);
-        owner.setPhoneNumber("06666666");
+        owner.setPhoneNumber("066684054");
         Address address = new Address();
         address.setCity("Grad");
         address.setState("Srbija");
@@ -63,6 +67,7 @@ public class CottageOwnerServiceTest {
         owner.setAddress(address);
         owner.setRegistrationExplanation("Registrujem se");
         owner.setRole("ROLE_COTTAGE_OWNER");
+
         int ownersSizeBeforeAdd = cottageOwnerService.findAll().size();
         CottageOwner cottageOwner = (CottageOwner) cottageOwnerService.add(owner, java.util.Optional.empty());
 

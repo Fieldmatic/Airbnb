@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Instructor extends Owner {
     private String biography;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Adventure> adventures;
 }

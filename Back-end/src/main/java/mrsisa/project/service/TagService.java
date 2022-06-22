@@ -19,7 +19,7 @@ public class TagService {
     public List<Tag> getAdditionalServicesFromDTO(List<String> additionalServices, Bookable bookable){
         List<Tag> tags = new ArrayList<>();
         for (String tagName : additionalServices) {
-            Optional<Tag> tag = Optional.ofNullable(tagRepository.findByName(tagName));
+            Optional<Tag> tag = Optional.ofNullable(tagRepository.getByNameWithBookables(tagName));
             if (tag.isPresent()) {
                 if (!(tag.get().getBookables().contains(bookable)))  tag.get().getBookables().add(bookable);
                 tags.add(tag.get());
@@ -32,9 +32,17 @@ public class TagService {
         return tags;
     }
 
+    public List<Tag> getExistingAdditionalServices(List<String> additionalServices) {
+        List<Tag> tags = new ArrayList<>();
+        for (String tagName : additionalServices) {
+            tags.add(tagRepository.findTagByName(tagName));
+        }
+        return tags;
+    }
+
     public void setNewAdditionalServices(List<String> additionalServices, Bookable bookable){
         for (String tagName : additionalServices) {
-            Optional<Tag> tag = Optional.ofNullable(tagRepository.findByName(tagName));
+            Optional<Tag> tag = Optional.ofNullable(tagRepository.getByNameWithBookables(tagName));
             if (tag.isPresent() && (!(tag.get().getBookables().contains(bookable)))) {
                 tag.get().getBookables().add(bookable);
                 bookable.getAdditionalServices().add(tag.get());

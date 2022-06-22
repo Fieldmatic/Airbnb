@@ -17,6 +17,10 @@ import ShowActions from "./ShowActions";
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ClientService from '../../services/ClientService';
+import ReviewService from "../../services/ReviewService";
+import PersonIcon from '@mui/icons-material/Person';
+import Review from "./Review";
+import OwnerService from "../../services/OwnerService";
 
 
 
@@ -31,10 +35,13 @@ export default function EntityDetails() {
 
     const [heartColorState, setHeartColor] = React.useState(heartColor)
     const [reviewsNumber, setReviewsNumber] = React.useState(0)
+    const [owner, setOwner] = React.useState({})
     const [slideNumber, setSlideNumber] = React.useState(0)
     const [slideOpened, setSlideOpened] = React.useState(false)
     const [actions, setActions] = React.useState([])
     const [reservationMade, setReservationMade] = React.useState(false)
+    const [reviews, setReviews] = React.useState([])
+    const [ownerProfilePhoto, setOwnerProfilePhoto] = React.useState()
     const [entity, setEntity] = React.useState(
         {
             name : "",
@@ -54,7 +61,8 @@ export default function EntityDetails() {
             tripleRooms : 0,
             quadRooms : 0,
             photos: [],
-            rating : 0
+            rating : 0,
+            services : []
           }
     )
 
@@ -74,6 +82,9 @@ export default function EntityDetails() {
                     doubleRooms : entityDetails.doubleRooms,
                     tripleRooms : entityDetails.tripleRooms,
                     quadRooms : entityDetails.quadRooms,
+                    services : entityDetails.additionalServices,
+                    capacity: entityDetails.capacity,
+
 
                 }))
             }) 
@@ -81,12 +92,16 @@ export default function EntityDetails() {
                 setReviewsNumber(response.data) 
             })
         } else if (entityType === "adventure") {
+            console.log("udje")
             AdventureService.getAdventure(id).then((response) => {
                 let entityDetails = response.data;
+                console.log(response.data)
                 createEntity(entityDetails)
                 setEntity(prevState => ({
                     ...prevState,
-                    capacity: entityDetails.capacity
+                    capacity: entityDetails.capacity,
+                    eq: entityDetails.equipment,
+                    services : entityDetails.additionalServices
                 }))
             }) 
             AdventureService.getNumberOfAdventureReviews(id).then((response) => {
@@ -104,7 +119,8 @@ export default function EntityDetails() {
                     maxSpeed : entityDetails.maxSpeed,
                     capacity: entityDetails.capacity,
                     navigationEquipment: entityDetails.navigationEquipment,
-                    fishingEquipment: entityDetails.fishingEquipment
+                    fishingEquipment: entityDetails.fishingEquipment,
+                    services : entityDetails.additionalServices
                 }))
             }) 
             BoatService.getNumberOfBoatReviews(id).then((response) => {
@@ -112,6 +128,27 @@ export default function EntityDetails() {
             })
         }
     }, [])
+
+
+    React.useEffect(() => {
+            ReviewService.getBookableReviews(id).then((response) => {
+                setReviews(response.data) 
+            })
+    }, [])
+
+    React.useEffect(() => {
+        OwnerService.getBookableOwner(id).then((response) => {
+            setOwner(response.data) 
+        })
+}, [])
+
+    React.useEffect(() => {
+        OwnerService.getProfilePicture(id).then((response) => {
+            setOwnerProfilePhoto(response.data) 
+        })
+    }, [])
+
+
 
     function createEntity(entityDetails) {
         setEntity((prevState) => ({
@@ -205,6 +242,15 @@ export default function EntityDetails() {
                                 <LocationOnIcon/>
                                 <span> {entity.address.street}, {entity.address.city}, {entity.address.state}</span>
                             </div>
+                            <div className="ownerMainInfo">
+                                <div>
+                                    {ownerProfilePhoto && <img className="clientAvatar" src = {URL.createObjectURL(ownerProfilePhoto)} alt="avatar"/>}
+                                    <label>{owner.name} {owner.surname}</label>
+                                </div>
+                                <div className="ownerBiography">
+                                    {owner.biography && <label>{owner.biography}</label>}
+                                </div>
+                            </div>
                             <div className="price">
                                 {user === "client" && <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColorState,
                                     '&:hover': {
@@ -223,12 +269,18 @@ export default function EntityDetails() {
                                 <span className="price"> € {entity.hourlyRate}</span>
                                 <span className="night"> /hour</span>
                                 </div>}
+                                {(entityType === "cottage" || entityType === "boat") &&
+                                <div>
+                                <span className="price"> € {entity.hourlyRate}</span>
+                                <span className="night"> /hour</span>
+                                </div>}
+        
                             </div>
                         </div>
                         <div className="rating">
                             <StarIcon sx={{color: "#FF5A5F"}}/>
-                            <div className="rating"> {entity.rating}/10</div>
-                            <div className="reviews"> ({reviewsNumber} reviews)</div>
+                            <div className="rating"> {entity.rating}/5</div>
+                            <div className="reviewsNumber"> ({reviewsNumber} reviews)</div>
                         </div>
                         <div className="hotelImages">
                             {entity.photos.map((photo, i) =>(
@@ -237,23 +289,70 @@ export default function EntityDetails() {
                                 </div>
                             ))}
                         </div>
+                        <div className="adventureCapacity">
+                            <h5> Number of guests: </h5>
+                            <span>{entity.capacity} <PersonIcon/></span>
+                        </div>
                         {entityType === "cottage" && <CottageDetails key={id} bedsNum={getNumberOfBeds()} roomsNum={getNumberOfBedrooms()}/>}
-                        {entityType === "adventure" && <AdventureDetails key={id} capacity={entity.capacity}/>}
                         {entityType === "boat" && <BoatDetails key={id} capacity={entity.capacity} enginesNumber={entity.enginesNumber} enginePower={entity.enginePower} maxSpeed={entity.maxSpeed}/>}
                         <div className="paragraphs">
                             <h3>Description</h3>
                             <p>{entity.promotionalDescription}</p>
                         </div>
+                        {entityType === "adventure" && entity.eq && <AdventureDetails key={id} capacity={entity.capacity} eq={entity.eq}/>}
+
+                        {entityType === "boat" && entity.fishingEquipment && 
                         <div className="paragraphs">
-                            <h3>Behavior rules</h3>
+                            <h3>Fishing equipment</h3>
+                            <div className="services">
+                            {entity.fishingEquipment.map((service, i) =>(
+                                <div className="service" key={i}>
+                                    <p> {service}</p>
+                                </div>
+                            ))}
+                            </div>
+                        </div>}     
+                        {entityType === "boat" && entity.navigationEquipment && 
+                        <div className="paragraphs">
+                            <h3>Navigation equipment</h3>
+                            <div className="services">
+                            {entity.navigationEquipment.map((service, i) =>(
+                                <div className="service" key={i}>
+                                    <p> {service}</p>
+                                </div>
+                            ))}
+                            </div>
+                        </div>}     
+                        <div className="paragraphs">
+                            <h3>Additional services</h3>
+                            <div className="services">
+                                {entity.services.map((service, i) =>(
+                                    <div className="service" key={i}>
+                                        <p> {service}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>     
+                        <div className="paragraphs">
+                            <h3>Rules of conduct</h3>
                             <p>{entity.rules}</p>
                         </div>
                         <div className="paragraphs">
                             <h3>Cancellation conditions</h3>
                             <p>{entity.cancellationConditions}</p>
-                        </div>          
+                        </div>     
                         {user === "client" && <ShowActions actions={actions} hourlyPrice={entity.hourlyRate} dailyPrice={entity.dailyRate} bookableType={entityType} deleteAction={rerenderActions}/>}
                         <iframe style={{width: "100%", height:"500px", marginTop: "25px"}} src={`https://maps.google.com/maps?q=${createAddressUrl()}&t=&z=13&ie=UTF8&iwloc=&output=embed`} frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0"></iframe>
+                        <div className="reviewParagraphs">
+                            <h3>Reviews</h3>
+                            <div className="reviews">
+                            {reviews.map(item => {
+                                return (<Review clientName={item.clientName} clientSurname={item.clientSurname} clientId={item.clientId} clientEmail={item.clientEmail} bookableRating={item.bookableRating} bookableComment={item.bookableComment}
+                                                ownerRating={item.ownerRating} ownerComment={item.ownerComment} entity={entityType}/>)}
+                            )} 
+                            {reviews.length === 0 && <p>No one reviewed this entity yet.</p>}
+                        </div>
+                        </div>          
                 </div>
             </div>
         </div>

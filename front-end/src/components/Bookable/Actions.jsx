@@ -8,10 +8,19 @@ import Calendar from "./Calendar";
 function Actions(){
     let {id} = useParams();
 
-    const [updateType, setUpdateType] = React.useState("");
+    const [updateType, setUpdateType] = React.useState({
+        availablePeriod: false,
+        reservation: false,
+        action: false
+    });
 
-    const updateCalendar = (type) => {
-        setUpdateType(type);
+    const updateCalendar = () => {
+        setUpdateType(prevVal => {
+            return {
+                ...prevVal,
+                action: !prevVal.action
+            }
+        });
     }
 
     return (

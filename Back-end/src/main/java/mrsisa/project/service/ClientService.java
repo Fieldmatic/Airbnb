@@ -10,6 +10,7 @@ import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -41,22 +43,25 @@ public class ClientService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private UserCategoryService userCategoryService;
+
+    @Autowired
     private PictureService pictureService;
 
     final static String picturesPath = "src/main/resources/static/pictures/client/";
 
+
     public List<Client> findAll() {
         return clientRepository.findAll();
     }
-
+    @Cacheable(value = "personId", key = "#id",unless="#result == null")
     public Client findOne(Long id) {return clientRepository.getById(id);}
 
     public Client save(Client client) {return clientRepository.save(client);}
 
     public Client findClientByUsername(String username) {return clientRepository.findByUsername(username);}
-
     public Client findClientByEmail(String email) {return clientRepository.findByEmail(email);}
-
+    @Cacheable(value = "personId", key = "#id",unless="#result == null")
     public Client findClientById(Long id) {return clientRepository.getById(id);}
 
     public Client findClientByUsernameWithSubscriptions(String username) {
@@ -64,16 +69,43 @@ public class ClientService {
     }
 
 
-    public void add(ClientDTO dto, MultipartFile[] multipartFiles) throws IOException {
+    public Client add(ClientDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
         Client client = dtoToClient(dto);
         clientRepository.save(client);
-        List<String> paths = pictureService.addPictures(client.getId(), picturesPath, multipartFiles);
-        client.setProfilePhoto(paths.get(0));
+        if (multipartFiles.isPresent()) {
+            List<String> paths = pictureService.addPictures(client.getId(), picturesPath, multipartFiles.get());
+            client.setProfilePhoto(paths.get(0));
+        }
         clientRepository.save(client);
+        return client;
+    }
+
+
+    @Transactional
+    public Client update(Client client, ClientDTO clientDetails) {
+        Address address = addressRepository.findById(clientDetails.getAddress().getId()).get();
+
+        //update adrese odradi
+
+        client.setUsername(clientDetails.getUsername());
+        client.setPassword(clientDetails.getPassword());
+        client.setName(clientDetails.getName());
+        client.setSurname(clientDetails.getSurname());
+        client.setAddress(clientDetails.getAddress());
+        client.setEmail(clientDetails.getEmail());
+        client.setPhoneNumber(clientDetails.getPhoneNumber());
+        address.setStreet(clientDetails.getAddress().getStreet());
+        address.setCity(clientDetails.getAddress().getCity());
+        address.setState(clientDetails.getAddress().getState());
+        addressRepository.save(address);
+
+        client = clientRepository.save(client);
+        return client;
     }
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         Client client = clientRepository.findByUsername(username);
+        pictureService.tryDeletePhoto(client.getProfilePhoto());
         List<String> paths = pictureService.addPictures(client.getId(), picturesPath, files);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);
@@ -149,6 +181,7 @@ public class ClientService {
         client.setPenalties(0);
         List<Role> roles = roleService.findByName("ROLE_CLIENT");
         client.setRoles(roles);
+        client.setCategory(userCategoryService.getRegularCategory());
         return client;
     }
 }

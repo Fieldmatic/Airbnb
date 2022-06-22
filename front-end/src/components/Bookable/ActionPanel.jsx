@@ -15,6 +15,7 @@ import ActionService from '../../services/ActionService';
 import { ThemeProvider} from '@mui/material/styles';
 import "./ActionPanel.css";
 import muiStyles from '../utils/muiStyles';
+import ActionServicesPopup from './ActionServicesPopup';
 
 
 
@@ -35,6 +36,9 @@ function ActionPanel (props) {
     )
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [showError, setShowError] = React.useState(false);
+
+    const [actionPopup, setActionPopup] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
 
     function handleChange(event) {
         const {name, value} = event.target;
@@ -58,25 +62,34 @@ function ActionPanel (props) {
         key: 'selection'
     }
 
-    function handleSubmit(event){
-        event.preventDefault()
+    const handleClose = () => {
+        setOpen(false);
+        setActionPopup(false)
+        };
+
+    function handleSubmit(services){
         let data = {
             personLimit: formData.personLimit,
             price:formData.price,
             bookableId:formData.bookableId,
             startDateTime:toISODate(new Date(formData.startDate.getFullYear(),formData.startDate.getMonth(), formData.startDate.getDate(), formData.startTime.getHours(), formData.startTime.getMinutes(),formData.startTime.getSeconds())),
             endDateTime: toISODate(new Date(formData.endDate.getFullYear(),formData.endDate.getMonth(), formData.endDate.getDate(), formData.endTime.getHours(), formData.endTime.getMinutes(), formData.endTime.getSeconds())),
-            expirationDateTime : toISODate(formData.expirationDateTime)
+            expirationDateTime : toISODate(formData.expirationDateTime),
+            additionalServices:services
         }
         ActionService.addAction(data)
             .then(response => {
                 if (response.status === 201) {
                     setShowSuccess(true)
-                    props.func('ACTION')
+                    props.func()
                 }
             }).catch(error => {
                 setShowError(true)
             });
+      }
+
+      function handleActionPopupClicked(){
+        setActionPopup(true);
       }
     
       
@@ -85,15 +98,15 @@ function ActionPanel (props) {
         <div className='actions--container'>
             <h1 className='actions--header'>Action defining</h1>
             {showSuccess &&
-            <Alert style={{width:"100%", height:"80px"}} variant='success' onClose = {() => setShowSuccess(false)} dismissible>
+            <Alert style={{width:"100%", height:"12vh"}} variant='success' onClose = {() => setShowSuccess(false)} dismissible>
                 <Alert.Heading>Success!</Alert.Heading>
                 <p>Successfully added action!</p>
             </Alert>
             }
             {showError &&
-            <Alert style={{width:"100%", height:"80px"}} variant='danger' onClose = {() => setShowError(false)} dismissible>
+            <Alert style={{width:"100%", height:"12vh"}} variant='danger' onClose = {() => setShowError(false)} dismissible>
                 <Alert.Heading>Error!</Alert.Heading>
-                <p>Action already exists in given date range!</p>
+                <p>Action must be created within available period!</p>
             </Alert>
             }
             <DateRangePicker
@@ -208,14 +221,15 @@ function ActionPanel (props) {
                 <Button 
                     className = "action--submit" 
                     variant="contained"
-                    onClick={handleSubmit}
+                    onClick={handleActionPopupClicked}
                     sx = {{background:"#FF5A5F",'&:hover': {
                         backgroundColor: '#FF5A5F',
                         color: 'black',
                     },}} 
                     endIcon={<SendIcon />}>   
-                    Save
+                    Next
                 </Button>
+                {actionPopup && <ActionServicesPopup actionPopup = {actionPopup} handleClose={handleClose} handleSubmit = {handleSubmit} services={props.services} id = {formData.bookableId}/>}
             </div>
 
         

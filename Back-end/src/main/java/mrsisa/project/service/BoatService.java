@@ -5,6 +5,7 @@ import mrsisa.project.dto.BoatDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,6 +64,14 @@ public class BoatService {
         boat.setAdditionalServices(additionalServices);
         boatRepository.save(boat);
         owner.getBoats().add(boat);
+    }
+
+    public BoatDTO getBoat(Long id) throws IOException {
+        Boat boat = boatRepository.findById(id).orElse(null);
+        if (boat == null) return null;
+        List<String> cottagePhotos = getPhotos(boat);
+        boat.setPictures(cottagePhotos);
+        return new BoatDTO(boat);
     }
 
     @Transactional
@@ -183,13 +192,18 @@ public class BoatService {
         }
 
     }
-
+    @Cacheable(value = "bookableId", key = "#id",unless="#result == null")
     public Boat findOne(Long id) {
         return boatRepository.findById(id).orElse(null);
     }
 
     public Integer getNumberOfReviews(Long id) {
-        return boatRepository.findByIdWithReviews(id).getReviews().size();
+        Boat boat = boatRepository.findByIdWithReviews(id);
+        int i = 0;
+        for (Review review : boat.getReviews()) {
+            if (review.isAnswered()) i++;
+        }
+        return i;
     }
 
     public List<Boat> findAll() {

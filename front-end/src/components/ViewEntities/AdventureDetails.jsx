@@ -1,18 +1,20 @@
 import React from "react"
-import PersonIcon from '@mui/icons-material/Person';
 
 
 export default function EntityDetails(props) {
 
-    var persons = []
-    for (let i = 0; i < props.capacity; i++) {
-        persons.push(<PersonIcon />)
-    }
-
     return(
-        <div className="adventureCapacity">
-            <span> Number of guests</span>
-            {persons}
-        </div>
+        <>
+            <div className="paragraphs">
+                    <h3>Equipment</h3>
+                    <div className="services">
+                        {props.eq.map((service, i) =>(
+                            <div className="service" key={i}>
+                                <p> {service}</p>
+                            </div>
+                        ))}
+                </div>
+            </div>     
+        </>
     )
 }

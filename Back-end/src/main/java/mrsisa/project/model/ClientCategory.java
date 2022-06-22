@@ -15,7 +15,7 @@ public class ClientCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private CategoryName name;
     private Integer points;
     private Double discount;
 }

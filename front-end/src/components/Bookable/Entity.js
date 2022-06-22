@@ -35,7 +35,7 @@ function entity(props) {
     const navigate = useNavigate()
 
     const alertText = {
-        accept: "Reservation is successfull!",
+        accept: "Reservation is successful!",
         deny: "You are not allowed to reserve after cancellation!"
     }
 
@@ -65,7 +65,6 @@ function entity(props) {
     };
 
     function handleCloseAfterReservation(result) {
-        console.log(result)
         setAccept(result);
             setShowAlert(true)
             setTimeout(() => {
@@ -119,6 +118,11 @@ function entity(props) {
                 props.setEntitiesEdited(true)
             })
         }
+        else if(props.entity === "adventure") {
+            AdventureService.deleteAdventure(props.id).then(() => {
+                props.setEntitiesEdited(true)
+            })
+        }
         handleClose()
     }
 
@@ -128,11 +132,13 @@ function entity(props) {
 
     function handleEdit(){
         if (props.entity === "cottage") {
-            navigate("/editCottage/"+props.id)
-            
+            navigate("/editCottage/"+props.id)           
         }
         else if (props.entity === "boat") {
             navigate("/editBoat/"+props.id)
+        }
+        else if (props.entity === "adventure") {
+            navigate("/editAdventure/"+props.id)
         }
         
     }
@@ -174,7 +180,7 @@ function entity(props) {
                             <Alert variant="filled" severity="info">{accept ? alertText.accept : alertText.deny}</Alert>
                 </Collapse>
         <div className="entities">
-            {profileImage && <img src={URL.createObjectURL(profileImage)}  alt=""/>}
+            {profileImage && <div className="entityProfilePhoto"><img src={URL.createObjectURL(profileImage)}  alt=""/></div>}
             {props.user === "client" && <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColor,
                 '&:hover': {
                     backgroundColor: 'lightgray',
@@ -197,7 +203,7 @@ function entity(props) {
                         <StarIcon className="entity__star" />
                         <div>
                         <span className='entity_rating_value'>{props.rating}</span>
-                        <span>/10 ({reviewsNumber} reviews)</span>
+                        <span>/5 ({reviewsNumber} reviews)</span>
                         </div>
                         </div>
                     </div>
@@ -267,8 +273,8 @@ function entity(props) {
                         onClose={handleClose}
                         aria-labelledby="responsive-dialog-title"
                     >
-                    <DialogTitle id="responsive-dialog-title">{"Delete this cottage?"}</DialogTitle>
-                    <DialogContent><DialogContentText>This action Cannot be undone.</DialogContentText></DialogContent>
+                    <DialogTitle id="responsive-dialog-title">Delete this {props.entity}?</DialogTitle>
+                    <DialogContent><DialogContentText>This action CANNOT be undone.</DialogContentText></DialogContent>
                     <DialogActions>
                         <Button autoFocus onClick={handleClose}>Disagree</Button>
                         <Button onClick={handleDelete} autoFocus>Agree</Button>
@@ -280,6 +286,15 @@ function entity(props) {
                             <span className='entity_price_value'>€{props.entity === "adventure"? props.hourlyRate : props.dailyRate} </span>
                             <span className='entity_price_per'>{props.entity === "adventure" ? '/hour' : '/night'}</span>
                         </div>
+                        <div className="entity__price">
+                            <span className='entity_price_value'>{props.entity === "adventure"? "" :"€" + props.hourlyRate} </span>
+                            <span className='entity_price_per'>{props.entity === "adventure" ? '' : '/hour'}</span>
+                        </div>
+                        {(!props.showAll && props.user ==="client") &&
+                         <div className="reservation__price">
+                            <span className='entity_price_value'> Price: {getPrice()} €</span>
+                     </div>
+                        }
                         <div className='exploreAndReserveButtons'>
                             <Button className="entity_explore_button" sx = {{
                                 backgroundColor : props.user === "client" && !props.showAll ? "#D4AF37" : "#FF5A5F", 
@@ -301,7 +316,7 @@ function entity(props) {
                                     }} variant='outlined'  onClick={openReservePopup}> Reserve</Button>}
         
                         </div>
-                        {props.user === "client" && <ReservationPopup handleClose={handleClose} handleCloseAfterReservation={handleCloseAfterReservation} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>}
+                        {props.user === "client" && <ReservationPopup handleClose={handleClose} handleCloseAfterReservation={handleCloseAfterReservation} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={() => getPrice()} bookableId={props.id} capacity={props.capacity}/>}
                     </div>
                 </div>
             </div>

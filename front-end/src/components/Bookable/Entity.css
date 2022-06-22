@@ -1,16 +1,29 @@
 .entities {
     display: flex;
-    position: relative;
     padding: 20px;
     cursor: pointer;
+    height: 45vh;
+    width: 100%;
+    position: relative;
 }
 
 .entity:hover {
     opacity: 0.8;
 }
 
-.entities img {
-    height: 230px;
+.reservation__price {
+    color: #FF5A5F;
+    font-size: x-large;
+    font-weight: bold;
+
+}
+
+.entityProfilePhoto {
+    width: 33%;
+  }
+
+.entityProfilePhoto > img {
+    height: 100%;
     width: auto;
     border-radius: 10px;
     overflow: hidden;
@@ -19,9 +32,11 @@
 .entity__info {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     justify-content: space-between;
     padding-left: 20px;
     width: 100%;
+    height: 100%;
 }
 
 .entity__heart {
@@ -49,6 +64,7 @@
     justify-content: space-between;
     align-items: flex-end;
     width: 100%;
+
 }
 
 .entity_explore_button {
@@ -68,6 +84,7 @@
     flex-direction: row;
     align-items: center;
     font-size: 1.1rem;
+    margin-bottom: 2vh;
 }
 
 

@@ -16,6 +16,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PhishingIcon from '@mui/icons-material/Phishing';
 import CottageOutlinedIcon from '@mui/icons-material/CottageOutlined';
 import DirectionsBoatOutlinedIcon from '@mui/icons-material/DirectionsBoatOutlined';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
+import DocumentScannerOutlinedIcon from '@mui/icons-material/DocumentScannerOutlined';
 import { Link , useNavigate} from "react-router-dom";
 import { useState, useEffect } from "react";
 import inMemoryJwt from '../../../../services/inMemoryJwtService'
@@ -66,18 +68,20 @@ export default function AdminSidebar() {
             <div className="center">
                 <ul>
                     <p className="title">MAIN</p>
-                    <li>
-                        <DashboardIcon className="icon" />
-                        <span>Dashboard</span>
-                    </li>
+                    <Link to="/admin" style={{ textDecoration: "none" }}>
+                        <li>
+                            <DashboardIcon className="icon" />
+                            <span>Dashboard</span>
+                        </li>
+                    </Link>
                     <p className="title">REQUESTS</p>
-                    <Link to="/admin/registrationRequests" style={{ textDecoration: "none" }}>
+                    <Link to="/admin/requests/registrationRequests" style={{ textDecoration: "none" }}>
                         <li>
                         <PersonOutlineIcon className="icon" />
                         <span>Registration</span>
                         </li>
                     </Link>
-                    <Link to="/admin/deletionRequests" style={{ textDecoration: "none" }}>
+                    <Link to="/admin/requests/deletionRequests" style={{ textDecoration: "none" }}>
                         <li>
                         <DeleteOutlineIcon className="icon" />
                         <span>Deletion</span>
@@ -102,15 +106,19 @@ export default function AdminSidebar() {
                             <span>Boats</span>
                         </li>
                     </Link>
-                    <p className="title">SERVICE - po potrebi dodavati</p>                  
-                    <li>
-                        <PsychologyOutlinedIcon className="icon" />
-                        <span>Logs</span>
-                    </li>
-                    <li>
-                        <SettingsApplicationsIcon className="icon" />
-                        <span>Settings</span>
-                    </li>
+                    <p className="title">REVISIONS</p>
+                    <Link to="/admin/revisions/complaints" style={{ textDecoration: "none" }}>
+                        <li>
+                            <ReceiptLongOutlinedIcon className="icon" />
+                            <span>Complaints</span>
+                        </li>
+                    </Link>
+                    <Link to="/admin/revisions/reviews" style={{ textDecoration: "none" }}>
+                        <li>
+                            <DocumentScannerOutlinedIcon className="icon" />
+                            <span>Reviews</span>
+                        </li>
+                    </Link>
                     <p className="title">USER</p>
                     <Link to="/admin/profile" style={{ textDecoration: "none" }}>
                         <li>

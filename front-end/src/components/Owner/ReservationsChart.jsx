@@ -54,7 +54,8 @@ export default function ReservationsChart(props) {
                 setDataLoaded(true)              
             })
             OwnerService.getAverageRating().then((response) => {
-                setAvgRating(response.data.toFixed(2))
+                if (!isNaN(response.data))
+                    setAvgRating(response.data.toFixed(2))
             })
         }
         else {
@@ -63,7 +64,8 @@ export default function ReservationsChart(props) {
             setDataLoaded(true)
             })  
             BookableService.getRating(props.bookableId).then((response) => {
-                setAvgRating(response.data.toFixed(2))
+                if (!isNaN(response.data))
+                    setAvgRating(response.data.toFixed(2))
             })            
             }
     },[]) 
@@ -79,7 +81,7 @@ export default function ReservationsChart(props) {
                         <span>Average rating</span>
                         <StarIcon className="entity__star" />               
                         <span className='entity_rating_value'>{avgRating}</span>
-                        <span>/10</span>
+                        <span>/5</span>
                     </div>
                     <TextField
                         select

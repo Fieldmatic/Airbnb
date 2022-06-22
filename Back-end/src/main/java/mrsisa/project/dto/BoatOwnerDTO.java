@@ -4,6 +4,7 @@ package mrsisa.project.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
+import mrsisa.project.model.UserCategory;
 
 
 @Data
@@ -18,4 +19,6 @@ public class BoatOwnerDTO {
     private String phoneNumber;
     private Address address;
     private String registrationExplanation;
+    private UserCategory category;
+    private Integer points;
 }

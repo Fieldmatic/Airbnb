@@ -58,7 +58,7 @@ function PeriodPanel (props) {
             if (response.status === 201 || response.status === 200) {
                 setSuccessMessage(response.data)
                 setShowSuccess(true)
-                props.func('AVAILABLE_PERIOD');
+                props.func();
             }
         }).catch(error => {
             setShowError(true)
@@ -83,13 +83,13 @@ function PeriodPanel (props) {
         <div className='availability--periods--container'>
             <h1 className='availability--periods--header'>Availability period defining</h1>
             {showSuccess &&
-            <Alert variant='success' onClose = {() => setShowSuccess(false)} dismissible>
+            <Alert style={{width:"100%", height:"12vh"}} variant='success' onClose = {() => setShowSuccess(false)} dismissible>
                 <Alert.Heading>Success!</Alert.Heading>
                 <p>{successMessage}</p>
             </Alert>
             }
             {showError &&
-            <Alert variant='danger' onClose = {() => setShowError(false)} dismissible>
+            <Alert style={{width:"100%", height:"12vh"}} variant='danger' onClose = {() => setShowError(false)} dismissible>
                 <Alert.Heading>Error!</Alert.Heading>
                 <p>Period already exists in given date range!</p>
             </Alert>

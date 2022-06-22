@@ -46,7 +46,7 @@ public class CottageControllerTest {
     @Test
     public void testGetAllCottages() throws Exception {
         mockMvc.perform(get(URL_PREFIX + "/all")).andExpect(status().isOk())
-                .andExpect(content().contentType(contentType)).andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(content().contentType(contentType)).andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(99)))
                 .andExpect(jsonPath("$.[*].name").value(hasItem("Suncana reka")))
                 .andExpect(jsonPath("$.[*].dailyRate").value(hasItem(1500.0)))

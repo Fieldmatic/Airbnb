@@ -49,6 +49,9 @@ public class CottageOwnerService {
     @Autowired
     PictureService pictureService;
 
+    @Autowired
+    UserCategoryService userCategoryService;
+
     final static String picturesPath = "src/main/resources/static/pictures/cottageOwner/";
 
     public Person add(PersonDTO dto, Optional<MultipartFile[]> multipartFiles) throws IOException {
@@ -65,6 +68,7 @@ public class CottageOwnerService {
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         CottageOwner cottageOwner = cottageOwnerRepository.findByUsername(username);
+        pictureService.tryDeletePhoto(cottageOwner.getProfilePhoto());
         List<String> paths = pictureService.addPictures(cottageOwner.getId(), picturesPath, files);
         cottageOwner.setProfilePhoto(paths.get(0));
         cottageOwnerRepository.save(cottageOwner);
@@ -83,6 +87,7 @@ public class CottageOwnerService {
         owner.setPhoneNumber(dto.getPhoneNumber());
         owner.setRegistrationExplanation(dto.getRegistrationExplanation());
         owner.setApprovedAccount(false);
+        owner.setCategory(userCategoryService.getRegularCategory());
         owner.setPoints(0);
         List<Role> roles = roleService.findByName(dto.getRole());
         owner.setRoles(roles);

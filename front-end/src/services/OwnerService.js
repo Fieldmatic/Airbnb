@@ -6,7 +6,16 @@ const OWNER_BASED_REST_API_URL  = "https://airbnbexperiences-springboot.herokuap
 
 class OwnerService {
     getOwner(){
-        return axios.get(OWNER_BASED_REST_API_URL + "/get",
+        return axios.get(OWNER_BASED_REST_API_URL + "/getOwner",
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+         })
+    }
+
+    getInstructor(){
+        return axios.get(OWNER_BASED_REST_API_URL + "/getInstructor",
         {
             headers: {
                 'Authorization':`Bearer ${inMemoryJwt.getToken()}`
@@ -65,6 +74,10 @@ class OwnerService {
                 'Authorization':`Bearer ${inMemoryJwt.getToken()}`
             },
         })  
+    }
+
+    getBookableOwner(id){
+        return axios.get(OWNER_BASED_REST_API_URL + "/getBookableOwner/" + id)
     }
 
 }

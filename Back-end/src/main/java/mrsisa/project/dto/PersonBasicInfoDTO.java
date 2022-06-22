@@ -23,5 +23,6 @@ public class PersonBasicInfoDTO {
         this.email = person.getEmail();
         this.phoneNumber = person.getPhoneNumber();
         this.address = person.getAddress();
+        this.username = person.getUsername();
     }
 }

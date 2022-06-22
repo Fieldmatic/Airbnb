@@ -7,6 +7,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Bookable {
+public abstract class Bookable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;

@@ -7,10 +7,19 @@ import Calendar from './Calendar';
 function Periods(){
     let {id} = useParams();
 
-    const [updateType, setUpdateType] = React.useState("");
+    const [updateType, setUpdateType] = React.useState({
+        availablePeriod: false,
+        reservation: false,
+        action: false
+    });
 
-    const updateCalendar = (type) => {
-        setUpdateType(type);
+    const updateCalendar = () => {
+        setUpdateType(prevVal => {
+            return {
+                ...prevVal,
+                availablePeriod: !prevVal.availablePeriod
+            }
+        });
     }
 
     return (

@@ -15,4 +15,5 @@ public interface PeriodRepository extends JpaRepository<Period, Long> {
 
     Optional<Period> findPeriodByBookableIdAndStartDateTimeLessThanEqualAndEndDateTimeGreaterThanEqual(Long id, LocalDateTime start, LocalDateTime end);
 
+    Optional<Period> getPeriodByBookable_Id(Long id);
 }

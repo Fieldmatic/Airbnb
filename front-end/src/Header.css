@@ -40,7 +40,7 @@
 .header__right{
     display: flex;
     align-items: center;
-    font-weight: bold;
+    font-weight: 600;
     justify-content: space-evenly;
     width: 20%;
 }
@@ -54,7 +54,7 @@
 
 .header__links{
     display: flex;
-    font-weight: bold;
+    font-weight: 600;
     align-items: center;
     justify-content: space-between;
     width: 45%;
@@ -134,7 +134,7 @@
   }
 
   .guestsNumber > span, .entityType > span {
-    font-weight: bold;
+    font-weight: 600;
     font-size: large;
   }
 
@@ -196,12 +196,16 @@
   padding: 8px;
 }
 
+.yourReservations{
+  font-weight: 600;
+}
+
 
 
 #demo-customized-button {
   background-color: transparent;
   color: black;
-  font-weight: bold;
-  font-size: medium;
+  font-weight: 700;
+  font-size: bold;
   text-transform:none;
 }

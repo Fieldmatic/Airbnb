@@ -110,19 +110,19 @@
 }
 
 .img-REGULAR {
-    border: 15px solid rgb(17, 147, 203);
+    border: 0.5vh solid rgb(17, 147, 203);
 }
 
 .img-BRONZE {
-    border: 15px solid #cd853f;;
+    border: 0.5vh  solid #cd853f;;
 }
 
 .img-SILVER {
-    border: 15px solid silver;
+    border: 0.5vh  solid silver;
 }
 
 .img-GOLD {
-    border: 15px solid gold;
+    border: 0.5vh  solid gold;
 }
 
 .changeProfilePictureBtn {

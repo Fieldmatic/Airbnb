@@ -98,7 +98,7 @@ public class ReservationService {
             periodService.splitPeriodAfterReservation(period.get(), reservation, bookable);
             client.setPoints(client.getPoints() + loyaltyProgramService.getLoyaltyProgram().getClientPoints());
             this.tryChangeClientCategory(client, loyaltyProgramService.getLoyaltyProgram());
-            Owner owner = (Owner) personRepository.findById(getBookableOwnerId(reservation.getBookable())).get();
+            Owner owner = (Owner) personRepository.getById(getBookableOwnerId(reservation.getBookable()));
             owner.setPoints(owner.getPoints() + loyaltyProgramService.getLoyaltyProgram().getOwnerPoints());
             this.tryChangeOwnerCategory(owner, loyaltyProgramService.getLoyaltyProgram());
             paymentService.increaseTotalMoney(reservation.getPrice() * paymentService.getMoneyPercentage());
@@ -267,8 +267,8 @@ public class ReservationService {
                 Client client = reservation.getClient();
                 client.setPoints(client.getPoints() - loyaltyProgramService.getLoyaltyProgram().getClientPoints());
                 this.tryChangeClientCategory(client, loyaltyProgramService.getLoyaltyProgram());
-                Owner owner = (Owner) personRepository.findById(getBookableOwnerId(reservation.getBookable())).get();
-                owner.setPoints(owner.getPoints() + loyaltyProgramService.getLoyaltyProgram().getOwnerPoints());
+                Owner owner = (Owner) personRepository.getById(getBookableOwnerId(reservation.getBookable()));
+                owner.setPoints(owner.getPoints() - loyaltyProgramService.getLoyaltyProgram().getOwnerPoints());
                 this.tryChangeOwnerCategory(owner, loyaltyProgramService.getLoyaltyProgram());
                 paymentService.decreaseTotalMoney(reservation.getPrice() * paymentService.getMoneyPercentage());
                 return true;

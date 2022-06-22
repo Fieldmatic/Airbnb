@@ -61,17 +61,16 @@ public class InstructorService {
     final static String picturesPath = "src/main/resources/static/pictures/instructor/";
     final static String defaultPicturePath = "src/main/resources/static/pictures/defaults/default-profile-picture.jpg";
 
-    public Person add(InstructorDTO instructorDTO, MultipartFile[] multipartFiles) throws IOException {
+    public Person add(InstructorDTO instructorDTO, Optional<MultipartFile[]> multipartFiles) throws IOException {
         Instructor instructor = this.dtoToInstructor(instructorDTO);
         if (instructor == null) {
             return null;
         }
         instructorRepository.save(instructor);
-        List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, multipartFiles);
-        if (paths.size() == 0)
-            instructor.setProfilePhoto(defaultPicturePath);
-        else
+        if (multipartFiles.isPresent()) {
+            List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, multipartFiles.get());
             instructor.setProfilePhoto(paths.get(0));
+        }
         instructorRepository.save(instructor);
         adminService.createRegistrationRequest(instructor);
         return instructor;

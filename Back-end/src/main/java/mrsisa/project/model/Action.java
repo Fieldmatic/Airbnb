@@ -3,6 +3,8 @@ package mrsisa.project.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,7 +22,8 @@ public class Action {
     private LocalDateTime endDateTime;
     private Integer personLimit;
     private Boolean used;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Tag> additionalServices;
     private Double price;
     private LocalDateTime expirationDateTime;

@@ -24,6 +24,15 @@ class BookableService {
         })
     }
 
+    getBookableServices(id){
+        return axios.get(BOOKABLE_BASED_REST_API_URL + "/getServices/" + id,
+        {
+            headers: {
+                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
+            } 
+        })
+    }
+
     getBookableActions(id){
         return axios.get(BOOKABLE_BASED_REST_API_URL + "/getBookableActions/" + id,
         {

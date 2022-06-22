@@ -1,9 +1,6 @@
 package mrsisa.project.controller;
 
-import mrsisa.project.dto.AdminDTO;
-import mrsisa.project.dto.ChartDataDTO;
-import mrsisa.project.dto.ProfileDeletionReasonDTO;
-import mrsisa.project.dto.RegistrationRequestDTO;
+import mrsisa.project.dto.*;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.LoyaltyProgram;
 import mrsisa.project.model.Payment;
@@ -131,11 +128,11 @@ public class AdminController {
 
     @PutMapping(path = "/updatePaymentConfig")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> updatePaymentConfig(@RequestBody Payment payment, Principal userP) {
+    public ResponseEntity<String> updatePaymentConfig(@RequestBody PaymentDTO paymentDTO, Principal userP) {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-        adminService.updatePaymentConfig(payment);
+        adminService.updatePaymentConfig(paymentDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Payment config successfully updated!");
     }
 
@@ -151,11 +148,11 @@ public class AdminController {
 
     @PutMapping(path = "/updateLoyaltyProgram")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> updateLoyaltyProgram(@RequestBody LoyaltyProgram loyaltyProgram, Principal userP) {
+    public ResponseEntity<String> updateLoyaltyProgram(@RequestBody LoyaltyProgramDTO loyaltyProgramDTO, Principal userP) {
         Administrator admin = adminService.findAdminByUsername(userP.getName());
         if (admin.getLastPasswordResetDate() == null)
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-        adminService.updateLoyaltyProgram(loyaltyProgram);
+        adminService.updateLoyaltyProgram(loyaltyProgramDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Loyalty program successfully updated!");
     }
 

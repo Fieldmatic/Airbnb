@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 
+import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReviewDTO;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Review;
@@ -79,4 +80,9 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body("Review denied!");
     }
 
+    @GetMapping(value="/getBookableReviews/{id}")
+    public ResponseEntity<List<ReviewDTO>> getBookableReviews(@PathVariable("id") Long id) {
+        List<ReviewDTO> reviewsDTO = reviewService.findBookableReviews(id);
+        return new ResponseEntity<>(reviewsDTO, HttpStatus.OK);
+    }
 }

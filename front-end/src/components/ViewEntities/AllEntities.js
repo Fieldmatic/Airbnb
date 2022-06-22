@@ -109,22 +109,26 @@ function AllEntities() {
     
     //sortiranje po rating i number of reviews
     var cards;
+    console.log(chosenParams.boatType)
+    //console.log(chosenParams.boatType[item.boatType])
     if (location.state.entityType === "cottage") {
         cards = allCards.filter(item => chosenParams.priceValue === 0 || item.dailyRate <= chosenParams.priceValue)
-                        .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[1]) >= item.rating))
+                        .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[2]) >= item.rating))
                         .filter(item => chosenParams.bedroomNum === "anyRooms" || (chosenParams.bedroomNum === "8+" && getNumberOfBedrooms(item) === 8) || parseFloat(chosenParams.bedroomNum) === getNumberOfBedrooms(item))
                         .filter(item => chosenParams.bedsNum === "anyBeds" || parseFloat(chosenParams.bedsNum) === getNumberOfBeds(item))
+                        .filter(item => chosenParams.capacity === "anyCapacity" || (chosenParams.capacity === "7+" && item.capacity >= 7) || (parseInt(chosenParams.capacity[0]) <= item.capacity && parseInt(chosenParams.capacity[2]) > item.capacity))
                         .map(item => filterCardBySearch(item)) 
     } else if (location.state.entityType === "boat") {
         cards = allCards.filter(item => chosenParams.priceValue === 0 || item.dailyRate <= chosenParams.priceValue)
-                        .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[1]) >= item.rating))
-                        .filter(item => chosenParams.maxSpeed === "anyMaxSpeed" || (chosenParams.maxSpeed === "30+" && item.maxSpeed >= 30) || (chosenParams.maxSpeed === "50+" && item.maxSpeed >= 50) || (chosenParams.maxSpeed === "80+" && item.maxSpeed >= 80))
-                        .filter(item => chosenParams.capacity === "anyCapacity" || (parseInt(chosenParams.capacity[0]) <= item.capacity && parseInt(chosenParams.capacity[2]) >= item.capacity) || (chosenParams.capacity === "7+" && item.capacity >= 7))
+                        .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[2]) >= item.rating))
+                        .filter(item => chosenParams.maxSpeed === "anyMaxSpeed" || (item.maxSpeed >= parseFloat(chosenParams.maxSpeed.split("+")[0])))
+                        .filter(item => chosenParams.capacity === "anyCapacity" || (chosenParams.capacity === "7+" && item.capacity >= 7) || (parseInt(chosenParams.capacity[0]) <= item.capacity && parseInt(chosenParams.capacity[2]) > item.capacity))
+                        .filter(item => (chosenParams.boatType["Any"]) || (chosenParams.boatType[item.type]))
                         .map(item => filterCardBySearch(item)) 
     } else {
         cards = allCards.filter(item => chosenParams.priceValue === 0 || item.hourlyRate <= chosenParams.priceValue)
-                        .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[1]) >= item.rating))
-                        .filter(item => chosenParams.capacity === "anyCapacity" || (parseInt(chosenParams.capacity[0]) <= item.capacity && parseInt(chosenParams.capacity[2]) >= item.capacity) || (chosenParams.capacity === "7+" && item.capacity >= 7))
+                        .filter(item => chosenParams.rating === "anyRate" || (parseFloat(chosenParams.rating[0]) <= item.rating && parseFloat(chosenParams.rating[2]) >= item.rating))
+                        .filter(item => chosenParams.capacity === "anyCapacity" || (chosenParams.capacity === "7+" && item.capacity >= 7) || (parseInt(chosenParams.capacity[0]) <= item.capacity && parseInt(chosenParams.capacity[2]) > item.capacity))
                         .map(item => filterCardBySearch(item))   
 
     }
@@ -173,7 +177,7 @@ function AllEntities() {
             address={item.address}
             promotionalDescription={item.promotionalDescription}
             additionalServices={item.additionalServices}
-            capacity={item.capacity}
+            capacity={location.state.showAll ? item.capacity : location.state.guestsNumber}
             startDateTime={location.state.startDateTime}
             endDateTime={location.state.endDateTime}
             showAll={location.state.showAll}
@@ -186,12 +190,11 @@ function AllEntities() {
     var maximalPrice, minimalPrice;
     if (location.state.entityType === "adventure") {
         maximalPrice = Math.max(...allCards.map(o => o.hourlyRate))
-        //minimalPrice = Math.min(...allCards.map(o => o.hourlyRate))
+        minimalPrice = Math.min(...allCards.map(o => o.hourlyRate))
     } else {
         maximalPrice = Math.max(...allCards.map(o => o.dailyRate))
-        //minimalPrice = Math.min(...allCards.map(o => o.dailyRate))
+        minimalPrice = Math.min(...allCards.map(o => o.dailyRate))
     }
-    //console.log(minimalPrice)
 
     function handleSearch(event) {
         const {name, value} = event.target
@@ -207,7 +210,7 @@ function AllEntities() {
         <div>
         <Header />
         <div className="show_entities">
-            {filterPopup && <FilterPopup trigger={filterPopup} setTrigger={setFilterPopup} value={location.state.entityType} getFilters={setChosenParams} maxPrice = {maximalPrice}></FilterPopup>}
+            {filterPopup && <FilterPopup trigger={filterPopup} setTrigger={setFilterPopup} value={location.state.entityType} getFilters={setChosenParams} maxPrice = {maximalPrice} minPrice = {minimalPrice}></FilterPopup>}
             <div className="search_sort_filter">
                 <div className="sort">
                         <select 

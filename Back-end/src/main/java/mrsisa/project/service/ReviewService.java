@@ -1,10 +1,8 @@
 package mrsisa.project.service;
 
+import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReviewDTO;
-import mrsisa.project.model.Bookable;
-import mrsisa.project.model.Owner;
-import mrsisa.project.model.Reservation;
-import mrsisa.project.model.Review;
+import mrsisa.project.model.*;
 import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.OwnerRepository;
 import mrsisa.project.repository.ReservationRepository;
@@ -116,6 +114,17 @@ public class ReviewService {
         review.setAnswered(true);
         reviewRepository.save(review);
     }
+
+    public List<ReviewDTO> findBookableReviews(Long bookaleId) {
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+        for (Review review : reviewRepository.findReviewsByBookable_Id(bookaleId)) {
+            //stavi na answered
+            if (!review.isAnswered())
+                reviewDTOS.add(new ReviewDTO(review));
+        }
+        return reviewDTOS;
+    }
+
     public List<Review> findAll() {
         return reviewRepository.findAll();
     }

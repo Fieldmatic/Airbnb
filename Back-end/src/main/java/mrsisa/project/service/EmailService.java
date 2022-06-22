@@ -81,7 +81,7 @@ public class EmailService {
                     "\nReservation ends: " + endDateTime.getMonth() + " " + endDateTime.getDayOfMonth() + ", " + endDateTime.getYear() + " at " + endDateTime.getHour() + ":" + (endDateTime.getMinute()<10 ? '0' : ' ') + endDateTime.getMinute() +
                     "\nPrice: " + reservation.getPrice() +
                     "\nNumber of guests: " + reservation.getPersonLimit() +
-                    "\n\n\nWe wish you a good time!, \n\n\nBest regards, \nAirBnb team");
+                    "\n\n\nWe wish you a good time! \n\n\nBest regards, \nAirBnb team");
 
         javaMailSender.send(mail);
     }

@@ -94,6 +94,7 @@ public class AdminService {
         return pdrDTOs;
     }
 
+    @Transactional
     public boolean deleteAccount(Long userId, Long profileDeletionId, boolean delete, String message) {
         Person user = personRepository.findById(userId).orElse(null);
         ProfileDeletionReason pdr = profileDeletionReasonRepository.findById(profileDeletionId).orElse(null);
@@ -128,6 +129,7 @@ public class AdminService {
         return regReqDTOs;
     }
 
+    @Transactional
     public boolean registerUser(Long userId, Long regId, boolean register, String message) {
         Owner user = ownerRepository.findById(userId).orElse(null);
         RegistrationRequest regReq = registrationRequestRepository.findById(regId).orElse(null);
@@ -199,7 +201,7 @@ public class AdminService {
         address2.setState("Serbia");
         address2.setCity("Novi Sad");
 
-        Instructor instructor = new Instructor();
+        CottageOwner instructor = new CottageOwner();
         instructor.setActive(true);
         instructor.setApprovedAccount(true);
         instructor.setAddress(address2);
@@ -212,9 +214,9 @@ public class AdminService {
         instructor.setProfilePhoto("src/main/resources/static/pictures/client/4/ocean-3605547_1920.jpg");
         instructor.setPoints(260);
         instructor.setCategory(userCategoryService.getSilverCategory());
-        instructor.setBiography("Ja sam jedan jako dobar instruktor pecanja i obozavam da pecam ribe.");
+//        instructor.setBiography("Ja sam jedan jako dobar instruktor pecanja i obozavam da pecam ribe.");
         instructor.setPassword(passwordEncoder.encode("bane"));
-        List<Role> roles2 = roleService.findByName("ROLE_INSTRUCTOR");
+        List<Role> roles2 = roleService.findByName("ROLE_COTTAGE_OWNER");
         instructor.setRoles(roles2);
         personRepository.save(instructor);
 

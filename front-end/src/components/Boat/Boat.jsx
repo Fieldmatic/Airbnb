@@ -36,6 +36,8 @@ export default function Boat () {
             fishingEquipment : ""
         }
     )
+    
+    const [errors, setErrors] = React.useState(false);
 
     const [tags, setTags] = React.useState([]);
 
@@ -130,6 +132,22 @@ export default function Boat () {
         setErrors(true);
         if (anyFieldEmpty(formData))
             return;
+        if(isNaN(formData.address.zipCode))
+            return;
+        if(isNaN(formData.capacity))
+            return;
+        if(isNaN(formData.hourlyRate))
+            return;
+        if(isNaN(formData.dailyRate))
+            return;
+        if(isNaN(formData.length))
+            return;
+        if(isNaN(formData.enginesNumber))
+            return;
+        if(isNaN(formData.enginePower))
+            return;
+        if(isNaN(formData.maxSpeed))
+            return;
 
         formData.additionalServices = tags;
         let data = new FormData()
@@ -150,8 +168,6 @@ export default function Boat () {
             <Navigate to={redirect}/>
         )
     }
-
-    const [errors, setErrors] = React.useState(false);
 
     return (
         <div>

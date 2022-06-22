@@ -57,6 +57,8 @@ export default function InstructorRegistration() {
 
     const [imageSrc, setImageSrc] = React.useState(undefined);
 
+    const [errors, setErrors] = React.useState(false)
+
     const updateFiles = (incommingFiles) => {
         setFiles(incommingFiles);
     };
@@ -99,8 +101,16 @@ export default function InstructorRegistration() {
     
     function handleSubmit(event){
         event.preventDefault()
-        console.log(formData);
+        setErrors(true)
         if (anyFieldEmpty(formData))
+            return;
+        if(isNaN(formData.address.zipCode))
+            return;
+        if (formData.password.length < 6)
+            return;
+        if(formData.confirmPassword !== formData.password)
+            return;
+        if(!isEmail(formData.email))
             return;
         
         let data = new FormData()
@@ -122,8 +132,6 @@ export default function InstructorRegistration() {
         });
         return instructorJson;
     }
-
-    const [errors, setErrors] = React.useState(false)
 
     return (
         <div>

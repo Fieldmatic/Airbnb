@@ -67,7 +67,8 @@ public class ReportService {
         return reportDTOS;
     }
 
-    public void reviewReport(Report report, String message, boolean penalty) {
+    @Transactional
+    public void reviewReport(Report report, String message, boolean penalty) { // ovo treba da bude ReportDTO
         report.setViewed(true);
         Client client = report.getClient();
         if (penalty) {

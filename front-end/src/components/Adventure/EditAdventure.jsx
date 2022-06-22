@@ -62,6 +62,8 @@ export default function EditAdventure() {
         if(adventure.photos.length == 0) setSlideOpened(false);
     },[adventure.photos])
 
+    const [errors, setErrors] = React.useState(false);
+
     const [files, setFiles] = React.useState([]);
 
     const [imageSrc, setImageSrc] = React.useState(undefined);
@@ -126,6 +128,12 @@ export default function EditAdventure() {
         setErrors(true);
         if (anyFieldEmpty(formData))
             return;
+        if(isNaN(adventure.address.zipCode))
+            return;
+        if(isNaN(adventure.capacity))
+            return;
+        if(isNaN(adventure.hourlyRate))
+            return;
 
         adventure.additionalServices = tags;
         prepareEquipment(adventure)
@@ -174,8 +182,6 @@ export default function EditAdventure() {
         addressQuery = addressQuery.replace(/ /g,"%20")
         return addressQuery
     }
-
-    const [errors, setErrors] = React.useState(false);
     
     return (
         <div>

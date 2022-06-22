@@ -15,6 +15,9 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private Long id;
+    @Version
+    @Column(name = "optLock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Integer version;
     private String comment;
     private boolean showedUp;
     private boolean viewed;

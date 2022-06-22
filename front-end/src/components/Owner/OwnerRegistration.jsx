@@ -33,6 +33,8 @@ export default function OwnerRegistration() {
   
     )
 
+    const [errors, setErrors] = React.useState(false)
+
     const account_types = [
         {
           value: 'ROLE_COTTAGE_OWNER',
@@ -96,6 +98,14 @@ export default function OwnerRegistration() {
         setErrors(true);
         if (anyFieldEmpty(formData))
             return;
+        if(isNaN(formData.address.zipCode))
+            return;
+        if (formData.password.length < 6)
+            return;
+        if(formData.passwordRetype !== formData.password)
+            return;
+        if(!isEmail(formData.email))
+            return;
 
         let data = new FormData()
         const ownerJson = getOwnerJson();
@@ -108,8 +118,6 @@ export default function OwnerRegistration() {
             navigate("/");
         });
     }
-
-    const [errors, setErrors] = React.useState(false)
     
     return (
         <div>

@@ -46,6 +46,7 @@ public class ClientService {
     @Autowired
     private UserCategoryService userCategoryService;
 
+    @Autowired
     private PictureService pictureService;
 
     final static String picturesPath = "src/main/resources/static/pictures/client/";

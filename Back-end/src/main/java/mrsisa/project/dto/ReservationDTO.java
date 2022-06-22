@@ -65,7 +65,7 @@ public class ReservationDTO {
     public Boolean canceled;
     private final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    private List<String> getStringAdditionalServices(List<Tag> services) {
+    public List<String> getStringAdditionalServices(List<Tag> services) {
         List<String> stringServices = new ArrayList<>();
         for (Tag tag: services) {
             stringServices.add(tag.getName());

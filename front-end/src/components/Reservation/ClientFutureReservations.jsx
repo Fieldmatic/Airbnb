@@ -53,7 +53,6 @@ export default function ClientReservationHistory() {
         setRows([])
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
         reservations.map ((item) => {
-          //DODAAAJ !
                 var row = {}
                 BookableService.getProfilePicture(item.bookableId).then(response => {
                     row.img = response.data

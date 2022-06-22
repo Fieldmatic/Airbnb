@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -274,7 +275,7 @@ public class AdminService {
         return (Administrator) personRepository.findByUsername(username);
     }
 
-    public void add(AdminDTO dto) {
+    public Administrator add(AdminDTO dto) {
         Administrator admin = new Administrator();
         admin.setActive(true);
         admin.setEmail(dto.getEmail());
@@ -289,6 +290,7 @@ public class AdminService {
         List<Role> roles = roleService.findByName("ROLE_ADMIN");
         admin.setRoles(roles);
         adminRepository.save(admin);
+        return admin;
     }
 
     public List<ChartDataDTO> getChartData(String startDate, String endDate) {
@@ -369,4 +371,6 @@ public class AdminService {
         adminRepository.save(admin);
         return admin.getProfilePhoto();
     }
+
+    public List<Administrator> findAll(){return adminRepository.findAll();}
 }

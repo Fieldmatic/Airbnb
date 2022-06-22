@@ -24,6 +24,7 @@
 
 .entityProfilePhoto > img {
     height: 100%;
+    width: auto;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -33,6 +34,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
+    padding-left: 20px;
     width: 100%;
     height: 100%;
 }

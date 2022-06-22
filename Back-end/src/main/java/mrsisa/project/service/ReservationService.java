@@ -204,6 +204,7 @@ public class ReservationService {
         return reservationsDTO;
     }
 
+
     public List<ReservationDTO> getClientReservations(Person person) {
         List<ReservationDTO> reservationsDTO = new ArrayList<>();
         Client client = (Client) person;

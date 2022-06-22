@@ -106,7 +106,7 @@ function ActionPanel (props) {
             {showError &&
             <Alert style={{width:"100%", height:"12vh"}} variant='danger' onClose = {() => setShowError(false)} dismissible>
                 <Alert.Heading>Error!</Alert.Heading>
-                <p>Action already exists in given date range!</p>
+                <p>Action must be created within available period!</p>
             </Alert>
             }
             <DateRangePicker

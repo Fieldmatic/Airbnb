@@ -146,7 +146,7 @@ export default function Header(props){
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
             >
-            Your reservations
+            <span className='yourReservations'>Your reservations</span>
             </Button>
             <StyledMenu
                 id="demo-customized-menu"

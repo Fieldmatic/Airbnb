@@ -78,9 +78,10 @@ public class MockupService {
         cottage.setName("Suncana obala");
         cottage.setAddress(address);
         cottage.setPromotionalDescription("Nema");
-        cottage.setProfilePicture("src/main/resources/static/pictures/cottage/5/drinskaRuza.jpg");
+        cottage.setProfilePicture("src/main/resources/static/pictures/cottage/5/torknik.png");
+        cottage.setPictures(new ArrayList<String>(Arrays.asList("src/main/resources/static/pictures/cottage/5/torknik.png","src/main/resources/static/pictures/cottage/5/tornik2.png","src/main/resources/static/pictures/cottage/5/tornik3.png","src/main/resources/static/pictures/cottage/5/tornik4.png")));
         cottage.setRules("Nema");
-        cottage.setRating(8.3);
+        cottage.setRating(4.8);
         cottage.setCapacity(3);
         cottage.setSubscribedClients(new ArrayList<>());
 

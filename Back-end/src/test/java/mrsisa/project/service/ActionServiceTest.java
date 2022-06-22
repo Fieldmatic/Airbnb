@@ -50,6 +50,9 @@ public class ActionServiceTest {
     @Mock
     private EmailService emailService;
 
+    @Mock
+    private TagService  tagService;
+
 
     @InjectMocks
     private ActionService actionService;
@@ -63,6 +66,7 @@ public class ActionServiceTest {
         actionDTO.setPersonLimit(4);
         actionDTO.setPrice(20.0);
         actionDTO.setUsed(true);
+        actionDTO.setAdditionalServices(new ArrayList<>());
 
         Cottage cottage = new Cottage();
         cottage.setId(101L);
@@ -101,6 +105,15 @@ public class ActionServiceTest {
 
     }
 
+
+    private void test(){
+        int array[] = {1,2,3,4,5};
+        for (int i = 1; i < array.length; i++){
+           if (!array.contains(i)) return i;
+
+        }
+
+    }
 
 
 }

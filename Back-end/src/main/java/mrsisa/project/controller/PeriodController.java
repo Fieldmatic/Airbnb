@@ -25,7 +25,7 @@ public class PeriodController {
         String answer = periodService.add(periodDTO);
         switch (answer) {
             case "success":
-                return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+                return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added new period!");
             case "occupied":
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Period already exists in given date range!");
             case "Reservation exists in given period!":

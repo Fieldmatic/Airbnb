@@ -184,7 +184,9 @@ export default function EditCottage() {
     .then(response => {
       alert(response.data);
       window.location.reload();
-    });
+    }).catch(error => {
+      alert(response.data);
+  });
   }
 
 

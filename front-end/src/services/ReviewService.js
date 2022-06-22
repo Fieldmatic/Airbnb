@@ -15,7 +15,7 @@ class ReviewService {
     }
 
     async approveReview(id) {
-        let body = "poruka"
+        let body = "body"
         return await axios.put(REVIEW_BASED_REST_API_URL + "/approveReview/" + id, body,
         {
             headers: {
@@ -25,7 +25,8 @@ class ReviewService {
     }
 
     async denyReview(id) {
-        return await axios.put(REVIEW_BASED_REST_API_URL + "/denyReview/" + id,
+        let body = "body"
+        return await axios.put(REVIEW_BASED_REST_API_URL + "/denyReview/" + id, body,
         {
             headers: {
                 'Authorization':`Bearer ${inMemoryJwt.getToken()}`

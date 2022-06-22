@@ -2,7 +2,6 @@ package mrsisa.project.service;
 
 
 import mrsisa.project.model.Adventure;
-import mrsisa.project.model.Cottage;
 import mrsisa.project.model.Review;
 import mrsisa.project.repository.*;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Owner;
-import mrsisa.project.model.Person;
 import mrsisa.project.model.UserCategory;
 
 @Data

@@ -1,8 +1,6 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.AdventureDTO;
-import mrsisa.project.dto.BoatDTO;
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Adventure;
 import mrsisa.project.repository.PersonRepository;

@@ -2,15 +2,8 @@ package mrsisa.project.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mrsisa.project.model.*;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import mrsisa.project.model.Instructor;
+import mrsisa.project.model.Owner;
 
 @Data
 @NoArgsConstructor

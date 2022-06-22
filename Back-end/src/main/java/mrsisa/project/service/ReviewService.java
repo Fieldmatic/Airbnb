@@ -1,8 +1,10 @@
 package mrsisa.project.service;
 
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.dto.ReviewDTO;
-import mrsisa.project.model.*;
+import mrsisa.project.model.Bookable;
+import mrsisa.project.model.Owner;
+import mrsisa.project.model.Reservation;
+import mrsisa.project.model.Review;
 import mrsisa.project.repository.BookableRepository;
 import mrsisa.project.repository.OwnerRepository;
 import mrsisa.project.repository.ReservationRepository;

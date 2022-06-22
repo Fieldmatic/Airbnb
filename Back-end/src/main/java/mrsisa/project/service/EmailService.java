@@ -1,9 +1,9 @@
 package mrsisa.project.service;
 
 import mrsisa.project.model.Client;
+import mrsisa.project.model.Owner;
 import mrsisa.project.model.Person;
 import mrsisa.project.model.Reservation;
-import mrsisa.project.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;

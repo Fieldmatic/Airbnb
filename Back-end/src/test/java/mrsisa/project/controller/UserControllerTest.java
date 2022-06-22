@@ -1,7 +1,6 @@
 package mrsisa.project.controller;
 
 
-import mrsisa.project.dto.ClientDTO;
 import mrsisa.project.dto.PersonDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.util.TestUtil;
@@ -21,8 +20,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.security.Principal;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)

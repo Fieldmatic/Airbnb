@@ -2,13 +2,10 @@ package mrsisa.project.service;
 
 
 import mrsisa.project.dto.AdminDTO;
-import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.model.Address;
 import mrsisa.project.model.Administrator;
-import mrsisa.project.model.Instructor;
 import mrsisa.project.repository.AddressRepository;
 import mrsisa.project.repository.AdminRepository;
-import mrsisa.project.repository.InstructorRepository;
 import mrsisa.project.repository.PersonRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,13 +17,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

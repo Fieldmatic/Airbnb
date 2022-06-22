@@ -1,6 +1,5 @@
 package mrsisa.project.service;
 
-import mrsisa.project.model.CategoryName;
 import mrsisa.project.model.UserCategory;
 import mrsisa.project.repository.UserCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

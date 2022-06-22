@@ -2,8 +2,8 @@ package mrsisa.project.controller;
 
 import mrsisa.project.dto.InstructorDTO;
 import mrsisa.project.dto.OwnerDTO;
-import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.dto.OwnerDetailsDTO;
+import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;

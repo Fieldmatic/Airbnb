@@ -1,11 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.CottageDTO;
-import mrsisa.project.dto.SearchDTO;
 import mrsisa.project.model.Administrator;
-import mrsisa.project.model.Boat;
-import mrsisa.project.model.Cottage;
-import mrsisa.project.model.CottageOwner;
 import mrsisa.project.repository.PersonRepository;
 import mrsisa.project.service.AdminService;
 import mrsisa.project.service.CottageService;

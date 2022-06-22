@@ -4,8 +4,9 @@ import inMemoryJwt from "./inMemoryJwtService";
 const RESERVATION_BASED_REST_API_URL = "https://airbnbexperiences-springboot.herokuapp.com/api/reservation";
 
 class ReservationService {
-    addQuickReservation (actionId){
-        return axios.post(RESERVATION_BASED_REST_API_URL + "/addQuick", actionId, 
+
+    async addQuickReservation (actionId){
+        return await axios.post(RESERVATION_BASED_REST_API_URL + "/addQuick", actionId, 
         {
            headers: {
                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
@@ -13,8 +14,8 @@ class ReservationService {
         })
     }
 
-    addReservation(dto){
-        return axios.post(RESERVATION_BASED_REST_API_URL + "/add", dto, 
+    async addReservation(dto){
+        return await axios.post(RESERVATION_BASED_REST_API_URL + "/add", dto, 
         {
            headers: {
                'Authorization':`Bearer ${inMemoryJwt.getToken()}`
@@ -31,8 +32,8 @@ class ReservationService {
         })
     }
 
-    reserveForClient(reservation, email){
-        return axios.post(RESERVATION_BASED_REST_API_URL + "/reserveForClient/" + email, reservation, 
+    async reserveForClient(reservation, email){
+        return await axios.post(RESERVATION_BASED_REST_API_URL + "/reserveForClient/" + email, reservation, 
         {
            headers: {
                'Authorization':`Bearer ${inMemoryJwt.getToken()}`

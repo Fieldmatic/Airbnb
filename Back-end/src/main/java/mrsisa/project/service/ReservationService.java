@@ -74,6 +74,10 @@ public class ReservationService {
             bookable.getReservations().add(reservation);
             bookableRepository.save(bookable);
             action.setUsed(true);
+            try {
+                emailService.sendReservationMail(client, reservation);
+            } catch (MailException ignored) {
+            }
             return true;
         } catch (ObjectOptimisticLockingFailureException e) {
             return false;

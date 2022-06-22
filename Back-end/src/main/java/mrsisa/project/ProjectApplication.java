@@ -3,6 +3,7 @@ package mrsisa.project;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.repository.CottageRepository;
+import mrsisa.project.repository.ReservationRepository;
 import mrsisa.project.service.AdminService;
 import mrsisa.project.service.CottageService;
 import mrsisa.project.service.MockupService;
@@ -13,12 +14,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 @EnableAsync
 @EnableCaching
+@EnableScheduling
 public class ProjectApplication implements CommandLineRunner {
 
 	@Autowired
@@ -32,6 +37,9 @@ public class ProjectApplication implements CommandLineRunner {
 
 	@Autowired
 	private ClientRepository clientRepository;
+
+	@Autowired
+	private ReservationRepository reservationRepository;
 
 	@Autowired
 	private PeriodService periodService;
@@ -61,6 +69,20 @@ public class ProjectApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectApplication.class, args);
+	}
+
+	@Scheduled(cron = "0 0 * * * *")
+	public void scheduleReservationEndChecker() {
+		for (Reservation reservation: reservationRepository.findAll()){
+			if (reservation.getEndDateTime().isBefore(LocalDateTime.now()) && reservation.getActive()) reservation.setActive(false);
+		}
+	}
+
+	@Scheduled(cron = "0 0 0 1 * *")
+	public void resetPenalties(){
+		for (Client client : clientRepository.findAll()){
+			client.setPenalties(0);
+		}
 	}
 
 }

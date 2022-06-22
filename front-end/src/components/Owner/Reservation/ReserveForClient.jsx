@@ -7,7 +7,11 @@ import LoginRegisterService from '../../../services/LoginRegisterService';
 
 function ReserveForClient(){
     let {bookableId, email} = useParams();
-    const [updateType, setUpdateType] = React.useState("");
+    const [updateType, setUpdateType] = React.useState({
+        availablePeriod: false,
+        reservation: false,
+        action: false
+    });
     const [role, setRole] = useState(null);
 
     useEffect(() => {
@@ -17,12 +21,17 @@ function ReserveForClient(){
             else if (response.data ==="ROLE_INSTRUCTOR") setRole("INSTRUCTOR")
         })
         
-    }, [])
+    }, []) 
 
-    const updateCalendar = (type) => {
-        setUpdateType(type);
+    const updateCalendar = () => {
+        setUpdateType(prevVal => {
+            return {
+                ...prevVal,
+                reservation: !prevVal.reservation
+            }
+        });
     }
-    console.log(role)
+    
     return (
         <div>
             <Header/>

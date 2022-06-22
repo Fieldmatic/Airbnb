@@ -35,7 +35,7 @@ public class AdventureController {
     @PostMapping(path = "/add")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<String> addAdventure(@RequestPart("adventure") AdventureDTO adventureDTO,
-                                               @RequestPart("files") MultipartFile[] multiPartFiles,
+                                               @RequestPart(value = "files", required = false) MultipartFile[] multiPartFiles,
                                                Principal userP) throws IOException
     {
         adventureService.add(adventureDTO, multiPartFiles, userP);

@@ -157,7 +157,7 @@ function ReservationDateTimePanel (props) {
                     endIcon={<SendIcon />}>   
                     Reserve
                 </Button>
-                {reservePopup && <ReserveForClientPopup handleClose={handleClose} email={data.email} reservePopup={reservePopup} services={data.services} startDateTime={data.startDateTime} endDateTime={data.endDateTime} price={data.price} bookableId={data.bookableId} capacity={data.capacity}/>}
+                {reservePopup && <ReserveForClientPopup handleClose={handleClose} email={data.email} reservePopup={reservePopup} services={data.services} startDateTime={data.startDateTime} endDateTime={data.endDateTime} price={data.price} bookableId={data.bookableId} capacity={data.capacity} func={props.func}/>}
             </div>
         </div>
     )

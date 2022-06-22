@@ -144,11 +144,6 @@ export default function ComplaintTable(props) {
 
     const [rows, setRows] = React.useState([]);
 
-    //{id: 1, clientUsername: "pero", showedUp: false, comment: "Zahtevam da\
-    // se korisnku da penal jer je bezobrazannnn!", ownerUsername: "banz"},
-    // {id: 2, clientUsername: "djuro", showedUp: true, comment: "Svaka caastt!",
-    //  ownerUsername: "banz"},
-
     const [showMessageAlert, setShowMessageAlert] = React.useState(false);
     const [message, setMessage] = React.useState({
         success: undefined,

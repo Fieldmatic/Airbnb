@@ -8,6 +8,8 @@ import mrsisa.project.model.ReportType;
 @Data
 @NoArgsConstructor
 public class ReportDTO {
+
+    private Long id;
     private Long reservationId;
     private String comment;
     private boolean showedUp;
@@ -24,5 +26,7 @@ public class ReportDTO {
         this.type = report.getType();
         this.clientEmail = report.getClient().getEmail();
         this.clientUsername = report.getClient().getUsername();
+        this.ownerUsername = report.getOwnerUsername();
+        this.id = report.getId();
     }
 }

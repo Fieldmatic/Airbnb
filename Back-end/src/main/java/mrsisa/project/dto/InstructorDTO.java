@@ -25,6 +25,8 @@ public class InstructorDTO {
     private UserCategory category;
     private Integer points;
 
+    private String role;
+
     public InstructorDTO(Instructor instructor){
         this.id = instructor.getId();
         this.name = instructor.getName();

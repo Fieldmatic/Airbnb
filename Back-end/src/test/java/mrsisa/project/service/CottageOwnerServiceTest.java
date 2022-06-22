@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
@@ -39,6 +40,9 @@ public class CottageOwnerServiceTest {
 
     @Mock
     private AdminService adminService;
+
+    @Mock
+    private UserCategoryService userCategoryService;
 
     @InjectMocks
     private CottageOwnerService cottageOwnerService;

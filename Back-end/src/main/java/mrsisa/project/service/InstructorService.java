@@ -159,4 +159,6 @@ public class InstructorService {
         profileDeletionReason.setViewed(false);
         return profileDeletionReason;
     }
+
+    public List<Instructor> findAll(){return instructorRepository.findAll();}
 }

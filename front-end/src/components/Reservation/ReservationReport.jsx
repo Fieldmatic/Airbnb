@@ -67,7 +67,7 @@ export default function ReservationReport(props) {
                             onChange={handleRateChange}
                             >
                             <FormControlLabel sx = {{color:"black"}} value="COMMEND" control={<Radio sx={muiStyles.radioStyle}  />} label="Commend client" />
-                            <FormControlLabel sx = {{color:"black"}} value="REQUESTPENALTY" control={<Radio sx={muiStyles.radioStyle} />} label="Request penalty" />
+                            <FormControlLabel sx = {{color:"black"}} value="REQUEST_PENALTY" control={<Radio sx={muiStyles.radioStyle} />} label="Request penalty" />
                             <FormControlLabel sx = {{color:"black"}} value="NEUTRAL" control={<Radio sx={muiStyles.radioStyle} />} label="Stay neutral" />
                             </RadioGroup>
                         </FormControl>

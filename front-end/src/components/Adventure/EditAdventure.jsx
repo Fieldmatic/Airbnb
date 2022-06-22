@@ -126,7 +126,7 @@ export default function EditAdventure() {
     function handleSubmit(event){
         event.preventDefault()
         setErrors(true);
-        if (anyFieldEmpty(formData))
+        if (anyFieldEmpty(adventure))
             return;
         if(isNaN(adventure.address.zipCode))
             return;

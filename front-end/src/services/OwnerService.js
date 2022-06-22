@@ -76,6 +76,10 @@ class OwnerService {
         })  
     }
 
+    getBookableOwner(id){
+        return axios.get(OWNER_BASED_REST_API_URL + "/getBookableOwner/" + id)
+    }
+
 }
 
 

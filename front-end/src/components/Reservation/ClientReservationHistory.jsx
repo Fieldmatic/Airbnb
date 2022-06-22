@@ -54,8 +54,7 @@ export default function ClientReservationHistory() {
         setRows([])
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour:'numeric', minute:'numeric' };
         reservations.map ((item) => {
-          //DODAAAJ !
-            if ((entityType === "Future" && item.active) || (!item.active && entityType !== "Future" && item.bookableType === entityType)) {
+            if (!item.active && entityType !== "Future" && item.bookableType === entityType) {
                 var row = {}
                 row.id = item.id
                     row.active = item.active

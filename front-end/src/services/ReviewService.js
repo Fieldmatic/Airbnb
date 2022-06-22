@@ -40,6 +40,10 @@ class ReviewService {
             } 
         })
     }
+
+    getBookableReviews(id) {
+        return axios.get(REVIEW_BASED_REST_API_URL + "/getBookableReviews/" + id)
+    }
 }
 
 

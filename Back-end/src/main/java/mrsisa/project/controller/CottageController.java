@@ -48,14 +48,14 @@ public class CottageController {
     }
 
     @GetMapping(value="/allAvailableByCity/{startDate}/{endDate}/{city}/{capacity}")
-    public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city) {
-        List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(city, startDate, endDate);
+    public ResponseEntity<List<CottageDTO>> getAvailableCottagesByCity(@PathVariable String startDate, @PathVariable String endDate, @PathVariable String city, @PathVariable Integer capacity) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottagesByCity(city, startDate, endDate, capacity);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 
     @GetMapping(value="/allAvailable/{startDate}/{endDate}/{capacity}")
-    public ResponseEntity<List<CottageDTO>> getAvailableCottages(@PathVariable String startDate, @PathVariable String endDate) {
-        List<CottageDTO> availableCottages = cottageService.getAvailableCottages(startDate, endDate);
+    public ResponseEntity<List<CottageDTO>> getAvailableCottages(@PathVariable String startDate, @PathVariable String endDate, @PathVariable Integer capacity) {
+        List<CottageDTO> availableCottages = cottageService.getAvailableCottages(startDate, endDate, capacity);
         return new ResponseEntity<>(availableCottages, HttpStatus.OK);
     }
 

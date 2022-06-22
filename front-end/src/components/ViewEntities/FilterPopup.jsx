@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react'
 import './FilterPopup.css'
 import CloseIcon from '@mui/icons-material/Close';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 
 export default function SearchPopup(props) {
   const [priceValue, setPriceValue] = React.useState(0)
@@ -9,7 +14,32 @@ export default function SearchPopup(props) {
   const [bedsNum, setBedsNum] = React.useState("anyBeds")
   const [maxSpeed, setMaxSpeed] = React.useState("anyMaxSpeed")
   const [capacity, setCapacity] = React.useState("anyCapacity")
-  const [boatType, setBoatType] = React.useState([])
+  const [state, setState] = React.useState({
+    Any : true,
+    BOWRIDER : false,
+    CRUISER : false, 
+    FISHINGBOAT : false,
+    RUNABOAT : false,
+    SAILBOAT : false,
+    SPEEDBOAT : false,
+    TRAWLER : false,
+    JETSKI : false,
+    YACHT : false
+  });
+
+  var boatTypesList1 = ["Any", "BOWRIDER", "CRUISER", "FISHING BOAT", "RUNABOAT"]
+  var boatTypesList2 = ["SAILBOAT", "SPEEDBOAT", "TRAWLER", "JETSKI", "YACHT"]
+
+
+  const handleChange = (event) => {
+    if (event.target.name !== "ANY") {
+      state.Any = false;
+    }
+    setState({
+      ...state,
+      [event.target.name]: event.target.checked,
+    });
+  };
 
   var bedroomButtons = [];
   for (var i = 1; i <= 7; i++) {
@@ -22,7 +52,7 @@ export default function SearchPopup(props) {
   }
 
   var ratingButtons = [];
-  for (var i = 5; i < 10; i++) {
+  for (var i = 1; i < 5; i++) {
     ratingButtons.push(<button id = {`${i}-${i+1}`} onClick={changeRating}>{i}-{i+1}</button>);
   }
 
@@ -70,14 +100,6 @@ export default function SearchPopup(props) {
     setCapacity(newCapacity)
   }
 
-   function changeBoatType(event) {
-     event.preventDefault()
-     const {name, checked} = event.target;
-     document.getElementsByName(name).selected = true;
-     boatType.push(name)
-
-   }
-
   function undoButtonColor(elementType) {
     let element = document.getElementById(elementType)
     element.style.backgroundColor = "white";
@@ -87,7 +109,7 @@ export default function SearchPopup(props) {
   React.useEffect(() => {
     let elements;
     if (props.value === "cottage") {
-      elements = [document.getElementById(rating), document.getElementById(bedroomNum), document.getElementById(bedsNum)]
+      elements = [document.getElementById(rating), document.getElementById(bedroomNum), document.getElementById(bedsNum), document.getElementById(capacity)]
     } else if (props.value === "boat") {
       elements = [document.getElementById(rating), document.getElementById(maxSpeed), document.getElementById(capacity)]
 
@@ -101,7 +123,6 @@ export default function SearchPopup(props) {
   }
   //dodaj ovde obavezno u listu
   }, [rating, bedroomNum, bedsNum, maxSpeed, capacity]);
-
 
   function showResults(event) {
     event.preventDefault()
@@ -120,7 +141,7 @@ export default function SearchPopup(props) {
       bedsNum: bedsNum.replace("bed", ""),
       maxSpeed: maxSpeed,
       capacity: capacity,
-      boatType: boatType
+      boatType : state
     })
     props.setTrigger(false)
   }
@@ -136,6 +157,7 @@ export default function SearchPopup(props) {
     props.setTrigger(false)
   }
 
+
     return (props.trigger) ? (
         <div className='searchPopup'>
           <form>
@@ -150,11 +172,18 @@ export default function SearchPopup(props) {
                 <span>Choosen range: </span>
                 <label>0-{priceValue}</label>
                </div>
+               {props.minPrice === props.maxPrice &&
                 <div className="priceField">
                   <div className="valueLeft">0</div>
                   <input type="range" min="0" max={props.maxPrice} value={priceValue} steps="1" onChange={updateTextInput} id="selectedRange"></input>
                   <div className="valueRight">{props.maxPrice}</div>
-                  </div>
+                  </div>}
+                  {props.minPrice !== props.maxPrice &&
+                  <div className="priceField">
+                    <div className="valueLeft">{props.minPrice}</div>
+                    <input type="range" min={props.minPrice} max={props.maxPrice} value={priceValue} steps="1" onChange={updateTextInput} id="selectedRange"></input>
+                    <div className="valueRight">{props.maxPrice}</div>
+                  </div>}
               </div>
               <div className="parameters">
                 <h3>Rating</h3>
@@ -181,51 +210,39 @@ export default function SearchPopup(props) {
              {props.value === "boat" && 
               <div className="parameters">
                 <h3>Type of boat</h3>
-                <div className="paramSelects">
-                  <div className="paramSelects1">
-                    <label>
-                      <input type="checkbox" defaultChecked="true" name="any"/>
-                      Any
-                    </label>
-                    <label>
-                      <input type="checkbox"  name="bowrider"/>
-                      Bowrider
-                    </label>
-                    <label>
-                      <input type="checkbox" name="cruiser"/>
-                      Cruiser
-                    </label>
-                    <label>
-                      <input type="checkbox" onClick={changeBoatType}/>
-                      Fishing boat
-                    </label>
-                    <label>
-                      <input type="checkbox" onClick={changeBoatType}/>
-                      Runaboat
-                    </label>
-                  </div>
-                  <div className="paramSelects2">
-                  <label>
-                      <input type="checkbox" onClick={changeBoatType}/>
-                      Sailboat
-                    </label>
-                  <label>
-                    <input type="checkbox" onClick={changeBoatType}/>
-                    Speedboat
-                  </label>
-                  <label>
-                    <input type="checkbox" onClick={changeBoatType}/>
-                    Trawler
-                  </label>
-                  <label>
-                    <input type="checkbox" onClick={changeBoatType}/>
-                    Jetski
-                  </label>
-                  <label>
-                    <input type="checkbox" onClick={changeBoatType}/>
-                    Yacht
-                  </label>
-                  </div>
+                <div className='boatTypeSelects'>
+                <div>
+                <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                                    <FormGroup>
+                                    <div className='boatTypeSelect'>
+                                        {boatTypesList1.map(service => (
+                                            <FormControlLabel
+                                            control={
+                                            <Checkbox checked={state[service]} onChange={handleChange} name={service} />
+                                            }
+                                            label={service.toLowerCase()}
+                                        />
+                                        ))}
+                                        </div>
+                                    </FormGroup>
+                                </FormControl>
+                </div>
+                <div>
+                <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                                    <FormGroup>
+                                    <div className='boatTypeSelect'>
+                                        {boatTypesList2.map(service => (
+                                            <FormControlLabel
+                                            control={
+                                            <Checkbox checked={state[service]} onChange={handleChange} name={service} />
+                                            }
+                                            label={service.toLowerCase()}
+                                        />
+                                        ))}
+                                        </div>
+                                    </FormGroup>
+                                </FormControl>
+                </div>
                 </div>
               </div>}
              {props.value === "boat" && 
@@ -238,7 +255,7 @@ export default function SearchPopup(props) {
                   <button id="80+" onClick={changeMaxSpeed}>80+</button>
                 </div>
             </div>}
-            {(props.value === "boat" || props.value === "adventure") && 
+            {(props.value === "boat" || props.value === "adventure" || props.value === "cottage") && 
               <div className="parameters">
                 <h3>Number of persons</h3>
                 <div className="paramButtons">

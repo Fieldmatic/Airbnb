@@ -1,6 +1,7 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.InstructorDTO;
+import mrsisa.project.dto.OwnerDTO;
 import mrsisa.project.dto.ReservationStatisticsDTO;
 import mrsisa.project.dto.OwnerDetailsDTO;
 import mrsisa.project.model.*;
@@ -62,7 +63,7 @@ public class OwnerController {
     }
 
     @GetMapping(value="/getProfilePicture", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'ROLE_INSTRUCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_COTTAGE_OWNER','ROLE_BOAT_OWNER', 'ROLE_INSTRUCTOR','ROLE_CLIENT')")
     public ResponseEntity<InputStreamResource> getProfilePicture(Principal userP) throws IOException {
         Person owner = userService.getByUsername(userP.getName());
         try {
@@ -135,6 +136,14 @@ public class OwnerController {
                 else return new ResponseEntity<>(instructorService.getIncomeStatistics(start,end,userP,Optional.empty()), HttpStatus.OK);
             default: return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/getBookableOwner/{id}")
+    public ResponseEntity<OwnerDTO> getBookableOwner(@PathVariable("id") Long id){
+        Bookable bookable = bookableService.findById(id);
+        if (bookable instanceof Cottage) return new ResponseEntity<>(new OwnerDTO(((Cottage) bookable).getCottageOwner()), HttpStatus.OK);
+        else if (bookable instanceof Boat) return new ResponseEntity<>(new OwnerDTO(((Boat) bookable).getBoatOwner()), HttpStatus.OK);
+        else return new ResponseEntity<>(new OwnerDTO(((Adventure) bookable).getInstructor()), HttpStatus.OK);
     }
 
 

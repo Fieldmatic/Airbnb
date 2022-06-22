@@ -35,7 +35,7 @@ function entity(props) {
     const navigate = useNavigate()
 
     const alertText = {
-        accept: "Reservation is successfull!",
+        accept: "Reservation is successful!",
         deny: "You are not allowed to reserve after cancellation!"
     }
 
@@ -65,7 +65,6 @@ function entity(props) {
     };
 
     function handleCloseAfterReservation(result) {
-        console.log(result)
         setAccept(result);
             setShowAlert(true)
             setTimeout(() => {
@@ -181,7 +180,7 @@ function entity(props) {
                             <Alert variant="filled" severity="info">{accept ? alertText.accept : alertText.deny}</Alert>
                 </Collapse>
         <div className="entities">
-            {profileImage && <img src={URL.createObjectURL(profileImage)}  alt=""/>}
+            {profileImage && <div className="entityProfilePhoto"><img src={URL.createObjectURL(profileImage)}  alt=""/></div>}
             {props.user === "client" && <FavoriteIcon className="entity__heart" onClick={fillHeart} sx={{color: heartColor,
                 '&:hover': {
                     backgroundColor: 'lightgray',
@@ -287,6 +286,15 @@ function entity(props) {
                             <span className='entity_price_value'>€{props.entity === "adventure"? props.hourlyRate : props.dailyRate} </span>
                             <span className='entity_price_per'>{props.entity === "adventure" ? '/hour' : '/night'}</span>
                         </div>
+                        <div className="entity__price">
+                            <span className='entity_price_value'>{props.entity === "adventure"? "" :"€" + props.hourlyRate} </span>
+                            <span className='entity_price_per'>{props.entity === "adventure" ? '' : '/hour'}</span>
+                        </div>
+                        {!props.showAll && 
+                         <div className="reservation__price">
+                            <span className='entity_price_value'> Price: {getPrice()} €</span>
+                     </div>
+                        }
                         <div className='exploreAndReserveButtons'>
                             <Button className="entity_explore_button" sx = {{
                                 backgroundColor : props.user === "client" && !props.showAll ? "#D4AF37" : "#FF5A5F", 
@@ -308,7 +316,7 @@ function entity(props) {
                                     }} variant='outlined'  onClick={openReservePopup}> Reserve</Button>}
         
                         </div>
-                        {props.user === "client" && <ReservationPopup handleClose={handleClose} handleCloseAfterReservation={handleCloseAfterReservation} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={getPrice} bookableId={props.id} capacity={props.capacity}/>}
+                        {props.user === "client" && <ReservationPopup handleClose={handleClose} handleCloseAfterReservation={handleCloseAfterReservation} reservePopup={reservePopup} services={props.additionalServices} startDateTime={props.startDateTime} endDateTime={props.endDateTime} price={() => getPrice()} bookableId={props.id} capacity={props.capacity}/>}
                     </div>
                 </div>
             </div>

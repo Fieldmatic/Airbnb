@@ -11,6 +11,7 @@ import mrsisa.project.repository.ClientRepository;
 import mrsisa.project.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +49,9 @@ public class ClientService {
     @Autowired
     private PictureService pictureService;
 
+    @Autowired
+    EmailService emailService;
+
     final static String picturesPath = "src/main/resources/static/pictures/client/";
 
 
@@ -77,6 +81,10 @@ public class ClientService {
             client.setProfilePhoto(paths.get(0));
         }
         clientRepository.save(client);
+        try {
+            emailService.sendUserVerificationMail(client);
+        } catch (MailException ignored) {
+        }
         return client;
     }
 
@@ -183,5 +191,9 @@ public class ClientService {
         client.setRoles(roles);
         client.setCategory(userCategoryService.getRegularCategory());
         return client;
+    }
+
+    public Client getById(Long id) {
+        return clientRepository.getById(id);
     }
 }

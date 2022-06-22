@@ -14,6 +14,12 @@ class ClientService {
              })
     }
 
+    verifyClientAccount(username) {
+        console.log(username)
+        return axios.get(CLIENT_BASED_REST_API_URL + "/verify/" + username)
+    }
+    
+
     updateClient(client) {
         return axios.put(CLIENT_BASED_REST_API_URL + "/update" , client)
     }

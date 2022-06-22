@@ -30,6 +30,7 @@ import ClientReservationHistory from "./components/Reservation/ClientReservation
 import BookableStatistics from "./components/Owner/BookableStatistics";
 import ClientFutureReservations from "./components/Reservation/ClientFutureReservations"
 import Complaints from "./components/Admin/pages/list/Complaints";
+import ClientVerification from "./components/Login/ClientVerification";
 
 
 const Views = () => {
@@ -39,6 +40,7 @@ const Views = () => {
     <Routes>
       <Route index element = {<Home/>}/>
       <Route path = "/login" element =  {<Login/>}/>
+      <Route path = "/verification/:username" element =  {<Login/>}/>
       <Route path = "/addAdventure" element = {<AddAdventureForm />}/>
       <Route path = "/editAdventure/:id" element = {<EditAdventure />}/>
       <Route path = "/addCottage" element = {<Cottage/>}/>

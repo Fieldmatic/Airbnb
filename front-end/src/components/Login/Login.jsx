@@ -2,15 +2,29 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {Form,Button,Col, Container, Row} from "react-bootstrap";    
 import Alert from "react-bootstrap/Alert";
+import Collapse from '@mui/material/Collapse';
 import SecureLoginImg from "../../images/secure_login.png";
 import UserImg from "../../images/user.png"
 import Header from "../../Header"
 import LoginService from "../../services/LoginRegisterService"
+import { useParams } from 'react-router-dom'
+
 import "./Login.css";
+import ClientService from "../../services/ClientService";
 
 function Login() {
+    const [showAlertForVerify, setShowAlertForVerify] = React.useState(false);
    
     const navigate = useNavigate();
+    let {username} = useParams();
+
+    React.useEffect(() => {
+        if (username) {
+            ClientService.verifyClientAccount(username).then((response) => {
+                if (response.status) alert("You have successfully verified the account")
+            })
+    }
+    }, [])
 
     const [showAlert, setShowAlert] = React.useState(false);
 
@@ -62,6 +76,9 @@ function Login() {
          </p>
          </Alert>
         }
+        <Collapse in={showAlertForVerify}>
+            <Alert variant="filled" severity="info">You have successfully verified the account</Alert>
+        </Collapse>
         <Container className = "mt-5">
            <Row>
                <Col lg={4} md={6} sm={12} className="mt-5 p-2">

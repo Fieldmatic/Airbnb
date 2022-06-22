@@ -52,6 +52,9 @@ public class InstructorServiceTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private PictureService pictureService;
+
     @InjectMocks
     private InstructorService instructorService;
 

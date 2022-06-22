@@ -63,9 +63,6 @@ public class InstructorService {
 
     public Person add(InstructorDTO instructorDTO, Optional<MultipartFile[]> multipartFiles) throws IOException {
         Instructor instructor = this.dtoToInstructor(instructorDTO);
-        if (instructor == null) {
-            return null;
-        }
         instructorRepository.save(instructor);
         if (multipartFiles.isPresent()) {
             List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, multipartFiles.get());
@@ -89,9 +86,6 @@ public class InstructorService {
     }
 
     private Instructor dtoToInstructor(InstructorDTO dto) {
-        if (dto.getUsername() == null || !userService.usernameAvailable(dto.getUsername())) {
-            return null;
-        }
         Instructor instructor = new Instructor();
         instructor.setName(dto.getName());
         instructor.setAddress(dto.getAddress());

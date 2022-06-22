@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -55,11 +56,14 @@ public class BookableController {
     }
 
     @GetMapping(value="/getProfilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity getBookableProfilePicture(@PathVariable Long id) throws IOException {
+    public ResponseEntity<InputStreamResource> getBookableProfilePicture(@PathVariable Long id) throws IOException {
         Bookable bookable = bookableService.findOne(id);
-        File file = new File(bookable.getProfilePicture());
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        return ResponseEntity.ok().body(resource);
+        try {
+            File file = new File(bookable.getProfilePicture());
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(file.toPath())), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new InputStreamResource(Files.newInputStream(Paths.get("src/main/resources/static/pictures/defaults/noPhotoAvailable.jpeg"))),HttpStatus.OK);
+        }
     }
 
     @GetMapping(value = "/rating/{bookable_id}")

@@ -81,7 +81,7 @@ export default function ReservationsChart(props) {
                         <span>Average rating</span>
                         <StarIcon className="entity__star" />               
                         <span className='entity_rating_value'>{avgRating}</span>
-                        <span>/10</span>
+                        <span>/5</span>
                     </div>
                     <TextField
                         select

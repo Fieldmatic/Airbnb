@@ -78,6 +78,7 @@ public class InstructorService {
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         Instructor instructor = instructorRepository.findByUsernameWithReservations(username);
+        pictureService.tryDeletePhoto(instructor.getProfilePhoto());
         List<String> paths = pictureService.addPictures(instructor.getId(), picturesPath, files);
         instructor.setProfilePhoto(paths.get(0));
         instructorRepository.save(instructor);

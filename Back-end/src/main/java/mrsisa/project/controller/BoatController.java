@@ -1,8 +1,6 @@
 package mrsisa.project.controller;
 
 import mrsisa.project.dto.BoatDTO;
-import mrsisa.project.dto.CottageDTO;
-import mrsisa.project.dto.SearchDTO;
 import mrsisa.project.model.Administrator;
 import mrsisa.project.model.Boat;
 import mrsisa.project.repository.PersonRepository;
@@ -56,11 +54,9 @@ public class BoatController {
 
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<BoatDTO> getBoat(@PathVariable("id") Long id) throws IOException {
-        Boat boat = boatService.findOne(id);
-        if (boat == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<String> boatPhotos = boatService.getPhotos(boat);
-        boat.setPictures(boatPhotos);
-        return new ResponseEntity<>(new BoatDTO(boat), HttpStatus.OK);
+        BoatDTO boatDTO = boatService.getBoat(id);
+        if (boatDTO == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(boatDTO, HttpStatus.OK);
     }
 
     @GetMapping(value="/all")

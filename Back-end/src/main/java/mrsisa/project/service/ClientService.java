@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -105,6 +104,7 @@ public class ClientService {
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         Client client = clientRepository.findByUsername(username);
+        pictureService.tryDeletePhoto(client.getProfilePhoto());
         List<String> paths = pictureService.addPictures(client.getId(), picturesPath, files);
         client.setProfilePhoto(paths.get(0));
         clientRepository.save(client);

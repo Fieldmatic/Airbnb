@@ -156,6 +156,7 @@ public class CottageService {
         }
         if (cottage.getCottageOwner() == owner && (reservationRepository.getActiveReservations(id).size()) == 0) {
             owner.getCottages().remove(cottage);
+            tagService.removeRelationships(cottage);
             cottageRepository.delete(cottage);
             return true;
         }

@@ -1,7 +1,6 @@
 package mrsisa.project.service;
 
 import mrsisa.project.dto.AdventureDTO;
-import mrsisa.project.dto.CottageDTO;
 import mrsisa.project.model.*;
 import mrsisa.project.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,6 +154,7 @@ public class AdventureService {
         }
         if (adventure.getInstructor() == instructor && (reservationRepository.getActiveReservations(id).size()) == 0) {
             instructor.getAdventures().remove(adventure);
+            tagService.removeRelationships(adventure);
             adventureRepository.delete(adventure);
             return true;
         }

@@ -132,9 +132,8 @@ export default function EditCottage() {
 
   function handlePhotoDelete(event){
     event.preventDefault()
-    console.log(slideNumber)
     if (slideNumber != 0) handleMove("l")
-    else handleMove("r")
+    else if (slideNumber == 0 && cottage.photos.length > 2) handleMove("r")
     setCottage(prevFormData => {
       let newPhotos = prevFormData.photos.map((item) =>item);
       newPhotos.splice(slideNumber,1)

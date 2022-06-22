@@ -86,7 +86,7 @@ export default function EditAdventure() {
         event.preventDefault()
         console.log(slideNumber)
         if (slideNumber != 0) handleMove("l")
-        else handleMove("r")
+        else if (slideNumber == 0 && adventure.photos.length > 2) handleMove("r")
         setAdventure(prevFormData => {
             let newPhotos = prevFormData.photos.map((item) =>item);
             newPhotos.splice(slideNumber,1)

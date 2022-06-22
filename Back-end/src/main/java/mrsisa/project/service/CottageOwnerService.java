@@ -68,6 +68,7 @@ public class CottageOwnerService {
 
     public String changeProfilePhoto(MultipartFile[] files, String username) throws IOException {
         CottageOwner cottageOwner = cottageOwnerRepository.findByUsername(username);
+        pictureService.tryDeletePhoto(cottageOwner.getProfilePhoto());
         List<String> paths = pictureService.addPictures(cottageOwner.getId(), picturesPath, files);
         cottageOwner.setProfilePhoto(paths.get(0));
         cottageOwnerRepository.save(cottageOwner);

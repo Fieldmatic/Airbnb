@@ -167,7 +167,7 @@ export default function EditBoat() {
   function handlePhotoDelete(event){
     event.preventDefault()
     if (slideNumber != 0) handleMove("l")
-    else handleMove("r")
+    else if (slideNumber == 0 && boat.photos.length > 2) handleMove("r")
     setBoat(prevFormData => {
       let newPhotos = prevFormData.photos.map((item) =>item);
       newPhotos.splice(slideNumber,1)

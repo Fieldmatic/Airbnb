@@ -66,6 +66,14 @@ public class BoatService {
         owner.getBoats().add(boat);
     }
 
+    public BoatDTO getBoat(Long id) throws IOException {
+        Boat boat = boatRepository.findById(id).orElse(null);
+        if (boat == null) return null;
+        List<String> cottagePhotos = getPhotos(boat);
+        boat.setPictures(cottagePhotos);
+        return new BoatDTO(boat);
+    }
+
     @Transactional
     public boolean deleteBoat(Long id, Principal userP) {
         Boat boat = boatRepository.getById(id);
@@ -121,6 +129,7 @@ public class BoatService {
         return boatsDTO;
     }
 
+    @Transactional
     public List<String> getPhotos(Boat boat) throws IOException {
         List<String> photos = new ArrayList<>();
         for (String photo : boat.getPictures()) {

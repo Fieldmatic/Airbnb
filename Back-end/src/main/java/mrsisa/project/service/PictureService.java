@@ -47,13 +47,31 @@ public class PictureService {
 
     public void handleDeletedPictures(Bookable bookable, List<String> newPicturesList) throws IOException {
         for(int i = bookable.getPictures().size() - 1; i >= 0; --i) {
-            Path path = Paths.get(bookable.getPictures().get(i));
-            byte[] bytes = Files.readAllBytes(path);
-            String photoData = Base64.getEncoder().encodeToString(bytes);
-            if (!newPicturesList.contains(photoData)) {
-                bookable.getPictures().remove(bookable.getPictures().get(i));
-                Files.delete(path);
+            try {
+                Path path = Paths.get(bookable.getPictures().get(i));
+                byte[] bytes = Files.readAllBytes(path);
+                String photoData = Base64.getEncoder().encodeToString(bytes);
+                if (!newPicturesList.contains(photoData)) {
+                    bookable.getPictures().remove(bookable.getPictures().get(i));
+                    Files.delete(path);
+                }
             }
+            catch (Exception ignored) {
+            }
+        }
+        if (!bookable.getPictures().contains(bookable.getProfilePicture())) {
+            bookable.setProfilePicture(null);
+            if (bookable.getPictures().size() > 0) bookable.setProfilePicture(bookable.getPictures().get(0));
+        }
+    }
+
+    public void tryDeletePhoto(String photoPath) throws IOException {
+        try {
+            Path path = Paths.get(photoPath);
+            Files.delete(path);
+        }
+        catch (Exception ignored) {
+
         }
     }
 }

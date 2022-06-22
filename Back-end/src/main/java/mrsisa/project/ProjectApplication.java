@@ -1,11 +1,6 @@
 package mrsisa.project;
 
-import mrsisa.project.repository.ClientRepository;
-import mrsisa.project.repository.CottageRepository;
 import mrsisa.project.service.AdminService;
-import mrsisa.project.service.CottageService;
-import mrsisa.project.service.MockupService;
-import mrsisa.project.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,20 +18,6 @@ public class ProjectApplication implements CommandLineRunner {
 	@Autowired
 	private AdminService adminService;
 
-	@Autowired
-	private CottageRepository cottageRepository;
-
-	@Autowired
-	private CottageService cottageService;
-
-	@Autowired
-	private ClientRepository clientRepository;
-
-	@Autowired
-	private PeriodService periodService;
-
-	@Autowired
-	private MockupService mockupService;
 
 	@Override
 	public void run(String... args) throws IOException {

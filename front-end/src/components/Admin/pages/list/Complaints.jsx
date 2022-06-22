@@ -9,7 +9,7 @@ const Complaints = (props) => {
       <AdminSidebar/>
       <div className="requestListContainer">
         <AdminNavbar/>
-        <ComplaintTable refresh={props.refresh}/> {/* mozda refresh ne treba */}
+        <ComplaintTable />
       </div>
     </div>
   )

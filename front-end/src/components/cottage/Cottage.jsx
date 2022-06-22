@@ -41,6 +41,8 @@ export default function Cottage() {
 
   const [imageSrc, setImageSrc] = React.useState(undefined);
 
+  const [errors, setErrors] = React.useState(false);
+
   const updateFiles = (incommingFiles) => {
     setFiles(incommingFiles);
   };
@@ -95,6 +97,12 @@ export default function Cottage() {
     setErrors(true);
     if (anyFieldEmpty(formData))
       return;
+    if(isNaN(formData.address.zipCode))
+      return;
+    if(isNaN(formData.hourlyRate))
+        return;
+    if(isNaN(formData.dailyRate))
+        return;
 
     formData.additionalServices = tags;
     let data = new FormData()
@@ -117,8 +125,6 @@ export default function Cottage() {
         <Navigate to={redirect}/>
     )
   }
-
-  const [errors, setErrors] = React.useState(false);
 
   return (
     <div>

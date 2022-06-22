@@ -65,6 +65,8 @@ export default function EditCottage() {
       })
     },[])
 
+    const [errors, setErrors] = React.useState(false);
+
     const [files, setFiles] = React.useState([]);
 
     const [imageSrc, setImageSrc] = React.useState(undefined);
@@ -160,6 +162,13 @@ export default function EditCottage() {
     setErrors(true);
     if (anyFieldEmpty(cottage))
         return;
+    if(isNaN(cottage.address.zipCode))
+      return;
+    if(isNaN(cottage.hourlyRate))
+        return;
+    if(isNaN(cottage.dailyRate))
+        return;
+
     cottage.additionalServices = tags;
     let data = new FormData()
     const json = JSON.stringify(cottage)
@@ -179,7 +188,6 @@ export default function EditCottage() {
     });
   }
 
-  const [errors, setErrors] = React.useState(false);
 
   return (
     <div>

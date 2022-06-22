@@ -14,6 +14,10 @@ public class ProfileDeletionReason {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    @Column(name = "optLock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Integer version;
     private String reason;
     @OneToOne
     private Person user;

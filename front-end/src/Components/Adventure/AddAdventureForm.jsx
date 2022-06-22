@@ -26,6 +26,8 @@ export default function AddAdventureForm() {
         hourlyRate: ""
     });
 
+    const [errors, setErrors] = React.useState(false);
+
     const [tags, setTags] = React.useState([]);
 
     const [redirect, setRedirect] = React.useState("");
@@ -59,6 +61,13 @@ export default function AddAdventureForm() {
         setErrors(true);
         if (anyFieldEmpty(formData))
             return;
+        if(isNaN(formData.address.zipCode))
+            return;
+        if(isNaN(formData.capacity))
+            return;
+        if(isNaN(formData.hourlyRate))
+            return;
+        
         setValidFrom(true);
         if (validForm) {
             formData.additionalServices = tags;
@@ -112,8 +121,6 @@ export default function AddAdventureForm() {
             <Navigate to={redirect}/>
         )
     }
-
-    const [errors, setErrors] = React.useState(false);
 
     function createAddressUrl(){
         let addressQuery = formData.address.street + ", " + formData.address.city + ", " + formData.address.state

@@ -81,6 +81,14 @@ export default function OwnerRegistration() {
         setErrors(true);
         if (anyFieldEmpty(formData))
             return;
+        if(isNaN(formData.address.zipCode))
+            return;
+        if (formData.password.length < 6)
+            return;
+        if(formData.passwordRetype !== formData.password)
+            return;
+        if(!isEmail(formData.email))
+            return;
 
         let type = formData.type;
         let data = new FormData()

@@ -74,6 +74,8 @@ export default function EditBoat() {
       })
     },[])
 
+    const [errors, setErrors] = React.useState(false);
+
     const [files, setFiles] = React.useState([]);
 
     const [imageSrc, setImageSrc] = React.useState(undefined);
@@ -198,6 +200,22 @@ export default function EditBoat() {
     setErrors(true);
     if (anyFieldEmpty(boat))
         return;
+    if(isNaN(boat.address.zipCode))
+        return;
+    if(isNaN(boat.capacity))
+        return;
+    if(isNaN(boat.hourlyRate))
+        return;
+    if(isNaN(boat.dailyRate))
+        return;
+    if(isNaN(boat.length))
+        return;
+    if(isNaN(boat.enginesNumber))
+        return;
+    if(isNaN(boat.enginePower))
+        return;
+    if(isNaN(boat.maxSpeed))
+        return;  
 
     boat.additionalServices = tags;
     prepareEquipment(boat);
@@ -227,7 +245,6 @@ export default function EditBoat() {
     }
   }
 
-  const [errors, setErrors] = React.useState(false);
 
   return (
     <div>
